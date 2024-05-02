@@ -35,7 +35,7 @@ namespace Watermelon
         {
             instance = this;
 
-            SaveController.Initialise(false);
+            SaveController.Initialise(false, true);
 
             // Cache components
             CacheComponent(out currenciesController);
@@ -113,7 +113,7 @@ namespace Watermelon
 
         private static void OnCompletePageOpened(UIPage page, System.Type pageType)
         {
-            if(pageType == typeof(UIComplete))
+            if (pageType == typeof(UIComplete))
             {
                 LevelController.UnloadLevel();
 
@@ -125,7 +125,7 @@ namespace Watermelon
         {
             UIController.HidePage<UIComplete>(() =>
              {
-                 if(LevelController.NeedCharacterSugession)
+                 if (LevelController.NeedCharacterSugession)
                  {
                      UIController.ShowPage<UICharacterSuggestion>();
                  }

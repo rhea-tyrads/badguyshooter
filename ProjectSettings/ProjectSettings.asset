@@ -140,7 +140,8 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: 51fcb616b1292134784903d88496b97d, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -831,7 +832,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: MODULE_INPUT_SYSTEM
+    Android: MODULE_INPUT_SYSTEM;MODULE_IAP
     Standalone: MODULE_INPUT_SYSTEM
     WebGL: MODULE_INPUT_SYSTEM
     iPhone: 
