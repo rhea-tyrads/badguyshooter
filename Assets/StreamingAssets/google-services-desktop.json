@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "52664797870",
+    "project_id": "climbmaster-cf949-b3cf8",
+    "storage_bucket": "climbmaster-cf949-b3cf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52664797870:android:8266ae62ff69e132eefb3f",
+        "android_client_info": {
+          "package_name": "com.Belandagames.BadGuys"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPiFDzq1ZTPk9fmpIsSPzcJ_K-nlf4_Co"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52664797870:android:6234482070d44208eefb3f",
+        "android_client_info": {
+          "package_name": "com.Belandagames.ClimbMaster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPiFDzq1ZTPk9fmpIsSPzcJ_K-nlf4_Co"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
