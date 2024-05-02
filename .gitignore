@@ -70,3 +70,17 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/Firebase/m2repository/com/google/firebase/firebase-analytics-unity/11.9.0/firebase-analytics-unity-11.9.0.srcaar
+Assets/Firebase/m2repository/com/google/firebase/firebase-analytics-unity/11.9.0/firebase-analytics-unity-11.9.0.srcaar.meta
+Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/11.9.0/firebase-app-unity-11.9.0.srcaar
+Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/11.9.0/firebase-app-unity-11.9.0.srcaar.meta
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-11_9_0.so
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-11_9_0.so.meta
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-11_9_0.bundle
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-11_9_0.bundle.meta
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-11_9_0.dll
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-11_9_0.dll.meta
+Assets/Plugins/tvOS/Firebase/libFirebaseCppApp.a
+Assets/Plugins/tvOS/Firebase/libFirebaseCppApp.a.meta
+Assets/Plugins/iOS/Firebase/libFirebaseCppApp.a
+Assets/Plugins/iOS/Firebase/libFirebaseCppApp.a.meta
