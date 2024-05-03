@@ -1,4 +1,3 @@
-
 using CoreUI;
 using System;
 using System.Collections.Generic;
@@ -29,6 +28,7 @@ public class LeaderboardUI : MobilePopupUI
     public event Action OnCollectFinal = delegate { };
     public event Action OnCollect = delegate { };
     public GameObject collectVfx;
+
     void Awake()
     {
         openButton.onClick.AddListener(Show);

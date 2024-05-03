@@ -16,6 +16,11 @@ public class MobileTooklit : MonoBehaviour
 
     void Start()
     {
+        Init();
+    }
+
+    void Init()
+    {
         eula.Init(settings);
         versionCheck.Init(settings);
         internetConnection.Init(settings);
@@ -23,6 +28,4 @@ public class MobileTooklit : MonoBehaviour
         dailyLogin.Init(settings);
         leaderboard.Init(settings);
     }
-
-
 }
