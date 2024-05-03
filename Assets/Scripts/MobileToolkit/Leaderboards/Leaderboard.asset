@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c816326fff1d4438642a727073c5eb, type: 3}
+  m_Name: Leaderboard
+  m_EditorClassIdentifier: 
+  aiTableCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.009159088
+      value: 0.99765015
+      inSlope: -0.20205514
+      outSlope: -0.20205514
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.16105755
+    - serializedVersion: 3
+      time: 1.0018315
+      value: 0.2759434
+      inSlope: -0.52327996
+      outSlope: -0.52327996
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.12635712
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  refreshEvery:
+    Monday: 0
+    Tuesday: 0
+    Wednesday: 0
+    Thursday: 1
+    Friday: 0
+    Saturday: 0
+    Sunday: 1
+  ranks:
+  - leagueName: Rock Hugger
+    topScore: 800
+    levelRequire: 0
+    leagueNumber: 10
+    icon: {fileID: 21300000, guid: 9ae86ed394c9c42859006d2a7f51cad3, type: 3}
+  - leagueName: Chalk Monster
+    topScore: 1500
+    levelRequire: 10
+    leagueNumber: 9
+    icon: {fileID: 21300000, guid: 9ae86ed394c9c42859006d2a7f51cad3, type: 3}
+  - leagueName: Vertical Vagabond
+    topScore: 2500
+    levelRequire: 20
+    leagueNumber: 8
+    icon: {fileID: 21300000, guid: f668d02a428774352b1ebad5c88557f2, type: 3}
+  - leagueName: Craggy Connoisseur
+    topScore: 3000
+    levelRequire: 30
+    leagueNumber: 7
+    icon: {fileID: 21300000, guid: c2f7a8758a1d947f29a7524ad374ef13, type: 3}
+  - leagueName: Alpine Jester
+    topScore: 3500
+    levelRequire: 40
+    leagueNumber: 6
+    icon: {fileID: 21300000, guid: c2f7a8758a1d947f29a7524ad374ef13, type: 3}
+  - leagueName: Slope Sloth
+    topScore: 4500
+    levelRequire: 50
+    leagueNumber: 5
+    icon: {fileID: 21300000, guid: c2f7a8758a1d947f29a7524ad374ef13, type: 3}
+  - leagueName: Peak Prankster
+    topScore: 5500
+    levelRequire: 60
+    leagueNumber: 4
+    icon: {fileID: 21300000, guid: af046ff5a9b3d44b79be18e97354c5c4, type: 3}
+  - leagueName: Elevation Enthusiast
+    topScore: 6500
+    levelRequire: 70
+    leagueNumber: 3
+    icon: {fileID: 21300000, guid: af046ff5a9b3d44b79be18e97354c5c4, type: 3}
+  - leagueName: Highland Hooligan
+    topScore: 7500
+    levelRequire: 80
+    leagueNumber: 2
+    icon: {fileID: 21300000, guid: 8a44c0950e79b4deaa269b802b58b710, type: 3}
+  - leagueName: Apex Antic
+    topScore: 8500
+    levelRequire: 90
+    leagueNumber: 1
+    icon: {fileID: 21300000, guid: 30360851951504a5992f6c638731a77e, type: 3}
+  goldPerStepInBoard: 0a000000140000001e000000280000003200000064000000
+  goldForWinning: 3200000064000000c8000000
