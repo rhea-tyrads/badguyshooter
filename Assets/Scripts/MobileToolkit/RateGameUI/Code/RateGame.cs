@@ -1,7 +1,6 @@
 using CoreUI;
-using UnityEngine;
 
-public class RateGame : MonoBehaviour
+public class RateGame : MobileTool
 {
     public RateGameUI ui;
 

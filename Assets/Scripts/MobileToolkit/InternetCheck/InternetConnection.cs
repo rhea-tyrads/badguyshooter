@@ -1,13 +1,11 @@
-using CoreUI;
 using System.Collections;
 using UnityEngine;
 using NetworkReachability = UnityEngine.NetworkReachability;
 
-public class InternetConnection : MonoBehaviour
+public class InternetConnection : MobileTool
 {
 
     public bool hasConnection;
-    public ScreenUI ui;
     IEnumerator Start()
     {
         while (true)
@@ -36,12 +34,12 @@ public class InternetConnection : MonoBehaviour
     void HasConnection()
     {
         hasConnection = true;
-        ui.Hide();
+        mobileUI.Hide();
     }
 
     void NoConnection()
     {
         hasConnection = false;
-        ui.Show();
+        mobileUI.Show();
     }
 }

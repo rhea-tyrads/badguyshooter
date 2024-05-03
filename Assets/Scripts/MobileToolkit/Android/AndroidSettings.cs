@@ -1,8 +1,7 @@
-
 using UnityEngine;
 
 
-namespace Android
+namespace Assets.Scripts.MobileToolkit.Android
 {
     public class AndroidSettings : MonoBehaviour
     {

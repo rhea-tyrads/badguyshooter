@@ -1,23 +1,23 @@
-using CoreUI;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-
-public class VersionCheck : MonoBehaviour
+public class VersionCheck : MobileTool
 {
     public string versionCheckUrl;
     public string googlePlayUrl;
     public string currentVersion;
     public SpreadsheetData data;
     public InternetConnection internetAccess;
-    public ScreenUI ui;
+
     public Button downloadButton;
+
+
 
     void Start()
     {
-        ui.Hide();
+        mobileUI.Hide();
         currentVersion = Application.version;
         if (Time.time < 0.1f)
             StartCoroutine(CheckGameVersion());
@@ -60,7 +60,7 @@ public class VersionCheck : MonoBehaviour
         var last = float.Parse(data.value);
         if (current >= last) return;
         //  if (currentVersion.Equals(data.value)) return;
-        ui.Show();
+        mobileUI.Show();
         downloadButton.onClick.AddListener(OpenGameStore);
     }
 

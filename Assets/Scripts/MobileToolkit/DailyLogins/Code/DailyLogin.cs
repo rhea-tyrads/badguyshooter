@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DailyReward = FortuneWheels.Scripts.DailyReward;
 
-public class DailyLogin : MonoBehaviour
+public class DailyLogin : MobileTool
 {
     const string SaveKey = "DailyLoginSave";
     public DailyLoginFile file;

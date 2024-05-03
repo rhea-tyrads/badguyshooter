@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class LeaderboardUI : PopupUI
+public class LeaderboardUI : MobilePopupUI
 {
     public Button openButton;
     public PlayerScoreUI playerScorePrefab;

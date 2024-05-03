@@ -10,27 +10,31 @@ public class PlayerScoreUI : MonoBehaviour
     public TextMeshProUGUI positionTxt;
     public Image medal;
     public Image frame;
-    public Sprite normalFrame;
-    public Sprite highlightFrame;
+    public Color normalFrame;
+    public Color highlightFrame;
+
     public void Normal()
     {
-        frame.sprite = normalFrame;
+        frame.color = normalFrame;
         playerNameTxt.color = Color.white;
         scoreTxt.color = Color.white;
         positionTxt.color = Color.white;
     }
+
     public void Highlight()
     {
-        frame.sprite = highlightFrame;
+        frame.color = highlightFrame;
         //playerNameTxt.color = Color.green;
         //scoreTxt.color = Color.green;
         //positionTxt.color = Color.green;
     }
+
     public void ShowMedal(Sprite sprite)
     {
         medal.sprite = sprite;
         medal.gameObject.SetActive(true);
     }
+
     public void HideMedal()
     {
         medal.gameObject.SetActive(false);
@@ -42,6 +46,6 @@ public class PlayerScoreUI : MonoBehaviour
         scoreTxt.text = score.ToString();
         positionTxt.text = position.ToString();
     }
-    
+
 
 }

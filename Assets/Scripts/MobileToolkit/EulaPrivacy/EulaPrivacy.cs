@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace CoreUI
 {
-    public class EulaPrivacy : MonoBehaviour
+    public class EulaPrivacy : MobileTool
     {
         public EulaUI ui;
-
         public string url;
-        // public GameObject loadingCanvas;
 
         const string KEY = "EULA_ACCEPTED";
+
+
 
         void Start()
         {

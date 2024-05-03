@@ -7,11 +7,12 @@ using UnityEngine.UI;
 
 namespace CoreUI
 {
-    public class RateGameUI : PopupUI
+    public class RateGameUI : MobilePopupUI
     {
         [Space(20)]
         public string googleStoreLink;
         public string email;
+
         [Space(20)]
         public List<RateButtonUI> stars = new();
         public Button sendFeedbackButton;

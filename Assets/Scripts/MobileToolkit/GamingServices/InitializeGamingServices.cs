@@ -2,9 +2,8 @@ using System;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Samples.Purchasing.Core.InitializeGamingServices
+namespace Assets.Scripts.MobileToolkit.GamingServices
 {
     public class InitializeGamingServices : MonoBehaviour
     {

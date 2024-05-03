@@ -6,7 +6,7 @@ using TMPro;
 using DailyReward = FortuneWheels.Scripts.DailyReward;
 
 
-public class DailyLoginUI : PopupUI
+public class DailyLoginUI : MobilePopupUI
 {
     public List<DailyLoginDayUI> list = new();
     public event Action<int> OnCollect = delegate { };

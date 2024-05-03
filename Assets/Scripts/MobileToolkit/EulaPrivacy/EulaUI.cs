@@ -2,7 +2,7 @@ using CoreUI;
 using System;
 using UnityEngine.UI;
 
-public class EulaUI : ScreenUI
+public class EulaUI : MobileScreenUI
 {
     public Button acceptButton;
     public Button eulaURLButton;
@@ -14,6 +14,7 @@ public class EulaUI : ScreenUI
         acceptButton.onClick.AddListener(Accept);
         eulaURLButton.onClick.AddListener(URL);
     }
+
     protected override void Hiding()
     {
         acceptButton.onClick.RemoveListener(Accept);
@@ -24,3 +25,4 @@ public class EulaUI : ScreenUI
     void Accept() => OnAccept();
     void URL() => OnURL();
 }
+

@@ -11,7 +11,6 @@ namespace CoreUI
         public event Action OnShow = delegate { };
 
         protected virtual void Showing() { }
-
         protected virtual void Hiding() { }
 
         public void Show()
