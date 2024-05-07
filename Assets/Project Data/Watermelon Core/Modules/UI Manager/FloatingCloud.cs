@@ -8,21 +8,21 @@ namespace Watermelon
     [System.Serializable]
     public class FloatingCloud
     {
-        private static FloatingCloud floatingCloud;
+        static FloatingCloud floatingCloud;
 
         [SerializeField] Data[] floatingCloudCases;
 
         [Space]
         [SerializeField] TextMeshProUGUI floatingText;
 
-        private static Dictionary<int, Data> floatingCloudLink = new Dictionary<int, Data>();
-        private static List<Animation> activeClouds = new List<Animation>();
+        static Dictionary<int, Data> floatingCloudLink = new Dictionary<int, Data>();
+        static List<Animation> activeClouds = new List<Animation>();
 
         public void Initialise()
         {
             floatingCloud = this;
 
-            for (int i = 0; i < floatingCloudCases.Length; i++)
+            for (var i = 0; i < floatingCloudCases.Length; i++)
             {
                 RegisterCase(floatingCloudCases[i]);
             }
@@ -30,12 +30,12 @@ namespace Watermelon
 
         public void Clear()
         {
-            for(int i = 0; i < activeClouds.Count; i++)
+            for(var i = 0; i < activeClouds.Count; i++)
             {
                 activeClouds[i].Clear();
             }
 
-            foreach(Data floatingCloudData in floatingCloudLink.Values)
+            foreach(var floatingCloudData in floatingCloudLink.Values)
             {
                 floatingCloudData.Clear();
             }
@@ -46,7 +46,7 @@ namespace Watermelon
 
         public static void RegisterCase(FloatingCloudSettings floatingCloudSettings)
         {
-            int cloudHash = StringToHash(floatingCloudSettings.Name);
+            var cloudHash = StringToHash(floatingCloudSettings.Name);
 
             if (floatingCloudLink.ContainsKey(cloudHash))
             {
@@ -55,7 +55,7 @@ namespace Watermelon
                 return;
             }
 
-            Data floatingCloudCase = new Data(floatingCloudSettings);
+            var floatingCloudCase = new Data(floatingCloudSettings);
             floatingCloudCase.Initialise();
 
             floatingCloudLink.Add(cloudHash, floatingCloudCase);
@@ -63,7 +63,7 @@ namespace Watermelon
 
         public static void RegisterCase(Data floatingCloudCase)
         {
-            int cloudHash = StringToHash(floatingCloudCase.Name);
+            var cloudHash = StringToHash(floatingCloudCase.Name);
 
             if (floatingCloudLink.ContainsKey(cloudHash))
             {
@@ -91,7 +91,7 @@ namespace Watermelon
                 return;
             }
 
-            Animation animation = new Animation(floatingCloudLink[hash], rectTransform, targetTransform, elementsAmount, onCurrencyHittedTarget);
+            var animation = new Animation(floatingCloudLink[hash], rectTransform, targetTransform, elementsAmount, onCurrencyHittedTarget);
             animation.PlayAnimation();
 
             activeClouds.Add(animation);
@@ -168,7 +168,7 @@ namespace Watermelon
             [SerializeField] float cloudRadius;
             public float CloudRadius => cloudRadius;
 
-            private Pool pool;
+            Pool pool;
             public Pool Pool => pool;
 
             public Data(FloatingCloudSettings settings)
@@ -195,13 +195,13 @@ namespace Watermelon
 
         public class Animation
         {
-            private Data floatingCloudData;
-            private RectTransform rectTransform;
-            private RectTransform targetTransform;
-            private int elementsAmount;
-            private SimpleCallback onCurrencyHittedTarget;
+            Data floatingCloudData;
+            RectTransform rectTransform;
+            RectTransform targetTransform;
+            int elementsAmount;
+            SimpleCallback onCurrencyHittedTarget;
 
-            private TweenCaseCollection tweenCaseCollection;
+            TweenCaseCollection tweenCaseCollection;
 
             public Animation(Data floatingCloudData, RectTransform rectTransform, RectTransform targetTransform, int elementsAmount, SimpleCallback onCurrencyHittedTarget)
             {
@@ -214,7 +214,7 @@ namespace Watermelon
 
             public void PlayAnimation()
             {
-                RectTransform targetRectTransform = targetTransform;
+                var targetRectTransform = targetTransform;
 
                 tweenCaseCollection = Tween.BeginTweenCaseCollection();
 
@@ -224,29 +224,29 @@ namespace Watermelon
                 if (floatingCloudData.AppearAudioClip != null)
                     AudioController.PlaySound(floatingCloudData.AppearAudioClip);
 
-                float cloudRadius = floatingCloudData.CloudRadius;
-                Vector3 centerPoint = rectTransform.position;
+                var cloudRadius = floatingCloudData.CloudRadius;
+                var centerPoint = rectTransform.position;
 
-                int finishedElementsAmount = 0;
+                var finishedElementsAmount = 0;
 
-                float defaultPitch = 0.9f;
-                bool currencyHittedTarget = false;
-                for (int i = 0; i < elementsAmount; i++)
+                var defaultPitch = 0.9f;
+                var currencyHittedTarget = false;
+                for (var i = 0; i < elementsAmount; i++)
                 {
-                    GameObject elementObject = floatingCloudData.Pool.GetPooledObject();
+                    var elementObject = floatingCloudData.Pool.GetPooledObject();
                     elementObject.transform.SetParent(targetRectTransform);
 
                     elementObject.transform.position = centerPoint;
                     elementObject.transform.localRotation = Quaternion.identity;
                     elementObject.transform.localScale = Vector3.one;
 
-                    Image elementImage = elementObject.GetComponent<Image>();
+                    var elementImage = elementObject.GetComponent<Image>();
                     elementImage.color = Color.white.SetAlpha(0);
 
-                    float moveTime = Random.Range(0.6f, 0.8f);
+                    var moveTime = Random.Range(0.6f, 0.8f);
 
                     TweenCase currencyTweenCase = null;
-                    RectTransform elementRectTransform = (RectTransform)elementObject.transform;
+                    var elementRectTransform = (RectTransform)elementObject.transform;
 
                     elementImage.DOFade(1, 0.2f, unscaledTime: true);
                     elementRectTransform.DOAnchoredPosition(elementRectTransform.anchoredPosition + (Random.insideUnitCircle * cloudRadius), moveTime, unscaledTime: true).SetEasing(Ease.Type.CubicOut).OnComplete(delegate
@@ -264,7 +264,7 @@ namespace Watermelon
                                     currencyHittedTarget = true;
                                 }
 
-                                bool punchTarget = true;
+                                var punchTarget = true;
                                 if (currencyTweenCase != null)
                                 {
                                     if (currencyTweenCase.State < 0.8f)

@@ -10,23 +10,23 @@ namespace Watermelon
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] Image icon;
 
-        private CanvasGroup canvasGroup;
-        private RectTransform rectTransform;
+        CanvasGroup canvasGroup;
+        RectTransform rectTransform;
         public RectTransform RectTransform => rectTransform;
-        private LayoutElement layoutElement;
+        LayoutElement layoutElement;
 
         public string Text { get => text.text; set => text.text = value; }
         public Sprite Icon { get => icon.sprite; set => icon.sprite = value; }
 
         public bool IsVisible { get => gameObject.activeSelf; }
 
-        private TweenCase fadeTweenCase;
-        private TweenCase disableTweenCase;
+        TweenCase fadeTweenCase;
+        TweenCase disableTweenCase;
 
-        private Currency currency;
+        Currency currency;
         public Currency Currency => currency;
 
-        private void Awake()
+        void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();

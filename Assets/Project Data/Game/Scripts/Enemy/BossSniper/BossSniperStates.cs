@@ -5,8 +5,8 @@ namespace Watermelon.Enemy.BossSniper
 {
     public class BossSniperChangingPositionState : StateBehavior<BossSniperBehavior>
     {
-        private int positionId = 0;
-        private Vector3 nextPosition;
+        int positionId = 0;
+        Vector3 nextPosition;
 
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
 
@@ -42,19 +42,19 @@ namespace Watermelon.Enemy.BossSniper
 
     public class BossSniperAimState: StateBehavior<BossSniperBehavior>
     {
-        private BossSniperBehavior boss;
+        BossSniperBehavior boss;
 
         public BossSniperAimState(BossSniperBehavior enemy) : base(enemy)
         {
             this.boss = enemy;
         }
 
-        private bool isYellow;
-        private TweenCase delayedCase;
+        bool isYellow;
+        TweenCase delayedCase;
 
-        private float startAimingTime;
+        float startAimingTime;
 
-        private bool isAimingFinished = false;
+        bool isAimingFinished = false;
 
         public override void OnStart()
         {
@@ -119,7 +119,7 @@ namespace Watermelon.Enemy.BossSniper
             Target.OnAttackFinished += OnAttackEnded;
         }
 
-        private void OnAttackEnded()
+        void OnAttackEnded()
         {
             InvokeOnFinished();
         }

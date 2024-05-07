@@ -14,7 +14,7 @@ namespace Watermelon.SquadShooter
         {
             characters.OrderBy(c => c.RequiredLevel);
 
-            for (int i = 0; i < characters.Length; i++)
+            for (var i = 0; i < characters.Length; i++)
             {
                 characters[i].Initialise();
             }
@@ -22,7 +22,7 @@ namespace Watermelon.SquadShooter
 
         public Character GetCharacter(CharacterType characterType)
         {
-            for (int i = 0; i < characters.Length; i++)
+            for (var i = 0; i < characters.Length; i++)
             {
                 if (characters[i].Type == characterType)
                     return characters[i];
@@ -33,7 +33,7 @@ namespace Watermelon.SquadShooter
 
         public Character GetLastUnlockedCharacter()
         {
-            for (int i = 0; i < characters.Length; i++)
+            for (var i = 0; i < characters.Length; i++)
             {
                 if (characters[i].RequiredLevel > ExperienceController.CurrentLevel)
                 {
@@ -46,7 +46,7 @@ namespace Watermelon.SquadShooter
 
         public Character GetNextCharacterToUnlock()
         {
-            for (int i = 0; i < characters.Length; i++)
+            for (var i = 0; i < characters.Length; i++)
             {
                 if (characters[i].RequiredLevel > ExperienceController.CurrentLevel)
                 {

@@ -4,9 +4,9 @@ namespace Watermelon
 {
     public class NavigationArrowCase : BaseNavigationArrowCase
     {
-        private Transform graphicsTransform;
+        Transform graphicsTransform;
 
-        private TweenCase scaleTweenCase;
+        TweenCase scaleTweenCase;
 
         public NavigationArrowCase(Transform parentTransform, GameObject arrowObject, Vector3 targetPosition) : base(parentTransform, arrowObject, targetPosition)
         {

@@ -147,7 +147,7 @@ namespace Watermelon
 
         public class AnchoredPositionWithVerticalOffset : TweenCaseFunction<RectTransform, Vector2>
         {
-            private AnimationCurve verticalOffset;
+            AnimationCurve verticalOffset;
 
             public AnchoredPositionWithVerticalOffset(RectTransform tweenObject, Vector2 resultValue, AnimationCurve verticalOffset) : base(tweenObject, resultValue)
             {
@@ -201,9 +201,9 @@ namespace Watermelon
 
         public class Shake : TweenCase
         {
-            private RectTransform tweenObject;
-            private Vector2 startPosition;
-            private float magnitude;
+            RectTransform tweenObject;
+            Vector2 startPosition;
+            float magnitude;
 
             public Shake(RectTransform tweenObject, float magnitude)
             {

@@ -18,14 +18,14 @@ namespace Watermelon.SquadShooter
         [Space]
         [SerializeField] RectTransform arrowRectTransform;
 
-        private LevelsDatabase levelsDatabase;
-        private GameSettings levelSettings;
+        LevelsDatabase levelsDatabase;
+        GameSettings levelSettings;
 
-        private PreviewCase[] previewCases;
+        PreviewCase[] previewCases;
 
-        private CanvasGroup canvasGroup;
+        CanvasGroup canvasGroup;
 
-        private TweenCase fadeTweenCase;
+        TweenCase fadeTweenCase;
 
         public void Initialise()
         {
@@ -37,16 +37,16 @@ namespace Watermelon.SquadShooter
 
         public void LoadPanel()
         {
-            int currentWorldIndex = ActiveRoom.CurrentWorldIndex;
-            int currentLevelIndex = ActiveRoom.CurrentLevelIndex;
+            var currentWorldIndex = ActiveRoom.CurrentWorldIndex;
+            var currentLevelIndex = ActiveRoom.CurrentLevelIndex;
 
-            WorldData currentWorld = levelsDatabase.GetWorld(currentWorldIndex);
-            WorldData nextWorld = levelsDatabase.GetWorld(currentWorldIndex + 1);
+            var currentWorld = levelsDatabase.GetWorld(currentWorldIndex);
+            var nextWorld = levelsDatabase.GetWorld(currentWorldIndex + 1);
 
             // Reset pool objects
             if (previewCases != null)
             {
-                for (int i = 0; i < previewCases.Length; i++)
+                for (var i = 0; i < previewCases.Length; i++)
                 {
                     previewCases[i].Reset();
                 }
@@ -75,11 +75,11 @@ namespace Watermelon.SquadShooter
                 }
 
                 previewCases = new PreviewCase[currentWorld.Levels.Length];
-                for (int i = 0; i < previewCases.Length; i++)
+                for (var i = 0; i < previewCases.Length; i++)
                 {
-                    LevelTypeSettings levelTypeSettings = levelSettings.GetLevelSettings(currentWorld.Levels[i].Type);
+                    var levelTypeSettings = levelSettings.GetLevelSettings(currentWorld.Levels[i].Type);
 
-                    GameObject previewObject = levelTypeSettings.PreviewPool.GetPooledObject();
+                    var previewObject = levelTypeSettings.PreviewPool.GetPooledObject();
                     previewObject.transform.SetParent(levelPreviewContainer);
                     previewObject.transform.ResetLocal();
                     previewObject.transform.localScale = Vector3.one;

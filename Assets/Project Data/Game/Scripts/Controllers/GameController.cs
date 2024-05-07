@@ -6,7 +6,7 @@ namespace Watermelon
 {
     public class GameController : MonoBehaviour
     {
-        private static GameController instance;
+        static GameController instance;
 
         [Header("Refferences")]
         [SerializeField] UIController uiController;
@@ -15,23 +15,23 @@ namespace Watermelon
         [DrawReference]
         [SerializeField] GameSettings settings;
 
-        private CurrenciesController currenciesController;
-        private UpgradesController upgradesController;
-        private ParticlesController particlesController;
-        private FloatingTextController floatingTextController;
-        private ExperienceController experienceController;
-        private WeaponsController weaponsController;
-        private CharactersController charactersController;
-        private BalanceController balanceController;
-        private EnemyController enemyController;
-        private TutorialController tutorialController;
+        CurrenciesController currenciesController;
+        UpgradesController upgradesController;
+        ParticlesController particlesController;
+        FloatingTextController floatingTextController;
+        ExperienceController experienceController;
+        WeaponsController weaponsController;
+        CharactersController charactersController;
+        BalanceController balanceController;
+        EnemyController enemyController;
+        TutorialController tutorialController;
 
         public static GameSettings Settings => instance.settings;
 
-        private static bool isGameActive;
+        static bool isGameActive;
         public static bool IsGameActive => isGameActive;
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
 
@@ -50,7 +50,7 @@ namespace Watermelon
             CacheComponent(out tutorialController);
         }
 
-        private void Start()
+        void Start()
         {
             InitialiseGame();
         }
@@ -94,13 +94,18 @@ namespace Watermelon
 
         public static void LevelComplete()
         {
-            if (!isGameActive)
-                return;
+            if (!isGameActive) return;
 
-            LevelData currentLevel = LevelController.CurrentLevelData;
+            var currentLevel = LevelController.CurrentLevelData;
 
-            UIComplete completePage = UIController.GetPage<UIComplete>();
-            completePage.SetData(ActiveRoom.CurrentWorldIndex + 1, ActiveRoom.CurrentLevelIndex + 1, currentLevel.GetCoinsReward(), currentLevel.XPAmount, currentLevel.GetCardsReward());
+            var completePage = UIController.GetPage<UIComplete>();
+            completePage.SetData(ActiveRoom.CurrentWorldIndex + 1, ActiveRoom.CurrentLevelIndex + 1,
+                currentLevel.GetCoinsReward(), currentLevel.XPAmount, currentLevel.GetCardsReward());
+
+            // Debug.LogError("COMPLETE: lvl" + ActiveRoom.CurrentLevelIndex
+            //                                + ", world: " + ActiveRoom.CurrentWorldIndex + ", " + currentLevel.Rooms
+            //                                + ", total levels here: " + currentLevel.Rooms.Length);
+
 
             UIController.OnPageOpenedEvent += OnCompletePageOpened;
             instance.weaponsController.CheckWeaponUpdateState();
@@ -111,7 +116,7 @@ namespace Watermelon
             isGameActive = false;
         }
 
-        private static void OnCompletePageOpened(UIPage page, System.Type pageType)
+        static void OnCompletePageOpened(UIPage page, System.Type pageType)
         {
             if (pageType == typeof(UIComplete))
             {
@@ -124,16 +129,16 @@ namespace Watermelon
         public static void OnLevelCompleteClosed()
         {
             UIController.HidePage<UIComplete>(() =>
-             {
-                 if (LevelController.NeedCharacterSugession)
-                 {
-                     UIController.ShowPage<UICharacterSuggestion>();
-                 }
-                 else
-                 {
-                     ShowMainMenuAfterLevelComplete();
-                 }
-             });
+            {
+                if (LevelController.NeedCharacterSugession)
+                {
+                    UIController.ShowPage<UICharacterSuggestion>();
+                }
+                else
+                {
+                    ShowMainMenuAfterLevelComplete();
+                }
+            });
         }
 
         public static void OnCharacterSugessionClosed()
@@ -141,7 +146,7 @@ namespace Watermelon
             ShowMainMenuAfterLevelComplete();
         }
 
-        private static void ShowMainMenuAfterLevelComplete()
+        static void ShowMainMenuAfterLevelComplete()
         {
             AdsManager.ShowInterstitial(null);
 
@@ -163,7 +168,7 @@ namespace Watermelon
             isGameActive = false;
         }
 
-        public static void OnLevelFailded()
+        public static void OnLevelFail()
         {
             if (!isGameActive)
                 return;
@@ -179,7 +184,7 @@ namespace Watermelon
             isGameActive = false;
         }
 
-        private static void OnFailedPageOpened(UIPage page, System.Type pageType)
+        static void OnFailedPageOpened(UIPage page, System.Type pageType)
         {
             if (pageType == typeof(UIGameOver))
             {
@@ -219,13 +224,14 @@ namespace Watermelon
         }
 
         #region Extensions
+
         public bool CacheComponent<T>(out T component) where T : Component
         {
-            Component unboxedComponent = gameObject.GetComponent(typeof(T));
+            var unboxedComponent = gameObject.GetComponent(typeof(T));
 
             if (unboxedComponent != null)
             {
-                component = (T)unboxedComponent;
+                component = (T) unboxedComponent;
 
                 return true;
             }
@@ -236,6 +242,7 @@ namespace Watermelon
 
             return false;
         }
+
         #endregion
     }
 }

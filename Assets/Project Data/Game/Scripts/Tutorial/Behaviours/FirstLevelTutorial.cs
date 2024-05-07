@@ -6,10 +6,10 @@ namespace Watermelon
 {
     public sealed class FirstLevelTutorial : ITutorial
     {
-        private TutorialID tutorialId;
+        TutorialID tutorialId;
         public TutorialID TutorialID => tutorialId;
 
-        private bool isInitialised;
+        bool isInitialised;
         public bool IsInitialised => isInitialised;
 
         [SerializeField] Transform finishPointTransform;
@@ -19,14 +19,14 @@ namespace Watermelon
         public bool IsFinished => saveData.isFinished;
         public int Progress => saveData.progress;
 
-        private TutorialBaseSave saveData;
+        TutorialBaseSave saveData;
 
-        private LineNavigationArrowCase arrowCase;
+        LineNavigationArrowCase arrowCase;
 
-        private CharacterBehaviour characterBehaviour;
-        private BaseEnemyBehavior enemyBehavior;
+        CharacterBehaviour characterBehaviour;
+        BaseEnemyBehavior enemyBehavior;
 
-        private bool isCompleted;
+        bool isCompleted;
 
         public void Initialise()
         {
@@ -67,7 +67,7 @@ namespace Watermelon
             }
         }
 
-        private void OnEnemyDied(BaseEnemyBehavior enemy)
+        void OnEnemyDied(BaseEnemyBehavior enemy)
         {
             if (enemy == enemyBehavior)
             {
@@ -89,7 +89,7 @@ namespace Watermelon
             }
         }
 
-        private void OnPlayerExitLevel()
+        void OnPlayerExitLevel()
         {
             LevelController.OnPlayerExitLevelEvent -= OnPlayerExitLevel;
 

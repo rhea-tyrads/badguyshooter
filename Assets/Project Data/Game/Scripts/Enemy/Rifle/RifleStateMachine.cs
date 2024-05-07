@@ -7,8 +7,9 @@ namespace Watermelon.Enemy.Rifle
     [RequireComponent(typeof(RifleEnemyBehavior))]
     public class RifleStateMachine : AbstractStateMachine<State>
     {
-        private RifleEnemyBehavior enemy;
-        private void Awake()
+        RifleEnemyBehavior enemy;
+
+        void Awake()
         {
             enemy = GetComponent<RifleEnemyBehavior>();
 
@@ -45,7 +46,7 @@ namespace Watermelon.Enemy.Rifle
             states.Add(State.Attacking, attackingStateCase);
         }
 
-        private bool PatrollingStateTransition(out State nextState)
+        bool PatrollingStateTransition(out State nextState)
         {
             var isTargetSpotted = enemy.IsTargetInVisionRange || (!EnemyController.IgnoreAttackAfterDamage && enemy.HasTakenDamage);
 
@@ -64,7 +65,7 @@ namespace Watermelon.Enemy.Rifle
             return true;
         }
 
-        private bool FollowingStateTransition(out State nextState)
+        bool FollowingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInFleeRange)
             {
@@ -81,7 +82,7 @@ namespace Watermelon.Enemy.Rifle
             return false;
         }
 
-        private bool FleeingStateTransition(out State nextState)
+        bool FleeingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInAttackRange)
             {
@@ -94,7 +95,7 @@ namespace Watermelon.Enemy.Rifle
             return true;
         }
 
-        private bool AttackingStateTransition(out State nextState)
+        bool AttackingStateTransition(out State nextState)
         {
             var attackingState = states[State.Attacking].state;
             if ((attackingState as AimAndAttackState).IsFinished && !CharacterBehaviour.IsDead)

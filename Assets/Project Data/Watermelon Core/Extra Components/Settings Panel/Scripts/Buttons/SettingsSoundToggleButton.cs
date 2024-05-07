@@ -13,9 +13,9 @@ namespace Watermelon
         [SerializeField] Sprite activeSprite;
         [SerializeField] Sprite disableSprite;
 
-        private bool isActive = true;
+        bool isActive = true;
 
-        private void Start()
+        void Start()
         {
             isActive = AudioController.GetVolume() != 0;
 

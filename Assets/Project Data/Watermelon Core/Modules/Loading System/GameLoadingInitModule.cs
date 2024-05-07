@@ -13,10 +13,10 @@ namespace Watermelon
         {
             if(loadingCanvasObject != null)
             {
-                GameObject tempObject = Instantiate(loadingCanvasObject);
+                var tempObject = Instantiate(loadingCanvasObject);
                 tempObject.transform.ResetGlobal();
 
-                LoadingGraphics loadingGraphics = tempObject.GetComponent<LoadingGraphics>();
+                var loadingGraphics = tempObject.GetComponent<LoadingGraphics>();
                 loadingGraphics.Initialise();
             }
 

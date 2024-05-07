@@ -4,22 +4,22 @@ namespace Watermelon
 {
     public class ParticleCase
     {
-        private ParticleSystem particleSystem;
+        ParticleSystem particleSystem;
         public ParticleSystem ParticleSystem => particleSystem;
 
-        private float disableTime = -1;
+        float disableTime = -1;
 
-        private bool forceDisable;
+        bool forceDisable;
 
-        private Particle particle;
-        private ParticleBehaviour particleBehaviour;
+        Particle particle;
+        ParticleBehaviour particleBehaviour;
 
         public ParticleCase(Particle particle, bool isDelayed)
         {
             this.particle = particle;
 
             // Create object
-            GameObject particleObject = particle.ParticlePool.GetPooledObject();
+            var particleObject = particle.ParticlePool.GetPooledObject();
             particleObject.SetActive(true);
 
             // Get particle component

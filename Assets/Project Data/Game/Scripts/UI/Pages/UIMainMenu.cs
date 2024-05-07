@@ -45,18 +45,18 @@ namespace Watermelon
         public CharacterTab CharacterTab => characterTab;
         public WeaponTab WeaponTab => weaponTab;
 
-        private CharacterUpgradeTutorial characterUpgradeTutorial;
-        private WeaponUpgradeTutorial weaponUpgradeTutorial;
+        CharacterUpgradeTutorial characterUpgradeTutorial;
+        WeaponUpgradeTutorial weaponUpgradeTutorial;
 
-        private RectTransform noAdsRectTransform;
+        RectTransform noAdsRectTransform;
 
-        private UIGamepadButton noAdsGamepadButton;
+        UIGamepadButton noAdsGamepadButton;
         public UIGamepadButton NoAdsGamepadButton => noAdsGamepadButton;
 
-        private UIGamepadButton settingsGamepadButton;
+        UIGamepadButton settingsGamepadButton;
         public UIGamepadButton SettingsGamepadButton => settingsGamepadButton;
 
-        private UIGamepadButton playGamepadButton;
+        UIGamepadButton playGamepadButton;
         public UIGamepadButton PlayGamepadButton => playGamepadButton;
 
         public static bool DontFadeRevealNextTime { get; set; }
@@ -201,7 +201,7 @@ namespace Watermelon
 
         #endregion
 
-        private void OnPurchaseComplete(ProductKeyType productKeyType)
+        void OnPurchaseComplete(ProductKeyType productKeyType)
         {
             if (productKeyType == ProductKeyType.NoAds)
             {

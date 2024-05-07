@@ -6,7 +6,7 @@ namespace Watermelon
 {
     public class SettingsPanel : MonoBehaviour
     {
-        private static SettingsPanel instance;
+        static SettingsPanel instance;
 
         [DrawReference]
         [SerializeField] SettingsAnimation settingsAnimation;
@@ -27,26 +27,26 @@ namespace Watermelon
             get { return settingsButtonsInfo; }
         }
 
-        private bool isActiveSettingsButton = false;
+        bool isActiveSettingsButton = false;
         public bool IsActiveSettingsButton => isActiveSettingsButton;
 
-        private static bool IsPanelActive { get; set; }
-        private static UIScaleAnimation MainRect => instance.mainRect;
+        static bool IsPanelActive { get; set; }
+        static UIScaleAnimation MainRect => instance.mainRect;
 
-        private bool isAnimationActive = false;
+        bool isAnimationActive = false;
 
-        private Vector2[] buttonPositions;
+        Vector2[] buttonPositions;
         public Vector2[] ButtonPositions
         {
             get { return buttonPositions; }
         }
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
 
             // Disable all buttons
-            for (int i = 0; i < settingsButtonsInfo.Length; i++)
+            for (var i = 0; i < settingsButtonsInfo.Length; i++)
             {
                 settingsButtonsInfo[i].SettingsButton.gameObject.SetActive(false);
             }
@@ -63,10 +63,10 @@ namespace Watermelon
 
         public void InitPositions()
         {
-            Vector2 lastPosition = new Vector2(xPanelPosition, yPanelPosition);
+            var lastPosition = new Vector2(xPanelPosition, yPanelPosition);
 
             buttonPositions = new Vector2[settingsButtonsInfo.Length];
-            for (int i = 0; i < buttonPositions.Length; i++)
+            for (var i = 0; i < buttonPositions.Length; i++)
             {
                 if (settingsButtonsInfo[i].SettingsButton != null)
                 {
@@ -79,9 +79,9 @@ namespace Watermelon
                             settingsButtonsInfo[i].SettingsButton.RectTransform.gameObject.SetActive(true);
 #endif
 
-                        RectTransform button = settingsButtonsInfo[i].SettingsButton.RectTransform;
+                        var button = settingsButtonsInfo[i].SettingsButton.RectTransform;
 
-                        Vector2 buttonPosition = lastPosition;
+                        var buttonPosition = lastPosition;
 
                         lastPosition -= new Vector2(0, elementSpace);
 
@@ -152,7 +152,7 @@ namespace Watermelon
                 return;
             }
 
-            for (int i = settingsButtonsInfo.Length - 1; i >= 0; i--)
+            for (var i = settingsButtonsInfo.Length - 1; i >= 0; i--)
             {
                 settingsButtonsInfo[i].SettingsButton.gameObject.SetActive(false);
             }
@@ -184,7 +184,7 @@ namespace Watermelon
 
         }
 
-        private static void OnSettingButtonsHidden(bool immediately = false)
+        static void OnSettingButtonsHidden(bool immediately = false)
         {
             MainRect.Hide(immediately: immediately);
         }

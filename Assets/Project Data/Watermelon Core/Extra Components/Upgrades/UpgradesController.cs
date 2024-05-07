@@ -7,27 +7,27 @@ namespace Watermelon
 
     public class UpgradesController : MonoBehaviour
     {
-        private const string SAVE_IDENTIFIER = "upgrades:{0}";
+        const string SAVE_IDENTIFIER = "upgrades:{0}";
 
         [SerializeField] UpgradesDatabase upgradesDatabase;
 
-        private static BaseUpgrade[] activeUpgrades;
+        static BaseUpgrade[] activeUpgrades;
         public static BaseUpgrade[] ActiveUpgrades => activeUpgrades;
 
-        private static Dictionary<UpgradeType, BaseUpgrade> activeUpgradesLink;
+        static Dictionary<UpgradeType, BaseUpgrade> activeUpgradesLink;
 
         public void Initialise()
         {
             activeUpgrades = upgradesDatabase.Upgrades;
 
             activeUpgradesLink = new Dictionary<UpgradeType, BaseUpgrade>();
-            for (int i = 0; i < activeUpgrades.Length; i++)
+            for (var i = 0; i < activeUpgrades.Length; i++)
             {
                 var upgrade = activeUpgrades[i];
 
                 var hash = string.Format(SAVE_IDENTIFIER, upgrade.UpgradeType.ToString()).GetHashCode();
 
-                UpgradeSavableObject save = SaveController.GetSaveObject<UpgradeSavableObject>(hash); ;
+                var save = SaveController.GetSaveObject<UpgradeSavableObject>(hash); ;
 
                 upgrade.SetSave(save);
 

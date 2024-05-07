@@ -7,42 +7,38 @@ namespace Watermelon
 {
     public class AdsManagerExampleScript : MonoBehaviour
     {
-        private Vector2 scrollView;
+        Vector2 scrollView;
 
-        [SerializeField]
-        private Text logText;
-
-        [Space]
-        [SerializeField]
-        private Text bannerTitleText;
-        [SerializeField]
-        private Button[] bannerButtons;
+        [SerializeField] Text logText;
 
         [Space]
         [SerializeField]
-        private Text interstitialTitleText;
-        [SerializeField]
-        private Button[] interstitialButtons;
+        Text bannerTitleText;
+        [SerializeField] Button[] bannerButtons;
 
         [Space]
         [SerializeField]
-        private Text rewardVideoTitleText;
+        Text interstitialTitleText;
+        [SerializeField] Button[] interstitialButtons;
+
+        [Space]
         [SerializeField]
-        private Button[] rewardVideoButtons;
+        Text rewardVideoTitleText;
+        [SerializeField] Button[] rewardVideoButtons;
 
-        private AdsSettings settings;
+        AdsSettings settings;
 
-        private void Awake()
+        void Awake()
         {
             Application.logMessageReceived += Log;
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             Application.logMessageReceived -= Log;
         }
 
-        private void Start()
+        void Start()
         {
             settings = AdsManager.Settings;
 
@@ -51,7 +47,7 @@ namespace Watermelon
             bannerTitleText.text = string.Format("Banner ({0})", settings.BannerType.ToString());
             if(settings.BannerType == AdProvider.Disable)
             {
-                for(int i = 0; i < bannerButtons.Length; i++)
+                for(var i = 0; i < bannerButtons.Length; i++)
                 {
                     bannerButtons[i].interactable = false; 
                 }
@@ -60,7 +56,7 @@ namespace Watermelon
             interstitialTitleText.text = string.Format("Interstitial ({0})", settings.InterstitialType.ToString());
             if (settings.InterstitialType == AdProvider.Disable)
             {
-                for (int i = 0; i < interstitialButtons.Length; i++)
+                for (var i = 0; i < interstitialButtons.Length; i++)
                 {
                     interstitialButtons[i].interactable = false;
                 }
@@ -69,7 +65,7 @@ namespace Watermelon
             rewardVideoTitleText.text = string.Format("Rewarded Video ({0})", settings.RewardedVideoType.ToString());
             if (settings.RewardedVideoType == AdProvider.Disable)
             {
-                for (int i = 0; i < rewardVideoButtons.Length; i++)
+                for (var i = 0; i < rewardVideoButtons.Length; i++)
                 {
                     rewardVideoButtons[i].interactable = false;
                 }
@@ -78,12 +74,12 @@ namespace Watermelon
             GameLoading.MarkAsReadyToHide();
         }
 
-        private void Log(string condition, string stackTrace, LogType type)
+        void Log(string condition, string stackTrace, LogType type)
         {
             logText.text = logText.text.Insert(0, condition + "\n");
         }
 
-        private void Log(string condition)
+        void Log(string condition)
         {
             logText.text = logText.text.Insert(0, condition + "\n");
         }

@@ -11,7 +11,7 @@ namespace Watermelon
         public void Initialise()
         {
             // Initialise currencies
-            for(int i = 0; i < currencies.Length; i++)
+            for(var i = 0; i < currencies.Length; i++)
             {
                 currencies[i].Initialise();
             }

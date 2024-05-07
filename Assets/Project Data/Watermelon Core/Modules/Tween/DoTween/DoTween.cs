@@ -26,7 +26,7 @@ namespace Watermelon
         [SerializeField] protected TweenTargetType type;
         [SerializeField] protected T target;
 
-        private C targetComponent;
+        C targetComponent;
         public C TargetComponent
         {
             get

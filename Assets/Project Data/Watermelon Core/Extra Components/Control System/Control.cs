@@ -31,7 +31,7 @@ namespace Watermelon
             {
                 case InputType.Gamepad:
 
-                    GamepadControl gamepadControl = Initialiser.InitialiserGameObject.AddComponent<GamepadControl>();
+                    var gamepadControl = Initialiser.InitialiserGameObject.AddComponent<GamepadControl>();
                     gamepadControl.Initialise();
 
                     CurrentControl = gamepadControl;
@@ -39,7 +39,7 @@ namespace Watermelon
                     break;
 
                 case InputType.Keyboard:
-                    KeyboardControl keyboardControl = Initialiser.InitialiserGameObject.AddComponent<KeyboardControl>();
+                    var keyboardControl = Initialiser.InitialiserGameObject.AddComponent<KeyboardControl>();
                     keyboardControl.Initialise();
 
                     CurrentControl = keyboardControl;

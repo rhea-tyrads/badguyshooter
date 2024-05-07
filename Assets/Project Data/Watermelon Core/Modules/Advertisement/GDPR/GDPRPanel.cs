@@ -13,23 +13,23 @@ namespace Watermelon
 
         [SerializeField] Button acceptButton;
 
-        private GDPRLoadingTask gdprLoadingTask;
+        GDPRLoadingTask gdprLoadingTask;
 
         public void Initialise(GDPRLoadingTask gdprLoadingTask)
         {
             this.gdprLoadingTask = gdprLoadingTask;
 
             // Inititalise panel
-            EventTrigger termsTrigger = termsOfUseObject.AddComponent<EventTrigger>();
+            var termsTrigger = termsOfUseObject.AddComponent<EventTrigger>();
 
-            EventTrigger.Entry termsEntry = new EventTrigger.Entry();
+            var termsEntry = new EventTrigger.Entry();
             termsEntry.eventID = EventTriggerType.PointerDown;
             termsEntry.callback.AddListener((eventData) => { OpenTermsOfUseLinkButton(); });
             termsTrigger.triggers.Add(termsEntry);
 
-            EventTrigger privacyTrigger = privacyPolicyObject.AddComponent<EventTrigger>();
+            var privacyTrigger = privacyPolicyObject.AddComponent<EventTrigger>();
 
-            EventTrigger.Entry privacyEntry = new EventTrigger.Entry();
+            var privacyEntry = new EventTrigger.Entry();
             privacyEntry.eventID = EventTriggerType.PointerDown;
             privacyEntry.callback.AddListener((eventData) => { OpenPrivacyLinkButton(); });
             privacyTrigger.triggers.Add(privacyEntry);

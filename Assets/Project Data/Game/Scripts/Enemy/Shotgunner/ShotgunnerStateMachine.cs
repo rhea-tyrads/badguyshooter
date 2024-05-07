@@ -7,9 +7,9 @@ namespace Watermelon.Enemy.Shotgunner
     [RequireComponent(typeof(ShotgunerEnemyBehavior))]
     public class ShotgunnerStateMachine : AbstractStateMachine<State>
     {
-        private ShotgunerEnemyBehavior enemy;
+        ShotgunerEnemyBehavior enemy;
 
-        private void Awake()
+        void Awake()
         {
             enemy = GetComponent<ShotgunerEnemyBehavior>();
 
@@ -39,7 +39,7 @@ namespace Watermelon.Enemy.Shotgunner
             states.Add(State.Attacking, attackingStateCase);
         }
 
-        private bool PatrollingStateTransition(out State nextState)
+        bool PatrollingStateTransition(out State nextState)
         {
             var isTargetSpotted = enemy.IsTargetInVisionRange || (!EnemyController.IgnoreAttackAfterDamage && enemy.HasTakenDamage);
 
@@ -56,7 +56,7 @@ namespace Watermelon.Enemy.Shotgunner
             return true;
         }
 
-        private bool FollowingStateTransition(out State nextState)
+        bool FollowingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInAttackRange && enemy.IsTargetInSight())
             {
@@ -68,7 +68,7 @@ namespace Watermelon.Enemy.Shotgunner
             return false;
         }
 
-        private bool AttackingStateTransition(out State nextState)
+        bool AttackingStateTransition(out State nextState)
         {
             var attackingState = states[State.Attacking].state;
             if ((attackingState as AimAndAttackState).IsFinished && !CharacterBehaviour.IsDead)

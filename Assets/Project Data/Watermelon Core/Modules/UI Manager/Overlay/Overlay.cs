@@ -5,13 +5,13 @@ namespace Watermelon
 {
     public static class Overlay
     {
-        private static IOverlayPanel overlayPanel;
+        static IOverlayPanel overlayPanel;
 
         public static void Initialise(UIController uiController)
         {
             foreach (Transform child in uiController.transform)
             {
-                Component component = child.GetComponent(typeof(IOverlayPanel));
+                var component = child.GetComponent(typeof(IOverlayPanel));
 
                 if (component != null)
                 {
@@ -24,23 +24,23 @@ namespace Watermelon
             if(overlayPanel == null)
             {
                 // Create a custom canvas
-                GameObject canvasObject = new GameObject("[TEMP OVERLAY]");
+                var canvasObject = new GameObject("[TEMP OVERLAY]");
                 canvasObject.transform.SetParent(uiController.transform);
                 canvasObject.transform.ResetLocal();
                 canvasObject.layer = LayerMask.NameToLayer("UI");
 
-                RectTransform canvasRectTransform = canvasObject.AddComponent<RectTransform>();
+                var canvasRectTransform = canvasObject.AddComponent<RectTransform>();
                 canvasRectTransform.anchorMin = new Vector2(0, 0);
                 canvasRectTransform.anchorMax = new Vector2(1.0f, 1.0f);
                 canvasRectTransform.sizeDelta = Vector2.zero;
 
-                Canvas overlayCanvas = canvasObject.AddComponent<Canvas>();
+                var overlayCanvas = canvasObject.AddComponent<Canvas>();
                 overlayCanvas.overrideSorting = true;
                 overlayCanvas.sortingOrder = 999;
 
                 canvasObject.AddComponent<GraphicRaycaster>();
 
-                DummyOverlayPanel dummyOverlayPanel = new DummyOverlayPanel();
+                var dummyOverlayPanel = new DummyOverlayPanel();
                 dummyOverlayPanel.SetCanvas(overlayCanvas);
 
                 overlayPanel = dummyOverlayPanel;

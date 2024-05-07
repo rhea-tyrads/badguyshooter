@@ -5,10 +5,10 @@ namespace Watermelon
 {
     public class AdDummyHandler : AdProviderHandler
     {
-        private AdDummyController dummyController;
+        AdDummyController dummyController;
 
-        private bool isInterstitialLoaded = false;
-        private bool isRewardVideoLoaded = false;
+        bool isInterstitialLoaded = false;
+        bool isRewardVideoLoaded = false;
 
         public AdDummyHandler(AdProvider providerType) : base(providerType) { }
 
@@ -21,10 +21,10 @@ namespace Watermelon
 
             if (adsSettings.IsDummyEnabled())
             {
-                GameObject dummyCanvasPrefab = AdsManager.InitModule.DummyCanvasPrefab;
+                var dummyCanvasPrefab = AdsManager.InitModule.DummyCanvasPrefab;
                 if (dummyCanvasPrefab != null)
                 {
-                    GameObject dummyCanvas = GameObject.Instantiate(dummyCanvasPrefab);
+                    var dummyCanvas = GameObject.Instantiate(dummyCanvasPrefab);
                     dummyCanvas.transform.position = Vector3.zero;
                     dummyCanvas.transform.localScale = Vector3.one;
                     dummyCanvas.transform.rotation = Quaternion.identity;

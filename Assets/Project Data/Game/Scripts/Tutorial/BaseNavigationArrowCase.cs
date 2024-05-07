@@ -15,7 +15,7 @@ namespace Watermelon
         public bool IsShowing { get; protected set; }
         public bool IsVisible { get; protected set; }
 
-        private float showingDistance = 12;
+        float showingDistance = 12;
         public float ShowingDistance => showingDistance;
 
         public Vector3 DistancePointPosition => targetPosition;

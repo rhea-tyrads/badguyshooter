@@ -50,7 +50,7 @@ namespace Watermelon.Enemy.Boss
 
     public class KikkingState : BossState
     {
-        private float kickEndTime;
+        float kickEndTime;
 
         public KikkingState(BossBomberBehaviour enemy) : base(enemy) { }
 
@@ -72,7 +72,7 @@ namespace Watermelon.Enemy.Boss
 
     public class ShootingState : BossState
     {
-        private float shootingEndTime;
+        float shootingEndTime;
 
         public ShootingState(BossBomberBehaviour enemy) : base(enemy) { }
 

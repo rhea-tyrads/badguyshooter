@@ -7,16 +7,16 @@ namespace Watermelon.Enemy.Boss
     [RequireComponent(typeof(BossBomberBehaviour))]
     public class BossStateMachine : AbstractStateMachine<State>
     {
-        private BossBomberBehaviour enemy;
+        BossBomberBehaviour enemy;
 
-        private StateBehavior<BossBomberBehaviour> hidingState;
-        private EnteringState enteringState;
-        private IdleState idleState;
-        private ChasingState chasingState;
-        private KikkingState hittingState;
-        private ShootingState shootingState;
+        StateBehavior<BossBomberBehaviour> hidingState;
+        EnteringState enteringState;
+        IdleState idleState;
+        ChasingState chasingState;
+        KikkingState hittingState;
+        ShootingState shootingState;
 
-        private void Awake()
+        void Awake()
         {
             enemy = GetComponent<BossBomberBehaviour>();
 
@@ -78,7 +78,7 @@ namespace Watermelon.Enemy.Boss
             states.Add(State.Shooting, shootingCase);
         }
 
-        private bool HidingTransition(out State nextState)
+        bool HidingTransition(out State nextState)
         {
             nextState = State.Entering;
             var isInRange = Vector3.Distance(transform.position, CharacterBehaviour.GetBehaviour().transform.position) < 8f;
@@ -90,7 +90,7 @@ namespace Watermelon.Enemy.Boss
             return isInRange;
         }
 
-        private bool TransitionToIdle(out State state)
+        bool TransitionToIdle(out State state)
         {
             state = State.Idle;
             var distance = Vector3.Distance(transform.position, CharacterBehaviour.GetBehaviour().transform.position);
@@ -98,7 +98,7 @@ namespace Watermelon.Enemy.Boss
             return distance > enemy.VisionRange;
         }
 
-        private bool TransitionToKicking(out State state)
+        bool TransitionToKicking(out State state)
         {
             state = State.Hitting;
             var distance = Vector3.Distance(transform.position, CharacterBehaviour.GetBehaviour().transform.position);
@@ -106,7 +106,7 @@ namespace Watermelon.Enemy.Boss
             return distance < enemy.KickDistance;
         }
 
-        private bool TransitionToShooting(out State state)
+        bool TransitionToShooting(out State state)
         {
             state = State.Shooting;
             var distance = Vector3.Distance(transform.position, CharacterBehaviour.GetBehaviour().transform.position);
@@ -114,7 +114,7 @@ namespace Watermelon.Enemy.Boss
             return distance > enemy.AttackDistanceMin && distance <= enemy.AttackDistanceMax;
         }
 
-        private bool InstantTransitionToChasing(out State state)
+        bool InstantTransitionToChasing(out State state)
         {
             state = State.Chasing;
 

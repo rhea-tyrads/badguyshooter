@@ -6,32 +6,32 @@ namespace Watermelon.LevelSystem
 {
     public static class ActiveRoom
     {
-        private static GameObject levelObject;
+        static GameObject levelObject;
 
-        private static RoomData roomData;
+        static RoomData roomData;
         public static RoomData RoomData => roomData;
 
-        private static LevelData levelData;
+        static LevelData levelData;
         public static LevelData LevelData => levelData;
 
-        private static List<GameObject> activeObjects;
+        static List<GameObject> activeObjects;
 
-        private static List<BaseEnemyBehavior> enemies;
+        static List<BaseEnemyBehavior> enemies;
         public static List<BaseEnemyBehavior> Enemies => enemies;
 
-        private static List<AbstractChestBehavior> chests;
+        static List<AbstractChestBehavior> chests;
         public static List<AbstractChestBehavior> Chests => chests;
 
-        private static int currentLevelIndex;
+        static int currentLevelIndex;
         public static int CurrentLevelIndex => currentLevelIndex;
 
-        private static int currentWorldIndex;
+        static int currentWorldIndex;
         public static int CurrentWorldIndex => currentWorldIndex;
 
-        private static ExitPointBehaviour exitPointBehaviour;
+        static ExitPointBehaviour exitPointBehaviour;
         public static ExitPointBehaviour ExitPointBehaviour => exitPointBehaviour;
 
-        private static List<GameObject> customObjects;
+        static List<GameObject> customObjects;
         public static List<GameObject> CustomObjects => customObjects;
 
         public static void Initialise(GameObject levelObject)
@@ -63,16 +63,16 @@ namespace Watermelon.LevelSystem
         public static void Unload()
         {
             // Unload created obstacles
-            for (int i = 0; i < activeObjects.Count; i++)
+            foreach (var a in activeObjects)
             {
-                activeObjects[i].transform.SetParent(null);
-                activeObjects[i].SetActive(false);
+                a.transform.SetParent(null);
+                a.SetActive(false);
             }
 
             activeObjects.Clear();
 
             // Unload enemies
-            for (int i = 0; i < enemies.Count; i++)
+            for (var i = 0; i < enemies.Count; i++)
             {
                 enemies[i].Unload();
 
@@ -97,7 +97,7 @@ namespace Watermelon.LevelSystem
         #region Environment/Obstacles
         public static void SpawnItem(LevelItem item, ItemEntityData itemEntityData)
         {
-            GameObject itemObject = item.Pool.GetPooledObject(false);
+            var itemObject = item.Pool.GetPooledObject(false);
             itemObject.transform.SetParent(levelObject.transform);
             itemObject.transform.SetPositionAndRotation(itemEntityData.Position, itemEntityData.Rotation);
             itemObject.transform.localScale = itemEntityData.Scale;
@@ -114,7 +114,7 @@ namespace Watermelon.LevelSystem
 
         public static void SpawnChest(ChestEntityData chestEntityData, ChestData chestData)
         {
-            GameObject chestObject = chestData.Pool.GetPooledObject(false);
+            var chestObject = chestData.Pool.GetPooledObject(false);
             chestObject.transform.SetParent(levelObject.transform);
             chestObject.transform.SetPositionAndRotation(chestEntityData.Position, chestEntityData.Rotation);
             chestObject.transform.localScale = chestEntityData.Scale;
@@ -130,7 +130,7 @@ namespace Watermelon.LevelSystem
         #region Enemies
         public static BaseEnemyBehavior SpawnEnemy(EnemyData enemyData, EnemyEntityData enemyEntityData, bool isActive)
         {
-            BaseEnemyBehavior enemy = Object.Instantiate(enemyData.Prefab, enemyEntityData.Position, enemyEntityData.Rotation, levelObject.transform).GetComponent<BaseEnemyBehavior>();
+            var enemy = Object.Instantiate(enemyData.Prefab, enemyEntityData.Position, enemyEntityData.Rotation, levelObject.transform).GetComponent<BaseEnemyBehavior>();
             enemy.transform.localScale = enemyEntityData.Scale;
             enemy.SetEnemyData(enemyData, enemyEntityData.IsElite);
             enemy.SetPatrollingPoints(enemyEntityData.PathPoints);
@@ -149,7 +149,7 @@ namespace Watermelon.LevelSystem
 
         public static void ActivateEnemies()
         {
-            for (int i = 0; i < enemies.Count; i++)
+            for (var i = 0; i < enemies.Count; i++)
             {
                 enemies[i].Initialise();
             }
@@ -157,7 +157,7 @@ namespace Watermelon.LevelSystem
 
         public static void ClearEnemies()
         {
-            for (int i = 0; i < enemies.Count; i++)
+            for (var i = 0; i < enemies.Count; i++)
             {
                 enemies[i].Unload();
 
@@ -169,7 +169,7 @@ namespace Watermelon.LevelSystem
 
         public static BaseEnemyBehavior GetEnemyForSpecialReward()
         {
-            BaseEnemyBehavior result = enemies.Find(e => e.Tier == EnemyTier.Boss);
+            var result = enemies.Find(e => e.Tier == EnemyTier.Boss);
 
             if (result != null)
                 return result;
@@ -181,7 +181,7 @@ namespace Watermelon.LevelSystem
 
             result = enemies[0];
 
-            for (int i = 1; i < enemies.Count; i++)
+            for (var i = 1; i < enemies.Count; i++)
             {
                 if (enemies[i].transform.position.z > result.transform.position.z)
                 {
@@ -194,18 +194,18 @@ namespace Watermelon.LevelSystem
 
         public static void InitialiseDrop(List<DropData> enemyDrop, List<DropData> chestDrop)
         {
-            for (int i = 0; i < enemies.Count; i++)
+            for (var i = 0; i < enemies.Count; i++)
             {
                 enemies[i].ResetDrop();
             }
 
-            for (int i = 0; i < enemyDrop.Count; i++)
+            for (var i = 0; i < enemyDrop.Count; i++)
             {
                 if (enemyDrop[i].dropType == DropableItemType.Currency && enemyDrop[i].currencyType == CurrencyType.Coins)
                 {
-                    List<int> coins = LevelController.SplitIntEqually(enemyDrop[i].amount, enemies.Count);
+                    var coins = LevelController.SplitIntEqually(enemyDrop[i].amount, enemies.Count);
 
-                    for (int j = 0; j < enemies.Count; j++)
+                    for (var j = 0; j < enemies.Count; j++)
                     {
                         enemies[j].AddDrop(new DropData() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = coins[j] });
                     }
@@ -216,7 +216,7 @@ namespace Watermelon.LevelSystem
                 }
             }
 
-            for (int i = 0; i < chests.Count; i++)
+            for (var i = 0; i < chests.Count; i++)
             {
                 chests[i].Init(chestDrop);
             }
@@ -224,9 +224,9 @@ namespace Watermelon.LevelSystem
 
         public static List<BaseEnemyBehavior> GetAliveEnemies()
         {
-            List<BaseEnemyBehavior> result = new List<BaseEnemyBehavior>();
+            var result = new List<BaseEnemyBehavior>();
 
-            for (int i = 0; i < enemies.Count; i++)
+            for (var i = 0; i < enemies.Count; i++)
             {
                 if (!enemies[i].IsDead)
                 {
@@ -239,7 +239,7 @@ namespace Watermelon.LevelSystem
 
         public static bool AreAllEnemiesDead()
         {
-            for (int i = 0; i < enemies.Count; i++)
+            for (var i = 0; i < enemies.Count; i++)
             {
                 if (!enemies[i].IsDead)
                 {
@@ -255,7 +255,7 @@ namespace Watermelon.LevelSystem
 
         public static void SpawnCustomObject(CustomObjectData objectData)
         {
-            GameObject customObject = Tween.Instantiate(objectData.PrefabRef);
+            var customObject = Tween.Instantiate(objectData.PrefabRef);
             customObject.transform.SetParent(levelObject.transform);
             customObject.transform.SetPositionAndRotation(objectData.Position, objectData.Rotation);
             customObject.transform.localScale = objectData.Scale;
@@ -269,7 +269,7 @@ namespace Watermelon.LevelSystem
             if (customObjects.IsNullOrEmpty())
                 return;
 
-            for (int i = 0; i < customObjects.Count; i++)
+            for (var i = 0; i < customObjects.Count; i++)
             {
                 Tween.Destroy(customObjects[i]);
             }

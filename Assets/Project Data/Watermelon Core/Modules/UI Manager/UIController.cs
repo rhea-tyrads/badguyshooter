@@ -7,27 +7,27 @@ namespace Watermelon
 {
     public class UIController : MonoBehaviour
     {
-        private static UIController uiController;
+        static UIController uiController;
 
         [SerializeField] FloatingCloud currencyCloud;
         [SerializeField] NotchSaveArea notchSaveArea;
 
-        private static List<UIPage> pages;
-        private static Dictionary<Type, UIPage> pagesLink = new Dictionary<Type, UIPage>();
+        static List<UIPage> pages;
+        static Dictionary<Type, UIPage> pagesLink = new Dictionary<Type, UIPage>();
 
-        private static bool isTablet;
+        static bool isTablet;
         public static bool IsTablet => isTablet;
 
-        private static Canvas mainCanvas;
+        static Canvas mainCanvas;
         public static Canvas MainCanvas => mainCanvas;
         public static CanvasScaler CanvasScaler { get; private set; }
 
-        private static UIGame gamePage;
+        static UIGame gamePage;
         public static UIGame GamePage => gamePage;
 
-        private static Camera mainCamera;
+        static Camera mainCamera;
 
-        private static SimpleCallback localPageClosedCallback;
+        static SimpleCallback localPageClosedCallback;
 
         public static event PageCallback OnPageOpenedEvent;
         public static event PageCallback OnPageClosedEvent;
@@ -48,9 +48,9 @@ namespace Watermelon
 
             pages = new List<UIPage>();
             pagesLink = new Dictionary<Type, UIPage>();
-            for (int i = 0; i < transform.childCount; i++)
+            for (var i = 0; i < transform.childCount; i++)
             {
-                UIPage uiPage = transform.GetChild(i).GetComponent<UIPage>();
+                var uiPage = transform.GetChild(i).GetComponent<UIPage>();
                 if(uiPage != null)
                 {
                     uiPage.CacheComponents();
@@ -70,7 +70,7 @@ namespace Watermelon
 
         public void InitialisePages()
         {
-            for (int i = 0; i < pages.Count; i++)
+            for (var i = 0; i < pages.Count; i++)
             {
                 pages[i].Initialise();
                 pages[i].DisableCanvas();
@@ -85,10 +85,10 @@ namespace Watermelon
 
         public static void ResetPages()
         {
-            UIController controller = uiController;
+            var controller = uiController;
             if (controller != null)
             {
-                for (int i = 0; i < pages.Count; i++)
+                for (var i = 0; i < pages.Count; i++)
                 {
                     if (pages[i].IsPageDisplayed)
                     {
@@ -100,8 +100,8 @@ namespace Watermelon
 
         public static void ShowPage<T>() where T : UIPage
         {
-            Type pageType = typeof(T);
-            UIPage page = pagesLink[pageType];
+            var pageType = typeof(T);
+            var page = pagesLink[pageType];
             if (!page.IsPageDisplayed)
             {
                 page.PlayShowAnimation();
@@ -112,8 +112,8 @@ namespace Watermelon
 
         public static void HidePage<T>(SimpleCallback onPageClosed = null)
         {
-            Type pageType = typeof(T);
-            UIPage page = pagesLink[pageType];
+            var pageType = typeof(T);
+            var page = pagesLink[pageType];
             if (page.IsPageDisplayed)
             {
                 localPageClosedCallback = onPageClosed;
@@ -167,10 +167,10 @@ namespace Watermelon
 
         public static Vector3 FixUIElementToWorld(Transform target, Vector3 offset)
         {
-            Vector3 targPos = target.transform.position + offset;
-            Vector3 camForward = mainCamera.transform.forward;
+            var targPos = target.transform.position + offset;
+            var camForward = mainCamera.transform.forward;
 
-            float distInFrontOfCamera = Vector3.Dot(targPos - (mainCamera.transform.position + camForward), camForward);
+            var distInFrontOfCamera = Vector3.Dot(targPos - (mainCamera.transform.position + camForward), camForward);
             if (distInFrontOfCamera < 0f)
             {
                 targPos -= camForward * distInFrontOfCamera;
@@ -179,7 +179,7 @@ namespace Watermelon
             return RectTransformUtility.WorldToScreenPoint(mainCamera, targPos);
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             currencyCloud.Clear();
 
@@ -197,9 +197,9 @@ namespace Watermelon
 
 // Changelog
 // v 1.2
-// • Added global overlay
+// ï¿½ Added global overlay
 // v 1.1
-// • Added popup callbacks and methods to handle when a custom window is opened
-// • RectTransform can be added to NotchSaveArea using NotchSaveArea.RegisterRectTransform method
+// ï¿½ Added popup callbacks and methods to handle when a custom window is opened
+// ï¿½ RectTransform can be added to NotchSaveArea using NotchSaveArea.RegisterRectTransform method
 // v 1.0
-// • Basic logic
+// ï¿½ Basic logic

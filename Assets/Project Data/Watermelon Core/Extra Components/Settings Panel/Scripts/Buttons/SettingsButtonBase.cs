@@ -4,10 +4,10 @@ namespace Watermelon
 {
     public abstract class SettingsButtonBase : MonoBehaviour
     {
-        private int index;
+        int index;
         protected SettingsPanel settingsPanel;
 
-        private RectTransform rectTransform;
+        RectTransform rectTransform;
         public RectTransform RectTransform { get { return rectTransform; } }
 
         public void Init(int index, SettingsPanel settingsPanel)

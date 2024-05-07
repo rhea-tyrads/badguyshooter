@@ -12,7 +12,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] GameObject prefab;
         public GameObject DropPrefab => prefab;
 
-        private Pool pool;
+        Pool pool;
 
         public CustomDropItem(DropableItemType dropableItemType, GameObject prefab)
         {

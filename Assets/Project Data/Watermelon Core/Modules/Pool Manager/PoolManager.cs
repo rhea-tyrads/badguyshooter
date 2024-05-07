@@ -11,7 +11,7 @@ namespace Watermelon
     /// </summary>
     public class PoolManager : MonoBehaviour
     {
-        private static PoolManager instance;
+        static PoolManager instance;
 
         /// <summary>
         /// List of all existing pools.
@@ -21,19 +21,19 @@ namespace Watermelon
         /// <summary>
         /// Dictionary which allows to acces Pool by name.
         /// </summary>
-        private Dictionary<string, Pool> poolsDictionary;
+        Dictionary<string, Pool> poolsDictionary;
 
-        private int spawnedObjectAmount = 0;
+        int spawnedObjectAmount = 0;
 
         /// <summary>
         /// Amount of spawned objects.
         /// </summary>
         public static int SpawnedObjectsAmount => instance.spawnedObjectAmount;
 
-        private static Transform objectsContainer;
+        static Transform objectsContainer;
         public static Transform ObjectsContainerTransform => objectsContainer;
 
-        private void Awake()
+        void Awake()
         {
             InitSingletone(this);
         }
@@ -41,7 +41,7 @@ namespace Watermelon
         /// <summary>
         /// Initialize a single instance of PoolManager.
         /// </summary>
-        private static void InitSingletone(PoolManager poolManager = null)
+        static void InitSingletone(PoolManager poolManager = null)
         {
             if (instance != null)
                 return;
@@ -56,7 +56,7 @@ namespace Watermelon
 
 #if UNITY_EDITOR
                 // Create container object
-                GameObject containerObject = new GameObject("[POOL OBJECTS]");
+                var containerObject = new GameObject("[POOL OBJECTS]");
                 objectsContainer = containerObject.transform;
                 objectsContainer.ResetGlobal();
 #endif
@@ -64,7 +64,7 @@ namespace Watermelon
                 // Link and initialise pools
                 poolManager.poolsDictionary = new Dictionary<string, Pool>();
 
-                foreach (Pool pool in poolManager.poolsList)
+                foreach (var pool in poolManager.poolsList)
                 {
                     poolManager.poolsDictionary.Add(pool.Name, pool);
 
@@ -79,10 +79,10 @@ namespace Watermelon
 
         public static void Unload()
         {
-            PoolManager poolManager = instance; 
+            var poolManager = instance; 
             if(poolManager != null)
             {
-                for(int i = 0; i < poolManager.poolsList.Count; i++)
+                for(var i = 0; i < poolManager.poolsList.Count; i++)
                 {
                     poolManager.poolsList[i].ReturnToPoolEverything(true);
                 }
@@ -126,7 +126,7 @@ namespace Watermelon
 
             if (instance.poolsDictionary.ContainsKey(poolName))
             {
-                Pool unboxedPool = instance.poolsDictionary[poolName];
+                var unboxedPool = instance.poolsDictionary[poolName];
 
                 try
                 {
@@ -160,7 +160,7 @@ namespace Watermelon
                 return GetPoolByName(poolBuilder.name);
             }
 
-            Pool newPool = new Pool(poolBuilder);
+            var newPool = new Pool(poolBuilder);
             instance.poolsDictionary.Add(newPool.Name, newPool);
             instance.poolsList.Add(newPool);
 
@@ -180,7 +180,7 @@ namespace Watermelon
                 return GetPoolByName<T>(poolBuilder.name);
             }
 
-            PoolGeneric<T> poolGeneric = new PoolGeneric<T>(poolBuilder);
+            var poolGeneric = new PoolGeneric<T>(poolBuilder);
             instance.poolsDictionary.Add(poolGeneric.Name, poolGeneric);
             instance.poolsList.Add(poolGeneric);
 
@@ -236,7 +236,7 @@ namespace Watermelon
 
         // editor methods
 
-        private bool IsAllPrefabsAssignedAtPool(int poolIndex)
+        bool IsAllPrefabsAssignedAtPool(int poolIndex)
         {
             if (poolsList != null && poolIndex < poolsList.Count)
             {
@@ -248,7 +248,7 @@ namespace Watermelon
             }
         }
 
-        private void RecalculateWeightsAtPool(int poolIndex)
+        void RecalculateWeightsAtPool(int poolIndex)
         {
             poolsList[poolIndex].RecalculateWeights();
         }

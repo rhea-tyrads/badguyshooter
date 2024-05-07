@@ -8,9 +8,9 @@ namespace Watermelon.SquadShooter
     {
         protected float damage;
         protected float speed;
-        private bool autoDisableOnHit;
+        bool autoDisableOnHit;
 
-        private TweenCase disableTweenCase;
+        TweenCase disableTweenCase;
 
         protected BaseEnemyBehavior currentTarget;
 
@@ -38,11 +38,11 @@ namespace Watermelon.SquadShooter
                 transform.position += transform.forward * speed * Time.fixedDeltaTime;
         }
 
-        private void OnTriggerEnter(Collider other)
+        void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
             {
-                BaseEnemyBehavior baseEnemyBehavior = other.GetComponent<BaseEnemyBehavior>();
+                var baseEnemyBehavior = other.GetComponent<BaseEnemyBehavior>();
                 if (baseEnemyBehavior != null)
                 {
                     if (!baseEnemyBehavior.IsDead)
@@ -67,12 +67,12 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             disableTweenCase.KillActive();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             disableTweenCase.KillActive();
         }

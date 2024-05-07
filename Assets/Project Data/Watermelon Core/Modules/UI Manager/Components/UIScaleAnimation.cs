@@ -9,7 +9,7 @@ namespace Watermelon
 
         public RectTransform RectTransform => rect;
 
-        private TweenCase scaleTweenCase;
+        TweenCase scaleTweenCase;
 
         public void Show(float scaleMultiplier = 1.1f, float duration = 0.5f, float delay = 0f, bool immediately = false, SimpleCallback onCompleted = null)
         {

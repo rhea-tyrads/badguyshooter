@@ -7,8 +7,9 @@ namespace Watermelon.Enemy.Range
     [RequireComponent(typeof(RangeEnemyBehaviour))]
     public class RangeStateMachine : AbstractStateMachine<State>
     {
-        private RangeEnemyBehaviour enemy;
-        private void Awake()
+        RangeEnemyBehaviour enemy;
+
+        void Awake()
         {
             enemy = GetComponent<RangeEnemyBehaviour>();
 
@@ -45,7 +46,7 @@ namespace Watermelon.Enemy.Range
             states.Add(State.Attacking, attackingStateCase);
         }
 
-        private bool PatrollingStateTransition(out State nextState)
+        bool PatrollingStateTransition(out State nextState)
         {
             var isTargetSpotted = enemy.IsTargetInVisionRange || (!EnemyController.IgnoreAttackAfterDamage && enemy.HasTakenDamage);
 
@@ -64,7 +65,7 @@ namespace Watermelon.Enemy.Range
             return true;
         }
 
-        private bool FollowingStateTransition(out State nextState)
+        bool FollowingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInFleeRange)
             {
@@ -81,7 +82,7 @@ namespace Watermelon.Enemy.Range
             return false;
         }
 
-        private bool FleeingStateTransition(out State nextState)
+        bool FleeingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInAttackRange)
             {
@@ -94,7 +95,7 @@ namespace Watermelon.Enemy.Range
             return true;
         }
 
-        private bool AttackingStateTransition(out State nextState)
+        bool AttackingStateTransition(out State nextState)
         {
             var attackingState = states[State.Attacking].state;
             if ((attackingState as AimAndAttackState).IsFinished && !CharacterBehaviour.IsDead)

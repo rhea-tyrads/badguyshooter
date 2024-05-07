@@ -5,9 +5,9 @@ namespace Watermelon.SquadShooter
 {
     public class MeleeEnemyBehaviour : BaseEnemyBehavior
     {
-        private static readonly int HIT_PARTICLE_HASH = ParticlesController.GetHash("Enemy Melee Hit");
+        static readonly int HIT_PARTICLE_HASH = ParticlesController.GetHash("Enemy Melee Hit");
 
-        private readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
+        readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
 
         [Header("Fighting")]
         [SerializeField] float hitRadius;
@@ -17,10 +17,10 @@ namespace Watermelon.SquadShooter
         [Space]
         [SerializeField] Transform hitParticlePosition;
 
-        private float slowRunningTimer;
+        float slowRunningTimer;
 
-        private bool isHitting;
-        private bool isSlowRunning;
+        bool isHitting;
+        bool isSlowRunning;
 
         public override void Attack()
         {
@@ -35,7 +35,7 @@ namespace Watermelon.SquadShooter
             animatorRef.SetTrigger(ANIMATOR_ATTACK_HASH);
         }
 
-        private void ApplySlowDown()
+        void ApplySlowDown()
         {
             isSlowRunning = true;
             IsWalking = true;
@@ -44,7 +44,7 @@ namespace Watermelon.SquadShooter
             navMeshAgent.speed = Stats.MoveSpeed * slowDownSpeedMult;
         }
 
-        private void DisableSlowDown()
+        void DisableSlowDown()
         {
             isSlowRunning = false;
             IsWalking = false;

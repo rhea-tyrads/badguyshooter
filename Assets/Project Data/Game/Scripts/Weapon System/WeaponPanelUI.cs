@@ -32,7 +32,7 @@ namespace Watermelon.SquadShooter
 
         public WeaponData Data { get; private set; }
 
-        private BaseWeaponUpgrade Upgrade { get; set; }
+        BaseWeaponUpgrade Upgrade { get; set; }
 
         [Space]
         [SerializeField] Button upgradesBuyButton;
@@ -45,15 +45,15 @@ namespace Watermelon.SquadShooter
         [SerializeField] GameObject upgradesMaxObject;
 
         public override bool IsUnlocked => Upgrade.UpgradeLevel > 0;
-        private int weaponIndex;
+        int weaponIndex;
         public int WeaponIndex => weaponIndex;
 
-        private UIGamepadButton gamepadButton;
+        UIGamepadButton gamepadButton;
         public UIGamepadButton GamepadButton => gamepadButton;
 
         public Transform UpgradeButtonTransform => upgradesBuyButton.transform;
 
-        private WeaponsController weaponController;
+        WeaponsController weaponController;
 
         public void Init(WeaponsController weaponController, BaseWeaponUpgrade upgrade, WeaponData data, int weaponIndex)
         {
@@ -103,7 +103,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void UpdateSelectionState()
+        void UpdateSelectionState()
         {
             if (weaponIndex == WeaponsController.SelectedWeaponIndex)
             {
@@ -119,13 +119,13 @@ namespace Watermelon.SquadShooter
             UpdateUI();
         }
 
-        private void UpdateLockedState()
+        void UpdateLockedState()
         {
             lockedStateObject.SetActive(true);
             upgradeStateObject.SetActive(false);
 
-            int currentAmount = Data.CardsAmount;
-            int target = Upgrade.NextStage.Price;
+            var currentAmount = Data.CardsAmount;
+            var target = Upgrade.NextStage.Price;
 
             cardsFillImage.fillAmount = (float)currentAmount / target;
             cardsAmountText.text = currentAmount + "/" + target;
@@ -134,7 +134,7 @@ namespace Watermelon.SquadShooter
             powerText.gameObject.SetActive(false);
         }
 
-        private void UpdateUpgradeState()
+        void UpdateUpgradeState()
         {
             lockedStateObject.SetActive(false);
             upgradeStateObject.SetActive(true);
@@ -157,7 +157,7 @@ namespace Watermelon.SquadShooter
             RedrawUpgradeElements();
         }
 
-        private void RedrawUpgradeElements()
+        void RedrawUpgradeElements()
         {
             levelText.text = "LEVEL " + Upgrade.UpgradeLevel;
 
@@ -182,8 +182,8 @@ namespace Watermelon.SquadShooter
         {
             if (!Upgrade.IsMaxedOut)
             {
-                int price = Upgrade.NextStage.Price;
-                CurrencyType currencyType = Upgrade.NextStage.CurrencyType;
+                var price = Upgrade.NextStage.Price;
+                var currencyType = Upgrade.NextStage.CurrencyType;
 
                 if (CurrenciesController.HasAmount(currencyType, price))
                 {
@@ -237,7 +237,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             WeaponsController.OnNewWeaponSelected += UpdateSelectionState;
         }

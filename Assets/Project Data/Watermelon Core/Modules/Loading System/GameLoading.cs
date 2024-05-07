@@ -7,15 +7,15 @@ namespace Watermelon
 {
     public static class GameLoading
     {
-        private const float MINIMUM_LOADING_TIME = 2.0f;
+        const float MINIMUM_LOADING_TIME = 2.0f;
 
-        private static AsyncOperation loadingOperation;
+        static AsyncOperation loadingOperation;
 
-        private static bool isReadyToHide;
-        private static bool manualControlMode;
+        static bool isReadyToHide;
+        static bool manualControlMode;
 
-        private static string loadingMessage;
-        private static List<LoadingTask> loadingTasks = new List<LoadingTask>();
+        static string loadingMessage;
+        static List<LoadingTask> loadingTasks = new List<LoadingTask>();
 
         public static event LoadingCallback OnLoading;
         public static event SimpleCallback OnLoadingFinished;
@@ -24,7 +24,7 @@ namespace Watermelon
         {
             loadingMessage = message;
 
-            float progress = 0.0f;
+            var progress = 0.0f;
             if (loadingOperation != null)
                 progress = loadingOperation.progress;
 
@@ -36,13 +36,13 @@ namespace Watermelon
             loadingTasks.Add(loadingTask);
         }
 
-        private static IEnumerator LoadSceneCoroutine(SimpleCallback onSceneLoaded = null)
+        static IEnumerator LoadSceneCoroutine(SimpleCallback onSceneLoaded = null)
         {
             isReadyToHide = false;
 
-            float realtimeSinceStartup = Time.realtimeSinceStartup;
+            var realtimeSinceStartup = Time.realtimeSinceStartup;
 
-            int taskIndex = 0;
+            var taskIndex = 0;
             while(taskIndex < loadingTasks.Count)
             {
                 if(!loadingTasks[taskIndex].IsActive)
@@ -56,11 +56,11 @@ namespace Watermelon
                 yield return null;
             }
 
-            int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
             if (SceneManager.sceneCount < sceneIndex)
                 Debug.LogError("[Loading]: First scene is missing!");
 
-            float minimumFinishTime = realtimeSinceStartup + MINIMUM_LOADING_TIME;
+            var minimumFinishTime = realtimeSinceStartup + MINIMUM_LOADING_TIME;
 
             loadingOperation = SceneManager.LoadSceneAsync(sceneIndex);
             loadingOperation.allowSceneActivation = false;
@@ -104,11 +104,11 @@ namespace Watermelon
             OnLoadingFinished?.Invoke();
         }
 
-        private static IEnumerator SimpleLoadCoroutine(SimpleCallback onSceneLoaded = null)
+        static IEnumerator SimpleLoadCoroutine(SimpleCallback onSceneLoaded = null)
         {
-            float realtimeSinceStartup = Time.realtimeSinceStartup;
+            var realtimeSinceStartup = Time.realtimeSinceStartup;
 
-            int taskIndex = 0;
+            var taskIndex = 0;
             while (taskIndex < loadingTasks.Count)
             {
                 if (!loadingTasks[taskIndex].IsActive)
@@ -160,8 +160,8 @@ namespace Watermelon
 
 // Changelog
 // v 0.2
-// • Loading graphics removed from Init scene
-// • Added GameLoadingSettings Init Module
-// • Added manual control mode (If manual mode is enabled, the loading screen will be active until GameLoading.MarkAsReadyToHide method has been called)
+// ï¿½ Loading graphics removed from Init scene
+// ï¿½ Added GameLoadingSettings Init Module
+// ï¿½ Added manual control mode (If manual mode is enabled, the loading screen will be active until GameLoading.MarkAsReadyToHide method has been called)
 // v 0.1
-// • Added basic version
+// ï¿½ Added basic version

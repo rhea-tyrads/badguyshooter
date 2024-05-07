@@ -4,8 +4,8 @@ namespace Watermelon
 {
     public static class CustomMusicController
     {
-        private static AudioCaseCustom musicAudioCase;
-        private static TweenCase fadeTweenCase;
+        static AudioCaseCustom musicAudioCase;
+        static TweenCase fadeTweenCase;
 
         public static void Initialise(AudioClip defaultMusic)
         {

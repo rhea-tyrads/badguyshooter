@@ -4,13 +4,13 @@ namespace Watermelon
 {
     public class TweenCaseCollection
     {
-        private List<TweenCase> tweenCases = new List<TweenCase>();
+        List<TweenCase> tweenCases = new List<TweenCase>();
         public List<TweenCase> TweenCases => tweenCases;
 
-        private SimpleCallback tweensCompleted;
+        SimpleCallback tweensCompleted;
 
-        private int completedTweensCount = 0;
-        private int tweensCount = 0;
+        int completedTweensCount = 0;
+        int tweensCount = 0;
 
         public void AddTween(TweenCase tweenCase)
         {
@@ -22,7 +22,7 @@ namespace Watermelon
 
         public bool IsComplete()
         {
-            for(int i = 0; i < tweensCount; i++)
+            for(var i = 0; i < tweensCount; i++)
             {
                 if (!tweenCases[i].IsCompleted)
                     return false;
@@ -33,7 +33,7 @@ namespace Watermelon
 
         public void Complete()
         {
-            for (int i = 0; i < tweensCount; i++)
+            for (var i = 0; i < tweensCount; i++)
             {
                 tweenCases[i].Complete();
             }
@@ -41,7 +41,7 @@ namespace Watermelon
 
         public void Kill()
         {
-            for (int i = 0; i < tweensCount; i++)
+            for (var i = 0; i < tweensCount; i++)
             {
                 tweenCases[i].Kill();
             }
@@ -52,7 +52,7 @@ namespace Watermelon
             tweensCompleted += callback;
         }
 
-        private void OnTweenCaseComplete()
+        void OnTweenCaseComplete()
         {
             completedTweensCount++;
 

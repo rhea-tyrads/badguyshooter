@@ -4,17 +4,17 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterGraphics : BaseCharacterGraphics
     {
-        private static readonly int ANIMATOR_MOVEMENT_SPEED = Animator.StringToHash("Speed");
+        static readonly int ANIMATOR_MOVEMENT_SPEED = Animator.StringToHash("Speed");
 
-        private static readonly int ANIMATOR_RUNNING_HASH = Animator.StringToHash("IsRunning");
-        private static readonly int ANIMATOR_MOVEMENT_X_HASH = Animator.StringToHash("MovementX");
-        private static readonly int ANIMATOR_MOVEMENT_Y_HASH = Animator.StringToHash("MovementY");
+        static readonly int ANIMATOR_RUNNING_HASH = Animator.StringToHash("IsRunning");
+        static readonly int ANIMATOR_MOVEMENT_X_HASH = Animator.StringToHash("MovementX");
+        static readonly int ANIMATOR_MOVEMENT_Y_HASH = Animator.StringToHash("MovementY");
 
-        private Vector3 enemyPosition;
-        private float angle;
-        private Vector2 rotatedInput;
+        Vector3 enemyPosition;
+        float angle;
+        Vector2 rotatedInput;
 
-        private void Awake()
+        void Awake()
         {
 
         }
@@ -76,7 +76,7 @@ namespace Watermelon.SquadShooter
             StopMovementAnimation();
         }
 
-        private void StopMovementAnimation()
+        void StopMovementAnimation()
         {
             characterAnimator.SetFloat(ANIMATOR_MOVEMENT_SPEED, 1.0f);
 

@@ -49,7 +49,7 @@ namespace Watermelon
         /// <summary>
         /// The StartState method retrieves the EnemyStateBehavior for the current state, subscribes to the OnFinished event of the state, and calls the OnStart method of the state.
         /// </summary>
-        private void StartState()
+        void StartState()
         {
             var state = states[CurrentState].state;
 
@@ -60,7 +60,7 @@ namespace Watermelon
         /// <summary>
         /// The EndState method retrieves the EnemyStateBehavior for the current state, unsubscribes from the OnFinished event of the state, and calls the OnEnd method of the state.
         /// </summary>
-        private void EndState()
+        void EndState()
         {
             var state = states[CurrentState].state;
 
@@ -84,14 +84,14 @@ namespace Watermelon
         /// If a transition's transitionType is set to StateTransitionType.OnFinish and it evaluates to true (i.e. the criteria for the transition are met), 
         /// the EndState method is called, the CurrentState is updated to the next state, and the StartState method is called.
         /// </summary>
-        private void OnStateFinished()
+        void OnStateFinished()
         {
             var stateCase = states[CurrentState];
 
             var state = stateCase.state;
             var transitions = stateCase.transitions;
 
-            for (int i = 0; i < transitions.Count; i++)
+            for (var i = 0; i < transitions.Count; i++)
             {
                 var transition = transitions[i];
                 if (transition.transitionType == StateTransitionType.OnFinish && transition.Evaluate(out var nextState))
@@ -112,7 +112,7 @@ namespace Watermelon
         /// If a transition's transitionType is set to StateTransitionType.
         /// Independent and it evaluates to true, the EndState method is called, the CurrentState is updated to the next state, and the StartState method is called.
         /// </summary>
-        private void Update()
+        void Update()
         {
             if (IsPlaying)
             {
@@ -123,7 +123,7 @@ namespace Watermelon
 
                 state.OnUpdate();
 
-                for (int i = 0; i < transitions.Count; i++)
+                for (var i = 0; i < transitions.Count; i++)
                 {
                     var transition = transitions[i];
                     if (transition.transitionType == StateTransitionType.Independent && transition.Evaluate(out var nextState))

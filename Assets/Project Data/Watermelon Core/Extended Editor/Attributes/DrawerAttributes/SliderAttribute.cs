@@ -5,8 +5,8 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class SliderAttribute : DrawerAttribute
     {
-        private float minValue;
-        private float maxValue;
+        float minValue;
+        float maxValue;
 
         public SliderAttribute(float minValue, float maxValue)
         {

@@ -9,20 +9,20 @@ public class ColliderSizeAdjuster : MonoBehaviour
     [Button]
     public void Run()
     {
-        float scaleCoef = 0.15625f;
+        var scaleCoef = 0.15625f;
 
-        Collider[] colliders = gameObject.GetComponentsInChildren<Collider>();
+        var colliders = gameObject.GetComponentsInChildren<Collider>();
 
-        for (int i = 0; i < colliders.Length    ; i++)
+        for (var i = 0; i < colliders.Length    ; i++)
         {
-            BoxCollider box = colliders[i] as BoxCollider;
+            var box = colliders[i] as BoxCollider;
             if(box != null)
             {
                 box.size *= scaleCoef;
                 box.center *= scaleCoef;
             }
 
-            CapsuleCollider capsuleCollider = colliders[i] as CapsuleCollider;
+            var capsuleCollider = colliders[i] as CapsuleCollider;
             if (capsuleCollider != null)
             {
                 capsuleCollider.height *= scaleCoef;
@@ -30,7 +30,7 @@ public class ColliderSizeAdjuster : MonoBehaviour
                 capsuleCollider.center *= scaleCoef;
             }
 
-            SphereCollider sphere = colliders[i] as SphereCollider;
+            var sphere = colliders[i] as SphereCollider;
             if (sphere != null)
             {
                 sphere.radius *= scaleCoef;
@@ -38,7 +38,7 @@ public class ColliderSizeAdjuster : MonoBehaviour
             }
         }
 
-        NavMeshObstacle obst = GetComponent<NavMeshObstacle>();
+        var obst = GetComponent<NavMeshObstacle>();
 
         if(obst != null)
         {

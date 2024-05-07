@@ -30,7 +30,7 @@ namespace Watermelon
 
         public override ProductData GetProductData(ProductKeyType productKeyType)
         {
-            IAPItem iapItem = IAPManager.GetIAPItem(productKeyType);
+            var iapItem = IAPManager.GetIAPItem(productKeyType);
             if(iapItem != null)
             {
                 return new ProductData(iapItem.ProductType);

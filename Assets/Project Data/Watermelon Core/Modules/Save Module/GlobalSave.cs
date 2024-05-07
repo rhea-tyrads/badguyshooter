@@ -13,7 +13,7 @@ namespace Watermelon
         public int LevelId { get => levelId; set => levelId = value; }
 
         [SerializeField] SavedDataContainer[] saveObjects;
-        private List<SavedDataContainer> saveObjectsList;
+        List<SavedDataContainer> saveObjectsList;
 
         [SerializeField] float gameTime;
         public float GameTime => gameTime + (Time - lastFlushTime);
@@ -21,7 +21,7 @@ namespace Watermelon
         [SerializeField] DateTime lastExitTime;
         public DateTime LastExitTime => lastExitTime;
 
-        private float lastFlushTime = 0;
+        float lastFlushTime = 0;
 
         public float Time { get; set; }
 
@@ -36,7 +36,7 @@ namespace Watermelon
                 saveObjectsList = new List<SavedDataContainer>(saveObjects);
             }
 
-            for (int i = 0; i < saveObjectsList.Count; i++)
+            for (var i = 0; i < saveObjectsList.Count; i++)
             {
                 saveObjectsList[i].Restored = false;
             }
@@ -49,7 +49,7 @@ namespace Watermelon
         {
             saveObjects = saveObjectsList.ToArray();
 
-            for (int i = 0; i < saveObjectsList.Count; i++)
+            for (var i = 0; i < saveObjectsList.Count; i++)
             {
                 var saveObject = saveObjectsList[i];
 

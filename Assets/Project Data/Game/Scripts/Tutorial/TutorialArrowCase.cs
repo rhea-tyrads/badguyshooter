@@ -4,7 +4,7 @@ namespace Watermelon
 {
     public class TutorialArrowCase
     {
-        private GameObject arrowObject;
+        GameObject arrowObject;
         public GameObject ArrowObject => arrowObject;
 
         public Vector3 Position
@@ -13,10 +13,10 @@ namespace Watermelon
             set => arrowObject.transform.position = value;
         }
 
-        private bool isDisabled;
+        bool isDisabled;
         public bool IsDisabled => isDisabled;
 
-        private TweenCase scaleTweenCase;
+        TweenCase scaleTweenCase;
 
         public TutorialArrowCase(GameObject arrowObject)
         {

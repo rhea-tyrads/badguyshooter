@@ -5,7 +5,7 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
     public class OnValueChangedAttribute : MetaAttribute
     {
-        private string callbackName;
+        string callbackName;
 
         public OnValueChangedAttribute(string callbackName)
         {

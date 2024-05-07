@@ -12,10 +12,10 @@ namespace Watermelon
         [SerializeField] CinemachineVirtualCamera virtualCamera;
         public CinemachineVirtualCamera VirtualCamera => virtualCamera;
 
-        private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
         public CinemachineBasicMultiChannelPerlin CinemachineBasicMultiChannelPerlin => cinemachineBasicMultiChannelPerlin;
 
-        private TweenCase shakeTweenCase;
+        TweenCase shakeTweenCase;
 
         public void Initialise()
         {

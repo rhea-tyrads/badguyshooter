@@ -5,37 +5,37 @@ namespace Watermelon
 {
     public class FlyingTextBehavior : MonoBehaviour
     {
-        private RectTransform rectTransform;
-        private CanvasGroup canvasGroup;
+        RectTransform rectTransform;
+        CanvasGroup canvasGroup;
 
         [SerializeField] Text text;
         [SerializeField] Image image;
 
         [SerializeField] AnimationCurve scaleAnimationCurve;
 
-        private int amount;
+        int amount;
         public int Amount => amount;
 
         public int Order { get; set; }
 
-        private float startTime;
+        float startTime;
 
-        private static float minScale = 1f;
-        private static float maxScale = 1.5f;
+        static float minScale = 1f;
+        static float maxScale = 1.5f;
 
-        private static float maxDuration = 10f;
+        static float maxDuration = 10f;
 
-        private static float minValue = 0.1f;
-        private static float maxValue = 0.2f;
+        static float minValue = 0.1f;
+        static float maxValue = 0.2f;
 
-        private static float minAnimSpeed = 0.6f;
-        private static float maxAnimSpeed = 0.75f;
+        static float minAnimSpeed = 0.6f;
+        static float maxAnimSpeed = 0.75f;
 
-        private static Ease.IEasingFunction quadIn = Ease.GetFunction(Ease.Type.QuadIn);
+        static Ease.IEasingFunction quadIn = Ease.GetFunction(Ease.Type.QuadIn);
 
-        private bool isAlive = false;
+        bool isAlive = false;
 
-        private void Awake()
+        void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
@@ -63,7 +63,7 @@ namespace Watermelon
             isAlive = true;
         }
 
-        private void Update()
+        void Update()
         {
             if (!isAlive) return;
 

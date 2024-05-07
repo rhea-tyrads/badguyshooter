@@ -12,7 +12,7 @@ namespace Watermelon
         [SerializeField] GameObject itemPrefab;
         [SerializeField] RectTransform contentParent;
 
-        private void Start()
+        void Start()
         {
             logText.text = string.Empty;
 
@@ -21,15 +21,15 @@ namespace Watermelon
             InitItems();
         }
 
-        private void InitItems()
+        void InitItems()
         {
 #if MODULE_IAP
-            ProductKeyType[] values = (ProductKeyType[])Enum.GetValues(typeof(ProductKeyType));
+            var values = (ProductKeyType[])Enum.GetValues(typeof(ProductKeyType));
             ItemPanelScript itemPanelScript;
             ProductData product;
             GameObject itemGameObject;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 product = IAPManager.GetProductData(values[i]);
 
@@ -67,22 +67,23 @@ namespace Watermelon
         }
 
         #region Handle logs
-        private void OnEnable()
+
+        void OnEnable()
         {
             Application.logMessageReceived += Log;
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             Application.logMessageReceived -= Log;
         }
 
-        private void Log(string condition, string stackTrace, LogType type)
+        void Log(string condition, string stackTrace, LogType type)
         {
             logText.text = logText.text.Insert(0, condition + "\n");
         }
 
-        private void Log(string condition)
+        void Log(string condition)
         {
             logText.text = logText.text.Insert(0, condition + "\n");
         }

@@ -57,7 +57,7 @@ namespace Watermelon
             singlePoolPrefab = origin.SinglePoolPrefab;
             multiPoolPrefabsList = new List<Pool.MultiPoolPrefab>();
 
-            for (int i = 0; i < origin.MultiPoolPrefabsAmount; i++)
+            for (var i = 0; i < origin.MultiPoolPrefabsAmount; i++)
             {
                 multiPoolPrefabsList.Add(origin.MultiPoolPrefabByIndex(i));
             }
@@ -124,15 +124,15 @@ namespace Watermelon
 
         public void RecalculateWeights()
         {
-            List<Pool.MultiPoolPrefab> oldPrefabsList = new List<Pool.MultiPoolPrefab>(multiPoolPrefabsList);
+            var oldPrefabsList = new List<Pool.MultiPoolPrefab>(multiPoolPrefabsList);
             multiPoolPrefabsList = new List<Pool.MultiPoolPrefab>();
 
             if (oldPrefabsList.Count > 0)
             {
-                int totalUnlockedPoints = 100;
-                int unlockedPrefabsAmount = oldPrefabsList.Count;
+                var totalUnlockedPoints = 100;
+                var unlockedPrefabsAmount = oldPrefabsList.Count;
 
-                for (int i = 0; i < oldPrefabsList.Count; i++)
+                for (var i = 0; i < oldPrefabsList.Count; i++)
                 {
                     if (oldPrefabsList[i].isWeightLocked)
                     {
@@ -143,10 +143,10 @@ namespace Watermelon
 
                 if (unlockedPrefabsAmount > 0)
                 {
-                    int averagePoints = totalUnlockedPoints / unlockedPrefabsAmount;
-                    int additionalPoints = totalUnlockedPoints - averagePoints * unlockedPrefabsAmount;
+                    var averagePoints = totalUnlockedPoints / unlockedPrefabsAmount;
+                    var additionalPoints = totalUnlockedPoints - averagePoints * unlockedPrefabsAmount;
 
-                    for (int j = 0; j < oldPrefabsList.Count; j++)
+                    for (var j = 0; j < oldPrefabsList.Count; j++)
                     {
                         if (oldPrefabsList[j].isWeightLocked)
                         {

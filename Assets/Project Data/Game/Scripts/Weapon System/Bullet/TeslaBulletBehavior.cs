@@ -7,17 +7,17 @@ namespace Watermelon.SquadShooter
 {
     public class TeslaBulletBehavior : PlayerBulletBehavior
     {
-        private static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Tesla Hit");
-        private static readonly int PARTICLE_WALL_HIT_HASH = ParticlesController.GetHash("Tesla Wall Hit");
+        static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Tesla Hit");
+        static readonly int PARTICLE_WALL_HIT_HASH = ParticlesController.GetHash("Tesla Wall Hit");
 
         [Space(5f)]
         [SerializeField] TrailRenderer trailRenderer;
 
-        private List<BaseEnemyBehavior> targets;
+        List<BaseEnemyBehavior> targets;
 
-        private int targetsHitGoal;
-        private int hitsPerformed;
-        private float stunDuration;
+        int targetsHitGoal;
+        int hitsPerformed;
+        float stunDuration;
 
         public void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime, bool autoDisableOnHit, float stunDuration)
         {
@@ -53,8 +53,8 @@ namespace Watermelon.SquadShooter
             }
 
 
-            Vector3 targetDirection = targets[0].transform.position.SetY(1f) - transform.position;
-            Vector3 rotationDirection = Vector3.RotateTowards(transform.forward, targetDirection, 360, 0f);
+            var targetDirection = targets[0].transform.position.SetY(1f) - transform.position;
+            var rotationDirection = Vector3.RotateTowards(transform.forward, targetDirection, 360, 0f);
             transform.rotation = Quaternion.LookRotation(rotationDirection);
 
             base.FixedUpdate();
@@ -72,7 +72,7 @@ namespace Watermelon.SquadShooter
 
             trailRenderer.Clear();
 
-            for (int i = 0; i < targets.Count; i++)
+            for (var i = 0; i < targets.Count; i++)
             {
                 if (targets[i].IsDead || targets[i].Equals(baseEnemyBehavior))
                 {
@@ -103,7 +103,7 @@ namespace Watermelon.SquadShooter
             DisableBullet();
         }
 
-        private void DisableBullet()
+        void DisableBullet()
         {
             trailRenderer.Clear();
             gameObject.SetActive(false);

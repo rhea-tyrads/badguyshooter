@@ -8,19 +8,19 @@ namespace Watermelon.LevelSystem
 
     public static class NavMeshController
     {
-        private static List<INavMeshAgent> navMeshAgents;
-        private static int navMeshAgentsCount;
+        static List<INavMeshAgent> navMeshAgents;
+        static int navMeshAgentsCount;
 
-        private static NavMeshSurface navMeshSurface;
+        static NavMeshSurface navMeshSurface;
         public static NavMeshSurface NavMeshSurface => navMeshSurface;
 
-        private static bool isNavMeshCalculated;
+        static bool isNavMeshCalculated;
         public static bool IsNavMeshCalculated => isNavMeshCalculated;
 
         public static event SimpleCallback OnNavMeshRecalculated;
 
-        private static TweenCase navMeshTweenCase;
-        private static bool navMeshRecalculating;
+        static TweenCase navMeshTweenCase;
+        static bool navMeshRecalculating;
 
         public static void Initialise(GameObject parentObject, NavMeshData navMeshData)
         {
@@ -61,12 +61,12 @@ namespace Watermelon.LevelSystem
             }).StartTween();
         }
 
-        private static void OnRecalculationFinished()
+        static void OnRecalculationFinished()
         {
             isNavMeshCalculated = true;
 
             // Activate agents
-            for (int i = 0; i < navMeshAgentsCount; i++)
+            for (var i = 0; i < navMeshAgentsCount; i++)
             {
                 navMeshAgents[i].OnNavMeshUpdated();
             }

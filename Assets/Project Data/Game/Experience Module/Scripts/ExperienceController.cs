@@ -5,15 +5,15 @@ namespace Watermelon
 {
     public class ExperienceController : MonoBehaviour
     {
-        private static readonly int FLOATING_TEXT_HASH = FloatingTextController.GetHash("Stars");
-        private static readonly int SAVE_HASH = "Experience".GetHashCode();
+        static readonly int FLOATING_TEXT_HASH = FloatingTextController.GetHash("Stars");
+        static readonly int SAVE_HASH = "Experience".GetHashCode();
 
         [SerializeField] ExperienceDatabase database;
 
-        private static ExperienceController instance;
+        static ExperienceController instance;
 
-        private ExperienceSave save;
-        private ExperienceUIController expUI;
+        ExperienceSave save;
+        ExperienceUIController expUI;
 
         public static int CurrentLevel
         {
@@ -33,7 +33,7 @@ namespace Watermelon
         public static event SimpleCallback OnExperienceGained;
         public static event SimpleCallback OnLevelIncreased;
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
         }

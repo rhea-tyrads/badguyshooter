@@ -26,12 +26,12 @@ namespace Watermelon
                 return;
             }
 
-            RagdollCase ragdollCase = new RagdollCase(animator, totalMass, strength, layer);
+            var ragdollCase = new RagdollCase(animator, totalMass, strength, layer);
 #endif
         }
 
 #if UNITY_EDITOR
-        private class RagdollCase
+        class RagdollCase
         {
             public Transform pelvis;
 
@@ -106,7 +106,7 @@ namespace Watermelon
                 ModifyLayers();
             }
 
-            private void ModifyLayers()
+            void ModifyLayers()
             {
                 if (layer == -1)
                     return;
@@ -225,7 +225,7 @@ namespace Watermelon
 
             void AddJoint(string name, Transform anchor, string parent, Vector3 worldTwistAxis, Vector3 worldSwingAxis, float minLimit, float maxLimit, float swingLimit, Type colliderType, float radiusScale, float density)
             {
-                BoneInfo bone = new BoneInfo();
+                var bone = new BoneInfo();
                 bone.name = name;
                 bone.anchor = anchor;
                 bone.axis = worldTwistAxis;
@@ -260,18 +260,18 @@ namespace Watermelon
                     float distance;
                     if (bone.children.Count == 1)
                     {
-                        BoneInfo childBone = (BoneInfo)bone.children[0];
-                        Vector3 endPoint = childBone.anchor.position;
+                        var childBone = (BoneInfo)bone.children[0];
+                        var endPoint = childBone.anchor.position;
                         CalculateDirection(bone.anchor.InverseTransformPoint(endPoint), out direction, out distance);
                     }
                     else
                     {
-                        Vector3 endPoint = bone.anchor.position - bone.parent.anchor.position + bone.anchor.position;
+                        var endPoint = bone.anchor.position - bone.parent.anchor.position + bone.anchor.position;
                         CalculateDirection(bone.anchor.InverseTransformPoint(endPoint), out direction, out distance);
 
                         if (bone.anchor.GetComponentsInChildren(typeof(Transform)).Length > 1)
                         {
-                            Bounds bounds = new Bounds();
+                            var bounds = new Bounds();
                             foreach (Transform child in bone.anchor.GetComponentsInChildren(typeof(Transform)))
                             {
                                 bounds.Encapsulate(bone.anchor.InverseTransformPoint(child.position));
@@ -284,10 +284,10 @@ namespace Watermelon
                         }
                     }
 
-                    CapsuleCollider collider = UnityEditor.Undo.AddComponent<CapsuleCollider>(bone.anchor.gameObject);
+                    var collider = UnityEditor.Undo.AddComponent<CapsuleCollider>(bone.anchor.gameObject);
                     collider.direction = direction;
 
-                    Vector3 center = Vector3.zero;
+                    var center = Vector3.zero;
                     center[direction] = distance * 0.5F;
                     collider.center = center;
                     collider.height = Mathf.Abs(distance);
@@ -302,15 +302,15 @@ namespace Watermelon
                     if (!bone.anchor)
                         continue;
 
-                    Component[] joints = bone.anchor.GetComponentsInChildren(typeof(Joint));
+                    var joints = bone.anchor.GetComponentsInChildren(typeof(Joint));
                     foreach (Joint joint in joints)
                         UnityEditor.Undo.DestroyObjectImmediate(joint);
 
-                    Component[] bodies = bone.anchor.GetComponentsInChildren(typeof(Rigidbody));
+                    var bodies = bone.anchor.GetComponentsInChildren(typeof(Rigidbody));
                     foreach (Rigidbody body in bodies)
                         UnityEditor.Undo.DestroyObjectImmediate(body);
 
-                    Component[] colliders = bone.anchor.GetComponentsInChildren(typeof(Collider));
+                    var colliders = bone.anchor.GetComponentsInChildren(typeof(Collider));
                     foreach (Collider collider in colliders)
                         UnityEditor.Undo.DestroyObjectImmediate(collider);
                 }
@@ -332,7 +332,7 @@ namespace Watermelon
                     if (bone.parent == null)
                         continue;
 
-                    CharacterJoint joint = UnityEditor.Undo.AddComponent<CharacterJoint>(bone.anchor.gameObject);
+                    var joint = UnityEditor.Undo.AddComponent<CharacterJoint>(bone.anchor.gameObject);
                     bone.joint = joint;
 
                     // Setup connection and axis
@@ -343,7 +343,7 @@ namespace Watermelon
                     joint.enablePreprocessing = false; // turn off to handle degenerated scenarios, like spawning inside geometry.
 
                     // Setup limits
-                    SoftJointLimit limit = new SoftJointLimit();
+                    var limit = new SoftJointLimit();
                     limit.contactDistance = 0; // default to zero, which automatically sets contact distance.
 
                     limit.limit = bone.minLimit;
@@ -362,7 +362,7 @@ namespace Watermelon
 
             void CalculateMassRecurse(BoneInfo bone)
             {
-                float mass = bone.anchor.GetComponent<Rigidbody>().mass;
+                var mass = bone.anchor.GetComponent<Rigidbody>().mass;
                 foreach (BoneInfo child in bone.children)
                 {
                     CalculateMassRecurse(child);
@@ -377,7 +377,7 @@ namespace Watermelon
                 CalculateMassRecurse(rootBone);
 
                 // Rescale the mass so that the whole character weights totalMass
-                float massScale = totalMass / rootBone.summedMass;
+                var massScale = totalMass / rootBone.summedMass;
                 foreach (BoneInfo bone in bones)
                     bone.anchor.GetComponent<Rigidbody>().mass *= massScale;
 
@@ -399,10 +399,10 @@ namespace Watermelon
 
             static Vector3 CalculateDirectionAxis(Vector3 point)
             {
-                int direction = 0;
+                var direction = 0;
                 float distance;
                 CalculateDirection(point, out direction, out distance);
-                Vector3 axis = Vector3.zero;
+                var axis = Vector3.zero;
                 if (distance > 0)
                     axis[direction] = 1.0F;
                 else
@@ -412,7 +412,7 @@ namespace Watermelon
 
             static int SmallestComponent(Vector3 point)
             {
-                int direction = 0;
+                var direction = 0;
                 if (Mathf.Abs(point[1]) < Mathf.Abs(point[0]))
                     direction = 1;
                 if (Mathf.Abs(point[2]) < Mathf.Abs(point[direction]))
@@ -422,7 +422,7 @@ namespace Watermelon
 
             static int LargestComponent(Vector3 point)
             {
-                int direction = 0;
+                var direction = 0;
                 if (Mathf.Abs(point[1]) > Mathf.Abs(point[0]))
                     direction = 1;
                 if (Mathf.Abs(point[2]) > Mathf.Abs(point[direction]))
@@ -432,11 +432,11 @@ namespace Watermelon
 
             static int SecondLargestComponent(Vector3 point)
             {
-                int smallest = SmallestComponent(point);
-                int largest = LargestComponent(point);
+                var smallest = SmallestComponent(point);
+                var largest = LargestComponent(point);
                 if (smallest < largest)
                 {
-                    int temp = largest;
+                    var temp = largest;
                     largest = smallest;
                     smallest = temp;
                 }
@@ -451,17 +451,17 @@ namespace Watermelon
 
             Bounds Clip(Bounds bounds, Transform relativeTo, Transform clipTransform, bool below)
             {
-                int axis = LargestComponent(bounds.size);
+                var axis = LargestComponent(bounds.size);
 
                 if (Vector3.Dot(worldUp, relativeTo.TransformPoint(bounds.max)) > Vector3.Dot(worldUp, relativeTo.TransformPoint(bounds.min)) == below)
                 {
-                    Vector3 min = bounds.min;
+                    var min = bounds.min;
                     min[axis] = relativeTo.InverseTransformPoint(clipTransform.position)[axis];
                     bounds.min = min;
                 }
                 else
                 {
-                    Vector3 max = bounds.max;
+                    var max = bounds.max;
                     max[axis] = relativeTo.InverseTransformPoint(clipTransform.position)[axis];
                     bounds.max = max;
                 }
@@ -471,12 +471,12 @@ namespace Watermelon
             Bounds GetBreastBounds(Transform relativeTo)
             {
                 // Pelvis bounds
-                Bounds bounds = new Bounds();
+                var bounds = new Bounds();
                 bounds.Encapsulate(relativeTo.InverseTransformPoint(leftHips.position));
                 bounds.Encapsulate(relativeTo.InverseTransformPoint(rightHips.position));
                 bounds.Encapsulate(relativeTo.InverseTransformPoint(leftArm.position));
                 bounds.Encapsulate(relativeTo.InverseTransformPoint(rightArm.position));
-                Vector3 size = bounds.size;
+                var size = bounds.size;
                 size[SmallestComponent(bounds.size)] = size[LargestComponent(bounds.size)] / 2.0F;
                 bounds.size = size;
                 return bounds;
@@ -504,16 +504,16 @@ namespace Watermelon
                 // Only pelvis
                 else
                 {
-                    Bounds bounds = new Bounds();
+                    var bounds = new Bounds();
                     bounds.Encapsulate(pelvis.InverseTransformPoint(leftHips.position));
                     bounds.Encapsulate(pelvis.InverseTransformPoint(rightHips.position));
                     bounds.Encapsulate(pelvis.InverseTransformPoint(leftArm.position));
                     bounds.Encapsulate(pelvis.InverseTransformPoint(rightArm.position));
 
-                    Vector3 size = bounds.size;
+                    var size = bounds.size;
                     size[SmallestComponent(bounds.size)] = size[LargestComponent(bounds.size)] / 2.0F;
 
-                    BoxCollider box = UnityEditor.Undo.AddComponent<BoxCollider>(pelvis.gameObject);
+                    var box = UnityEditor.Undo.AddComponent<BoxCollider>(pelvis.gameObject);
                     box.center = bounds.center;
                     box.size = size;
                 }
@@ -524,12 +524,12 @@ namespace Watermelon
                 if (head.GetComponent<Collider>())
                     UnityEngine.Object.Destroy(head.GetComponent<Collider>());
 
-                float radius = Vector3.Distance(leftArm.transform.position, rightArm.transform.position);
+                var radius = Vector3.Distance(leftArm.transform.position, rightArm.transform.position);
                 radius /= 4;
 
-                SphereCollider sphere = UnityEditor.Undo.AddComponent<SphereCollider>(head.gameObject);
+                var sphere = UnityEditor.Undo.AddComponent<SphereCollider>(head.gameObject);
                 sphere.radius = radius;
-                Vector3 center = Vector3.zero;
+                var center = Vector3.zero;
 
                 int direction;
                 float distance;

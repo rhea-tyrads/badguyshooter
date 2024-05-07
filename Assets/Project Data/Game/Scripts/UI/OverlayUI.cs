@@ -7,7 +7,7 @@ namespace Watermelon
     {
         [SerializeField] CurrencyUIPanelSimple coinsUI;
 
-        private static Canvas canvas;
+        static Canvas canvas;
 
         public void Initialise()
         {

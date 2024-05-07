@@ -6,10 +6,10 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class HelpButtonAttribute : ExtendedEditorAttribute
     {
-        private string name;
+        string name;
         public string Name => name;
 
-        private string url;
+        string url;
         public string URL => url;
 
         public HelpButtonAttribute(string name, string url)

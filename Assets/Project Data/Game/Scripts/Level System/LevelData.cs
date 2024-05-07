@@ -35,7 +35,7 @@ namespace Watermelon.LevelSystem
         [SerializeField] LevelSpecialBehaviour[] specialBehaviours;
         public LevelSpecialBehaviour[] SpecialBehaviours => specialBehaviours;
 
-        private WorldData world;
+        WorldData world;
         public WorldData World => world;
 
         public void Initialise(WorldData world)
@@ -46,7 +46,7 @@ namespace Watermelon.LevelSystem
         #region Special Behaviours callbacks
         public void OnLevelInitialised()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnLevelInitialised();
             }
@@ -54,7 +54,7 @@ namespace Watermelon.LevelSystem
 
         public void OnLevelLoaded()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnLevelLoaded();
             }
@@ -62,7 +62,7 @@ namespace Watermelon.LevelSystem
 
         public void OnLevelUnloaded()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnLevelUnloaded();
             }
@@ -70,7 +70,7 @@ namespace Watermelon.LevelSystem
 
         public void OnLevelStarted()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnLevelStarted();
             }
@@ -78,7 +78,7 @@ namespace Watermelon.LevelSystem
 
         public void OnLevelFailed()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnLevelFailed();
             }
@@ -86,7 +86,7 @@ namespace Watermelon.LevelSystem
 
         public void OnLevelCompleted()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnLevelCompleted();
             }
@@ -94,7 +94,7 @@ namespace Watermelon.LevelSystem
 
         public void OnRoomEntered()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnRoomEntered();
             }
@@ -102,7 +102,7 @@ namespace Watermelon.LevelSystem
 
         public void OnRoomLeaved()
         {
-            for (int i = 0; i < specialBehaviours.Length; i++)
+            for (var i = 0; i < specialBehaviours.Length; i++)
             {
                 specialBehaviours[i].OnRoomLeaved();
             }
@@ -111,14 +111,14 @@ namespace Watermelon.LevelSystem
 
         public int GetChestsAmount(bool includeRewarded = false)
         {
-            int finalAmount = 0;
+            var finalAmount = 0;
 
-            for (int i = 0; i < rooms.Length; i++)
+            for (var i = 0; i < rooms.Length; i++)
             {
                 var room = rooms[i];
                 if (room.ChestEntities != null)
                 {
-                    for (int j = 0; j < room.ChestEntities.Length; j++)
+                    for (var j = 0; j < room.ChestEntities.Length; j++)
                     {
                         var chest = room.ChestEntities[j];
 
@@ -135,7 +135,7 @@ namespace Watermelon.LevelSystem
 
         public int GetCoinsReward()
         {
-            for (int i = 0; i < dropData.Count; i++)
+            for (var i = 0; i < dropData.Count; i++)
             {
                 if (dropData[i].dropType == DropableItemType.Currency && dropData[i].currencyType == CurrencyType.Coins)
                     return dropData[i].amount;
@@ -146,17 +146,17 @@ namespace Watermelon.LevelSystem
 
         public List<WeaponType> GetCardsReward()
         {
-            List<WeaponType> result = new List<WeaponType>();
+            var result = new List<WeaponType>();
 
-            for (int i = 0; i < dropData.Count; i++)
+            for (var i = 0; i < dropData.Count; i++)
             {
                 if (dropData[i].dropType == DropableItemType.WeaponCard)
                 {
-                    bool isWeaponUnlocked = WeaponsController.IsWeaponUnlocked(dropData[i].cardType);
+                    var isWeaponUnlocked = WeaponsController.IsWeaponUnlocked(dropData[i].cardType);
 
                     if (!isWeaponUnlocked)
                     {
-                        for (int j = 0; j < dropData[i].amount; j++)
+                        for (var j = 0; j < dropData[i].amount; j++)
                         {
                             result.Add(dropData[i].cardType);
                         }

@@ -25,11 +25,11 @@ namespace Watermelon
         [SerializeField] float fadeTime;
         [SerializeField] Ease.Type fadeEasing;
 
-        private Transform targetTransform;
-        private Vector3 targetOffset;
-        private bool fixToTarget;
+        Transform targetTransform;
+        Vector3 targetOffset;
+        bool fixToTarget;
 
-        private void LateUpdate()
+        void LateUpdate()
         {
             if (fixToTarget)
                 transform.position = targetTransform.position + targetOffset;

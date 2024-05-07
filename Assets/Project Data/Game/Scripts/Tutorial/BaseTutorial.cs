@@ -15,12 +15,12 @@ namespace Watermelon
         protected bool isInitialised;
         public bool IsInitialised => isInitialised;
 
-        private void OnEnable()
+        void OnEnable()
         {
             TutorialController.RegisterTutorial(this);
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             TutorialController.RemoveTutorial(this);
         }

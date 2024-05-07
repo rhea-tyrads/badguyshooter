@@ -6,32 +6,32 @@ namespace Watermelon
     [RequireComponent(typeof(Text))]
     public class UILevelNumberText : MonoBehaviour
     {
-        private const string LEVEL_LABEL = "LEVEL {0}";
-        private static UILevelNumberText instance;
+        const string LEVEL_LABEL = "LEVEL {0}";
+        static UILevelNumberText instance;
 
         [SerializeField] UIScaleAnimation uIScalableObject;
 
-        private static UIScaleAnimation UIScalableObject => instance.uIScalableObject;
-        private static Text levelNumberText;
+        static UIScaleAnimation UIScalableObject => instance.uIScalableObject;
+        static Text levelNumberText;
 
-        private static bool IsDisplayed = false;
+        static bool IsDisplayed = false;
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
             levelNumberText = GetComponent<Text>();
         }
 
-        private void Start()
+        void Start()
         {
             UpdateLevelNumber();
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
         }
 
@@ -62,7 +62,7 @@ namespace Watermelon
            });
         }
 
-        private void UpdateLevelNumber()
+        void UpdateLevelNumber()
         {
             levelNumberText.text = string.Format(LEVEL_LABEL, "X");
         }

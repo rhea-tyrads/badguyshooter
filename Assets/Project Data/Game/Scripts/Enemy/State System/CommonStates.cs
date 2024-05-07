@@ -7,12 +7,12 @@ namespace Watermelon.Enemy
     {
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
 
-        private bool isStationary = false;
+        bool isStationary = false;
 
-        private Vector3 FirstPoint => Target.PatrollingPoints[0];
-        private int pointId = 0;
+        Vector3 FirstPoint => Target.PatrollingPoints[0];
+        int pointId = 0;
 
-        private TweenCase idleCase;
+        TweenCase idleCase;
 
         public PatrollingState(BaseEnemyBehavior enemy): base(enemy)
         {
@@ -36,7 +36,7 @@ namespace Watermelon.Enemy
             }
         }
 
-        private void GoToPoint()
+        void GoToPoint()
         {
             var point = Target.PatrollingPoints[pointId];
 
@@ -83,8 +83,8 @@ namespace Watermelon.Enemy
 
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
 
-        private Vector3 cachedTargetPos;
-        private bool isSlowed = false;
+        Vector3 cachedTargetPos;
+        bool isSlowed = false;
 
         public override void OnStart()
         {
@@ -138,7 +138,7 @@ namespace Watermelon.Enemy
 
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
 
-        private Vector3 fleePoint;
+        Vector3 fleePoint;
 
         public override void OnStart()
         {
@@ -166,7 +166,7 @@ namespace Watermelon.Enemy
 
         public Vector3 GetRandomPointOnLevel()
         {
-            int counter = 0;
+            var counter = 0;
             while (true)
             {
                 counter++;
@@ -218,7 +218,7 @@ namespace Watermelon.Enemy
             Target.OnAttackFinished -= OnAttackFinished;
         }
 
-        private void OnAttackFinished()
+        void OnAttackFinished()
         {
             IsFinished = true;
         }
@@ -231,14 +231,14 @@ namespace Watermelon.Enemy
             rangeEnemy = enemy as RangeEnemyBehaviour;
         }
 
-        private RangeEnemyBehaviour rangeEnemy;
+        RangeEnemyBehaviour rangeEnemy;
 
         public bool IsFinished { get; private set; }
 
-        private bool AimHash { set => Target.Animator.SetBool("Aim", value); }
+        bool AimHash { set => Target.Animator.SetBool("Aim", value); }
 
-        private float nextAttackTime = 0;
-        private bool hasAttacked = false;
+        float nextAttackTime = 0;
+        bool hasAttacked = false;
 
         public override void OnStart()
         {
@@ -285,7 +285,7 @@ namespace Watermelon.Enemy
             }
         }
 
-        private void OnAttackFinished()
+        void OnAttackFinished()
         {
             IsFinished = true;
         }

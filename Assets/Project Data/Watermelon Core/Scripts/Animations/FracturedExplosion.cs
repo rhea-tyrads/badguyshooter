@@ -15,15 +15,15 @@ namespace Watermelon
         [SerializeField] float scaleDelay = 0.3f;
         [SerializeField] Ease.Type scaleEasing = Ease.Type.QuadOut;
 
-        private List<FractureData> fractures = new List<FractureData>();
+        List<FractureData> fractures = new List<FractureData>();
 
-        private TweenCase explodeTweenCase;
-        private bool isExploded;
+        TweenCase explodeTweenCase;
+        bool isExploded;
 
         public void Initialise()
         {
-            Transform parent = fracturedObject.transform;
-            for (int i = parent.childCount - 1; i >= 0; i--)
+            var parent = fracturedObject.transform;
+            for (var i = parent.childCount - 1; i >= 0; i--)
             {
                 var fracture = new FractureData(parent.GetChild(i));
 
@@ -38,7 +38,7 @@ namespace Watermelon
 
         public void Restore()
         {
-            for(int i = 0; i < fractures.Count; i++)
+            for(var i = 0; i < fractures.Count; i++)
             {
                 fractures[i].Restore();
             }
@@ -65,7 +65,7 @@ namespace Watermelon
             solidObject.SetActive(false);
             fracturedObject.SetActive(true);
 
-            for (int i = 0; i < fractures.Count; i++)
+            for (var i = 0; i < fractures.Count; i++)
             {
                 fractures[i].Explode(epicenterPosition, force, scaleDuration, scaleDelay, scaleEasing);
             }
@@ -76,7 +76,7 @@ namespace Watermelon
             }
         }
 
-        private class FractureData
+        class FractureData
         {
             public Transform parent;
 

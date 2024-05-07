@@ -6,18 +6,18 @@ namespace Watermelon
 {
     public class CurrenciesController : MonoBehaviour
     {
-        private static CurrenciesController currenciesController;
+        static CurrenciesController currenciesController;
 
         [SerializeField] CurrenciesDatabase currenciesDatabase;
         public CurrenciesDatabase CurrenciesDatabase => currenciesDatabase;
 
-        private static Currency[] currencies;
+        static Currency[] currencies;
         public static Currency[] Currencies => currencies;
 
-        private static Dictionary<CurrencyType, int> currenciesLink;
+        static Dictionary<CurrencyType, int> currenciesLink;
 
-        private static bool isInitialised;
-        private static event SimpleCallback onModuleInitialised;
+        static bool isInitialised;
+        static event SimpleCallback onModuleInitialised;
 
         public virtual void Initialise()
         {
@@ -33,7 +33,7 @@ namespace Watermelon
 
             // Link currencies by the type
             currenciesLink = new Dictionary<CurrencyType, int>();
-            for (int i = 0; i < currencies.Length; i++)
+            for (var i = 0; i < currencies.Length; i++)
             {
                 if (!currenciesLink.ContainsKey(currencies[i].CurrencyType))
                 {
@@ -71,7 +71,7 @@ namespace Watermelon
 
         public static void Set(CurrencyType currencyType, int amount)
         {
-            Currency currency = currencies[currenciesLink[currencyType]];
+            var currency = currencies[currenciesLink[currencyType]];
 
             currency.Amount = amount;
 
@@ -84,7 +84,7 @@ namespace Watermelon
 
         public static void Add(CurrencyType currencyType, int amount)
         {
-            Currency currency = currencies[currenciesLink[currencyType]];
+            var currency = currencies[currenciesLink[currencyType]];
 
             currency.Amount += amount;
 
@@ -97,7 +97,7 @@ namespace Watermelon
 
         public static void Substract(CurrencyType currencyType, int amount)
         {
-            Currency currency = currencies[currenciesLink[currencyType]];
+            var currency = currencies[currenciesLink[currencyType]];
 
             currency.Amount -= amount;
 
@@ -110,7 +110,7 @@ namespace Watermelon
 
         public static void SubscribeGlobalCallback(CurrencyChangeDelegate currencyChange)
         {
-            for(int i = 0; i < currencies.Length; i++)
+            for(var i = 0; i < currencies.Length; i++)
             {
                 currencies[i].OnCurrencyChanged += currencyChange;
             }
@@ -118,7 +118,7 @@ namespace Watermelon
 
         public static void UnsubscribeGlobalCallback(CurrencyChangeDelegate currencyChange)
         {
-            for (int i = 0; i < currencies.Length; i++)
+            for (var i = 0; i < currencies.Length; i++)
             {
                 currencies[i].OnCurrencyChanged -= currencyChange;
             }

@@ -5,10 +5,10 @@ namespace Watermelon
     [CreateAssetMenu(fileName = "Prefs Settings", menuName = "Settings/Prefs Settings")]
     public partial class PrefsSettings : ScriptableObject
     {
-        private static PrefsSettings prefsSettings;
+        static PrefsSettings prefsSettings;
 
-        private const string PREFS_PREFIX = "settings_";
-        private const string INCORRECT_TYPE_ERROR_MESSAGE = "Incorrect settings type";
+        const string PREFS_PREFIX = "settings_";
+        const string INCORRECT_TYPE_ERROR_MESSAGE = "Incorrect settings type";
 
         [SerializeField] SettingsContainer settings;
 
@@ -119,7 +119,8 @@ namespace Watermelon
             }
 
         }
-        private static SettingInfo GetSettingInfo(Key key)
+
+        static SettingInfo GetSettingInfo(Key key)
         {
             return prefsSettings.settings.settingInfos[(int)key];
         }
@@ -127,7 +128,7 @@ namespace Watermelon
         #region Set methods
         public static void SetBool(Key key, bool value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Bool)
             {
@@ -142,7 +143,7 @@ namespace Watermelon
 
         public static void SetFloat(Key key, float value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Float)
             {
@@ -157,7 +158,7 @@ namespace Watermelon
 
         public static void SetInt(Key key, int value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Int)
             {
@@ -172,7 +173,7 @@ namespace Watermelon
 
         public static void SetLong(Key key, long value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Long)
             {
@@ -187,7 +188,7 @@ namespace Watermelon
 
         public static void SetString(Key key, string value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.String)
             {
@@ -202,7 +203,7 @@ namespace Watermelon
 
         public static void SetDateTime(Key key, System.DateTime value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.DateTime)
             {
@@ -217,7 +218,7 @@ namespace Watermelon
 
         public static void SetDateTime(Key key, string value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.DateTime)
             {
@@ -232,7 +233,7 @@ namespace Watermelon
 
         public static void SetDouble(Key key, double value)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Double)
             {
@@ -250,7 +251,7 @@ namespace Watermelon
         #region Get methods
         public static bool GetBool(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Bool)
             {
@@ -264,7 +265,7 @@ namespace Watermelon
 
         public static float GetFloat(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Float)
             {
@@ -278,7 +279,7 @@ namespace Watermelon
 
         public static int GetInt(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Int)
             {
@@ -292,7 +293,7 @@ namespace Watermelon
 
         public static long GetLong(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Long)
             {
@@ -306,7 +307,7 @@ namespace Watermelon
 
         public static string GetString(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.String)
             {
@@ -320,7 +321,7 @@ namespace Watermelon
 
         public static System.DateTime GetDateTime(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.DateTime)
             {
@@ -334,7 +335,7 @@ namespace Watermelon
 
         public static double GetDouble(Key key)
         {
-            SettingInfo settingInfo = GetSettingInfo(key);
+            var settingInfo = GetSettingInfo(key);
 
             if (settingInfo.fieldType == FieldType.Double)
             {
@@ -358,7 +359,7 @@ namespace Watermelon
         }
 
         [System.Serializable]
-        private class SettingsContainer
+        class SettingsContainer
         {
             public bool needsUpdate;
             public SettingInfo[] settingInfos;
@@ -372,7 +373,7 @@ namespace Watermelon
         }
 
         [System.Serializable]
-        private class SettingInfo
+        class SettingInfo
         {
             public Key key; //key can be used as index in settingInfos array
             public FieldType fieldType; // points at value array
@@ -380,32 +381,32 @@ namespace Watermelon
         }
 
         [System.Serializable]
-        private abstract class GenericSetting<T>
+        abstract class GenericSetting<T>
         {
             public T defaultValue;
             public T value;
         }
 
         [System.Serializable]
-        private class BoolSetting : GenericSetting<bool> { }
+        class BoolSetting : GenericSetting<bool> { }
 
         [System.Serializable]
-        private class FloatSetting : GenericSetting<float> { }
+        class FloatSetting : GenericSetting<float> { }
 
         [System.Serializable]
-        private class IntSetting : GenericSetting<int> { }
+        class IntSetting : GenericSetting<int> { }
 
         [System.Serializable]
-        private class LongSetting : GenericSetting<long> { }
+        class LongSetting : GenericSetting<long> { }
 
         [System.Serializable]
-        private class StringSetting : GenericSetting<string> { }
+        class StringSetting : GenericSetting<string> { }
 
         [System.Serializable]
-        private class DateTimeSetting : GenericSetting<string> { }
+        class DateTimeSetting : GenericSetting<string> { }
 
         [System.Serializable]
-        private class DoubleSetting : GenericSetting<double> { }
+        class DoubleSetting : GenericSetting<double> { }
 
         public enum FieldType
         {
@@ -426,4 +427,4 @@ namespace Watermelon
 
 // Changelog
 // v 1.0
-// • Basic version
+// ï¿½ Basic version

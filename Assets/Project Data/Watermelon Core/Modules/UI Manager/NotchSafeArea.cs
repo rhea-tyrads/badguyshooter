@@ -6,7 +6,7 @@ namespace Watermelon
     [System.Serializable]
     public class NotchSaveArea
     {
-        private static NotchSaveArea notchSaveArea;
+        static NotchSaveArea notchSaveArea;
 
         [SerializeField] RectTransform[] safePanels;
 
@@ -14,12 +14,12 @@ namespace Watermelon
         [SerializeField] bool conformX = true;
         [SerializeField] bool conformY = true;
 
-        private static List<RectTransform> registeredTransforms = new List<RectTransform>();
+        static List<RectTransform> registeredTransforms = new List<RectTransform>();
 
-        private static Rect lastSafeArea = new Rect(0, 0, 0, 0);
-        private static Vector2Int lastScreenSize = new Vector2Int(0, 0);
+        static Rect lastSafeArea = new Rect(0, 0, 0, 0);
+        static Vector2Int lastScreenSize = new Vector2Int(0, 0);
 
-        private static ScreenOrientation lastOrientation = ScreenOrientation.AutoRotation;
+        static ScreenOrientation lastOrientation = ScreenOrientation.AutoRotation;
 
         public void Initialise()
         {
@@ -40,7 +40,7 @@ namespace Watermelon
 
         public static void Refresh(bool forceRefresh = false)
         {
-            Rect safeArea = Screen.safeArea;
+            var safeArea = Screen.safeArea;
 
             if (safeArea != lastSafeArea || Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y || Screen.orientation != lastOrientation || forceRefresh)
             {
@@ -52,7 +52,7 @@ namespace Watermelon
             }
         }
 
-        private static void ApplySafeArea(Rect rect)
+        static void ApplySafeArea(Rect rect)
         {
             lastSafeArea = rect;
 
@@ -74,8 +74,8 @@ namespace Watermelon
             if (Screen.width > 0 && Screen.height > 0)
             {
                 // Convert safe area rectangle from absolute pixels to normalised anchor coordinates
-                Vector2 anchorMin = rect.position;
-                Vector2 anchorMax = rect.position + rect.size;
+                var anchorMin = rect.position;
+                var anchorMax = rect.position + rect.size;
 
                 anchorMin.x /= Screen.width;
                 anchorMin.y /= Screen.height;
@@ -85,7 +85,7 @@ namespace Watermelon
                 // Fix for some Samsung devices (e.g. Note 10+, A71, S20) where Refresh gets called twice and the first time returns NaN anchor coordinates
                 if (anchorMin.x >= 0 && anchorMin.y >= 0 && anchorMax.x >= 0 && anchorMax.y >= 0)
                 {
-                    for (int i = 0; i < registeredTransforms.Count; i++)
+                    for (var i = 0; i < registeredTransforms.Count; i++)
                     {
                         if(registeredTransforms[i] != null)
                         {

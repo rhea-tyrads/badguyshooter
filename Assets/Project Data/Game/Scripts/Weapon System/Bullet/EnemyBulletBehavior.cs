@@ -6,8 +6,8 @@ namespace Watermelon.SquadShooter
     {
         [SerializeField] TrailRenderer trailRenderer;
 
-        private static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Shotgun Hit");
-        private static readonly int PARTICLE_WALL_HIT_HASH = ParticlesController.GetHash("Shotgun Wall Hit");
+        static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Shotgun Hit");
+        static readonly int PARTICLE_WALL_HIT_HASH = ParticlesController.GetHash("Shotgun Wall Hit");
 
         protected float damage;
         protected float speed;
@@ -26,7 +26,7 @@ namespace Watermelon.SquadShooter
             distanceTraveled = 0;
 
             trailRenderer.Clear();
-            float time = trailRenderer.time;
+            var time = trailRenderer.time;
             trailRenderer.time = 0;
 
             gameObject.SetActive(true);
@@ -59,7 +59,7 @@ namespace Watermelon.SquadShooter
         {
             if (other.gameObject.layer == PhysicsHelper.LAYER_PLAYER)
             {
-                CharacterBehaviour characterBehaviour = other.GetComponent<CharacterBehaviour>();
+                var characterBehaviour = other.GetComponent<CharacterBehaviour>();
                 if (characterBehaviour != null)
                 {
                     // Deal damage to enemy

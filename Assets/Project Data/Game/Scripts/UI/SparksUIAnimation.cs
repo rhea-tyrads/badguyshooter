@@ -9,15 +9,15 @@ namespace Watermelon
         [SerializeField] GameObject sparkPrefab;
         [SerializeField] RectTransform[] sparkPositions;
 
-        private Pool sparkPool;
-        private Coroutine sparksCoroutine;
+        Pool sparkPool;
+        Coroutine sparksCoroutine;
 
 
-        private void Start()
+        void Start()
         {
             sparkPool = PoolManager.AddPool(new PoolSettings( "UI Spark", sparkPrefab, 5, true));
 
-            for (int i = 0; i < sparkPositions.Length; i++)
+            for (var i = 0; i < sparkPositions.Length; i++)
             {
                 sparkPositions[i].gameObject.SetActive(false);
             }
@@ -35,7 +35,7 @@ namespace Watermelon
                 StopCoroutine(sparksCoroutine);
         }
 
-        private IEnumerator SparkAnimation()
+        IEnumerator SparkAnimation()
         {
             WaitForSeconds waitForSeconds;
 
@@ -48,10 +48,10 @@ namespace Watermelon
                 tempSparkObjects = sparkPositions.Where(x => !x.gameObject.activeSelf).ToArray();
                 if (!tempSparkObjects.IsNullOrEmpty())
                 {
-                    RectTransform parentSpark = tempSparkObjects.GetRandomItem();
+                    var parentSpark = tempSparkObjects.GetRandomItem();
                     parentSpark.gameObject.SetActive(true);
 
-                    GameObject sparkObject = sparkPool.GetPooledObject();
+                    var sparkObject = sparkPool.GetPooledObject();
                     sparkObject.gameObject.SetActive(true);
                     sparkObject.transform.SetParent(parentSpark);
                     sparkObject.transform.localPosition = Vector3.zero;

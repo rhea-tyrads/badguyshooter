@@ -7,12 +7,12 @@ namespace Watermelon
     {
         public DropableItemType DropItemType => DropableItemType.Currency;
 
-        private Currency[] availableCurrencies;
+        Currency[] availableCurrencies;
 
         public GameObject GetDropObject(DropData dropData)
         {
-            CurrencyType currencyType = dropData.currencyType;
-            for(int i = 0; i < availableCurrencies.Length; i++)
+            var currencyType = dropData.currencyType;
+            for(var i = 0; i < availableCurrencies.Length; i++)
             {
                 if(availableCurrencies[i].CurrencyType == currencyType)
                 {

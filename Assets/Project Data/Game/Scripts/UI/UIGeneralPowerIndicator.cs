@@ -11,12 +11,12 @@ namespace Watermelon.SquadShooter
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] Image arrowImage;
 
-        private CanvasGroup canvasGroup;
-        private TweenCase fadeTweenCase;
+        CanvasGroup canvasGroup;
+        TweenCase fadeTweenCase;
 
-        private static UIGeneralPowerIndicator instance;
+        static UIGeneralPowerIndicator instance;
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
             canvasGroup = GetComponent<CanvasGroup>();
@@ -27,7 +27,7 @@ namespace Watermelon.SquadShooter
 
         public static void UpdateText(bool highlight = false)
         {
-            float delay = highlight ? 0.5f : 0f;
+            var delay = highlight ? 0.5f : 0f;
 
             Tween.DelayedCall(delay, () =>
             {

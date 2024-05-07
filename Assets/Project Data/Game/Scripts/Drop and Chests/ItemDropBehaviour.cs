@@ -12,7 +12,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Collider triggerRef;
         [SerializeField] bool useAutoPickup = true;
 
-        private TweenCase[] throwTweenCases;
+        TweenCase[] throwTweenCases;
 
         public override void Initialise(DropData dropData, float availableToPickDelay = -1, float autoPickDelay = -1, bool ignoreCollector = false)
         {
@@ -62,7 +62,7 @@ namespace Watermelon.SquadShooter
             });
         }
 
-        private void AutoPick()
+        void AutoPick()
         {
             if (useAutoPickup)
             {
@@ -90,7 +90,7 @@ namespace Watermelon.SquadShooter
             // Kill movement tweens
             if (!throwTweenCases.IsNullOrEmpty())
             {
-                for (int i = 0; i < throwTweenCases.Length; i++)
+                for (var i = 0; i < throwTweenCases.Length; i++)
                 {
                     throwTweenCases[i].KillActive();
                 }

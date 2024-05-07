@@ -13,17 +13,17 @@ namespace Watermelon.SquadShooter
 
         [SerializeField] List<DifficultySettings> difficultyPresets;
 
-        private TextMeshProUGUI devText;
+        TextMeshProUGUI devText;
 
-        private static BalanceController instance;
+        static BalanceController instance;
 
         public static Difficulty CurrentDifficulty { get; private set; }
         public static int PowerRequirement { get; private set; }
         public static int CurrentGeneralPower => CharactersController.SelectedCharacter.GetCurrentUpgrade().Stats.Power + (WeaponsController.GetCurrentWeaponUpgrade().CurrentStage as BaseWeaponUpgradeStage).Power;
-        private static int upgradesDifference;
+        static int upgradesDifference;
 
-        private static int BaseCreaturePower => CharactersController.BasePower;
-        private static int BaseWeaponPower => WeaponsController.BasePower;
+        static int BaseCreaturePower => CharactersController.BasePower;
+        static int BaseWeaponPower => WeaponsController.BasePower;
 
         public void Initialise()
         {
@@ -37,11 +37,11 @@ namespace Watermelon.SquadShooter
 
             if(showDevText)
             {
-                GameObject devTextObject = new GameObject("[BALANCE DEV TEXT]");
+                var devTextObject = new GameObject("[BALANCE DEV TEXT]");
                 devTextObject.transform.SetParent(UIController.MainCanvas.transform);
                 devTextObject.transform.ResetLocal();
 
-                RectTransform devRectTransform = devTextObject.AddComponent<RectTransform>();
+                var devRectTransform = devTextObject.AddComponent<RectTransform>();
                 devRectTransform.anchorMin = new Vector2(0, 1);
                 devRectTransform.anchorMax = new Vector2(0, 1);
                 devRectTransform.pivot = new Vector2(0, 1);
@@ -93,14 +93,14 @@ namespace Watermelon.SquadShooter
             instance.UpdateDevText();
         }
 
-        private void OnCharacterSelectedOrUpgraded(CharacterType characterType, Character character)
+        void OnCharacterSelectedOrUpgraded(CharacterType characterType, Character character)
         {
             UpdateDifficulty();
         }
 
-        private void OnWeaponUpgraded(BaseUpgrade upgrade)
+        void OnWeaponUpgraded(BaseUpgrade upgrade)
         {
-            BaseWeaponUpgrade weaponUpg = upgrade as BaseWeaponUpgrade;
+            var weaponUpg = upgrade as BaseWeaponUpgrade;
 
             if (weaponUpg != null)
             {
@@ -110,7 +110,7 @@ namespace Watermelon.SquadShooter
 
         public static DifficultySettings GetActiveDifficultySettings()
         {
-            for (int i = 0; i < instance.difficultyPresets.Count; i++)
+            for (var i = 0; i < instance.difficultyPresets.Count; i++)
             {
                 if (instance.difficultyPresets[i].Difficulty.Equals(CurrentDifficulty))
                 {
@@ -122,7 +122,7 @@ namespace Watermelon.SquadShooter
             return instance.difficultyPresets[0];
         }
 
-        private void UpdateDevText()
+        void UpdateDevText()
         {
             if (LevelController.CurrentLevelData != null && showDevText)
             {

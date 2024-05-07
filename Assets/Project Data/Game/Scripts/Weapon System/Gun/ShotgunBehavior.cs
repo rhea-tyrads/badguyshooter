@@ -11,18 +11,18 @@ namespace Watermelon.SquadShooter
         [SerializeField] LayerMask targetLayers;
         [SerializeField] float bulletDisableTime;
 
-        private float attackDelay;
-        private DuoFloat bulletSpeed;
-        private float bulletSpreadAngle;
+        float attackDelay;
+        DuoFloat bulletSpeed;
+        float bulletSpreadAngle;
 
-        private float nextShootTime;
+        float nextShootTime;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
-        private TweenCase shootTweenCase;
-        private Vector3 shootDirection;
+        TweenCase shootTweenCase;
+        Vector3 shootDirection;
 
-        private ShotgunUpgrade upgrade;
+        ShotgunUpgrade upgrade;
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
@@ -30,7 +30,7 @@ namespace Watermelon.SquadShooter
 
             upgrade = UpgradesController.GetUpgrade<ShotgunUpgrade>(data.UpgradeType);
 
-            GameObject bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
+            var bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
             bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
             RecalculateDamage();
@@ -81,11 +81,11 @@ namespace Watermelon.SquadShooter
 
                         nextShootTime = Time.timeSinceLevelLoad + attackDelay;
 
-                        int bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
+                        var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
 
-                        for (int i = 0; i < bulletsNumber; i++)
+                        for (var i = 0; i < bulletsNumber; i++)
                         {
-                            PlayerBulletBehavior bullet = bulletPool.GetPooledObject(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<PlayerBulletBehavior>();
+                            var bullet = bulletPool.GetPooledObject(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<PlayerBulletBehavior>();
                             bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                             bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(bulletSpreadAngle * -0.5f, bulletSpreadAngle * 0.5f), 0f));
                         }
@@ -107,7 +107,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             if (characterBehaviour == null)
                 return;
@@ -115,10 +115,10 @@ namespace Watermelon.SquadShooter
             if (characterBehaviour.ClosestEnemyBehaviour == null)
                 return;
 
-            Color defCol = Gizmos.color;
+            var defCol = Gizmos.color;
             Gizmos.color = Color.red;
 
-            Vector3 shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            var shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
 
             Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 10f, characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
 

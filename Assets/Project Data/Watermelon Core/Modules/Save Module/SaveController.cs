@@ -7,15 +7,15 @@ namespace Watermelon
 {
     public static class SaveController
     {
-        private const string SAVE_FILE_NAME = "save";
-        private const int SAVE_DELAY = 30;
+        const string SAVE_FILE_NAME = "save";
+        const int SAVE_DELAY = 30;
 
-        private static GlobalSave globalSave;
+        static GlobalSave globalSave;
 
-        private static bool isSaveLoaded;
+        static bool isSaveLoaded;
         public static bool IsSaveLoaded => isSaveLoaded;
 
-        private static bool isSaveRequired;
+        static bool isSaveRequired;
 
         public static int LevelId { get => globalSave.LevelId; set => globalSave.LevelId = value; }
         public static float GameTime => globalSave.GameTime;
@@ -63,7 +63,7 @@ namespace Watermelon
             return GetSaveObject<T>(uniqueName.GetHashCode());
         }
 
-        private static void InitClear(float time)
+        static void InitClear(float time)
         {
             globalSave = new GlobalSave();
             globalSave.Init(time);
@@ -73,7 +73,7 @@ namespace Watermelon
             isSaveLoaded = true;
         }
 
-        private static void Load(float time)
+        static void Load(float time)
         {
             if (isSaveLoaded)
                 return;
@@ -97,10 +97,10 @@ namespace Watermelon
 
             globalSave.Flush();
 
-            BaseSaveWrapper saveWrapper = BaseSaveWrapper.ActiveWrapper;
+            var saveWrapper = BaseSaveWrapper.ActiveWrapper;
             if(saveWrapper.UseThreads())
             {
-                Thread saveThread = new Thread(() => BaseSaveWrapper.ActiveWrapper.Save(globalSave, SAVE_FILE_NAME));
+                var saveThread = new Thread(() => BaseSaveWrapper.ActiveWrapper.Save(globalSave, SAVE_FILE_NAME));
                 saveThread.Start();
             }
             else
@@ -128,9 +128,9 @@ namespace Watermelon
             isSaveRequired = true;
         }
 
-        private static IEnumerator AutoSaveCoroutine()
+        static IEnumerator AutoSaveCoroutine()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(SAVE_DELAY);
+            var waitForSeconds = new WaitForSeconds(SAVE_DELAY);
 
             while (true)
             {
@@ -159,7 +159,7 @@ namespace Watermelon
 
         public static GlobalSave GetGlobalSave()
         {
-            GlobalSave tempGlobalSave = BaseSaveWrapper.ActiveWrapper.Load(SAVE_FILE_NAME);
+            var tempGlobalSave = BaseSaveWrapper.ActiveWrapper.Load(SAVE_FILE_NAME);
 
             tempGlobalSave.Init(Time.time);
 

@@ -8,9 +8,9 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterBehaviour : MonoBehaviour, IEnemyDetector, IHealth, INavMeshAgent
     {
-        private static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
+        static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
 
-        private static CharacterBehaviour characterBehaviour;
+        static CharacterBehaviour characterBehaviour;
 
         [SerializeField] NavMeshAgent agent;
         [SerializeField] EnemyDetector enemyDetector;
@@ -31,65 +31,65 @@ namespace Watermelon.SquadShooter
         [SerializeField] AimRingBehavior aimRingBehavior;
 
         // Character Graphics
-        private BaseCharacterGraphics graphics;
+        BaseCharacterGraphics graphics;
         public BaseCharacterGraphics Graphics => graphics;
 
-        private GameObject graphicsPrefab;
-        private SkinnedMeshRenderer characterMeshRenderer;
+        GameObject graphicsPrefab;
+        SkinnedMeshRenderer characterMeshRenderer;
 
-        private MaterialPropertyBlock hitShinePropertyBlock;
-        private TweenCase hitShineTweenCase;
+        MaterialPropertyBlock hitShinePropertyBlock;
+        TweenCase hitShineTweenCase;
 
-        private CharacterStats stats;
+        CharacterStats stats;
         public CharacterStats Stats => stats;
 
         // Gun
-        private BaseGunBehavior gunBehaviour;
+        BaseGunBehavior gunBehaviour;
         public BaseGunBehavior Weapon => gunBehaviour;
 
-        private GameObject gunPrefabGraphics;
+        GameObject gunPrefabGraphics;
 
         // Health
-        private float currentHealth;
+        float currentHealth;
 
         public float CurrentHealth => currentHealth;
         public float MaxHealth => stats.Health;
         public bool FullHealth => currentHealth == stats.Health;
 
         public bool IsActive => isActive;
-        private bool isActive;
+        bool isActive;
 
         public static Transform Transform => characterBehaviour.transform;
 
         // Movement
-        private MovementSettings movementSettings;
-        private MovementSettings movementAimingSettings;
+        MovementSettings movementSettings;
+        MovementSettings movementAimingSettings;
 
-        private MovementSettings activeMovementSettings;
+        MovementSettings activeMovementSettings;
         public MovementSettings MovementSettings => activeMovementSettings;
 
-        private bool isMoving;
-        private float speed = 0;
+        bool isMoving;
+        float speed = 0;
 
-        private Vector3 movementVelocity;
+        Vector3 movementVelocity;
         public Vector3 MovementVelocity => movementVelocity;
 
         public EnemyDetector EnemyDetector => enemyDetector;
 
         public bool IsCloseEnemyFound => closestEnemyBehaviour != null;
 
-        private BaseEnemyBehavior closestEnemyBehaviour;
+        BaseEnemyBehavior closestEnemyBehaviour;
         public BaseEnemyBehavior ClosestEnemyBehaviour => closestEnemyBehaviour;
 
-        private Transform playerTarget;
-        private GameObject targetRing;
-        private Renderer targetRingRenderer;
-        private TweenCase ringTweenCase;
+        Transform playerTarget;
+        GameObject targetRing;
+        Renderer targetRingRenderer;
+        TweenCase ringTweenCase;
 
-        private VirtualCameraCase mainCameraCase;
+        VirtualCameraCase mainCameraCase;
         public VirtualCameraCase MainCameraCase => mainCameraCase;
 
-        private bool isMovementActive = false;
+        bool isMovementActive = false;
         public bool IsMovementActive => isMovementActive;
 
         public static bool NoDamage { get; private set; } = false;
@@ -98,7 +98,7 @@ namespace Watermelon.SquadShooter
 
         public static SimpleCallback OnDied;
 
-        private void Awake()
+        void Awake()
         {
             agent.enabled = false;
         }
@@ -113,7 +113,7 @@ namespace Watermelon.SquadShooter
             enabled = false;
 
             // Create target
-            GameObject tempTarget = new GameObject("[TARGET]");
+            var tempTarget = new GameObject("[TARGET]");
             tempTarget.transform.position = transform.position;
             tempTarget.SetActive(true);
 
@@ -310,7 +310,7 @@ namespace Watermelon.SquadShooter
 
                 if (gunPrefabGraphics != null)
                 {
-                    GameObject gunObject = Instantiate(gunPrefabGraphics);
+                    var gunObject = Instantiate(gunPrefabGraphics);
                     gunObject.SetActive(true);
 
                     gunBehaviour = gunObject.GetComponent<BaseGunBehavior>();
@@ -331,7 +331,7 @@ namespace Watermelon.SquadShooter
             {
                 gunBehaviour.Initialise(this, weaponData);
 
-                Vector3 defaultScale = gunBehaviour.transform.localScale;
+                var defaultScale = gunBehaviour.transform.localScale;
 
                 if (playAnimation)
                 {
@@ -385,7 +385,7 @@ namespace Watermelon.SquadShooter
                     Destroy(graphics.gameObject);
                 }
 
-                GameObject graphicObject = Instantiate(newGraphicsPrefab);
+                var graphicObject = Instantiate(newGraphicsPrefab);
                 graphicObject.transform.SetParent(transform);
                 graphicObject.transform.ResetLocal();
                 graphicObject.SetActive(true);
@@ -491,7 +491,7 @@ namespace Watermelon.SquadShooter
             aimRingBehavior.Show();
         }
 
-        private void Update()
+        void Update()
         {
             if (gunBehaviour != null)
                 gunBehaviour.UpdateHandRig();
@@ -512,7 +512,7 @@ namespace Watermelon.SquadShooter
                     graphics.OnMovingStarted();
                 }
 
-                float maxAlowedSpeed = Mathf.Clamp01(joystick.MovementInput.magnitude) * activeMovementSettings.MoveSpeed;
+                var maxAlowedSpeed = Mathf.Clamp01(joystick.MovementInput.magnitude) * activeMovementSettings.MoveSpeed;
 
                 if (speed > maxAlowedSpeed)
                 {
@@ -571,7 +571,7 @@ namespace Watermelon.SquadShooter
             aimRingBehavior.UpdatePosition();
         }
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
             graphics.CustomFixedUpdate();
 
@@ -653,11 +653,11 @@ namespace Watermelon.SquadShooter
             targetRingRenderer.material.color = targetRingDisabledColor;
         }
 
-        private void OnTriggerEnter(Collider other)
+        void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(PhysicsHelper.TAG_ITEM))
             {
-                IDropableItem item = other.GetComponent<IDropableItem>();
+                var item = other.GetComponent<IDropableItem>();
                 if (item.IsPickable(this))
                 {
                     OnItemPicked(item);
@@ -671,7 +671,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        void OnTriggerExit(Collider other)
         {
             if (other.CompareTag(PhysicsHelper.TAG_CHEST))
             {
@@ -722,7 +722,7 @@ namespace Watermelon.SquadShooter
             gunBehaviour.DOScale(1, 0.2f).SetCustomEasing(Ease.GetCustomEasingFunction("BackOutLight"));
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             if (healthbarBehaviour.HealthBarTransform != null)
                 Destroy(healthbarBehaviour.HealthBarTransform.gameObject);

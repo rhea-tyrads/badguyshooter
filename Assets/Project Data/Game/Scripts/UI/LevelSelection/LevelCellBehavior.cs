@@ -15,9 +15,9 @@ namespace Watermelon
         [Space]
         [SerializeField] Button button;
 
-        private RectTransform rectTransform;
+        RectTransform rectTransform;
 
-        private int levelId;
+        int levelId;
         public int LevelNumber {
             get => levelId;
             set {
@@ -38,7 +38,7 @@ namespace Watermelon
             } 
         }
 
-        private void Awake()
+        void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
         }

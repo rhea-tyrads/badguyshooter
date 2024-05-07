@@ -9,7 +9,7 @@ namespace Watermelon
     {
         public int Id { get; private set; }
 
-        private List<GameObject> items;
+        List<GameObject> items;
 
         protected override void Awake()
         {
@@ -32,17 +32,17 @@ namespace Watermelon
                 itemsAmount * childSize.x + (itemsAmount - 1) * spacing,
                 childSize.y);
 
-            float leftBorder = -(itemsAmount * childSize.x + (itemsAmount - 1) * spacing) / 2;
+            var leftBorder = -(itemsAmount * childSize.x + (itemsAmount - 1) * spacing) / 2;
 
             items = new List<GameObject>();
 
-            for (int i = 0; i < itemsAmount; i++)
+            for (var i = 0; i < itemsAmount; i++)
             {
                 if (id * itemsAmount + i >= lastItemId) break; 
 
-                GridItem item = itemsPool.GetPooledObject().GetComponent<GridItem>();
+                var item = itemsPool.GetPooledObject().GetComponent<GridItem>();
 
-                RectTransform itemRect = item.GetRectTransform();
+                var itemRect = item.GetRectTransform();
 
                 itemRect.transform.SetParent(rectTransform);
                 itemRect.transform.localScale = Vector3.one;
@@ -65,7 +65,7 @@ namespace Watermelon
 
         public void ReturnItemsToPool()
         {
-            for(int i = 0; i < items.Count; i++)
+            for(var i = 0; i < items.Count; i++)
             {
                 items[i].SetActive(false);
                 items[i].transform.SetParent(null);

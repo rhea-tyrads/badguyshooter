@@ -22,7 +22,7 @@ namespace Watermelon
 
         public event CurrencyChangeDelegate OnCurrencyChanged;
 
-        private Save save;
+        Save save;
 
         public void Initialise()
         {

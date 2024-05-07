@@ -19,9 +19,9 @@ namespace Watermelon.SquadShooter
         [SerializeField] float scaleTime;
         [SerializeField] Ease.Type scaleEasing;
 
-        private Vector3 defaultScale;
+        Vector3 defaultScale;
 
-        private void Awake()
+        void Awake()
         {
             defaultScale = transform.localScale;
         }
@@ -30,7 +30,7 @@ namespace Watermelon.SquadShooter
         {
             floatingText.text = text;
 
-            int sign = Random.value >= 0.5f ? 1 : -1;
+            var sign = Random.value >= 0.5f ? 1 : -1;
 
             transform.localScale = defaultScale * scale * this.scale;
             transform.localRotation = Quaternion.Euler(70, 0, 18 * sign);

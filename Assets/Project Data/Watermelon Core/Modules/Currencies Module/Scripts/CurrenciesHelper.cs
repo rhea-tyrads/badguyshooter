@@ -4,12 +4,12 @@ namespace Watermelon
 {
     public static class CurrenciesHelper
     {
-        private static readonly string[] DIGITS = new string[] { "", "K", "M", "B", "T", "Qa" };
+        static readonly string[] DIGITS = new string[] { "", "K", "M", "B", "T", "Qa" };
 
         public static string Format(int value)
         {
             float moneyRepresentation = value;
-            int counter = 0;
+            var counter = 0;
 
             while (moneyRepresentation >= 1000)
             {
@@ -25,7 +25,7 @@ namespace Watermelon
             }
             else if (moneyRepresentation >= 10)
             {
-                string result = moneyRepresentation.ToString("F1");
+                var result = moneyRepresentation.ToString("F1");
 
                 if (result[result.Length - 1] == '0')
                     result = result.Remove(result.Length - 2);
@@ -35,7 +35,7 @@ namespace Watermelon
             }
             else
             {
-                string result = moneyRepresentation.ToString("F2");
+                var result = moneyRepresentation.ToString("F2");
 
                 if (result[result.Length - 1] == '0')
                 {
@@ -52,7 +52,7 @@ namespace Watermelon
             return Mathf.RoundToInt(moneyRepresentation).ToString();
         }
 
-        private static string GetDigits(int index)
+        static string GetDigits(int index)
         {
             if (index < 0 || index >= DIGITS.Length)
                 return "";

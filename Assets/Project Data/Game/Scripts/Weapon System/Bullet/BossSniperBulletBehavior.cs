@@ -6,14 +6,14 @@ namespace Watermelon.SquadShooter
 {
     public class BossSniperBulletBehavior : EnemyBulletBehavior
     {
-        private static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
+        static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
 
         [SerializeField] LayerMask collisionLayer;
 
-        private List<Vector3> hitPoints;
+        List<Vector3> hitPoints;
 
-        private int nextHitPointId = 0;
-        private Vector3 NextHitPoint => hitPoints[nextHitPointId];
+        int nextHitPointId = 0;
+        Vector3 NextHitPoint => hitPoints[nextHitPointId];
 
         public void InitialiseBullet(float damage, float speed, float selfDestroyDistance, List<Vector3> hitPoints)
         {

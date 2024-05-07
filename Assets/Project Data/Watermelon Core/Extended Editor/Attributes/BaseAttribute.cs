@@ -5,7 +5,7 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public abstract class BaseAttribute : Attribute
     {
-        private Type targetAttributeType;
+        Type targetAttributeType;
 
         public BaseAttribute(Type targetAttributeType)
         {

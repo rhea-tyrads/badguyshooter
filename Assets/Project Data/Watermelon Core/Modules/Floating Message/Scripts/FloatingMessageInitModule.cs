@@ -9,7 +9,7 @@ namespace Watermelon
 
         public override void CreateComponent(Initialiser Initialiser)
         {
-            GameObject canvasGameObject = Instantiate(canvas);
+            var canvasGameObject = Instantiate(canvas);
             canvasGameObject.transform.SetParent(Initialiser.InitialiserGameObject.transform);
             canvasGameObject.transform.localScale = Vector3.one;
             canvasGameObject.transform.localPosition = Vector3.zero;

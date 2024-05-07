@@ -18,7 +18,7 @@ namespace Watermelon.SquadShooter
         public WeaponData Data { get; private set; }
         public WeaponType WeaponType { get; private set; }
 
-        private TweenCase[] throwTweenCases;
+        TweenCase[] throwTweenCases;
 
         public override void Initialise(DropData dropData, float availableToPickDelay = -1, float autoPickDelay = -1, bool ignoreCollector = false)
         {
@@ -42,14 +42,14 @@ namespace Watermelon.SquadShooter
             backImage.color = Data.RarityData.MainColor;
             titleText.text = Data.Name;
 
-            for (int i = 0; i < rarityParticles.Count; i++)
+            for (var i = 0; i < rarityParticles.Count; i++)
             {
                 var main = rarityParticles[i].main;
                 main.startColor = Data.RarityData.MainColor.SetAlpha(main.startColor.color.a);
             }
         }
 
-        private void AutoPick()
+        void AutoPick()
         {
             CharacterBehaviour.GetBehaviour().OnItemPicked(this);
 
@@ -97,7 +97,7 @@ namespace Watermelon.SquadShooter
             // Kill movement tweens
             if (!throwTweenCases.IsNullOrEmpty())
             {
-                for (int i = 0; i < throwTweenCases.Length; i++)
+                for (var i = 0; i < throwTweenCases.Length; i++)
                 {
                     throwTweenCases[i].KillActive();
                 }

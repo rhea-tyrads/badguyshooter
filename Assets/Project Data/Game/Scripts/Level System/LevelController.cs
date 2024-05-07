@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MobileTools.SDK;
 using UnityEngine;
 using Watermelon.SquadShooter;
 
@@ -6,57 +7,57 @@ namespace Watermelon.LevelSystem
 {
     public static class LevelController
     {
-        private static LevelsDatabase levelsDatabase;
+        static LevelsDatabase levelsDatabase;
         public static LevelsDatabase LevelsDatabase => levelsDatabase;
 
-        private static GameSettings levelSettings;
+        static GameSettings levelSettings;
         public static GameSettings LevelSettings => levelSettings;
 
-        private static GameObject levelGameObject;
+        static GameObject levelGameObject;
         public static GameObject LevelGameObject => levelGameObject;
 
-        private static GameObject backWallCollider;
+        static GameObject backWallCollider;
 
-        private static bool isLevelLoaded;
-        private static LevelData loadedLevel;
+        static bool isLevelLoaded;
+        static LevelData loadedLevel;
 
-        private static bool isRoomLoaded;
-        private static RoomData loadedRoom;
+        static bool isRoomLoaded;
+        static RoomData loadedRoom;
 
-        private static LevelSave levelSave;
+        static LevelSave levelSave;
 
-        private static LevelData currentLevelData;
+        static LevelData currentLevelData;
         public static LevelData CurrentLevelData => currentLevelData;
 
-        private static int currentRoomIndex;
+        static int currentRoomIndex;
 
         // Player
-        private static CharacterBehaviour characterBehaviour;
-        private static GameObject playerObject;
+        static CharacterBehaviour characterBehaviour;
+        static GameObject playerObject;
 
         // World Data
-        private static WorldData activeWorldData;
+        static WorldData activeWorldData;
 
         // UI
-        private static UIComplete uiComplete;
-        private static UIMainMenu uiMainMenu;
-        private static UIGame uiGame;
-        private static UICharacterSuggestion uiCharacterSuggestion;
+        static UIComplete uiComplete;
+        static UIMainMenu uiMainMenu;
+        static UIGame uiGame;
+        static UICharacterSuggestion uiCharacterSuggestion;
 
         // Gameplay
-        private static bool manualExitActivation;
+        static bool manualExitActivation;
 
-        private static int lastLevelMoneyCollected;
+        static int lastLevelMoneyCollected;
 
-        private static bool isGameplayActive;
+        static bool isGameplayActive;
         public static bool IsGameplayActive => isGameplayActive;
 
-        private static bool needCharacterSugession;
+        static bool needCharacterSugession;
         public static bool NeedCharacterSugession => needCharacterSugession;
 
         // Drop
-        private static List<List<DropData>> roomRewards;
-        private static List<List<DropData>> roomChestRewards;
+        static List<List<DropData>> roomRewards;
+        static List<List<DropData>> roomChestRewards;
 
         // Events
         public static event SimpleCallback OnPlayerExitLevelEvent;
@@ -94,10 +95,10 @@ namespace Watermelon.LevelSystem
 
         public static void SpawnPlayer()
         {
-            Character character = CharactersController.SelectedCharacter;
+            var character = CharactersController.SelectedCharacter;
 
-            CharacterStageData characterStage = character.GetCurrentStage();
-            CharacterUpgrade characterUpgrade = character.GetCurrentUpgrade();
+            var characterStage = character.GetCurrentStage();
+            var characterUpgrade = character.GetCurrentUpgrade();
 
             // Spawn player
             playerObject = Object.Instantiate(levelSettings.PlayerPrefab);
@@ -125,7 +126,7 @@ namespace Watermelon.LevelSystem
 
             isLevelLoaded = true;
 
-            LevelData levelData = levelsDatabase.GetLevel(worldIndex, levelIndex);
+            var levelData = levelsDatabase.GetLevel(worldIndex, levelIndex);
 
             ActiveRoom.SetLevelData(levelData);
 
@@ -134,7 +135,7 @@ namespace Watermelon.LevelSystem
 
             ActiveRoom.SetLevelData(worldIndex, levelIndex);
 
-            WorldData world = levelData.World;
+            var world = levelData.World;
             ActivateWorld(world);
 
             BalanceController.UpdateDifficulty();
@@ -162,12 +163,12 @@ namespace Watermelon.LevelSystem
             }
         }
 
-        private static void DistributeRewardBetweenRooms()
+        static void DistributeRewardBetweenRooms()
         {
-            int roomsAmount = currentLevelData.Rooms.Length;
-            int chestsAmount = currentLevelData.GetChestsAmount();
+            var roomsAmount = currentLevelData.Rooms.Length;
+            var chestsAmount = currentLevelData.GetChestsAmount();
 
-            List<int> moneyPerRoomOrChest = new List<int>();
+            var moneyPerRoomOrChest = new List<int>();
             DropData coinsReward;
 
             // find coins reward amount
@@ -183,7 +184,7 @@ namespace Watermelon.LevelSystem
             roomChestRewards = new List<List<DropData>>();
 
             // creating reward for each room individually
-            for (int i = 0; i < roomsAmount; i++)
+            for (var i = 0; i < roomsAmount; i++)
             {
                 roomRewards.Add(new List<DropData>());
 
@@ -199,12 +200,12 @@ namespace Watermelon.LevelSystem
                 // if room is last - give special reward
                 if (i == roomsAmount - 1)
                 {
-                    for (int j = 0; j < currentLevelData.DropData.Count; j++)
+                    for (var j = 0; j < currentLevelData.DropData.Count; j++)
                     {
                         // if it's not coins - then it's a special reward
                         if (!(currentLevelData.DropData[j].dropType == DropableItemType.Currency && currentLevelData.DropData[j].currencyType == CurrencyType.Coins))
                         {
-                            bool skipThisReward = false;
+                            var skipThisReward = false;
 
                             // skip weapon card if weapon is already unlocked
                             if (currentLevelData.DropData[j].dropType == DropableItemType.WeaponCard && WeaponsController.IsWeaponUnlocked(currentLevelData.DropData[j].cardType))
@@ -219,15 +220,15 @@ namespace Watermelon.LevelSystem
                 }
             }
 
-            int chestsSpawned = 0;
+            var chestsSpawned = 0;
 
-            for (int i = 0; i < roomsAmount; i++)
+            for (var i = 0; i < roomsAmount; i++)
             {
                 var room = currentLevelData.Rooms[i];
 
                 if (room.ChestEntities != null && room.ChestEntities.Length > 0)
                 {
-                    for (int j = 0; j < room.ChestEntities.Length; j++)
+                    for (var j = 0; j < room.ChestEntities.Length; j++)
                     {
                         var chest = room.ChestEntities[j];
 
@@ -263,7 +264,7 @@ namespace Watermelon.LevelSystem
             }
         }
 
-        private static bool DoesNextRoomExist()
+        static bool DoesNextRoomExist()
         {
             if (isLevelLoaded)
             {
@@ -273,9 +274,9 @@ namespace Watermelon.LevelSystem
             return false;
         }
 
-        private static void LoadRoom(int index)
+        static void LoadRoom(int index)
         {
-            RoomData roomData = currentLevelData.Rooms[index];
+            var roomData = currentLevelData.Rooms[index];
 
             ActiveRoom.SetRoomData(roomData);
 
@@ -288,10 +289,10 @@ namespace Watermelon.LevelSystem
 
             NavMeshController.InvokeOrSubscribe(characterBehaviour);
 
-            ItemEntityData[] items = roomData.ItemEntities;
-            for (int i = 0; i < items.Length; i++)
+            var items = roomData.ItemEntities;
+            for (var i = 0; i < items.Length; i++)
             {
-                LevelItem itemData = activeWorldData.GetLevelItem(items[i].Hash);
+                var itemData = activeWorldData.GetLevelItem(items[i].Hash);
 
                 if (itemData == null)
                 {
@@ -303,8 +304,8 @@ namespace Watermelon.LevelSystem
             }
 
 
-            EnemyEntityData[] enemies = roomData.EnemyEntities;
-            for (int i = 0; i < enemies.Length; i++)
+            var enemies = roomData.EnemyEntities;
+            for (var i = 0; i < enemies.Length; i++)
             {
                 ActiveRoom.SpawnEnemy(EnemyController.Database.GetEnemyData(enemies[i].EnemyType), enemies[i], false);
             }
@@ -313,7 +314,7 @@ namespace Watermelon.LevelSystem
 
             if (roomData.ChestEntities != null)
             {
-                for (int i = 0; i < roomData.ChestEntities.Length; i++)
+                for (var i = 0; i < roomData.ChestEntities.Length; i++)
                 {
                     var chest = roomData.ChestEntities[i];
 
@@ -324,14 +325,14 @@ namespace Watermelon.LevelSystem
                 }
             }
 
-            CustomObjectData[] roomCustomObjects = roomData.RoomCustomObjects;
-            for (int i = 0; i < roomCustomObjects.Length; i++)
+            var roomCustomObjects = roomData.RoomCustomObjects;
+            for (var i = 0; i < roomCustomObjects.Length; i++)
             {
                 ActiveRoom.SpawnCustomObject(roomCustomObjects[i]);
             }
 
-            CustomObjectData[] worldCustomObjects = levelsDatabase.GetWorld(levelSave.WorldIndex).WorldCustomObjects;
-            for (int i = 0; i < worldCustomObjects.Length; i++)
+            var worldCustomObjects = levelsDatabase.GetWorld(levelSave.WorldIndex).WorldCustomObjects;
+            for (var i = 0; i < worldCustomObjects.Length; i++)
             {
                 ActiveRoom.SpawnCustomObject(worldCustomObjects[i]);
             }
@@ -362,7 +363,7 @@ namespace Watermelon.LevelSystem
             Control.EnableMovementControl();
         }
 
-        private static void LoadPedestal()
+        static void LoadPedestal()
         {
             PedestalBehavior = Object.Instantiate(activeWorldData.PedestalPrefab).GetComponent<PedestalBehavior>();
             PedestalBehavior.transform.position = LevelSettings.PedestalPosition;
@@ -392,10 +393,10 @@ namespace Watermelon.LevelSystem
 
             uiGame.UpdateReachedRoomUI(currentRoomIndex);
 
-            RoomData roomData = currentLevelData.Rooms[currentRoomIndex];
+            var roomData = currentLevelData.Rooms[currentRoomIndex];
 
-            EnemyEntityData[] enemies = roomData.EnemyEntities;
-            for (int i = 0; i < enemies.Length; i++)
+            var enemies = roomData.EnemyEntities;
+            for (var i = 0; i < enemies.Length; i++)
             {
                 ActiveRoom.SpawnEnemy(EnemyController.Database.GetEnemyData(enemies[i].EnemyType), enemies[i], false);
             }
@@ -427,7 +428,7 @@ namespace Watermelon.LevelSystem
             loadedLevel = null;
         }
 
-        private static void ActivateWorld(WorldData data)
+        static void ActivateWorld(WorldData data)
         {
             if (activeWorldData != null && activeWorldData.Equals(data))
                 return;
@@ -466,7 +467,7 @@ namespace Watermelon.LevelSystem
             }
         }
 
-        private static void StartGameplayOnceNavmeshIsReady()
+        static void StartGameplayOnceNavmeshIsReady()
         {
             GameController.OnGameStarted();
 
@@ -497,19 +498,16 @@ namespace Watermelon.LevelSystem
         public static void OnPlayerExitLevel()
         {
             OnPlayerExitLevelEvent?.Invoke();
-
             characterBehaviour.MoveForwardAndDisable(0.3f);
-
             Control.DisableMovementControl();
-
             currentRoomIndex++;
-
             currentLevelData.OnRoomLeaved();
 
             if (currentLevelData.Rooms.IsInRange(currentRoomIndex))
             {
                 Overlay.Show(0.3f, () =>
                 {
+                    Debug.LogWarning(("ROOM CLEARED: "+currentRoomIndex));
                     uiGame.UpdateReachedRoomUI(currentRoomIndex);
 
                     ActiveRoom.Unload();
@@ -536,6 +534,8 @@ namespace Watermelon.LevelSystem
 
                 OnLevelCompleted();
             }
+            
+            SDKEvents.Instance.LevelComplete(ActiveRoom.CurrentWorldIndex+1, ActiveRoom.CurrentLevelIndex);
         }
 
         public static void OnEnemyKilled(BaseEnemyBehavior enemyBehavior)
@@ -612,25 +612,17 @@ namespace Watermelon.LevelSystem
         {
             isGameplayActive = false;
 
-            // applying reward
             CurrenciesController.Add(CurrencyType.Coins, CurrentLevelData.GetCoinsReward());
-
             WeaponsController.AddCards(CurrentLevelData.GetCardsReward());
-
             uiComplete.UpdateExperienceLabel(currentLevelData.XPAmount);
-
             InitialiseCharacterSuggestion();
-
             IncreaseLevelInSave();
-
             SaveController.MarkAsSaveIsRequired();
-
             GameController.LevelComplete();
-
             currentLevelData.OnLevelCompleted();
         }
 
-        private static void InitialiseCharacterSuggestion()
+        static void InitialiseCharacterSuggestion()
         {
             if (!currentLevelData.HasCharacterSuggestion)
             {
@@ -639,8 +631,8 @@ namespace Watermelon.LevelSystem
                 return;
             }
 
-            Character lastUnlockedCharacter = CharactersController.LastUnlockedCharacter;
-            Character nextCharacterToUnlock = CharactersController.NextCharacterToUnlock;
+            var lastUnlockedCharacter = CharactersController.LastUnlockedCharacter;
+            var nextCharacterToUnlock = CharactersController.NextCharacterToUnlock;
 
             if (lastUnlockedCharacter == null || nextCharacterToUnlock == null)
             {
@@ -650,18 +642,18 @@ namespace Watermelon.LevelSystem
 
             }
 
-            int lastXpRequirement = ExperienceController.GetXpPointsRequiredForLevel(lastUnlockedCharacter.RequiredLevel);
-            int nextXpRequirement = ExperienceController.GetXpPointsRequiredForLevel(nextCharacterToUnlock.RequiredLevel);
+            var lastXpRequirement = ExperienceController.GetXpPointsRequiredForLevel(lastUnlockedCharacter.RequiredLevel);
+            var nextXpRequirement = ExperienceController.GetXpPointsRequiredForLevel(nextCharacterToUnlock.RequiredLevel);
 
-            float lastProgression = (float)(ExperienceController.ExperiencePoints - lastXpRequirement) / (nextXpRequirement - lastXpRequirement);
-            float currentProgression = (float)(ExperienceController.ExperiencePoints + currentLevelData.XPAmount - lastXpRequirement) / (nextXpRequirement - lastXpRequirement);
+            var lastProgression = (float)(ExperienceController.ExperiencePoints - lastXpRequirement) / (nextXpRequirement - lastXpRequirement);
+            var currentProgression = (float)(ExperienceController.ExperiencePoints + currentLevelData.XPAmount - lastXpRequirement) / (nextXpRequirement - lastXpRequirement);
 
             uiCharacterSuggestion.SetData(lastProgression, currentProgression, nextCharacterToUnlock);
 
             needCharacterSugession = true;
         }
 
-        private static void IncreaseLevelInSave()
+        static void IncreaseLevelInSave()
         {
             if (levelsDatabase.DoesNextLevelExist(levelSave.WorldIndex, levelSave.LevelIndex))
             {
@@ -685,7 +677,7 @@ namespace Watermelon.LevelSystem
 
             Control.DisableMovementControl();
 
-            GameController.OnLevelFailded();
+            GameController.OnLevelFail();
         }
 
         public static string GetCurrentAreaText()
@@ -695,15 +687,15 @@ namespace Watermelon.LevelSystem
 
         public static List<int> SplitIntEqually(int value, int partsAmount)
         {
-            float floatPart = (float)value / partsAmount;
-            int part = Mathf.FloorToInt(floatPart);
+            var floatPart = (float)value / partsAmount;
+            var part = Mathf.FloorToInt(floatPart);
 
-            List<int> result = new List<int>();
+            var result = new List<int>();
             if (partsAmount > 0)
             {
-                int sum = 0;
+                var sum = 0;
 
-                for (int i = 0; i < partsAmount; i++)
+                for (var i = 0; i < partsAmount; i++)
                 {
                     result.Add(part);
                     sum += part;
@@ -734,7 +726,7 @@ namespace Watermelon.LevelSystem
             GameController.OnLevelCompleteClosed();
         }
 
-        private static void DecreaseLevelInSaveDev()
+        static void DecreaseLevelInSaveDev()
         {
             levelSave.LevelIndex--;
 

@@ -18,14 +18,14 @@ namespace Watermelon
         [SerializeField] Image currencyIconImage;
         [SerializeField] TextMeshProUGUI currencyText;
 
-        private Button button;
+        Button button;
         public Button Button => button;
 
-        private CurrencyPrice currencyPrice;
-        private SimpleBoolCallback completeCallback;
+        CurrencyPrice currencyPrice;
+        SimpleBoolCallback completeCallback;
 
-        private bool isInitialised;
-        private Currency currency;
+        bool isInitialised;
+        Currency currency;
 
         public void Initialise(SimpleBoolCallback completeCallback, CurrencyPrice currencyPrice)
         {
@@ -43,7 +43,7 @@ namespace Watermelon
             Redraw();
         }
 
-        private void OnCurrencyChanged(Currency currency, int difference)
+        void OnCurrencyChanged(Currency currency, int difference)
         {
             if (!isInitialised) return;
             if (AdsManager.Settings.RewardedVideoType != AdProvider.Disable) return;
@@ -60,7 +60,7 @@ namespace Watermelon
 
                 currencyContentObject.SetActive(true);
 
-                Currency currency = currencyPrice.Currency;
+                var currency = currencyPrice.Currency;
                 currencyIconImage.sprite = currency.Icon;
                 currencyText.text = currencyPrice.FormattedPrice;
 
@@ -83,7 +83,7 @@ namespace Watermelon
             }
         }
 
-        private void OnButtonClicked()
+        void OnButtonClicked()
         {
             AudioController.PlaySound(AudioController.Sounds.buttonSound);
 

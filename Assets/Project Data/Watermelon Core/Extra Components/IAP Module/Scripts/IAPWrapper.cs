@@ -18,10 +18,10 @@ namespace Watermelon
     {
 
 #if MODULE_IAP
-        private static IStoreController controller;
+        static IStoreController controller;
         public static IStoreController Controller => controller;
 
-        private static IExtensionProvider extensions;
+        static IExtensionProvider extensions;
         public static IExtensionProvider Extensions => extensions;
 #endif
 
@@ -34,7 +34,7 @@ namespace Watermelon
 
                 await UnityServices.InitializeAsync(options);
 
-                StandardPurchasingModule purchasingModule = StandardPurchasingModule.Instance();
+                var purchasingModule = StandardPurchasingModule.Instance();
 
                 if (settings.UseTestMode)
                 {
@@ -43,10 +43,10 @@ namespace Watermelon
                 }
 
                 // Init products
-                ConfigurationBuilder builder = ConfigurationBuilder.Instance(purchasingModule);
+                var builder = ConfigurationBuilder.Instance(purchasingModule);
 
-                IAPItem[] items = settings.StoreItems;
-                for (int i = 0; i < items.Length; i++)
+                var items = settings.StoreItems;
+                for (var i = 0; i < items.Length; i++)
                 {
                     builder.AddProduct(items[i].ID, (UnityEngine.Purchasing.ProductType)items[i].ProductType);
                 }
@@ -99,7 +99,7 @@ namespace Watermelon
         {
             Debug.Log("[IAPManager]: Purchasing - " + e.purchasedProduct.definition.id + " is completed!");
 
-            IAPItem item = IAPManager.GetIAPItem(e.purchasedProduct.definition.id);
+            var item = IAPManager.GetIAPItem(e.purchasedProduct.definition.id);
             if (item != null)
             {
                 IAPManager.OnPurchaseCompled(item.ProductKeyType);
@@ -123,7 +123,7 @@ namespace Watermelon
             Debug.Log("[IAPManager]: Purchasing - " + product.definition.id + " is failed!");
             Debug.Log("[IAPManager]: Fail reason - " + failureReason.ToString());
 
-            IAPItem item = IAPManager.GetIAPItem(product.definition.id);
+            var item = IAPManager.GetIAPItem(product.definition.id);
             if (item != null)
             {
                 IAPManager.OnPurchaseFailed(item.ProductKeyType, (Watermelon.PurchaseFailureReason)failureReason);
@@ -142,7 +142,7 @@ namespace Watermelon
             Debug.Log("[IAPManager]: Purchasing - " + product.definition.id + " is failed!");
             Debug.Log("[IAPManager]: Fail reason - " + failureDescription.message);
 
-            IAPItem item = IAPManager.GetIAPItem(product.definition.id);
+            var item = IAPManager.GetIAPItem(product.definition.id);
             if (item != null)
             {
                 IAPManager.OnPurchaseFailed(item.ProductKeyType, (Watermelon.PurchaseFailureReason)failureDescription.reason);
@@ -202,7 +202,7 @@ namespace Watermelon
             IAPCanvas.ShowLoadingPanel();
             IAPCanvas.ChangeLoadingMessage("Payment in progress..");
 
-            IAPItem item = IAPManager.GetIAPItem(productKeyType);
+            var item = IAPManager.GetIAPItem(productKeyType);
             if(item != null)
             {
                 controller.InitiatePurchase(item.ID);
@@ -218,7 +218,7 @@ namespace Watermelon
                 return null;
 
 #if MODULE_IAP
-            IAPItem item = IAPManager.GetIAPItem(productKeyType);
+            var item = IAPManager.GetIAPItem(productKeyType);
             if (item != null)
             {
                 return new ProductData(controller.products.WithID(item.ID));
@@ -231,10 +231,10 @@ namespace Watermelon
         public override bool IsSubscribed(ProductKeyType productKeyType)
         {
 #if MODULE_IAP
-            IAPItem item = IAPManager.GetIAPItem(productKeyType);
+            var item = IAPManager.GetIAPItem(productKeyType);
             if (item != null)
             {
-                Product product = controller.products.WithID(item.ID);
+                var product = controller.products.WithID(item.ID);
                 if (product != null)
                 {
                     // If the product doesn't have a receipt, then it wasn't purchased and the user is therefore not subscribed.
@@ -242,11 +242,11 @@ namespace Watermelon
                         return false;
 
                     //The intro_json parameter is optional and is only used for the App Store to get introductory information.
-                    SubscriptionManager subscriptionManager = new SubscriptionManager(product, null);
+                    var subscriptionManager = new SubscriptionManager(product, null);
 
                     // The SubscriptionInfo contains all of the information about the subscription.
                     // Find out more: https://docs.unity3d.com/Packages/com.unity.purchasing@3.1/manual/UnityIAPSubscriptionProducts.html
-                    SubscriptionInfo info = subscriptionManager.getSubscriptionInfo();
+                    var info = subscriptionManager.getSubscriptionInfo();
 
                     return info.isSubscribed() == Result.True;
                 }

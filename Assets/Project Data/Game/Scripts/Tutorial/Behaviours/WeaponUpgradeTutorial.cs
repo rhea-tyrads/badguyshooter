@@ -6,37 +6,37 @@ namespace Watermelon.SquadShooter
 {
     public class WeaponUpgradeTutorial : ITutorial
     {
-        private const WeaponType FIRST_WEAPON_TYPE = WeaponType.Minigun;
+        const WeaponType FIRST_WEAPON_TYPE = WeaponType.Minigun;
 
         public TutorialID TutorialID => TutorialID.WeaponUpgrade;
 
-        private const int STEP_TUTORIAL_ACTIVATED = 1;
-        private const int STEP_PAGE_OPENED = 2;
+        const int STEP_TUTORIAL_ACTIVATED = 1;
+        const int STEP_PAGE_OPENED = 2;
 
         public bool IsActive => saveData.isActive;
         public bool IsFinished => saveData.isFinished;
         public int Progress => saveData.progress;
 
-        private TutorialBaseSave saveData;
+        TutorialBaseSave saveData;
 
-        private WeaponData weaponData;
-        private BaseWeaponUpgrade weaponUpgrade;
+        WeaponData weaponData;
+        BaseWeaponUpgrade weaponUpgrade;
 
-        private UIMainMenu mainMenuUI;
-        private UIWeaponPage weaponPageUI;
+        UIMainMenu mainMenuUI;
+        UIWeaponPage weaponPageUI;
 
-        private WeaponTab weaponTab;
-        private CharacterTab characterTab;
+        WeaponTab weaponTab;
+        CharacterTab characterTab;
 
-        private bool isActive;
-        private int stepNumber;
+        bool isActive;
+        int stepNumber;
 
-        private UIGamepadButton activatedGamepadButton; 
-        private UIGamepadButton noAdsGamepadButton;
-        private UIGamepadButton settingsGamepadButton;
-        private UIGamepadButton playGamepadButton;
+        UIGamepadButton activatedGamepadButton;
+        UIGamepadButton noAdsGamepadButton;
+        UIGamepadButton settingsGamepadButton;
+        UIGamepadButton playGamepadButton;
 
-        private bool isInitialised;
+        bool isInitialised;
         public bool IsInitialised => isInitialised;
 
         public WeaponUpgradeTutorial()
@@ -82,7 +82,7 @@ namespace Watermelon.SquadShooter
             Control.OnInputChanged += OnInputTypeChanged;
         }
 
-        private void OnInputTypeChanged(InputType input)
+        void OnInputTypeChanged(InputType input)
         {
             if (activatedGamepadButton != null)
                 activatedGamepadButton.StopHighLight();
@@ -118,7 +118,7 @@ namespace Watermelon.SquadShooter
             }
             else if (stepNumber == STEP_PAGE_OPENED)
             {
-                WeaponPanelUI weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
+                var weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
                 if (weaponPanel != null)
                 {
                     TutorialCanvasController.ActivateTutorialCanvas(weaponPanel.RectTransform, true, true);
@@ -152,13 +152,13 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnMainMenuPageOpened(UIPage page, System.Type pageType)
+        void OnMainMenuPageOpened(UIPage page, System.Type pageType)
         {
             if (pageType == typeof(UIMainMenu))
             {
                 if (ActiveRoom.CurrentLevelIndex >= 2)
                 {
-                    BaseUpgradeStage stage = weaponUpgrade.NextStage;
+                    var stage = weaponUpgrade.NextStage;
                     if(stage != null)
                     {
                         // Player has enough money to upgrade first weapon
@@ -205,7 +205,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnWeaponTabOpened()
+        void OnWeaponTabOpened()
         {
             TutorialCanvasController.ResetTutorialCanvas();
 
@@ -216,11 +216,11 @@ namespace Watermelon.SquadShooter
             weaponPageUI.GraphicRaycaster.enabled = false;
         }
 
-        private void OnWeaponPageOpened(UIPage page, System.Type pageType)
+        void OnWeaponPageOpened(UIPage page, System.Type pageType)
         {
             UIController.OnPageOpenedEvent -= OnWeaponPageOpened;
 
-            WeaponPanelUI weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
+            var weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
             if (weaponPanel != null)
             {
                 stepNumber = STEP_PAGE_OPENED;
@@ -264,7 +264,7 @@ namespace Watermelon.SquadShooter
             weaponPageUI.GraphicRaycaster.enabled = true;
         }
 
-        private void OnWeaponUpgraded()
+        void OnWeaponUpgraded()
         {
             WeaponsController.OnWeaponUpgraded -= OnWeaponUpgraded;
 

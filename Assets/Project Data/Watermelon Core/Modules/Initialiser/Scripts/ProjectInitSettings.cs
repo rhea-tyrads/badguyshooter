@@ -17,7 +17,7 @@ namespace Watermelon
 
         public void Initialise(Initialiser initialiser)
         {
-            for (int i = 0; i < coreModules.Length; i++)
+            for (var i = 0; i < coreModules.Length; i++)
             {
                 if(coreModules[i] != null)
                 {
@@ -25,7 +25,7 @@ namespace Watermelon
                 }
             }
 
-            for (int i = 0; i < modules.Length; i++)
+            for (var i = 0; i < modules.Length; i++)
             {
                 if(modules[i] != null)
                 {

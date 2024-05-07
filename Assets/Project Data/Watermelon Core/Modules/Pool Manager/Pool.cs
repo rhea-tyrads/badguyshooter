@@ -56,8 +56,7 @@ namespace Watermelon
             get { return multiPoolPrefabsList.Count; }
         }
 
-        [SerializeField]
-        private int size = 10;
+        [SerializeField] int size = 10;
         /// <summary>
         /// Number of objects which be created be deffault.
         /// </summary>
@@ -91,7 +90,7 @@ namespace Watermelon
         /// <summary>
         /// Is pool created at runtime indicator.
         /// </summary>
-        private bool isRuntimeCreated;
+        bool isRuntimeCreated;
 
         [SerializeField]
         /// <summary>
@@ -177,7 +176,7 @@ namespace Watermelon
 
             if (singlePoolPrefab != null)
             {
-                for (int i = 0; i < size; i++)
+                for (var i = 0; i < size; i++)
                 {
                     AddObjectToPoolSingleType(" ");
                 }
@@ -197,13 +196,13 @@ namespace Watermelon
         {
             multiPooledObjects = new List<List<GameObject>>();
 
-            for (int i = 0; i < multiPoolPrefabsList.Count; i++)
+            for (var i = 0; i < multiPoolPrefabsList.Count; i++)
             {
                 multiPooledObjects.Add(new List<GameObject>());
 
                 if (multiPoolPrefabsList[i].prefab != null)
                 {
-                    for (int j = 0; j < size; j++)
+                    for (var j = 0; j < size; j++)
                     {
                         AddObjectToPoolMultiType(i, " ");
                     }
@@ -288,9 +287,9 @@ namespace Watermelon
         /// <param name="activateObject">If true object will be set as active.</param>
         /// <param name="position">Sets object to specified position.</param>
         /// <returns></returns>
-        private GameObject GetPooledObject(bool checkTypeActiveSelf, bool activateObject, bool setPosition, Vector3 position)
+        GameObject GetPooledObject(bool checkTypeActiveSelf, bool activateObject, bool setPosition, Vector3 position)
         {
-            PooledObjectSettings settings = new PooledObjectSettings(activateObject, !checkTypeActiveSelf);
+            var settings = new PooledObjectSettings(activateObject, !checkTypeActiveSelf);
 
             if (setPosition)
             {
@@ -314,18 +313,18 @@ namespace Watermelon
         /// <param name="activateObject">If true object will be set as active.</param>
         /// <param name="position">Sets object to specified position.</param>
         /// <returns></returns>
-        private GameObject GetPooledObjectSingleType(PooledObjectSettings settings)
+        GameObject GetPooledObjectSingleType(PooledObjectSettings settings)
         {
             if (!inited)
                 InitializeAsSingleTypePool();
 
-            for (int i = 0; i < pooledObjects.Count; i++)
+            for (var i = 0; i < pooledObjects.Count; i++)
             {
                 var obj = pooledObjects[i];
 
                 if(obj == null)
                 {
-                    GameObject newObject = PoolManager.SpawnObject(singlePoolPrefab, objectsContainer);
+                    var newObject = PoolManager.SpawnObject(singlePoolPrefab, objectsContainer);
 
                     newObject.name += " " + PoolManager.SpawnedObjectsAmount;
                     newObject.SetActive(false);
@@ -344,7 +343,7 @@ namespace Watermelon
 
             if (autoSizeIncrement)
             {
-                GameObject newObject = AddObjectToPoolSingleType(" e");
+                var newObject = AddObjectToPoolSingleType(" e");
                 SetupPooledObject(newObject, settings);
 
                 return newObject;
@@ -360,12 +359,12 @@ namespace Watermelon
         /// <param name="activateObject">If true object will be set as active.</param>
         /// <param name="position">Sets object to specified position.</param>
         /// <returns></returns>
-        private GameObject GetPooledObjectMultiType(PooledObjectSettings settings, int poolIndex)
+        GameObject GetPooledObjectMultiType(PooledObjectSettings settings, int poolIndex)
         {
             if (!inited)
                 InitializeAsMultiTypePool();
 
-            int chosenPoolIndex = 0;
+            var chosenPoolIndex = 0;
 
             if (poolIndex != -1)
             {
@@ -373,18 +372,18 @@ namespace Watermelon
             }
             else
             {
-                int randomPoolIndex = 0;
-                bool randomValueWasInRange = false;
-                int currentValue = 0;
-                int totalWeight = 0;
+                var randomPoolIndex = 0;
+                var randomValueWasInRange = false;
+                var currentValue = 0;
+                var totalWeight = 0;
 
-                for (int i = 0; i < multiPoolPrefabsList.Count; i++)
+                for (var i = 0; i < multiPoolPrefabsList.Count; i++)
                 {
                     totalWeight += multiPoolPrefabsList[i].weight;
                 }
 
-                int randomValue = UnityEngine.Random.Range(1, totalWeight);
-                for (int i = 0; i < multiPoolPrefabsList.Count; i++)
+                var randomValue = UnityEngine.Random.Range(1, totalWeight);
+                for (var i = 0; i < multiPoolPrefabsList.Count; i++)
                 {
                     currentValue += multiPoolPrefabsList[i].weight;
 
@@ -404,9 +403,9 @@ namespace Watermelon
                 chosenPoolIndex = randomPoolIndex;
             }
 
-            List<GameObject> objectsList = multiPooledObjects[chosenPoolIndex];
+            var objectsList = multiPooledObjects[chosenPoolIndex];
 
-            for (int i = 0; i < objectsList.Count; i++)
+            for (var i = 0; i < objectsList.Count; i++)
             {
                 if (settings.UseActiveOnHierarchy ? !objectsList[i].activeInHierarchy : !objectsList[i].activeSelf)
                 {
@@ -417,7 +416,7 @@ namespace Watermelon
 
             if (autoSizeIncrement)
             {
-                GameObject newObject = AddObjectToPoolMultiType(chosenPoolIndex, " e");
+                var newObject = AddObjectToPoolMultiType(chosenPoolIndex, " e");
                 SetupPooledObject(newObject, settings);
 
                 return newObject;
@@ -433,7 +432,7 @@ namespace Watermelon
         /// <param name="settings">Settings to apply.</param>
         protected void SetupPooledObject(GameObject gameObject, PooledObjectSettings settings)
         {
-            Transform objectTransform = gameObject.transform;
+            var objectTransform = gameObject.transform;
 
             if (settings.ApplyParrent)
             {
@@ -485,7 +484,7 @@ namespace Watermelon
         /// <returns>Returns reference to just added object.</returns>
         protected GameObject AddObjectToPoolSingleType(string nameAddition)
         {
-            GameObject newObject = PoolManager.SpawnObject(singlePoolPrefab, objectsContainer);
+            var newObject = PoolManager.SpawnObject(singlePoolPrefab, objectsContainer);
 
             newObject.name += nameAddition + PoolManager.SpawnedObjectsAmount;
             newObject.SetActive(false);
@@ -498,10 +497,10 @@ namespace Watermelon
 
         public void CreatePoolObjects(int count)
         {
-            int sizeDifference = count - pooledObjects.Count;
+            var sizeDifference = count - pooledObjects.Count;
             if (sizeDifference > 0)
             {
-                for (int i = 0; i < sizeDifference; i++)
+                for (var i = 0; i < sizeDifference; i++)
                 {
                     AddObjectToPoolSingleType(" ");
                 }
@@ -515,7 +514,7 @@ namespace Watermelon
         /// <returns>Returns reference to just added object.</returns>
         protected GameObject AddObjectToPoolMultiType(int PoolIndex, string nameAddition)
         {
-            GameObject newObject = PoolManager.SpawnObject(multiPoolPrefabsList[PoolIndex].prefab, objectsContainer);
+            var newObject = PoolManager.SpawnObject(multiPoolPrefabsList[PoolIndex].prefab, objectsContainer);
 
             newObject.name += nameAddition + PoolManager.SpawnedObjectsAmount;
             newObject.SetActive(false);
@@ -532,16 +531,16 @@ namespace Watermelon
         {
             if (type == PoolType.Single)
             {
-                for (int i = 0; i < pooledObjects.Count; i++)
+                for (var i = 0; i < pooledObjects.Count; i++)
                 {
                     pooledObjects[i].transform.SetParent(objectsContainer != null ? objectsContainer : PoolManager.ObjectsContainerTransform);
                 }
             }
             else
             {
-                for (int i = 0; i < multiPooledObjects.Count; i++)
+                for (var i = 0; i < multiPooledObjects.Count; i++)
                 {
-                    for (int j = 0; j < multiPooledObjects[i].Count; j++)
+                    for (var j = 0; j < multiPooledObjects[i].Count; j++)
                     {
                         multiPooledObjects[i][j].transform.SetParent(objectsContainer != null ? objectsContainer : PoolManager.ObjectsContainerTransform);
                     }
@@ -557,7 +556,7 @@ namespace Watermelon
         {
             if (type == PoolType.Single)
             {
-                for (int i = 0; i < pooledObjects.Count; i++)
+                for (var i = 0; i < pooledObjects.Count; i++)
                 {
                     if (resetParrent)
                     {
@@ -569,9 +568,9 @@ namespace Watermelon
             }
             else
             {
-                for (int i = 0; i < multiPooledObjects.Count; i++)
+                for (var i = 0; i < multiPooledObjects.Count; i++)
                 {
-                    for (int j = 0; j < multiPooledObjects[i].Count; j++)
+                    for (var j = 0; j < multiPooledObjects[i].Count; j++)
                     {
                         if (resetParrent)
                         {
@@ -590,7 +589,7 @@ namespace Watermelon
         {
             if (type == PoolType.Single)
             {
-                for (int i = 0; i < pooledObjects.Count; i++)
+                for (var i = 0; i < pooledObjects.Count; i++)
                 {
                     UnityEngine.Object.Destroy(pooledObjects[i]);
                 }
@@ -599,9 +598,9 @@ namespace Watermelon
             }
             else
             {
-                for (int i = 0; i < multiPooledObjects.Count; i++)
+                for (var i = 0; i < multiPooledObjects.Count; i++)
                 {
-                    for (int j = 0; j < multiPooledObjects[i].Count; j++)
+                    for (var j = 0; j < multiPooledObjects[i].Count; j++)
                     {
                         UnityEngine.Object.Destroy(multiPooledObjects[i][j]);
                     }
@@ -639,15 +638,15 @@ namespace Watermelon
         /// </summary>
         public void RecalculateWeights()
         {
-            List<MultiPoolPrefab> oldPrefabsList = new List<MultiPoolPrefab>(multiPoolPrefabsList);
+            var oldPrefabsList = new List<MultiPoolPrefab>(multiPoolPrefabsList);
             multiPoolPrefabsList = new List<MultiPoolPrefab>();
 
             if (oldPrefabsList.Count > 0)
             {
-                int totalUnlockedPoints = 100;
-                int unlockedPrefabsAmount = oldPrefabsList.Count;
+                var totalUnlockedPoints = 100;
+                var unlockedPrefabsAmount = oldPrefabsList.Count;
 
-                for (int i = 0; i < oldPrefabsList.Count; i++)
+                for (var i = 0; i < oldPrefabsList.Count; i++)
                 {
                     if (oldPrefabsList[i].isWeightLocked)
                     {
@@ -658,10 +657,10 @@ namespace Watermelon
 
                 if (unlockedPrefabsAmount > 0)
                 {
-                    int averagePoints = totalUnlockedPoints / unlockedPrefabsAmount;
-                    int additionalPoints = totalUnlockedPoints - averagePoints * unlockedPrefabsAmount;
+                    var averagePoints = totalUnlockedPoints / unlockedPrefabsAmount;
+                    var additionalPoints = totalUnlockedPoints - averagePoints * unlockedPrefabsAmount;
 
-                    for (int j = 0; j < oldPrefabsList.Count; j++)
+                    for (var j = 0; j < oldPrefabsList.Count; j++)
                     {
                         if (oldPrefabsList[j].isWeightLocked)
                         {
@@ -695,7 +694,7 @@ namespace Watermelon
                 if (multiPoolPrefabsList.Count == 0)
                     return false;
 
-                for (int i = 0; i < multiPoolPrefabsList.Count; i++)
+                for (var i = 0; i < multiPoolPrefabsList.Count; i++)
                 {
                     if (multiPoolPrefabsList[i].prefab == null)
                     {
@@ -709,7 +708,7 @@ namespace Watermelon
 
         public void DeleteAllNullRefsInSpawnedObjects()
         {
-            for (int i = 0; i < pooledObjects.Count; i++)
+            for (var i = 0; i < pooledObjects.Count; i++)
             {
                 if(pooledObjects[i] == null)
                 {

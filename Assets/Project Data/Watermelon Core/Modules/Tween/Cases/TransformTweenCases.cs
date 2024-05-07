@@ -358,8 +358,8 @@ namespace Watermelon
 
         public class RotateConstant : TweenCase
         {
-            private Transform objectTransform;
-            private Vector3 rotationVector;
+            Transform objectTransform;
+            Vector3 rotationVector;
 
             public RotateConstant(Transform tweenObject, Vector3 rotationVector)
             {
@@ -410,7 +410,7 @@ namespace Watermelon
 
         public class PositionTransform : TweenCaseFunction<Transform, Transform>
         {
-            private Vector3 startPosition;
+            Vector3 startPosition;
 
             public PositionTransform(Transform tweenObject, Transform resultValue) : base(tweenObject, resultValue)
             {
@@ -437,8 +437,8 @@ namespace Watermelon
 
         public class BezierPosition : TweenCaseFunction<Transform, Vector3>
         {
-            private Vector3 keyPoint1;
-            private Vector3 keyPoint2;
+            Vector3 keyPoint1;
+            Vector3 keyPoint2;
 
             public BezierPosition(Transform tweenObject, Vector3 resultValue, float upOffset, float rightOffset) : base(tweenObject, resultValue)
             {
@@ -474,16 +474,16 @@ namespace Watermelon
 
         public class BezierFollow : TweenCase
         {
-            private Vector3 startPosition;
+            Vector3 startPosition;
 
-            private Transform fromTransform;
-            private Transform toTransform;
+            Transform fromTransform;
+            Transform toTransform;
 
-            private Vector3 keyPoint1;
-            private Vector3 keyPoint2;
+            Vector3 keyPoint1;
+            Vector3 keyPoint2;
 
-            private float upOffset;
-            private float rightOffset;
+            float upOffset;
+            float rightOffset;
 
             public BezierFollow(Transform tweenObject, Transform followTarget, float upOffset, float rightOffset)
             {
@@ -500,7 +500,7 @@ namespace Watermelon
                 RecalculatePositions();
             }
 
-            private void RecalculatePositions()
+            void RecalculatePositions()
             {
                 var direction = toTransform.position - fromTransform.position;
 
@@ -530,11 +530,11 @@ namespace Watermelon
 
         public class Follow : TweenCase
         {
-            private Transform tweenObject;
-            private Transform target;
+            Transform tweenObject;
+            Transform target;
 
-            private float minimumDistanceSqr;
-            private float speed;
+            float minimumDistanceSqr;
+            float speed;
 
             public Follow(Transform tweenObject, Transform target, float speed, float minimumDistance)
             {
@@ -618,15 +618,15 @@ namespace Watermelon
 
         public class PositionXZ : TweenCase
         {
-            private Transform tweenObject;
+            Transform tweenObject;
 
-            private float resultValueX;
-            private float resultValueZ;
+            float resultValueX;
+            float resultValueZ;
 
-            private float startValueX;
-            private float startValueZ;
+            float startValueX;
+            float startValueZ;
 
-            private float intepolatedState;
+            float intepolatedState;
 
             public PositionXZ(Transform tweenObject, float resultValueX, float resultValueZ)
             {
@@ -729,20 +729,20 @@ namespace Watermelon
 
                 parentObject = tweenObject.gameObject;
 
-                float[] distances = new float[path.Length];
+                var distances = new float[path.Length];
                 float totalDistance = 0;
                 float minStateValue = 0;
 
                 distances[0] = Vector3.Distance(startValue, path[0]);
                 totalDistance += distances[0];
 
-                for (int i = 1; i < path.Length; i++)
+                for (var i = 1; i < path.Length; i++)
                 {
                     distances[i] = Vector3.Distance(path[i - 1], path[i]);
                     totalDistance += distances[i];
                 }
 
-                for (int i = 0; i < path.Length; i++)
+                for (var i = 0; i < path.Length; i++)
                 {
                     this.maxStateValues[i] = minStateValue + (distances[i] / totalDistance);
                     minStateValue = maxStateValues[i];
@@ -759,9 +759,9 @@ namespace Watermelon
                 tweenObject.position = path[path.Length - 1];
             }
 
-            private void UpdateIndex()
+            void UpdateIndex()
             {
-                for (int i = 0; i < maxStateValues.Length; i++)
+                for (var i = 0; i < maxStateValues.Length; i++)
                 {
                     if (state < maxStateValues[i])
                     {
@@ -799,10 +799,10 @@ namespace Watermelon
             public float firstTime;
             public float secondTime;
 
-            private Ease.Type firstScaleEasing;
-            private Ease.Type secondScaleEasing;
+            Ease.Type firstScaleEasing;
+            Ease.Type secondScaleEasing;
 
-            private float relativeState;
+            float relativeState;
 
             public PushScale(Transform tweenObject, Vector3 firstScaleValue, Vector3 secondScaleValue, float firstTime, float secondTime, Ease.Type firstScaleEasing, Ease.Type secondScaleEasing)
             {
@@ -924,19 +924,19 @@ namespace Watermelon
 
         public class PingPongScale : TweenCase
         {
-            private Transform tweenObject;
+            Transform tweenObject;
 
-            private float minValue;
-            private float maxValue;
+            float minValue;
+            float maxValue;
 
-            private float totalTime;
-            private float halfTime;
+            float totalTime;
+            float halfTime;
 
-            private float tempScaleValue;
+            float tempScaleValue;
 
-            private bool direction;
+            bool direction;
 
-            private Ease.IEasingFunction negativeEaseFunction;
+            Ease.IEasingFunction negativeEaseFunction;
 
             public PingPongScale(Transform tweenObject, float minValue, float maxValue, float duration, Ease.Type positiveScaleEasing, Ease.Type negativeScaleEasing)
             {
@@ -1086,7 +1086,7 @@ namespace Watermelon
 
         public class LookAt : TweenCaseFunction<Transform, Vector3>
         {
-            private Quaternion startRotation;
+            Quaternion startRotation;
 
             public LookAt(Transform tweenObject, Vector3 resultValue) : base(tweenObject, resultValue)
             {
@@ -1128,7 +1128,7 @@ namespace Watermelon
 
                 startValue = tweenObject.eulerAngles;
 
-                Vector3 different = (resultValue - tweenObject.position);
+                var different = (resultValue - tweenObject.position);
                 different.Normalize();
 
                 rotationZ = (Mathf.Atan2(different.y, different.x) * Mathf.Rad2Deg);
@@ -1162,9 +1162,9 @@ namespace Watermelon
 
         public class Shake : TweenCase
         {
-            private Transform tweenObject;
-            private Vector3 startPosition;
-            private float magnitude;
+            Transform tweenObject;
+            Vector3 startPosition;
+            float magnitude;
 
             public Shake(Transform tweenObject, float magnitude)
             {

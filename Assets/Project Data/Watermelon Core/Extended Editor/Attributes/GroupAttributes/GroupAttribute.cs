@@ -4,7 +4,7 @@ namespace Watermelon
 {
     public class GroupAttribute : ExtendedEditorAttribute
     {
-        private string name;
+        string name;
         public string Name => name;
 
         public GroupAttribute(string name)

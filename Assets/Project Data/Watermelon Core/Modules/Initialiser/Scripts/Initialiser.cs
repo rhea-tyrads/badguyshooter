@@ -72,7 +72,7 @@ namespace Watermelon
 
         public static bool IsModuleInitialised(Type moduleType)
         {
-            ProjectInitSettings projectInitSettings = InitSettings;
+            var projectInitSettings = InitSettings;
 
             InitModule[] coreModules = null;
             InitModule[] initModules = null;
@@ -90,7 +90,7 @@ namespace Watermelon
                 initModules = projectInitSettings.Modules;
             }
 
-            for (int i = 0; i < coreModules.Length; i++)
+            for (var i = 0; i < coreModules.Length; i++)
             {
                 if (coreModules[i].GetType() == moduleType)
                 {
@@ -98,7 +98,7 @@ namespace Watermelon
                 }
             }
 
-            for (int i = 0; i < initModules.Length; i++)
+            for (var i = 0; i < initModules.Length; i++)
             {
                 if (initModules[i].GetType() == moduleType)
                 {
@@ -109,7 +109,7 @@ namespace Watermelon
             return false;
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             IsInititalized = false;
 
@@ -118,7 +118,7 @@ namespace Watermelon
 #endif
         }
 
-        private void OnApplicationFocus(bool focus)
+        void OnApplicationFocus(bool focus)
         {
 #if !UNITY_EDITOR
             if(!focus) SaveController.Save();

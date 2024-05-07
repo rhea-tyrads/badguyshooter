@@ -28,36 +28,36 @@ namespace Watermelon
         [SerializeField] bool useTutorial;
         [SerializeField] GameObject pointerGameObject;
 
-        private RectTransform baseRectTransform;
-        private RectTransform backgroundRectTransform;
-        private RectTransform handleRectTransform;
+        RectTransform baseRectTransform;
+        RectTransform backgroundRectTransform;
+        RectTransform handleRectTransform;
 
-        private bool isActive;
+        bool isActive;
         public bool IsMovementInputNonZero => isActive;
 
-        private bool canDrag;
+        bool canDrag;
 
-        private Canvas canvas;
-        private Camera canvasCamera;
+        Canvas canvas;
+        Camera canvasCamera;
 
         protected Vector2 input = Vector2.zero;
 
         public Vector3 Input => input;
         public Vector3 MovementInput => new Vector3(input.x, 0, input.y);
 
-        private Vector2 defaultAnchoredPosition;
+        Vector2 defaultAnchoredPosition;
 
         public bool IsLookInputNonZero => false;
         public Vector3 LookInput => Vector3.zero;
 
-        private Animator joystickAnimator;
-        private bool isTutorialDisplayed;
-        private bool hideVisualsActive;
+        Animator joystickAnimator;
+        bool isTutorialDisplayed;
+        bool hideVisualsActive;
 
         // Events
         public event SimpleCallback OnMovementInputActivated;
 
-        private void Awake()
+        void Awake()
         {
             if (Control.InputType == InputType.UIJoystick)
             {
@@ -84,7 +84,7 @@ namespace Watermelon
             if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
                 canvasCamera = canvas.worldCamera;
 
-            Vector2 center = new Vector2(0.5f, 0.5f);
+            var center = new Vector2(0.5f, 0.5f);
             backgroundRectTransform.pivot = center;
             handleRectTransform.anchorMin = center;
             handleRectTransform.anchorMax = center;
@@ -145,8 +145,8 @@ namespace Watermelon
             if (!isActive || !canDrag)
                 return;
 
-            Vector2 position = RectTransformUtility.WorldToScreenPoint(canvasCamera, backgroundRectTransform.position);
-            Vector2 radius = backgroundRectTransform.sizeDelta / 2;
+            var position = RectTransformUtility.WorldToScreenPoint(canvasCamera, backgroundRectTransform.position);
+            var radius = backgroundRectTransform.sizeDelta / 2;
             input = (eventData.position - position) / (radius * canvas.scaleFactor);
             HandleInput(input.magnitude, input.normalized, radius, canvasCamera);
             handleRectTransform.anchoredPosition = input * radius * handleRange;
@@ -190,10 +190,10 @@ namespace Watermelon
 
         protected Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition)
         {
-            Vector2 localPoint = Vector2.zero;
+            var localPoint = Vector2.zero;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRectTransform, screenPosition, canvasCamera, out localPoint))
             {
-                Vector2 pivotOffset = baseRectTransform.pivot * baseRectTransform.sizeDelta;
+                var pivotOffset = baseRectTransform.pivot * baseRectTransform.sizeDelta;
                 return localPoint - (backgroundRectTransform.anchorMax * baseRectTransform.sizeDelta) + pivotOffset;
             }
             return Vector2.zero;

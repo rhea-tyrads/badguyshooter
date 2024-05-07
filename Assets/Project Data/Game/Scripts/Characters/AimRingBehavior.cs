@@ -14,18 +14,18 @@ namespace Watermelon.SquadShooter
         [Space(5f)]
         [SerializeField] float rotationSpeed;
 
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
-        private Mesh mesh;
+        MeshFilter meshFilter;
+        MeshRenderer meshRenderer;
+        Mesh mesh;
 
-        private List<Vector3> vertices = new List<Vector3>();
-        private List<int> triangles = new List<int>();
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
 
-        private Transform followTransform;
+        Transform followTransform;
 
-        private float radius;
+        float radius;
 
-        private void Awake()
+        void Awake()
         {
             meshFilter = GetComponent<MeshFilter>();
             meshRenderer = GetComponent<MeshRenderer>();
@@ -67,19 +67,19 @@ namespace Watermelon.SquadShooter
             meshRenderer.enabled = false;
         }
 
-        private void GenerateMesh()
+        void GenerateMesh()
         {
             mesh = new Mesh();
             mesh.name = "Generated Mesh";
             meshFilter.mesh = mesh;
 
-            float stepAngle = 360f / detalisation;
+            var stepAngle = 360f / detalisation;
 
-            float stripeAngle = 180f * stripeLength / (Mathf.PI * radius);
-            int stripeSectorsAmount = Mathf.FloorToInt(stripeAngle / stepAngle);
+            var stripeAngle = 180f * stripeLength / (Mathf.PI * radius);
+            var stripeSectorsAmount = Mathf.FloorToInt(stripeAngle / stepAngle);
 
-            float gapAngle = 180f * gapLength / (Mathf.PI * radius);
-            int gapSectorsAmount = Mathf.FloorToInt(gapAngle / stepAngle);
+            var gapAngle = 180f * gapLength / (Mathf.PI * radius);
+            var gapSectorsAmount = Mathf.FloorToInt(gapAngle / stepAngle);
 
             vertices.Clear();
             triangles.Clear();
@@ -89,7 +89,7 @@ namespace Watermelon.SquadShooter
 
             while (currentAngle < 360f)
             {
-                for (int i = 0; i < stripeSectorsAmount && currentAngle < 360f; i++)
+                for (var i = 0; i < stripeSectorsAmount && currentAngle < 360f; i++)
                 {
                     vertices.Add(GetPoint(radius, Mathf.Deg2Rad * currentAngle, Vector3.zero));
                     vertices.Add(GetPoint(radius + width, Mathf.Deg2Rad * currentAngle, Vector3.zero));
@@ -99,7 +99,7 @@ namespace Watermelon.SquadShooter
                     vertices.Add(GetPoint(radius + width, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
                     vertices.Add(GetPoint(radius, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
 
-                    int trisCount = triangles.Count;
+                    var trisCount = triangles.Count;
 
                     triangles.Add(trisCount + 2);
                     triangles.Add(trisCount + 1);
@@ -112,7 +112,7 @@ namespace Watermelon.SquadShooter
                     currentAngle += stepAngle;
                 }
 
-                for (int i = 0; i < gapSectorsAmount && currentAngle < 360f; i++)
+                for (var i = 0; i < gapSectorsAmount && currentAngle < 360f; i++)
                 {
                     currentAngle += stepAngle;
                 }
@@ -122,7 +122,7 @@ namespace Watermelon.SquadShooter
             mesh.triangles = triangles.ToArray();
         }
 
-        private Vector3 GetPoint(float radius, float angle, Vector3 center)
+        Vector3 GetPoint(float radius, float angle, Vector3 center)
         {
             return new Vector3(Mathf.Cos(angle) * radius + center.x, center.y, Mathf.Sin(angle) * radius + center.z);
         }

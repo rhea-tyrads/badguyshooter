@@ -19,19 +19,19 @@ namespace Watermelon.SquadShooter
         [Space]
         [SerializeField] List<float> bulletStreamAngles;
 
-        private float spread;
-        private float attackDelay;
-        private DuoFloat bulletSpeed;
+        float spread;
+        float attackDelay;
+        DuoFloat bulletSpeed;
 
-        private float nextShootTime;
+        float nextShootTime;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
-        private Vector3 shootDirection;
+        Vector3 shootDirection;
 
-        private MinigunUpgrade upgrade;
+        MinigunUpgrade upgrade;
 
-        private TweenCase shootTweenCase;
+        TweenCase shootTweenCase;
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
 
             upgrade = UpgradesController.GetUpgrade<MinigunUpgrade>(data.UpgradeType);
 
-            GameObject bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
+            var bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
             bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
             RecalculateDamage();
@@ -94,15 +94,15 @@ namespace Watermelon.SquadShooter
                         bulletStreamAngles = new List<float> { 0 };
                     }
 
-                    int bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
+                    var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
 
-                    for (int k = 0; k < bulletsNumber; k++)
+                    for (var k = 0; k < bulletsNumber; k++)
                     {
-                        for (int i = 0; i < bulletStreamAngles.Count; i++)
+                        for (var i = 0; i < bulletStreamAngles.Count; i++)
                         {
                             var streamAngle = bulletStreamAngles[i];
 
-                            PlayerBulletBehavior bullet = bulletPool
+                            var bullet = bulletPool
                                 .GetPooledObject(new PooledObjectSettings()
                                 .SetPosition(shootPoint.position)
                                 .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up * (Random.Range((float)-spread, spread) + streamAngle)))

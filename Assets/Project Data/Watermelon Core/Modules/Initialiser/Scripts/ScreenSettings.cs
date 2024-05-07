@@ -24,8 +24,8 @@ namespace Watermelon
 
             if (setFrameRateAutomatically)
             {
-                uint numerator = Screen.currentResolution.refreshRateRatio.numerator;
-                uint denominator = Screen.currentResolution.refreshRateRatio.denominator;
+                var numerator = Screen.currentResolution.refreshRateRatio.numerator;
+                var denominator = Screen.currentResolution.refreshRateRatio.denominator;
 
                 if(numerator != 0 && denominator != 0)
                 {
@@ -53,7 +53,7 @@ namespace Watermelon
             }
         }
 
-        private enum AllowedFrameRates
+        enum AllowedFrameRates
         {
             Rate30 = 30,
             Rate60 = 60,

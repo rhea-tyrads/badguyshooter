@@ -5,7 +5,7 @@ namespace Watermelon.SquadShooter
 {
     public class UIWeaponPage : UIUpgradesAbstractPage<WeaponPanelUI, WeaponType>
     {
-        private WeaponsController weaponController;
+        WeaponsController weaponController;
 
         protected override int SelectedIndex => Mathf.Clamp(WeaponsController.SelectedWeaponIndex, 0, int.MaxValue);
 
@@ -18,7 +18,7 @@ namespace Watermelon.SquadShooter
 
         public override WeaponPanelUI GetPanel(WeaponType weaponType)
         {
-            for (int i = 0; i < itemPanels.Count; i++)
+            for (var i = 0; i < itemPanels.Count; i++)
             {
                 if (itemPanels[i].Data.Type == weaponType)
                     return itemPanels[i];
@@ -29,7 +29,7 @@ namespace Watermelon.SquadShooter
 
         public bool IsAnyActionAvailable()
         {
-            for (int i = 0; i < itemPanels.Count; i++)
+            for (var i = 0; i < itemPanels.Count; i++)
             {
                 if (itemPanels[i].IsNextUpgradeCanBePurchased())
                     return true;
@@ -44,7 +44,7 @@ namespace Watermelon.SquadShooter
         {
             base.Initialise();
 
-            for (int i = 0; i < WeaponsController.Database.Weapons.Length; i++)
+            for (var i = 0; i < WeaponsController.Database.Weapons.Length; i++)
             {
                 var weapon = WeaponsController.Database.Weapons[i];
                 var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(weapon.UpgradeType);

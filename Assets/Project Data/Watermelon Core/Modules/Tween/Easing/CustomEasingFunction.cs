@@ -10,7 +10,7 @@ namespace Watermelon
 
         [SerializeField] AnimationCurve easingCurve;
 
-        private float totalEasingTime;
+        float totalEasingTime;
 
         public CustomEasingFunction(string name, AnimationCurve easingCurve)
         {

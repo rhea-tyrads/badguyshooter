@@ -9,34 +9,34 @@ namespace Watermelon
 
     public class UIParticleSystem : MonoBehaviour
     {
-        private RectTransform rectTransform;
+        RectTransform rectTransform;
 
         [SerializeField] UIParticleSettings settings;
 
-        private RuntimeGenericPool<UIParticle> particlesPool;
+        RuntimeGenericPool<UIParticle> particlesPool;
 
         public bool IsPlaying { get; set; }
 
-        private List<UIParticle> particles;
+        List<UIParticle> particles;
         public bool DisableWhenReady { get; set; }
 
-        private float spawnRate;
+        float spawnRate;
 
-        private float lastSpawnTime;
-        private List<BurstData> burstsData = new List<BurstData>();
+        float lastSpawnTime;
+        List<BurstData> burstsData = new List<BurstData>();
 
-        private bool isInited = false;
+        bool isInited = false;
 
-        private void Awake()
+        void Awake()
         {
             Init();
         }
 
-        private void Init()
+        void Init()
         {
             rectTransform = GetComponent<RectTransform>();
 
-            int maxCount = 0;
+            var maxCount = 0;
             if (settings.emissionPerSecond > 0)
             {
                 spawnRate = 1f / settings.emissionPerSecond;
@@ -49,7 +49,7 @@ namespace Watermelon
 
             if (!settings.bursts.IsNullOrEmpty())
             {
-                for (int i = 0; i < settings.bursts.Length; i++)
+                for (var i = 0; i < settings.bursts.Length; i++)
                 {
                     var burst = settings.bursts[i];
 
@@ -92,7 +92,7 @@ namespace Watermelon
             isInited = true;
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             if (settings.playOnAwake)
             {
@@ -102,10 +102,10 @@ namespace Watermelon
             }
         }
 
-        private void LateUpdate()
+        void LateUpdate()
         {
             // Tick through all active particles and remove finished ones
-            for (int i = 0; i < particles.Count; i++)
+            for (var i = 0; i < particles.Count; i++)
             {
                 var particle = particles[i];
 
@@ -148,7 +148,7 @@ namespace Watermelon
                 lastSpawnTime = Time.time - timeSpend;
             }
 
-            for (int i = 0; i < burstsData.Count; i++)
+            for (var i = 0; i < burstsData.Count; i++)
             {
                 var burst = burstsData[i];
                 if (!burst.isActive) return;
@@ -157,7 +157,7 @@ namespace Watermelon
                 {
                     timeSpend = Time.time - burst.timeToSpawn;
 
-                    for (int j = 0; j < burst.burstSettings.count; j++)
+                    for (var j = 0; j < burst.burstSettings.count; j++)
                     {
                         SpawnParticle(timeSpend);
                     }
@@ -177,7 +177,7 @@ namespace Watermelon
             }
         }
 
-        private void SpawnParticle(float timeSpend)
+        void SpawnParticle(float timeSpend)
         {
             var particle = particlesPool.GetComponent();
 
@@ -210,10 +210,10 @@ namespace Watermelon
 
     public class RuntimeGenericPool<T> where T : MonoBehaviour
     {
-        private List<T> pooledComponents;
+        List<T> pooledComponents;
 
-        private GameObject prefab;
-        private Transform parent;
+        GameObject prefab;
+        Transform parent;
 
         public RuntimeGenericPool(GameObject prefab, int maxCount, Transform parent)
         {
@@ -222,7 +222,7 @@ namespace Watermelon
             this.prefab = prefab;
             this.parent = parent;
 
-            for (int i = 0; i < maxCount; i++)
+            for (var i = 0; i < maxCount; i++)
             {
                 InstantiateComponent(prefab, parent);
             }
@@ -230,7 +230,7 @@ namespace Watermelon
 
         public T GetComponent()
         {
-            for (int i = 0; i < pooledComponents.Count; i++)
+            for (var i = 0; i < pooledComponents.Count; i++)
             {
                 var component = pooledComponents[i];
                 if (!component.gameObject.activeSelf)
@@ -243,7 +243,7 @@ namespace Watermelon
             return InstantiateComponent(prefab, parent, false);
         }
 
-        private T InstantiateComponent(GameObject prefab, Transform parent, bool reset = true)
+        T InstantiateComponent(GameObject prefab, Transform parent, bool reset = true)
         {
             var component = Object.Instantiate(prefab, parent).GetComponent<T>();
 

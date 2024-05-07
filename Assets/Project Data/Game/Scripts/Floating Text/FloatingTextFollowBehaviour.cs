@@ -17,9 +17,9 @@ namespace Watermelon.SquadShooter
         [SerializeField] float scaleTime;
         [SerializeField] Ease.Type scaleEasing;
 
-        private Vector3 defaultScale;
+        Vector3 defaultScale;
 
-        private void Awake()
+        void Awake()
         {
             defaultScale = transform.localScale;
         }

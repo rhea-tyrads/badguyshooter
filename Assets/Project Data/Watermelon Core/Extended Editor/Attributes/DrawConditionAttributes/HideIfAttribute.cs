@@ -5,7 +5,7 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class HideIfAttribute : DrawConditionAttribute
     {
-        private string conditionName;
+        string conditionName;
 
         public HideIfAttribute(string conditionName)
         {

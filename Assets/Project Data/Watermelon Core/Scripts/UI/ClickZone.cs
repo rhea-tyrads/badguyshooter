@@ -5,7 +5,7 @@ namespace Watermelon
 {
     public class ClickZone : MonoBehaviour, IPointerClickHandler
     {
-        private static ClickZone instance;
+        static ClickZone instance;
 
         public ClickCallback onZoneClick;
         public static ClickCallback OnZoneClick
@@ -14,9 +14,9 @@ namespace Watermelon
             set { instance.onZoneClick = value; }
         }
 
-        private bool isOpened;
+        bool isOpened;
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
 

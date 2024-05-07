@@ -11,10 +11,10 @@ namespace Watermelon
         [SerializeField] AnimationCurve hideStoreAdButtonsCurve;
         [SerializeField] float showHideDuration;
 
-        private float savedRectPosX;
-        private float rectXPosBehindOfTheScreen;
+        float savedRectPosX;
+        float rectXPosBehindOfTheScreen;
 
-        private TweenCase showHideCase;
+        TweenCase showHideCase;
 
         public void Init(float rectXPosBehindOfTheScreen)
         {

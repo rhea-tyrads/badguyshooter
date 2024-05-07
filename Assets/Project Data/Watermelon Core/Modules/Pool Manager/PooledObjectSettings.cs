@@ -7,56 +7,56 @@ namespace Watermelon
     public class PooledObjectSettings
     {
         //activate
-        private bool activate;
-        private bool useActiveOnHierarchy;
+        bool activate;
+        bool useActiveOnHierarchy;
         public bool Activate => activate;
         public bool UseActiveOnHierarchy => useActiveOnHierarchy;
 
         //position
-        private Vector3 position;
-        private bool applyPosition;
+        Vector3 position;
+        bool applyPosition;
         public Vector3 Position => position;
         public bool ApplyPosition => applyPosition;
 
         //localPosition
-        private Vector3 localPosition;
-        private bool applyLocalPosition;
+        Vector3 localPosition;
+        bool applyLocalPosition;
         public Vector3 LocalPosition => localPosition;
         public bool ApplyLocalPosition => applyLocalPosition;
 
         //eulerRotation
-        private Vector3 eulerRotation;
-        private bool applyEulerRotation;
+        Vector3 eulerRotation;
+        bool applyEulerRotation;
         public Vector3 EulerRotation => eulerRotation;
         public bool ApplyEulerRotation => applyEulerRotation;
 
         //localEulerRotation
-        private Vector3 localEulerRotation;
-        private bool applyLocalEulerRotation;
+        Vector3 localEulerRotation;
+        bool applyLocalEulerRotation;
         public Vector3 LocalEulerRotation => localEulerRotation;
         public bool ApplyLocalEulerRotation => applyLocalEulerRotation;
 
         //rotation
-        private Quaternion rotation;
-        private bool applyRotation;
+        Quaternion rotation;
+        bool applyRotation;
         public Quaternion Rotation => rotation;
         public bool ApplyRotation => applyRotation;
 
         //localRotation
-        private Quaternion localRotation;
-        private bool applyLocalRotation;
+        Quaternion localRotation;
+        bool applyLocalRotation;
         public Quaternion LocalRotation => localRotation;
         public bool ApplyLocalRotation => applyLocalRotation;
 
         //localScale
-        private Vector3 localScale;
-        private bool applyLocalScale;
+        Vector3 localScale;
+        bool applyLocalScale;
         public Vector3 LocalScale => localScale;
         public bool ApplyLocalScale => applyLocalScale;
 
         //parrent
-        private Transform parrent;
-        private bool applyParrent;
+        Transform parrent;
+        bool applyParrent;
         public Transform Parrent => parrent;
         public bool ApplyParrent => applyParrent;
 

@@ -23,7 +23,7 @@ namespace Watermelon.SquadShooter
 
         public void Validate()
         {
-            for (int i = 0; i < pairs.Count; i++)
+            for (var i = 0; i < pairs.Count; i++)
             {
                 if (pairs[i].renderer == null || pairs[i].simpleMesh == null || pairs[i].eliteMesh == null)
                 {
@@ -33,7 +33,7 @@ namespace Watermelon.SquadShooter
                 }
             }
 
-            for (int i = 0; i < simplePairs.Count; i++)
+            for (var i = 0; i < simplePairs.Count; i++)
             {
                 if (simplePairs[i].filter == null || simplePairs[i].simpleMesh == null || simplePairs[i].eliteMesh == null)
                 {

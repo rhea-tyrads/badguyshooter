@@ -16,13 +16,13 @@ namespace Watermelon.LevelSystem
         public Transform pathPointsContainer;
 
         //Gizmo
-        private const int LINE_HEIGHT = 5;
-        private Color enemyColor;
-        private Color defaultColor;
-        private Color goldColor;
-        private Material enemyMaterial;
-        private StartPointHandles startPointHandles;
-        private bool isStartPointHandlesInited;
+        const int LINE_HEIGHT = 5;
+        Color enemyColor;
+        Color defaultColor;
+        Color goldColor;
+        Material enemyMaterial;
+        StartPointHandles startPointHandles;
+        bool isStartPointHandlesInited;
 
 
         public void Awake()
@@ -37,7 +37,7 @@ namespace Watermelon.LevelSystem
 
         public void Update()
         {
-            for (int i = 0; i < pathPointsContainer.childCount; i++)
+            for (var i = 0; i < pathPointsContainer.childCount; i++)
             {
                 if (!pathPoints.Contains(pathPointsContainer.GetChild(i)))
                 {
@@ -45,7 +45,7 @@ namespace Watermelon.LevelSystem
                 }
             }
 
-            for (int i = pathPoints.Count - 1; i >= 0; i--)
+            for (var i = pathPoints.Count - 1; i >= 0; i--)
             {
                 if(pathPoints[i] == null)
                 {
@@ -90,30 +90,30 @@ namespace Watermelon.LevelSystem
         {
             MeshRenderer renderer;
 
-            for (int i = 0; i < pathPoints.Count; i++)
+            for (var i = 0; i < pathPoints.Count; i++)
             {
                 renderer = pathPoints[i].GetComponent<MeshRenderer>();
                 renderer.sharedMaterial = enemyMaterial;
             }
         }
 
-        private void DrawLine(Vector3 tempLineStart, Vector3 tempLineEnd)
+        void DrawLine(Vector3 tempLineStart, Vector3 tempLineEnd)
         {
-            Vector3 offset = Vector3.zero.AddToY(0.01f);
+            var offset = Vector3.zero.AddToY(0.01f);
 
-            for (int i = 0; i < LINE_HEIGHT; i++)
+            for (var i = 0; i < LINE_HEIGHT; i++)
             {
                 Gizmos.DrawLine(tempLineStart + i * offset, tempLineEnd + i * offset);
             }
         }
 
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             Gizmos.color = enemyColor;
 
             Gizmos.DrawSphere(transform.position + Vector3.up, 0.3125f);
 
-            for (int i = 0; i < pathPoints.Count - 1; i++)
+            for (var i = 0; i < pathPoints.Count - 1; i++)
             {
                 DrawLine(pathPoints[i].transform.position, pathPoints[i + 1].transform.position);
             }
@@ -124,9 +124,9 @@ namespace Watermelon.LevelSystem
 
         public Vector3[] GetPathPoints()
         {
-            Vector3[] result = new Vector3[pathPoints.Count];
+            var result = new Vector3[pathPoints.Count];
 
-            for (int i = 0; i < pathPoints.Count; i++)
+            for (var i = 0; i < pathPoints.Count; i++)
             {
                 result[i] = pathPoints[i].localPosition + pathPointsContainer.transform.parent.localPosition;
             }

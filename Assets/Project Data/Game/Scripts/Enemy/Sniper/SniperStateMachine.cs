@@ -7,8 +7,9 @@ namespace Watermelon.Enemy.Sniper
     [RequireComponent(typeof(SniperEnemyBehavior))]
     public class SniperStateMachine : AbstractStateMachine<State>
     {
-        private SniperEnemyBehavior enemy;
-        private void Awake()
+        SniperEnemyBehavior enemy;
+
+        void Awake()
         {
             enemy = GetComponent<SniperEnemyBehavior>();
 
@@ -53,7 +54,7 @@ namespace Watermelon.Enemy.Sniper
             states.Add(State.Aiming, aimCase);
         }
 
-        private bool PatrollingStateTransition(out State nextState)
+        bool PatrollingStateTransition(out State nextState)
         {
             var isTargetSpotted = enemy.IsTargetInVisionRange || (!EnemyController.IgnoreAttackAfterDamage && enemy.HasTakenDamage);
 
@@ -72,7 +73,7 @@ namespace Watermelon.Enemy.Sniper
             return true;
         }
 
-        private bool FollowingStateTransition(out State nextState)
+        bool FollowingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInFleeRange)
             {
@@ -89,7 +90,7 @@ namespace Watermelon.Enemy.Sniper
             return false;
         }
 
-        private bool FleeingStateTransition(out State nextState)
+        bool FleeingStateTransition(out State nextState)
         {
             if (enemy.IsTargetInAttackRange)
             {
@@ -102,7 +103,7 @@ namespace Watermelon.Enemy.Sniper
             return true;
         }
 
-        private bool AttackingStateTransition(out State nextState)
+        bool AttackingStateTransition(out State nextState)
         {
             var attackingState = states[State.Attacking].state;
             if ((attackingState as AimAndAttackState).IsFinished && !CharacterBehaviour.IsDead)
@@ -121,7 +122,7 @@ namespace Watermelon.Enemy.Sniper
             return false;
         }
 
-        private bool AimTransition(out State nextState)
+        bool AimTransition(out State nextState)
         {
             nextState = State.Attacking;
             return true;

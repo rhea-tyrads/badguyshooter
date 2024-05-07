@@ -14,9 +14,9 @@ namespace Watermelon
         [Space]
         [SerializeField] GameObject rewardedVideoObject;
 
-        private RectTransform bannerRectTransform;
+        RectTransform bannerRectTransform;
 
-        private void Awake()
+        void Awake()
         {
             bannerRectTransform = (RectTransform)bannerObject.transform;
 

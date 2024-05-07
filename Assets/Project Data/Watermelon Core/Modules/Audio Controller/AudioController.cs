@@ -10,40 +10,40 @@ namespace Watermelon
     [RequireSetting("Volume", PrefsSettings.FieldType.Float)]
     public class AudioController
     {
-        private static AudioController instance;
+        static AudioController instance;
 
-        private FieldInfo[] fields;
-        private const int AUDIO_SOURCES_AMOUNT = 4;
+        FieldInfo[] fields;
+        const int AUDIO_SOURCES_AMOUNT = 4;
 
-        private GameObject targetGameObject;
+        GameObject targetGameObject;
 
-        private List<AudioSource> audioSources = new List<AudioSource>();
+        List<AudioSource> audioSources = new List<AudioSource>();
 
-        private List<AudioSource> activeSoundSources = new List<AudioSource>();
-        private List<AudioSource> activeMusicSources = new List<AudioSource>();
+        List<AudioSource> activeSoundSources = new List<AudioSource>();
+        List<AudioSource> activeMusicSources = new List<AudioSource>();
 
-        private List<AudioSource> customSources = new List<AudioSource>();
-        private List<AudioCaseCustom> activeCustomSourcesCases = new List<AudioCaseCustom>();
+        List<AudioSource> customSources = new List<AudioSource>();
+        List<AudioCaseCustom> activeCustomSourcesCases = new List<AudioCaseCustom>();
 
-        private static bool vibrationState;
-        private static float volume;
+        static bool vibrationState;
+        static float volume;
 
-        private static AudioClip[] musicAudioClips;
+        static AudioClip[] musicAudioClips;
         public static AudioClip[] MusicAudioClips => musicAudioClips;
 
-        private static Sounds sounds;
+        static Sounds sounds;
         public static Sounds Sounds => sounds;
 
-        private static Music music;
+        static Music music;
         public static Music Music => music;
 
         public static OnVolumeChangedCallback OnVolumeChanged;
         public static OnVibrationChangedCallback OnVibrationChanged;
 
-        private static AudioListener audioListener;
+        static AudioListener audioListener;
         public static AudioListener AudioListener => audioListener;
 
-        private static List<AudioMinDelayData> minDelayQueue = new List<AudioMinDelayData>();
+        static List<AudioMinDelayData> minDelayQueue = new List<AudioMinDelayData>();
 
         public void Initialise(AudioSettings settings, GameObject targetGameObject)
         {
@@ -67,7 +67,7 @@ namespace Watermelon
             fields = typeof(Music).GetFields();
             musicAudioClips = new AudioClip[fields.Length];
 
-            for (int i = 0; i < fields.Length; i++)
+            for (var i = 0; i < fields.Length; i++)
             {
                 musicAudioClips[i] = fields[i].GetValue(settings.Music) as AudioClip;
             }
@@ -77,7 +77,7 @@ namespace Watermelon
 
             //Create audio source objects
             audioSources.Clear();
-            for (int i = 0; i < AUDIO_SOURCES_AMOUNT; i++)
+            for (var i = 0; i < AUDIO_SOURCES_AMOUNT; i++)
             {
                 audioSources.Add(CreateAudioSourceObject(false));
             }
@@ -95,7 +95,7 @@ namespace Watermelon
                 return;
 
             // Create game object for listener
-            GameObject listenerObject = new GameObject("[AUDIO LISTENER]");
+            var listenerObject = new GameObject("[AUDIO LISTENER]");
             listenerObject.transform.position = Vector3.zero;
 
             // Mark as non-destroyable
@@ -136,8 +136,8 @@ namespace Watermelon
         /// </summary>
         public static void ReleaseMusic()
         {
-            int activeMusicCount = instance.activeMusicSources.Count - 1;
-            for (int i = activeMusicCount; i >= 0; i--)
+            var activeMusicCount = instance.activeMusicSources.Count - 1;
+            for (var i = activeMusicCount; i >= 0; i--)
             {
                 instance.activeMusicSources[i].Stop();
                 instance.activeMusicSources[i].clip = null;
@@ -150,8 +150,8 @@ namespace Watermelon
         /// </summary>
         public static void ReleaseSounds()
         {
-            int activeStreamsCount = instance.activeSoundSources.Count - 1;
-            for (int i = activeStreamsCount; i >= 0; i--)
+            var activeStreamsCount = instance.activeSoundSources.Count - 1;
+            for (var i = activeStreamsCount; i >= 0; i--)
             {
                 instance.activeSoundSources[i].Stop();
                 instance.activeSoundSources[i].clip = null;
@@ -164,12 +164,12 @@ namespace Watermelon
         /// </summary>
         public static void ReleaseCustomStreams()
         {
-            int activeStreamsCount = instance.activeCustomSourcesCases.Count - 1;
-            for (int i = activeStreamsCount; i >= 0; i--)
+            var activeStreamsCount = instance.activeCustomSourcesCases.Count - 1;
+            for (var i = activeStreamsCount; i >= 0; i--)
             {
                 if (instance.activeCustomSourcesCases[i].autoRelease)
                 {
-                    AudioSource source = instance.activeCustomSourcesCases[i].source;
+                    var source = instance.activeCustomSourcesCases[i].source;
                     instance.activeCustomSourcesCases[i].source.Stop();
                     instance.activeCustomSourcesCases[i].source.clip = null;
                     instance.activeCustomSourcesCases.RemoveAt(i);
@@ -195,9 +195,9 @@ namespace Watermelon
             ReleaseCustomSource(audioCase, fadeTime);
         }
 
-        private void StopSound(AudioSource source, float fadeTime = 0)
+        void StopSound(AudioSource source, float fadeTime = 0)
         {
-            int streamID = activeSoundSources.FindIndex(x => x == source);
+            var streamID = activeSoundSources.FindIndex(x => x == source);
             if (streamID != -1)
             {
                 if (fadeTime == 0)
@@ -217,9 +217,9 @@ namespace Watermelon
             }
         }
 
-        private void StopMusic(AudioSource source, float fadeTime = 0)
+        void StopMusic(AudioSource source, float fadeTime = 0)
         {
-            int streamID = activeMusicSources.FindIndex(x => x == source);
+            var streamID = activeMusicSources.FindIndex(x => x == source);
             if (streamID != -1)
             {
                 if (fadeTime == 0)
@@ -239,7 +239,7 @@ namespace Watermelon
             }
         }
 
-        private static void AddMusic(AudioSource source)
+        static void AddMusic(AudioSource source)
         {
             if (!instance.activeMusicSources.Contains(source))
             {
@@ -247,7 +247,7 @@ namespace Watermelon
             }
         }
 
-        private static void AddSound(AudioSource source)
+        static void AddSound(AudioSource source)
         {
             if (!instance.activeSoundSources.Contains(source))
             {
@@ -260,7 +260,7 @@ namespace Watermelon
             if (clip == null)
                 Debug.LogError("[AudioController]: Audio clip is null");
 
-            AudioSource source = instance.GetAudioSource();
+            var source = instance.GetAudioSource();
 
             SetSourceDefaultSettings(source, AudioType.Music);
 
@@ -276,7 +276,7 @@ namespace Watermelon
             if (clip == null)
                 Debug.LogError("[AudioController]: Audio clip is null");
 
-            AudioSource source = instance.GetAudioSource();
+            var source = instance.GetAudioSource();
 
             SetSourceDefaultSettings(source, AudioType.Music);
 
@@ -284,7 +284,7 @@ namespace Watermelon
             source.volume *= volumePercentage;
             source.pitch = pitch;
 
-            AudioCase audioCase = new AudioCase(clip, source, AudioType.Music);
+            var audioCase = new AudioCase(clip, source, AudioType.Music);
 
             audioCase.Play();
 
@@ -311,7 +311,7 @@ namespace Watermelon
                 }
             }
 
-            AudioSource source = instance.GetAudioSource();
+            var source = instance.GetAudioSource();
 
             SetSourceDefaultSettings(source, AudioType.Sound);
 
@@ -328,7 +328,7 @@ namespace Watermelon
             if (clip == null)
                 Debug.LogError("[AudioController]: Audio clip is null");
 
-            AudioSource source = instance.GetAudioSource();
+            var source = instance.GetAudioSource();
 
             SetSourceDefaultSettings(source, AudioType.Sound);
 
@@ -336,7 +336,7 @@ namespace Watermelon
             source.volume *= volumePercentage;
             source.pitch = pitch;
 
-            AudioCase audioCase = new AudioCase(clip, source, AudioType.Sound);
+            var audioCase = new AudioCase(clip, source, AudioType.Sound);
             audioCase.Play();
 
             AddSound(source);
@@ -360,7 +360,7 @@ namespace Watermelon
 
             SetSourceDefaultSettings(source, audioType);
 
-            AudioCaseCustom audioCase = new AudioCaseCustom(null, source, audioType, autoRelease);
+            var audioCase = new AudioCaseCustom(null, source, audioType, autoRelease);
 
             instance.activeCustomSourcesCases.Add(audioCase);
 
@@ -369,7 +369,7 @@ namespace Watermelon
 
         public static void ReleaseCustomSource(AudioCaseCustom audioCase, float fadeTime = 0)
         {
-            int streamID = instance.activeCustomSourcesCases.FindIndex(x => x.source == audioCase.source);
+            var streamID = instance.activeCustomSourcesCases.FindIndex(x => x.source == audioCase.source);
             if (streamID != -1)
             {
                 if (fadeTime == 0)
@@ -391,10 +391,10 @@ namespace Watermelon
             }
         }
 
-        private AudioSource GetAudioSource()
+        AudioSource GetAudioSource()
         {
-            int sourcesAmount = audioSources.Count;
-            for (int i = 0; i < sourcesAmount; i++)
+            var sourcesAmount = audioSources.Count;
+            for (var i = 0; i < sourcesAmount; i++)
             {
                 if (!audioSources[i].isPlaying)
                 {
@@ -402,26 +402,26 @@ namespace Watermelon
                 }
             }
 
-            AudioSource createdSource = CreateAudioSourceObject(false);
+            var createdSource = CreateAudioSourceObject(false);
             audioSources.Add(createdSource);
 
             return createdSource;
         }
 
-        private AudioSource CreateAudioSourceObject(bool isCustom)
+        AudioSource CreateAudioSourceObject(bool isCustom)
         {
-            AudioSource audioSource = targetGameObject.AddComponent<AudioSource>();
+            var audioSource = targetGameObject.AddComponent<AudioSource>();
             SetSourceDefaultSettings(audioSource);
 
             return audioSource;
         }
 
-        private void SetVolumeForAudioSources(float volume)
+        void SetVolumeForAudioSources(float volume)
         {
             SetSoundsVolume(volume);
             SetMusicVolume(volume);
 
-            for (int i = 0; i < activeCustomSourcesCases.Count; i++)
+            for (var i = 0; i < activeCustomSourcesCases.Count; i++)
             {
                 activeCustomSourcesCases[i].source.volume = volume;
             }
@@ -429,7 +429,7 @@ namespace Watermelon
 
         public static void SetSoundsVolume(float newVolume)
         {
-            for (int i = 0; i < instance.activeSoundSources.Count; i++)
+            for (var i = 0; i < instance.activeSoundSources.Count; i++)
             {
                 instance.activeSoundSources[i].volume = newVolume;
             }
@@ -437,7 +437,7 @@ namespace Watermelon
 
         public static void SetMusicVolume(float newVolume)
         {
-            for (int i = 0; i < instance.activeMusicSources.Count; i++)
+            for (var i = 0; i < instance.activeMusicSources.Count; i++)
             {
                 instance.activeMusicSources[i].volume = newVolume;
             }
@@ -477,7 +477,7 @@ namespace Watermelon
 
         public static void SetSourceDefaultSettings(AudioSource source, AudioType type = AudioType.Sound)
         {
-            float volume = PrefsSettings.GetFloat(PrefsSettings.Key.Volume);
+            var volume = PrefsSettings.GetFloat(PrefsSettings.Key.Volume);
 
             if (type == AudioType.Sound)
             {
@@ -508,9 +508,9 @@ namespace Watermelon
         public delegate void OnVibrationChangedCallback(bool state);
 
 
-        private IEnumerator MinDelayQueueUpdate()
+        IEnumerator MinDelayQueueUpdate()
         {
-            WaitForSeconds delay = new WaitForSeconds(0.1f);
+            var delay = new WaitForSeconds(0.1f);
 
             while (true)
             {
@@ -521,7 +521,7 @@ namespace Watermelon
                 }
                 else
                 {
-                    for (int i = 0; i < minDelayQueue.Count; i++)
+                    for (var i = 0; i < minDelayQueue.Count; i++)
                     {
                         if (Time.timeSinceLevelLoad >= minDelayQueue[i].enableTime)
                         {

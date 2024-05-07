@@ -14,17 +14,17 @@ namespace Watermelon.Enemy.Sniper
 
     public class SniperAimState : StateBehavior<SniperEnemyBehavior>
     {
-        private SniperEnemyBehavior enemy;
+        SniperEnemyBehavior enemy;
 
         public SniperAimState(SniperEnemyBehavior enemy) : base(enemy)
         {
             this.enemy = enemy;
         }
 
-        private bool isYellow;
-        private TweenCase delayedCase;
+        bool isYellow;
+        TweenCase delayedCase;
 
-        private float startAimingTime;
+        float startAimingTime;
 
         public override void OnStart()
         {

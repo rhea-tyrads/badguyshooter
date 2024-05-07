@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void Update()
+        void Update()
         {
             if (!(Application.isPlaying || enableRigWeaponInEditor)) return;
 
@@ -56,20 +56,20 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OneHandedUpdate()
+        void OneHandedUpdate()
         {
-            Quaternion desiredRotation = primaryHandBone.rotation;
+            var desiredRotation = primaryHandBone.rotation;
 
-            Quaternion rotationCorrection = desiredRotation * Quaternion.Inverse(primaryHandAnchor.localRotation);
+            var rotationCorrection = desiredRotation * Quaternion.Inverse(primaryHandAnchor.localRotation);
 
             transform.rotation = rotationCorrection;
 
-            Vector3 positionCorrection = primaryHandBone.position - primaryHandAnchor.position;
+            var positionCorrection = primaryHandBone.position - primaryHandAnchor.position;
 
             transform.position = transform.position + positionCorrection;
         }
 
-        private void TwoHandedUpdate()
+        void TwoHandedUpdate()
         {
             var parent = transform;
 
@@ -147,12 +147,12 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnValidate()
+        void OnValidate()
         {
             if (enemy != null) Initialise(enemy);
         }
 
-        private bool NeedsOffHand()
+        bool NeedsOffHand()
         {
             return rigType == WeaponRigType.TwoHanded;
         }

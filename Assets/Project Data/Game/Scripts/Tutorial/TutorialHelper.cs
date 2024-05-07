@@ -6,8 +6,8 @@ namespace Watermelon
 {
     public static class TutorialHelper
     {
-        private const string MenuName = "Actions/Skip Tutorial";
-        private const string SettingName = "IsTutorialSkipped";
+        const string MenuName = "Actions/Skip Tutorial";
+        const string SettingName = "IsTutorialSkipped";
 
         public static bool IsTutorialSkipped()
         {
@@ -19,29 +19,29 @@ namespace Watermelon
         }
 
 #if UNITY_EDITOR
-        private static bool IsTutorialSkippedPrefs
+        static bool IsTutorialSkippedPrefs
         {
             get { return EditorPrefs.GetBool(SettingName, false); }
             set { EditorPrefs.SetBool(SettingName, value); }
         }
 
         [MenuItem(MenuName, priority = 200)]
-        private static void ToggleAction()
+        static void ToggleAction()
         {
-            bool tutorialState = IsTutorialSkippedPrefs;
+            var tutorialState = IsTutorialSkippedPrefs;
             IsTutorialSkippedPrefs = !tutorialState;
 
             if(Application.isPlaying)
             {
-                System.Type type = typeof(TutorialController);
+                var type = typeof(TutorialController);
 
-                FieldInfo field = type.GetField("isTutorialSkipped", BindingFlags.NonPublic | BindingFlags.Static);
+                var field = type.GetField("isTutorialSkipped", BindingFlags.NonPublic | BindingFlags.Static);
                 field.SetValue(null, !tutorialState);
             }
         }
 
         [MenuItem(MenuName, true, priority = 200)]
-        private static bool ToggleActionValidate()
+        static bool ToggleActionValidate()
         {
             Menu.SetChecked(MenuName, IsTutorialSkippedPrefs);
 

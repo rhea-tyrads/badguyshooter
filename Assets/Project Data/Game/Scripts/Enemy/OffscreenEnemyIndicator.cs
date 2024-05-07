@@ -7,29 +7,29 @@ namespace Watermelon.SquadShooter
     public class OffscreenEnemyIndicator : MonoBehaviour
     {
         [SerializeField] Image image;
-        private RectTransform rect;
+        RectTransform rect;
 
-        private BaseEnemyBehavior enemy;
+        BaseEnemyBehavior enemy;
 
-        private TweenCase fadeCase;
+        TweenCase fadeCase;
 
-        private bool IsEnabled { get; set; }
-        private bool IsTransparent { get; set; }
+        bool IsEnabled { get; set; }
+        bool IsTransparent { get; set; }
 
-        private Vector2 screenSize;
+        Vector2 screenSize;
 
-        private Vector2 centerViewportPos;
+        Vector2 centerViewportPos;
 
-        private Vector2 parentViewportMin;
-        private Vector2 parentViewportMax;
+        Vector2 parentViewportMin;
+        Vector2 parentViewportMax;
 
-        private void Awake()
+        void Awake()
         {
             rect = GetComponent<RectTransform>();
 
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             image.SetAlpha(0f);
         }
@@ -39,14 +39,14 @@ namespace Watermelon.SquadShooter
             screenSize = baseCanvasRect.rect.size;//Camera.main.pixelRect.size;
             var pixelViewportSize = new Vector2(1f / screenSize.x, 1f / screenSize.y);
 
-            float minX = parent.offsetMin.x;
-            float maxX = screenSize.x + parent.offsetMax.x;
+            var minX = parent.offsetMin.x;
+            var maxX = screenSize.x + parent.offsetMax.x;
 
-            float minY = parent.offsetMin.y;
-            float maxY = screenSize.y + parent.offsetMax.y;
+            var minY = parent.offsetMin.y;
+            var maxY = screenSize.y + parent.offsetMax.y;
 
-            float centerX = (minX + maxX) / 2f;
-            float centerY = (minY + maxY) / 2f;
+            var centerX = (minX + maxX) / 2f;
+            var centerY = (minY + maxY) / 2f;
 
             centerViewportPos = new Vector2(centerX * pixelViewportSize.x, centerY * pixelViewportSize.y);
 
@@ -76,7 +76,7 @@ namespace Watermelon.SquadShooter
             fadeCase = image.DOFade(0, 0.3f).OnComplete(() => IsTransparent = true);
         }
 
-        private void Update()
+        void Update()
         {
             if (IsEnabled)
             {
@@ -150,7 +150,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private Vector2 MoveXToN(Vector2 viewportPos, float n)
+        Vector2 MoveXToN(Vector2 viewportPos, float n)
         {
             var direction = (viewportPos - centerViewportPos).normalized;
 
@@ -161,7 +161,7 @@ namespace Watermelon.SquadShooter
         }
 
 
-        private Vector2 MoveYToN(Vector2 viewportPos, float n)
+        Vector2 MoveYToN(Vector2 viewportPos, float n)
         {
             var direction = (viewportPos - centerViewportPos).normalized;
 

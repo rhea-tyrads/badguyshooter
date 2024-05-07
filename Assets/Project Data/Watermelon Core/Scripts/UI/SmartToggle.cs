@@ -15,31 +15,26 @@ namespace Watermelon
     [RequireComponent(typeof(Image))]
     public class SmartToggle : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
     {
-        [SerializeField]
-        private bool defaultState;
+        [SerializeField] bool defaultState;
 
-        [SerializeField]
-        private RectTransform movableElement;
-        private Graphic movableElementGraphic;
+        [SerializeField] RectTransform movableElement;
+        Graphic movableElementGraphic;
 
         [Space]
         [SerializeField]
-        private Text enableText;
-        [SerializeField]
-        private Text disableText;
+        Text enableText;
+        [SerializeField] Text disableText;
 
         [Space]
         [SerializeField]
-        private Color activeOnTextColor;
-        [SerializeField]
-        private Color activeOffTextColor;
+        Color activeOnTextColor;
+        [SerializeField] Color activeOffTextColor;
 
-        [SerializeField]
-        private Color disabledTextColor;
+        [SerializeField] Color disabledTextColor;
 
         [Space]
         [SerializeField]
-        private Graphic icon;
+        Graphic icon;
 
 #if USING_UNITY_EVENT
     [SerializeField]
@@ -49,22 +44,22 @@ namespace Watermelon
         public event ToggleEvents OnStateChanged;
 #endif
 
-        private bool state;
+        bool state;
         public bool State
         {
             get { return state; }
         }
 
-        private RectTransform rectTransform;
-        private float offsetValue = 0;
+        RectTransform rectTransform;
+        float offsetValue = 0;
 
-        private bool isBusy = false;
+        bool isBusy = false;
 
-        private TweenCase animationTweenCase;
+        TweenCase animationTweenCase;
 
-        private bool isInited = false;
+        bool isInited = false;
 
-        private void Awake()
+        void Awake()
         {
             if (!isInited)
                 Init(defaultState);

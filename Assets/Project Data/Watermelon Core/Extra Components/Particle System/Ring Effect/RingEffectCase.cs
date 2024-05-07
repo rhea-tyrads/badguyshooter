@@ -4,16 +4,16 @@ namespace Watermelon
 {
     public class RingEffectCase : TweenCase
     {
-        private static readonly int SHADER_SCALE_PROPERTY = Shader.PropertyToID("_Scale");
-        private static readonly int SHADER_COLOR_PROPERTY = Shader.PropertyToID("_Color");
+        static readonly int SHADER_SCALE_PROPERTY = Shader.PropertyToID("_Scale");
+        static readonly int SHADER_COLOR_PROPERTY = Shader.PropertyToID("_Color");
 
-        private GameObject ringGameObject;
-        private MeshRenderer ringMeshRenderer;
+        GameObject ringGameObject;
+        MeshRenderer ringMeshRenderer;
 
-        private MaterialPropertyBlock materialPropertyBlock;
+        MaterialPropertyBlock materialPropertyBlock;
 
-        private float targetSize;
-        private Gradient targetGradient;
+        float targetSize;
+        Gradient targetGradient;
 
         public RingEffectCase(GameObject gameObject, float targetSize, Gradient targetGradient)
         {
@@ -45,7 +45,7 @@ namespace Watermelon
 
         public override void Invoke(float deltaTime)
         {
-            float interpolatedState = Interpolate(State);
+            var interpolatedState = Interpolate(State);
 
             ringMeshRenderer.GetPropertyBlock(materialPropertyBlock);
             //materialPropertyBlock.SetFloat(SHADER_SCALE_PROPERTY, Mathf.LerpUnclamped(0.1f, targetSize, interpolatedState));

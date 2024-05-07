@@ -5,7 +5,7 @@ namespace Watermelon.LevelSystem
 {
     public class NavMeshSurfaceTweenCase : TweenCase
     {
-        private AsyncOperation asyncOperation;
+        AsyncOperation asyncOperation;
 
         public NavMeshSurfaceTweenCase(NavMeshSurface navMeshSurface)
         {

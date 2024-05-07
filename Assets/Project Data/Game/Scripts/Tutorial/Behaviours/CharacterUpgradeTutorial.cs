@@ -4,35 +4,35 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterUpgradeTutorial : ITutorial
     {
-        private const CharacterType FIRST_CHARACTER_TYPE = CharacterType.Character_01;
+        const CharacterType FIRST_CHARACTER_TYPE = CharacterType.Character_01;
 
         public TutorialID TutorialID => TutorialID.CharacterUpgrade;
 
-        private const int STEP_TUTORIAL_ACTIVATED = 1;
-        private const int STEP_PAGE_OPENED = 2;
+        const int STEP_TUTORIAL_ACTIVATED = 1;
+        const int STEP_PAGE_OPENED = 2;
 
         public bool IsActive => saveData.isActive;
         public bool IsFinished => saveData.isFinished;
         public int Progress => saveData.progress;
 
-        private TutorialBaseSave saveData;
+        TutorialBaseSave saveData;
 
-        private Character firstCharacter;
+        Character firstCharacter;
 
-        private UIMainMenu mainMenuUI;
-        private UICharactersPanel characterPanelUI;
-        private CharacterTab characterTab;
-        private WeaponTab weaponTab;
+        UIMainMenu mainMenuUI;
+        UICharactersPanel characterPanelUI;
+        CharacterTab characterTab;
+        WeaponTab weaponTab;
 
-        private bool isActive;
-        private int stepNumber;
+        bool isActive;
+        int stepNumber;
 
-        private UIGamepadButton activatedGamepadButton;
-        private UIGamepadButton noAdsGamepadButton;
-        private UIGamepadButton settingsGamepadButton;
-        private UIGamepadButton playGamepadButton;
+        UIGamepadButton activatedGamepadButton;
+        UIGamepadButton noAdsGamepadButton;
+        UIGamepadButton settingsGamepadButton;
+        UIGamepadButton playGamepadButton;
 
-        private bool isInitialised;
+        bool isInitialised;
         public bool IsInitialised => isInitialised;
 
         public CharacterUpgradeTutorial()
@@ -74,7 +74,7 @@ namespace Watermelon.SquadShooter
             Control.OnInputChanged += OnInputTypeChanged;
         }
 
-        private void OnInputTypeChanged(InputType input)
+        void OnInputTypeChanged(InputType input)
         {
             if (activatedGamepadButton != null)
                 activatedGamepadButton.StopHighLight();
@@ -109,7 +109,7 @@ namespace Watermelon.SquadShooter
             }
             else if(stepNumber == STEP_PAGE_OPENED)
             {
-                CharacterPanelUI characterPanel = characterPanelUI.GetPanel(FIRST_CHARACTER_TYPE);
+                var characterPanel = characterPanelUI.GetPanel(FIRST_CHARACTER_TYPE);
                 if (characterPanel != null)
                 {
                     TutorialCanvasController.ActivateTutorialCanvas(characterPanel.RectTransform, true, true);
@@ -142,7 +142,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnMainMenuPageOpened(UIPage page, System.Type pageType)
+        void OnMainMenuPageOpened(UIPage page, System.Type pageType)
         {
             weaponTab.Disable();
 
@@ -150,7 +150,7 @@ namespace Watermelon.SquadShooter
             {
                 if (ActiveRoom.CurrentLevelIndex >= 1)
                 {
-                    CharacterUpgrade nextStage = firstCharacter.GetNextUpgrade();
+                    var nextStage = firstCharacter.GetNextUpgrade();
                     if(nextStage != null)
                     {
                         // Player has enough money to upgrade first character
@@ -197,7 +197,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnCharacterTabOpened()
+        void OnCharacterTabOpened()
         {
             if (activatedGamepadButton != null)
                 activatedGamepadButton.StopHighLight();
@@ -211,11 +211,11 @@ namespace Watermelon.SquadShooter
             UIController.OnPageOpenedEvent += OnCharacterPageOpened;
         }
 
-        private void OnCharacterPageOpened(UIPage page, System.Type pageType)
+        void OnCharacterPageOpened(UIPage page, System.Type pageType)
         {
             UIController.OnPageOpenedEvent -= OnCharacterPageOpened;
 
-            CharacterPanelUI characterPanel = characterPanelUI.GetPanel(FIRST_CHARACTER_TYPE);
+            var characterPanel = characterPanelUI.GetPanel(FIRST_CHARACTER_TYPE);
             if (characterPanel != null)
             {
                 stepNumber = STEP_PAGE_OPENED;
@@ -242,7 +242,7 @@ namespace Watermelon.SquadShooter
             characterPanelUI.GraphicRaycaster.enabled = true;
         }
 
-        private void OnCharacterUpgraded(CharacterType characterType, Character character)
+        void OnCharacterUpgraded(CharacterType characterType, Character character)
         {
             CharactersController.OnCharacterUpgradedEvent -= OnCharacterUpgraded;
 

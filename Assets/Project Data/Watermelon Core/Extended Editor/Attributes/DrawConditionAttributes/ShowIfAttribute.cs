@@ -5,7 +5,7 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class ShowIfAttribute : DrawConditionAttribute
     {
-        private string conditionName;
+        string conditionName;
 
         public ShowIfAttribute(string conditionName)
         {

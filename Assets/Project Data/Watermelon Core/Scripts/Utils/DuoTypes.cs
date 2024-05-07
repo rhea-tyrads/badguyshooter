@@ -169,7 +169,7 @@ namespace Watermelon
             return "(" + FormatValue(firstValue) + ", " + FormatValue(secondValue) + ")";
         }
 
-        private string FormatValue(float value)
+        string FormatValue(float value)
         {
             return value.ToString("0.0").Replace(',', '.');
         }
@@ -198,7 +198,7 @@ namespace Watermelon
     {
         public double firstValue;
         public double secondValue;
-        private static System.Random random;
+        static System.Random random;
 
         public DuoDouble(double firstValue, double secondValue)
         {
@@ -257,7 +257,7 @@ namespace Watermelon
             return "(" + FormatValue(firstValue) + ", " + FormatValue(secondValue) + ")";
         }
 
-        private string FormatValue(double value)
+        string FormatValue(double value)
         {
             return value.ToString("0.0").Replace(',', '.');
         }
@@ -305,12 +305,12 @@ namespace Watermelon
             return "[" + FormatValue(firstValue) + ", " + FormatValue(secondValue) + "]";
         }
 
-        private string FormatValue(float value)
+        string FormatValue(float value)
         {
             return value.ToString("0.0").Replace(',', '.');
         }
 
-        private string FormatValue(Vector3 value)
+        string FormatValue(Vector3 value)
         {
             return "(" + FormatValue(value.x) + ", " + FormatValue(value.y) + ", " + FormatValue(value.z) + ")";
         }

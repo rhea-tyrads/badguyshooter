@@ -11,20 +11,20 @@ namespace Watermelon.LevelSystem
     {
 
 #if UNITY_EDITOR
-        private static EditorSceneController instance;
+        static EditorSceneController instance;
         public static EditorSceneController Instance { get => instance; }
 
-        [SerializeField] private GameObject container;
-        [SerializeField] private GameObject roomCustomObjectsContainer;
-        [SerializeField] private GameObject worldCustomObjectsContainer;
+        [SerializeField] GameObject container;
+        [SerializeField] GameObject roomCustomObjectsContainer;
+        [SerializeField] GameObject worldCustomObjectsContainer;
         [SerializeField] Vector3 spawnPoint;
         [SerializeField] Vector3 exitPoint;
         [SerializeField] float spawnPointSphereSize;
         [SerializeField] float exitPointSphereSize;
         [SerializeField] Color spawnPointColor;
         [SerializeField] Color exitPointColor;
-        private Color backupColor;
-        private bool showGizmo;
+        Color backupColor;
+        bool showGizmo;
 
         public GameObject Container { set => container = value; }
         public Vector3 SpawnPoint { get => spawnPoint; set => spawnPoint = value; }
@@ -41,13 +41,13 @@ namespace Watermelon.LevelSystem
 
         public void SpawnItem(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, int hash, bool selectSpawnedItem = false)
         {
-            GameObject gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             gameObject.transform.SetParent(container.transform);
 
             gameObject.transform.localPosition = position;
             gameObject.transform.localRotation = rotation;
             gameObject.transform.localScale = scale;
-            LevelEditorItem levelEditorItem = gameObject.AddComponent<LevelEditorItem>();
+            var levelEditorItem = gameObject.AddComponent<LevelEditorItem>();
             levelEditorItem.hash = hash;
 
             if (selectSpawnedItem)
@@ -59,22 +59,22 @@ namespace Watermelon.LevelSystem
 
         public void SpawnEnemy(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, EnemyType type, bool isElite, Vector3[] pathPoints)
         {
-            GameObject gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             gameObject.transform.SetParent(container.transform);
             gameObject.transform.localPosition = position;
             gameObject.transform.localRotation = rotation;
             gameObject.transform.localScale = scale;
-            LevelEditorEnemy levelEditorEnemy = gameObject.AddComponent<LevelEditorEnemy>();
+            var levelEditorEnemy = gameObject.AddComponent<LevelEditorEnemy>();
             levelEditorEnemy.type = type;
             levelEditorEnemy.isElite = isElite;
-            GameObject pointsContainer = new GameObject("PathPointsContainer");
+            var pointsContainer = new GameObject("PathPointsContainer");
             pointsContainer.transform.SetParent(gameObject.transform);
             levelEditorEnemy.pathPointsContainer = pointsContainer.transform;
             pointsContainer.transform.localPosition = Vector3.zero;
 
             GameObject sphere;
 
-            for (int i = 0; i < pathPoints.Length; i++)
+            for (var i = 0; i < pathPoints.Length; i++)
             {
                 sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 sphere.transform.SetParent(levelEditorEnemy.pathPointsContainer);
@@ -89,16 +89,16 @@ namespace Watermelon.LevelSystem
 
         public void SpawnExitPoint(GameObject prefab, Vector3 position)
         {
-            GameObject gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             gameObject.transform.SetParent(container.transform);
             gameObject.transform.localPosition = position;
 
-            LevelEditorExitPoint exitPoint = gameObject.AddComponent<LevelEditorExitPoint>();
+            var exitPoint = gameObject.AddComponent<LevelEditorExitPoint>();
         }
 
         public void SpawnChest(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, LevelChestType type)
         {
-            GameObject gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             gameObject.transform.SetParent(container.transform);
             gameObject.transform.localPosition = position;
             gameObject.transform.localRotation = rotation;
@@ -123,10 +123,10 @@ namespace Watermelon.LevelSystem
         }
         public ItemEntityData[] CollectItemsFromRoom()
         {
-            LevelEditorItem[] editorData = container.GetComponentsInChildren<LevelEditorItem>();
-            ItemEntityData[] result = new ItemEntityData[editorData.Length];
+            var editorData = container.GetComponentsInChildren<LevelEditorItem>();
+            var result = new ItemEntityData[editorData.Length];
 
-            for (int i = 0; i < editorData.Length; i++)
+            for (var i = 0; i < editorData.Length; i++)
             {
                 result[i] = new ItemEntityData(editorData[i].hash, editorData[i].transform.localPosition, editorData[i].transform.localRotation, editorData[i].transform.localScale);
             }
@@ -136,10 +136,10 @@ namespace Watermelon.LevelSystem
 
         public EnemyEntityData[] CollectEnemiesFromRoom()
         {
-            LevelEditorEnemy[] editorData = container.GetComponentsInChildren<LevelEditorEnemy>();
-            EnemyEntityData[] result = new EnemyEntityData[editorData.Length];
+            var editorData = container.GetComponentsInChildren<LevelEditorEnemy>();
+            var result = new EnemyEntityData[editorData.Length];
 
-            for (int i = 0; i < editorData.Length; i++)
+            for (var i = 0; i < editorData.Length; i++)
             {
                 result[i] = new EnemyEntityData(editorData[i].type, editorData[i].transform.localPosition, editorData[i].transform.localRotation, editorData[i].transform.localScale, editorData[i].isElite,editorData[i].GetPathPoints());
             }
@@ -149,7 +149,7 @@ namespace Watermelon.LevelSystem
 
         public bool CollectExitPointFromRoom(out Vector3 position)
         {
-            LevelEditorExitPoint editorData = container.GetComponentInChildren<LevelEditorExitPoint>();
+            var editorData = container.GetComponentInChildren<LevelEditorExitPoint>();
 
             if(editorData == null)
             {
@@ -167,14 +167,14 @@ namespace Watermelon.LevelSystem
 
         public List<LevelEditorChest> CollectChestFromRoom()
         {
-            List<LevelEditorChest> result = new List<LevelEditorChest>();
+            var result = new List<LevelEditorChest>();
             container.GetComponentsInChildren(result);
             return result;
         }
 
         public void SpawnRoomCustomObject(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            GameObject gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             gameObject.transform.SetParent(roomCustomObjectsContainer.transform);
 
             gameObject.transform.localPosition = position;
@@ -184,7 +184,7 @@ namespace Watermelon.LevelSystem
 
         public void SpawnWorldCustomObject(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            GameObject gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var gameObject = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             gameObject.transform.SetParent(worldCustomObjectsContainer.transform);
 
             gameObject.transform.localPosition = position;
@@ -194,10 +194,10 @@ namespace Watermelon.LevelSystem
 
         public List<CustomObjectData> CollectRoomCustomObjects()
         {
-            List<CustomObjectData> result = new List<CustomObjectData>();
+            var result = new List<CustomObjectData>();
             Transform temp;
 
-            for (int i = 0; i < roomCustomObjectsContainer.transform.childCount; i++)
+            for (var i = 0; i < roomCustomObjectsContainer.transform.childCount; i++)
             {
                 temp = roomCustomObjectsContainer.transform.GetChild(i);
 
@@ -213,10 +213,10 @@ namespace Watermelon.LevelSystem
 
         public List<CustomObjectData> CollectWorldCustomObjects()
         {
-            List<CustomObjectData> result = new List<CustomObjectData>();
+            var result = new List<CustomObjectData>();
             Transform temp;
 
-            for (int i = 0; i < worldCustomObjectsContainer.transform.childCount; i++)
+            for (var i = 0; i < worldCustomObjectsContainer.transform.childCount; i++)
             {
                 temp = worldCustomObjectsContainer.transform.GetChild(i);
 
@@ -233,7 +233,7 @@ namespace Watermelon.LevelSystem
 
         public void Clear()
         {
-            for (int i = container.transform.childCount - 1; i >= 0; i--)
+            for (var i = container.transform.childCount - 1; i >= 0; i--)
             {
                 DestroyImmediate(container.transform.GetChild(i).gameObject);
             }
@@ -243,7 +243,7 @@ namespace Watermelon.LevelSystem
 
         public void ClearRoomCustomObjectsContainer()
         {
-            for (int i = roomCustomObjectsContainer.transform.childCount - 1; i >= 0; i--)
+            for (var i = roomCustomObjectsContainer.transform.childCount - 1; i >= 0; i--)
             {
                 DestroyImmediate(roomCustomObjectsContainer.transform.GetChild(i).gameObject);
             }
@@ -253,7 +253,7 @@ namespace Watermelon.LevelSystem
 
         public void ClearWorldCustomObjectsContainer()
         {
-            for (int i = worldCustomObjectsContainer.transform.childCount - 1; i >= 0; i--)
+            for (var i = worldCustomObjectsContainer.transform.childCount - 1; i >= 0; i--)
             {
                 DestroyImmediate(worldCustomObjectsContainer.transform.GetChild(i).gameObject);
             }

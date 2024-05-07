@@ -71,7 +71,7 @@ namespace Watermelon
 
             if (GamepadControl.WasButtonPressedThisFrame(GamepadButtonType.DLeft))
             {
-                for (int i = 0; i < itemPanels.Count; i++)
+                for (var i = 0; i < itemPanels.Count; i++)
                 {
                     if (SelectedIndex == i && i > 0 && itemPanels[i - 1].IsUnlocked)
                     {
@@ -83,7 +83,7 @@ namespace Watermelon
             }
             else if (GamepadControl.WasButtonPressedThisFrame(GamepadButtonType.DRight))
             {
-                for (int i = 0; i < itemPanels.Count; i++)
+                for (var i = 0; i < itemPanels.Count; i++)
                 {
                     if (SelectedIndex == i && i < itemPanels.Count - 1 && itemPanels[i + 1].IsUnlocked)
                     {
@@ -96,7 +96,7 @@ namespace Watermelon
 
             if (newSelectedPanel != null)
             {
-                float scrollOffsetX = Mathf.Clamp(-(newSelectedPanel.RectTransform.anchoredPosition.x - SCROLL_ELEMENT_WIDTH - SCROLL_SIDE_OFFSET), -scrollView.content.sizeDelta.x, 0);
+                var scrollOffsetX = Mathf.Clamp(-(newSelectedPanel.RectTransform.anchoredPosition.x - SCROLL_ELEMENT_WIDTH - SCROLL_SIDE_OFFSET), -scrollView.content.sizeDelta.x, 0);
                 scrollView.content.anchoredPosition = new Vector2(scrollOffsetX, 0);
                 scrollView.StopMovement();
             }
@@ -105,7 +105,7 @@ namespace Watermelon
         public override void PlayShowAnimation()
         {
             // Subscribe events
-            for (int i = 0; i < CurrenciesController.Currencies.Length; i++)
+            for (var i = 0; i < CurrenciesController.Currencies.Length; i++)
             {
                 CurrenciesController.Currencies[i].OnCurrencyChanged += OnCurrencyAmountChanged;
             }
@@ -113,13 +113,13 @@ namespace Watermelon
             backgroundPanelRectTransform.anchoredPosition = new Vector2(0, -1500);
             backgroundPanelRectTransform.DOAnchoredPosition(Vector2.zero, 0.3f).SetCustomEasing(GetCustomEasingFunction("BackOutLight"));
 
-            float scrollOffsetX = -(itemPanels[SelectedIndex].RectTransform.anchoredPosition.x - SCROLL_ELEMENT_WIDTH - SCROLL_SIDE_OFFSET);
+            var scrollOffsetX = -(itemPanels[SelectedIndex].RectTransform.anchoredPosition.x - SCROLL_ELEMENT_WIDTH - SCROLL_SIDE_OFFSET);
             scrollView.content.anchoredPosition = new Vector2(scrollOffsetX, 0);
             scrollView.StopMovement();
 
-            for (int i = 0; i < itemPanels.Count; i++)
+            for (var i = 0; i < itemPanels.Count; i++)
             {
-                RectTransform panelTransform = itemPanels[i].RectTransform;
+                var panelTransform = itemPanels[i].RectTransform;
 
                 panelTransform.localScale = Vector2.zero;
 
@@ -144,7 +144,7 @@ namespace Watermelon
 
         public override void PlayHideAnimation()
         {
-            for (int i = 0; i < CurrenciesController.Currencies.Length; i++)
+            for (var i = 0; i < CurrenciesController.Currencies.Length; i++)
             {
                 CurrenciesController.Currencies[i].OnCurrencyChanged -= OnCurrencyAmountChanged;
             }
@@ -155,9 +155,9 @@ namespace Watermelon
 
         }
 
-        private void OnCurrencyAmountChanged(Currency currency, int difference)
+        void OnCurrencyAmountChanged(Currency currency, int difference)
         {
-            for (int i = 0; i < itemPanels.Count; i++)
+            for (var i = 0; i < itemPanels.Count; i++)
             {
                 itemPanels[i].OnMoneyAmountChanged();
             }

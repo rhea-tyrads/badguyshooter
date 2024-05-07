@@ -14,7 +14,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Color alertColor;
         [SerializeField] Color redColor;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
         [Header("Fighting")]
         [SerializeField] GameObject bulletPrefab;
@@ -81,7 +81,7 @@ namespace Watermelon.SquadShooter
             bulletPool = new Pool(new PoolSettings(bulletPrefab.name, bulletPrefab, 3, true));
         }
 
-        private void Update()
+        void Update()
         {
             if (!LevelController.IsGameplayActive)
                 return;
@@ -98,7 +98,7 @@ namespace Watermelon.SquadShooter
         {
             if (enemyCallbackType == EnemyCallbackType.Hit)
             {
-                EnemyBulletBehavior bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(weaponExit.position).SetEulerRotation(weaponExit.eulerAngles)).GetComponent<EnemyBulletBehavior>();
+                var bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(weaponExit.position).SetEulerRotation(weaponExit.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                 bullet.transform.forward = transform.forward;
                 bullet.Initialise(GetCurrentDamage(), bulletSpeed, 200);
 

@@ -4,13 +4,13 @@ namespace Watermelon
 {
     public sealed class GDPRLoadingTask : LoadingTask
     {
-        private GDPRPanel gdprPanel;
+        GDPRPanel gdprPanel;
 
         public override void Activate()
         {
             isActive = true;
 
-            GameObject gdprPanelObject = GameObject.Instantiate(AdsManager.InitModule.GDPRPrefab);
+            var gdprPanelObject = GameObject.Instantiate(AdsManager.InitModule.GDPRPrefab);
             gdprPanelObject.transform.ResetGlobal();
 
             gdprPanel = gdprPanelObject.GetComponent<GDPRPanel>();

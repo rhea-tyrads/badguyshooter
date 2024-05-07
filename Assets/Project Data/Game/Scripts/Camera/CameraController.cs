@@ -8,10 +8,10 @@ namespace Watermelon
     [DefaultExecutionOrder(100)]
     public class CameraController : MonoBehaviour
     {
-        private const int ACTIVE_CAMERA_PRIORITY = 100;
-        private const int UNACTIVE_CAMERA_PRIORITY = 0;
+        const int ACTIVE_CAMERA_PRIORITY = 100;
+        const int UNACTIVE_CAMERA_PRIORITY = 0;
 
-        private static CameraController cameraController;
+        static CameraController cameraController;
 
         [SerializeField] CinemachineBrain cameraBrain;
         [SerializeField] CameraType firstCamera;
@@ -29,26 +29,26 @@ namespace Watermelon
         [SerializeField] float enemyShiftZ = 1f;
         [SerializeField] float enemyShiftLerpMultiplier = 4f;
 
-        private static Dictionary<CameraType, int> virtualCamerasLink;
+        static Dictionary<CameraType, int> virtualCamerasLink;
 
-        private static Camera mainCamera;
+        static Camera mainCamera;
         public static Camera MainCamera => mainCamera;
 
-        private static Transform mainTarget;
+        static Transform mainTarget;
         public static Transform MainTarget => mainTarget;
 
-        private static VirtualCameraCase activeVirtualCamera;
+        static VirtualCameraCase activeVirtualCamera;
         public static VirtualCameraCase ActiveVirtualCamera => activeVirtualCamera;
 
-        private static Transform InternalTarget { get; set; }
+        static Transform InternalTarget { get; set; }
 
-        private static bool cameraShiftEnabled = true;
+        static bool cameraShiftEnabled = true;
 
-        private Vector3 forward = Vector3.zero;
-        private static Vector3 enemyDirection = Vector3.zero;
-        private static BaseEnemyBehavior targetEnemy;
+        Vector3 forward = Vector3.zero;
+        static Vector3 enemyDirection = Vector3.zero;
+        static BaseEnemyBehavior targetEnemy;
 
-        private void Awake()
+        void Awake()
         {
             cameraController = this;
 
@@ -57,7 +57,7 @@ namespace Watermelon
 
             // Initialise cameras link
             virtualCamerasLink = new Dictionary<CameraType, int>();
-            for(int i = 0; i < virtualCameras.Length; i++)
+            for(var i = 0; i < virtualCameras.Length; i++)
             {
                 virtualCameras[i].Initialise();
                 virtualCamerasLink.Add(virtualCameras[i].CameraType, i);
@@ -81,7 +81,7 @@ namespace Watermelon
 
             cameraController.cameraBrain.enabled = false;
 
-            for (int i = 0; i < cameraController.virtualCameras.Length; i++)
+            for (var i = 0; i < cameraController.virtualCameras.Length; i++)
             {
                 cameraController.virtualCameras[i].VirtualCamera.Follow = InternalTarget;
                 cameraController.virtualCameras[i].VirtualCamera.LookAt = InternalTarget;
@@ -101,7 +101,7 @@ namespace Watermelon
             cameraShiftEnabled = state;
         }
 
-        private void LateUpdate()
+        void LateUpdate()
         {
             if (cameraShiftEnabled)
             {
@@ -135,7 +135,7 @@ namespace Watermelon
             if (activeVirtualCamera != null && activeVirtualCamera.CameraType == cameraType)
                 return;
 
-            for (int i = 0; i < cameraController.virtualCameras.Length; i++)
+            for (var i = 0; i < cameraController.virtualCameras.Length; i++)
             {
                 cameraController.virtualCameras[i].VirtualCamera.Priority = UNACTIVE_CAMERA_PRIORITY;
             }

@@ -5,8 +5,8 @@ namespace Watermelon
     [System.Serializable]
     public struct SafeInt
     {
-        private int value;
-        private int offset;
+        int value;
+        int offset;
 
         public int Value
         {

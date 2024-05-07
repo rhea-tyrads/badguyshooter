@@ -8,17 +8,17 @@ namespace Watermelon.SquadShooter
     {
         [SerializeField] TextMeshProUGUI label;
 
-        private Animation labelAnimation;
+        Animation labelAnimation;
 
-        private Transform parentTransform;
-        private Vector3 offset;
+        Transform parentTransform;
+        Vector3 offset;
 
-        private void Awake()
+        void Awake()
         {
             labelAnimation = GetComponent<Animation>();
         }
 
-        private void Update()
+        void Update()
         {
             transform.position = parentTransform.position + offset;
         }

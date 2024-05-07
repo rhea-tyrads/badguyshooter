@@ -7,7 +7,7 @@ namespace Watermelon
     {
         [SerializeField] CanvasGroup fadeCanvasGroup;
 
-        private TweenCase fadeTweenCase;
+        TweenCase fadeTweenCase;
 
         public void Show(float duration = 0.4f, float delay = 0f, bool immediately = false, SimpleCallback onCompleted = null)
         {

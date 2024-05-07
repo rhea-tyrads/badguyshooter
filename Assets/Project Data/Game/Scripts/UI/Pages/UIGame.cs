@@ -37,10 +37,10 @@ namespace Watermelon
         public Joystick Joystick => joystick;
         public RectTransform FloatingTextHolder => floatingTextHolder;
 
-        private List<UIRoomIndicator> roomIndicators = new List<UIRoomIndicator>();
-        private PoolGeneric<UIRoomIndicator> roomIndicatorsPool;
+        List<UIRoomIndicator> roomIndicators = new List<UIRoomIndicator>();
+        PoolGeneric<UIRoomIndicator> roomIndicatorsPool;
 
-        private void Awake()
+        void Awake()
         {
             roomIndicatorsPool = new PoolGeneric<UIRoomIndicator>(new PoolSettings(roomIndicatorUIPrefab.name, roomIndicatorUIPrefab, 3, true, roomsHolder));
 
@@ -90,7 +90,7 @@ namespace Watermelon
             roomIndicatorsPool.ReturnToPoolEverything();
             roomIndicators.Clear();
 
-            for (int i = 0; i < rooms.Length; i++)
+            for (var i = 0; i < rooms.Length; i++)
             {
                 roomIndicators.Add(roomIndicatorsPool.GetPooledComponent());
                 roomIndicators[i].Init();
@@ -113,7 +113,8 @@ namespace Watermelon
         }
 
         #region Pause
-        private void OnPauseResumeButtonClicked()
+
+        void OnPauseResumeButtonClicked()
         {
             if (!GameController.IsGameActive)
                 return;
@@ -127,14 +128,14 @@ namespace Watermelon
             });
         }
 
-        private void OnPauseExitButtonClicked()
+        void OnPauseExitButtonClicked()
         {
             GameController.OnLevelExit();
 
             UIController.HidePage<UIGame>();
 
-            ItemDropBehaviour[] dropItems = FindObjectsByType<ItemDropBehaviour>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            for (int i = 0; i < dropItems.Length; i++)
+            var dropItems = FindObjectsByType<ItemDropBehaviour>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+            for (var i = 0; i < dropItems.Length; i++)
             {
                 dropItems[i].ItemDisable();
             }
@@ -160,7 +161,7 @@ namespace Watermelon
             });
         }
 
-        private void OnPauseButtonClicked()
+        void OnPauseButtonClicked()
         {
             Time.timeScale = 0.0f;
 

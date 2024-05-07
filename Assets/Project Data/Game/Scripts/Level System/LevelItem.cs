@@ -16,7 +16,7 @@ namespace Watermelon.LevelSystem
         [SerializeField] LevelItemType type;
         public LevelItemType Type => type;
 
-        private Pool pool;
+        Pool pool;
         public Pool Pool => pool;
 
         

@@ -13,7 +13,7 @@ namespace Watermelon
 
         public override void OnParticleDisabled()
         {
-            for (int i = 0; i < trails.Length; i++)
+            for (var i = 0; i < trails.Length; i++)
             {
                 trails[i].Clear();
             }

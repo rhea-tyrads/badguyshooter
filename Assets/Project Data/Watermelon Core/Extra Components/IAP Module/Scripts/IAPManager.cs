@@ -10,13 +10,13 @@ namespace Watermelon
     [HelpURL("https://docs.google.com/document/d/1GlS55aF4z4Ddn4a1QCu5h0152PoOb29Iy4y9RKZ9Y9Y")]
     public static class IAPManager
     {
-        private static Dictionary<ProductKeyType, IAPItem> productsTypeToProductLink = new Dictionary<ProductKeyType, IAPItem>();
-        private static Dictionary<string, IAPItem> productsKeyToProductLink = new Dictionary<string, IAPItem>();
+        static Dictionary<ProductKeyType, IAPItem> productsTypeToProductLink = new Dictionary<ProductKeyType, IAPItem>();
+        static Dictionary<string, IAPItem> productsKeyToProductLink = new Dictionary<string, IAPItem>();
 
-        private static bool isInitialised = false;
+        static bool isInitialised = false;
         public static bool IsInitialised => isInitialised;
 
-        private static BaseIAPWrapper wrapper;
+        static BaseIAPWrapper wrapper;
 
         public static event SimpleCallback OnPurchaseModuleInitted;
         public static event ProductCallback OnPurchaseComplete;
@@ -30,8 +30,8 @@ namespace Watermelon
                 return;
             }
 
-            IAPItem[] items = settings.StoreItems;
-            for (int i = 0; i < items.Length; i++)
+            var items = settings.StoreItems;
+            for (var i = 0; i < items.Length; i++)
             {
                 productsTypeToProductLink.Add(items[i].ProductKeyType, items[i]);
                 productsKeyToProductLink.Add(items[i].ID, items[i]);
@@ -65,7 +65,7 @@ namespace Watermelon
 #if MODULE_IAP
         public static Product GetProduct(ProductKeyType productKeyType)
         {
-            IAPItem iapItem = GetIAPItem(productKeyType);
+            var iapItem = GetIAPItem(productKeyType);
             if (iapItem != null)
             {
                 return IAPWrapper.Controller.products.WithID(iapItem.ID);
@@ -105,7 +105,7 @@ namespace Watermelon
 
         public static string GetProductLocalPriceString(ProductKeyType productKeyType)
         {
-            ProductData product = GetProductData(productKeyType);
+            var product = GetProductData(productKeyType);
 
             if (product == null)
                 return string.Empty;

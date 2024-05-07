@@ -5,17 +5,17 @@ namespace Watermelon.SquadShooter
 {
     public class BossBombBehaviour : MonoBehaviour
     {
-        private readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Boss Bomb Hit");
-        private readonly int PARTICLE_EXPLOSION_HASH = ParticlesController.GetHash("Boss Bomb Explosion");
-        private readonly int PARTICLE_EXPLOSION_RADIUS_HASH = ParticlesController.GetHash("Boss Bomb Radius");
+        readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Boss Bomb Hit");
+        readonly int PARTICLE_EXPLOSION_HASH = ParticlesController.GetHash("Boss Bomb Explosion");
+        readonly int PARTICLE_EXPLOSION_RADIUS_HASH = ParticlesController.GetHash("Boss Bomb Radius");
 
-        private bool isPlaced;
+        bool isPlaced;
 
-        private float duration;
-        private float damage;
-        private float radius;
+        float duration;
+        float damage;
+        float radius;
 
-        private BossBomberBehaviour bossEnemyBehaviour;
+        BossBomberBehaviour bossEnemyBehaviour;
 
         public void Initialise(BossBomberBehaviour bossEnemyBehaviour, float duration, float damage, float radius)
         {
@@ -30,7 +30,7 @@ namespace Watermelon.SquadShooter
             transform.rotation = Random.rotation;
         }
 
-        private void Update()
+        void Update()
         {
             if (!isPlaced)
             {
@@ -47,14 +47,14 @@ namespace Watermelon.SquadShooter
 
             transform.DOScale(2.0f, duration).SetEasing(Ease.Type.CubicIn).OnComplete(delegate
             {
-                bool playerHitted = false;
+                var playerHitted = false;
 
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-                for (int i = 0; i < hitColliders.Length; i++)
+                var hitColliders = Physics.OverlapSphere(transform.position, radius);
+                for (var i = 0; i < hitColliders.Length; i++)
                 {
                     if (hitColliders[i].gameObject.layer == PhysicsHelper.LAYER_PLAYER)
                     {
-                        CharacterBehaviour characterBehaviour = hitColliders[i].GetComponent<CharacterBehaviour>();
+                        var characterBehaviour = hitColliders[i].GetComponent<CharacterBehaviour>();
                         if (characterBehaviour != null)
                         {
                             // Deal damage to player

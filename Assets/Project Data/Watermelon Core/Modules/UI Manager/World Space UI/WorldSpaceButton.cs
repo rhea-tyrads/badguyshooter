@@ -9,10 +9,10 @@ namespace Watermelon
     [RequireComponent(typeof(Button), typeof(BoxCollider))]
     public class WorldSpaceButton : MonoBehaviour
     {
-        private Button button;
-        private BoxCollider boxCollider;
+        Button button;
+        BoxCollider boxCollider;
 
-        private void Awake()
+        void Awake()
         {
             button = GetComponent<Button>();
             boxCollider = GetComponent<BoxCollider>();
@@ -34,7 +34,7 @@ namespace Watermelon
             button.OnPointerClick(eventData);
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             WorldSpaceRaycaster.AddWorldSpaceButton(this);
         }
@@ -44,7 +44,7 @@ namespace Watermelon
             WorldSpaceRaycaster.RemoveWorldSpaceButton(this);
         }
 
-        private void OnValidate()
+        void OnValidate()
         {
             button = GetComponent<Button>();
             boxCollider = GetComponent<BoxCollider>();

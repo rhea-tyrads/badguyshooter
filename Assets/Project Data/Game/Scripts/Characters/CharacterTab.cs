@@ -11,24 +11,24 @@ namespace Watermelon.SquadShooter
         [SerializeField] Color disabledColor;
         [SerializeField] GameObject notificationObject;
 
-        private UICharactersPanel characterPanel;
+        UICharactersPanel characterPanel;
 
-        private TweenCase movementTweenCase;
+        TweenCase movementTweenCase;
 
-        private Vector2 defaultAnchoredPosition;
+        Vector2 defaultAnchoredPosition;
 
-        private RectTransform rectTransform;
+        RectTransform rectTransform;
         public RectTransform RectTransform => rectTransform;
 
-        private Button button;
+        Button button;
         public Button Button => button;
 
-        private UIGamepadButton gamepadButton;
+        UIGamepadButton gamepadButton;
         public UIGamepadButton GamepadButton => gamepadButton;
 
-        private CanvasGroup canvasGroup;
+        CanvasGroup canvasGroup;
 
-        private bool isActive;
+        bool isActive;
 
         public void Initialise()
         {

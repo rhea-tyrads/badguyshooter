@@ -13,21 +13,21 @@ namespace Watermelon
 
         public Vector2 AnchoredPos { get => targetRect.anchoredPosition; set => targetRect.anchoredPosition = value; }
 
-        private PoolGeneric<UIParticle> particlePool;
+        PoolGeneric<UIParticle> particlePool;
 
         public bool IsPlaying { get; set; }
 
         public bool DisableWhenReady { get; set; }
 
-        private float spawnRate;
+        float spawnRate;
 
-        private float lastSpawnTime;
+        float lastSpawnTime;
 
         public Vector3 NormalizedVelocity { get; set; }
 
-        private List<UIParticle> particles = new List<UIParticle>();
+        List<UIParticle> particles = new List<UIParticle>();
 
-        private void Awake()
+        void Awake()
         {
             spawnRate = 1f / settings.emissionPerSecond;
 
@@ -45,9 +45,9 @@ namespace Watermelon
             lastSpawnTime = Time.time;
         }
 
-        private void LateUpdate()
+        void LateUpdate()
         {
-            for (int i = 0; i < particles.Count; i++)
+            for (var i = 0; i < particles.Count; i++)
             {
                 var particle = particles[i];
 

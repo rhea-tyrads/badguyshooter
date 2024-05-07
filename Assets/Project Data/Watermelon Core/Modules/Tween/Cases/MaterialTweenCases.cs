@@ -24,7 +24,7 @@ namespace Watermelon
 
         public class MaterialColor : TweenCaseFunction<Material, Color>
         {
-            private int colorID;
+            int colorID;
 
             public MaterialColor(int colorID, Material tweenObject, Color resultValue) : base(tweenObject, resultValue)
             {
@@ -51,7 +51,7 @@ namespace Watermelon
 
         public class MaterialFloat : TweenCaseFunction<Material, float>
         {
-            private int floatID;
+            int floatID;
 
             public MaterialFloat(int floatID, Material tweenObject, float resultValue) : base(tweenObject, resultValue)
             {

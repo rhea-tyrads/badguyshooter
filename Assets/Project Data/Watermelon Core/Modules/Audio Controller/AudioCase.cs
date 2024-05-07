@@ -12,7 +12,7 @@ namespace Watermelon
         public AudioType type;
 
         public AudioCallback onAudioEnded;
-        private Coroutine endCoroutine;
+        Coroutine endCoroutine;
 
         public AudioCase(AudioClip clip, AudioSource source, AudioType type, AudioCallback callback = null)
         {
@@ -46,7 +46,7 @@ namespace Watermelon
 
         public void FadeOut(float value, float time, bool stop = false)
         {
-            TweenCase tweenCase = source.DOVolume(value, time);
+            var tweenCase = source.DOVolume(value, time);
 
             if (stop)
             {
@@ -62,7 +62,7 @@ namespace Watermelon
             source.DOVolume(value, time);
         }
 
-        private IEnumerator OnAudioEndCoroutine(float clipDuration)
+        IEnumerator OnAudioEndCoroutine(float clipDuration)
         {
             yield return new WaitForSeconds(clipDuration);
 

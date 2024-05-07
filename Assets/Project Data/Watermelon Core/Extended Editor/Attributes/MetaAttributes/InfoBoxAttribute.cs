@@ -5,9 +5,9 @@ namespace Watermelon
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
     public class InfoBoxAttribute : MetaAttribute
     {
-        private string text;
-        private InfoBoxType type;
-        private string visibleIf;
+        string text;
+        InfoBoxType type;
+        string visibleIf;
 
         public InfoBoxAttribute(string text, InfoBoxType type = InfoBoxType.Normal, string visibleIf = null)
         {

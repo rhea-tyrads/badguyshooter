@@ -27,17 +27,17 @@ namespace Watermelon
 
             if(inputType == InputType.Keyboard)
             {
-                KeyboardControl keyboardControl = Initialiser.InitialiserGameObject.AddComponent<KeyboardControl>();
+                var keyboardControl = Initialiser.InitialiserGameObject.AddComponent<KeyboardControl>();
                 keyboardControl.Initialise();
             } 
             else if(inputType == InputType.Gamepad)
             {
-                GamepadControl gamepadControl = Initialiser.InitialiserGameObject.AddComponent<GamepadControl>();
+                var gamepadControl = Initialiser.InitialiserGameObject.AddComponent<GamepadControl>();
                 gamepadControl.Initialise();
             }
         }
 
-        private bool IsJoystickCondition()
+        bool IsJoystickCondition()
         {
             return selectAutomatically ? ControlUtils.GetCurrentInputType() == InputType.UIJoystick : inputType == InputType.UIJoystick;
         }

@@ -6,13 +6,13 @@ namespace Watermelon.SquadShooter
 {
     public abstract class BaseCharacterGraphics : MonoBehaviour
     {
-        private static readonly int PARTICLE_UPGRADE = ParticlesController.GetHash("Upgrade");
+        static readonly int PARTICLE_UPGRADE = ParticlesController.GetHash("Upgrade");
 
-        private readonly int ANIMATION_SHOT_HASH = Animator.StringToHash("Shot");
-        private readonly int ANIMATION_HIT_HASH = Animator.StringToHash("Hit");
+        readonly int ANIMATION_SHOT_HASH = Animator.StringToHash("Shot");
+        readonly int ANIMATION_HIT_HASH = Animator.StringToHash("Hit");
 
-        private readonly int JUMP_ANIMATION_HASH = Animator.StringToHash("Jump");
-        private readonly int GRUNT_ANIMATION_HASH = Animator.StringToHash("Grunt");
+        readonly int JUMP_ANIMATION_HASH = Animator.StringToHash("Jump");
+        readonly int GRUNT_ANIMATION_HASH = Animator.StringToHash("Grunt");
 
         [SerializeField]
         protected Animator characterAnimator;
@@ -67,11 +67,11 @@ namespace Watermelon.SquadShooter
         protected Material characterMaterial;
         public Material CharacterMaterial => characterMaterial;
 
-        private int animatorShootingLayerIndex;
+        int animatorShootingLayerIndex;
 
-        private AnimatorOverrideController animatorOverrideController;
+        AnimatorOverrideController animatorOverrideController;
 
-        private TweenCase rigWeightCase;
+        TweenCase rigWeightCase;
 
         protected RagdollBehavior ragdoll;
 
@@ -161,7 +161,7 @@ namespace Watermelon.SquadShooter
 
         public void PlayUpgradeParticle()
         {
-            ParticleCase particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE).SetPosition(transform.position + new Vector3(0, 0.5f, 0)).SetScale((5).ToVector3());
+            var particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE).SetPosition(transform.position + new Vector3(0, 0.5f, 0)).SetScale((5).ToVector3());
             particleCase.ParticleSystem.transform.rotation = CameraController.MainCamera.transform.rotation;
             particleCase.ParticleSystem.transform.Rotate(Vector3.up, 180);
         }
@@ -200,65 +200,65 @@ namespace Watermelon.SquadShooter
         public void PrepareModel()
         {
             // Get animator component
-            Animator tempAnimator = characterAnimator;
+            var tempAnimator = characterAnimator;
 
             if (tempAnimator != null)
             {
                 if (tempAnimator.avatar != null && tempAnimator.avatar.isHuman)
                 {
                     // Initialise rig
-                    RigBuilder rigBuilder = tempAnimator.GetComponent<RigBuilder>();
+                    var rigBuilder = tempAnimator.GetComponent<RigBuilder>();
                     if (rigBuilder == null)
                     {
                         rigBuilder = tempAnimator.gameObject.AddComponent<RigBuilder>();
 
-                        GameObject rigObject = new GameObject("Main Rig");
+                        var rigObject = new GameObject("Main Rig");
                         rigObject.transform.SetParent(tempAnimator.transform);
                         rigObject.transform.ResetLocal();
 
-                        Rig rig = rigObject.AddComponent<Rig>();
+                        var rig = rigObject.AddComponent<Rig>();
 
                         mainRig = rig;
 
                         rigBuilder.layers.Add(new RigLayer(rig, true));
 
                         // Left hand rig
-                        GameObject leftHandRigObject = new GameObject("Left Hand Rig");
+                        var leftHandRigObject = new GameObject("Left Hand Rig");
                         leftHandRigObject.transform.SetParent(rigObject.transform);
                         leftHandRigObject.transform.ResetLocal();
 
-                        GameObject leftHandControllerObject = new GameObject("Controller");
+                        var leftHandControllerObject = new GameObject("Controller");
                         leftHandControllerObject.transform.SetParent(leftHandRigObject.transform);
                         leftHandControllerObject.transform.ResetLocal();
 
                         leftHandController = leftHandControllerObject.transform;
 
-                        Transform leftHandBone = tempAnimator.GetBoneTransform(HumanBodyBones.LeftHand);
+                        var leftHandBone = tempAnimator.GetBoneTransform(HumanBodyBones.LeftHand);
                         leftHandControllerObject.transform.position = leftHandBone.position;
                         leftHandControllerObject.transform.rotation = leftHandBone.rotation;
 
-                        TwoBoneIKConstraint leftHandRig = leftHandRigObject.AddComponent<TwoBoneIKConstraint>();
+                        var leftHandRig = leftHandRigObject.AddComponent<TwoBoneIKConstraint>();
                         leftHandRig.data.target = leftHandControllerObject.transform;
                         leftHandRig.data.root = tempAnimator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
                         leftHandRig.data.mid = tempAnimator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
                         leftHandRig.data.tip = leftHandBone;
 
                         // Right hand rig
-                        GameObject rightHandRigObject = new GameObject("Right Hand Rig");
+                        var rightHandRigObject = new GameObject("Right Hand Rig");
                         rightHandRigObject.transform.SetParent(rigObject.transform);
                         rightHandRigObject.transform.ResetLocal();
 
-                        GameObject rightHandControllerObject = new GameObject("Controller");
+                        var rightHandControllerObject = new GameObject("Controller");
                         rightHandControllerObject.transform.SetParent(rightHandRigObject.transform);
                         rightHandControllerObject.transform.ResetLocal();
 
                         rightHandController = rightHandControllerObject.transform;
 
-                        Transform rightHandBone = tempAnimator.GetBoneTransform(HumanBodyBones.RightHand);
+                        var rightHandBone = tempAnimator.GetBoneTransform(HumanBodyBones.RightHand);
                         rightHandControllerObject.transform.position = rightHandBone.position;
                         rightHandControllerObject.transform.rotation = rightHandBone.rotation;
 
-                        TwoBoneIKConstraint rightHandRig = rightHandRigObject.AddComponent<TwoBoneIKConstraint>();
+                        var rightHandRig = rightHandRigObject.AddComponent<TwoBoneIKConstraint>();
                         rightHandRig.data.target = rightHandControllerObject.transform;
                         rightHandRig.data.root = tempAnimator.GetBoneTransform(HumanBodyBones.RightUpperArm);
                         rightHandRig.data.mid = tempAnimator.GetBoneTransform(HumanBodyBones.RightLowerArm);
@@ -281,19 +281,19 @@ namespace Watermelon.SquadShooter
                     movementAimingSettings.Acceleration = 781.25f;
                     movementAimingSettings.AnimationMultiplier = new DuoFloat(0, 1.2f);
 
-                    CharacterAnimationHandler tempAnimationHandler = tempAnimator.GetComponent<CharacterAnimationHandler>();
+                    var tempAnimationHandler = tempAnimator.GetComponent<CharacterAnimationHandler>();
                     if (tempAnimationHandler == null)
                         tempAnimator.gameObject.AddComponent<CharacterAnimationHandler>();
 
                     // Create weapon holders
-                    GameObject weaponHolderObject = new GameObject("Weapons");
+                    var weaponHolderObject = new GameObject("Weapons");
                     weaponHolderObject.transform.SetParent(tempAnimator.transform);
                     weaponHolderObject.transform.ResetLocal();
 
                     weaponsTransform = weaponHolderObject.transform;
 
                     // Minigun
-                    GameObject miniGunHolderObject = new GameObject("Minigun Holder");
+                    var miniGunHolderObject = new GameObject("Minigun Holder");
                     miniGunHolderObject.transform.SetParent(weaponsTransform);
                     miniGunHolderObject.transform.ResetLocal();
                     miniGunHolderObject.transform.localPosition = new Vector3(0.204f, 0.7f, 0.375f);
@@ -301,7 +301,7 @@ namespace Watermelon.SquadShooter
                     minigunHolderTransform = miniGunHolderObject.transform;
 
                     // Shotgun
-                    GameObject shotgunHolderObject = new GameObject("Shotgun Holder");
+                    var shotgunHolderObject = new GameObject("Shotgun Holder");
                     shotgunHolderObject.transform.SetParent(weaponsTransform);
                     shotgunHolderObject.transform.ResetLocal();
                     shotgunHolderObject.transform.localPosition = new Vector3(0.22f, 0.6735f, 0.23f);
@@ -309,7 +309,7 @@ namespace Watermelon.SquadShooter
                     shootGunHolderTransform = shotgunHolderObject.transform;
 
                     // Rocket
-                    GameObject rocketHolderObject = new GameObject("Rocket Holder");
+                    var rocketHolderObject = new GameObject("Rocket Holder");
                     rocketHolderObject.transform.SetParent(weaponsTransform);
                     rocketHolderObject.transform.ResetLocal();
                     rocketHolderObject.transform.localPosition = new Vector3(0.234f, 0.726f, 0.369f);
@@ -318,7 +318,7 @@ namespace Watermelon.SquadShooter
                     rocketHolderTransform = rocketHolderObject.transform;
 
                     // Tesla
-                    GameObject teslaHolderObject = new GameObject("Tesla Holder");
+                    var teslaHolderObject = new GameObject("Tesla Holder");
                     teslaHolderObject.transform.SetParent(weaponsTransform);
                     teslaHolderObject.transform.ResetLocal();
                     teslaHolderObject.transform.localPosition = new Vector3(0.213f, 0.783f, 0.357f);

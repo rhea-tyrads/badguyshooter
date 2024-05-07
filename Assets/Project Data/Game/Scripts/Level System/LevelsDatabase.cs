@@ -12,7 +12,7 @@ namespace Watermelon.LevelSystem
 
         public void Initialise()
         {
-            for (int i = 0; i < worlds.Length; i++)
+            for (var i = 0; i < worlds.Length; i++)
             {
                 worlds[i].Initialise();
             }
@@ -34,10 +34,10 @@ namespace Watermelon.LevelSystem
 
             do
             {
-                WorldData randomWorld = worlds.GetRandomItem();
+                var randomWorld = worlds.GetRandomItem();
                 if (randomWorld != null)
                 {
-                    LevelData randomLevel = randomWorld.Levels.GetRandomItem();
+                    var randomLevel = randomWorld.Levels.GetRandomItem();
                     if (randomLevel != null)
                         tempLevel = randomLevel;
                 }
@@ -49,7 +49,7 @@ namespace Watermelon.LevelSystem
 
         public LevelData GetLevel(int worldIndex, int levelIndex)
         {
-            WorldData world = GetWorld(worldIndex);
+            var world = GetWorld(worldIndex);
             if(world != null)
             {
                 if (world.Levels.IsInRange(levelIndex))
@@ -63,7 +63,7 @@ namespace Watermelon.LevelSystem
 
         public bool DoesNextLevelExist(int worldIndex, int levelIndex)
         {
-            WorldData world = GetWorld(worldIndex);
+            var world = GetWorld(worldIndex);
             if (world != null)
             {
                 if (world.Levels.IsInRange(levelIndex + 1))

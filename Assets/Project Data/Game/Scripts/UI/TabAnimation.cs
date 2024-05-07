@@ -38,7 +38,7 @@ namespace Watermelon.SquadShooter
                 state = 0;
                 isCompleted = false;
 
-                Vector2 tempStartValue = startValue;
+                var tempStartValue = startValue;
 
                 startValue = resultValue;
                 resultValue = tempStartValue;

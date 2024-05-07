@@ -10,7 +10,7 @@ namespace Watermelon.SquadShooter
     public class EnemyStats
     {
         [SerializeField] float hp;
-        private int calculatedHp;
+        int calculatedHp;
         public float Hp => calculatedHp * difficulty.HealthMult;
 
         [SerializeField] float visionRange;
@@ -23,7 +23,7 @@ namespace Watermelon.SquadShooter
         public float FleeDistance => fleeDistance;
 
         [SerializeField] DuoInt damage;
-        private DuoInt calculatedDamage;
+        DuoInt calculatedDamage;
 
         public DuoInt Damage => calculatedDamage * difficulty.DamageMult;
 
@@ -61,7 +61,7 @@ namespace Watermelon.SquadShooter
         [Header("Other")]
         [SerializeField] DuoInt healForPlayer;
 
-        private DuoInt calculatedHpForPlayer;
+        DuoInt calculatedHpForPlayer;
         public DuoInt HpForPlayer => calculatedHpForPlayer * difficulty.RestoredHpMult;
 
         [Space(5)]
@@ -73,12 +73,12 @@ namespace Watermelon.SquadShooter
         public float HitTextOffsetForward => hitTextOffsetForward;
 
         // dynamic stats system
-        private float enemyDmgToPlayerHp; // how much enemy needs to hit to kill player
-        private List<HpToWeaponRelation> enemyHpToCreatureDmgRelations; // how much times player needs to hit for kill | value for each weapon
-        private float restoredHpToDamage; // how much hits do we restore
-        private float creatureDamage;
+        float enemyDmgToPlayerHp; // how much enemy needs to hit to kill player
+        List<HpToWeaponRelation> enemyHpToCreatureDmgRelations; // how much times player needs to hit for kill | value for each weapon
+        float restoredHpToDamage; // how much hits do we restore
+        float creatureDamage;
 
-        private DifficultySettings difficulty;
+        DifficultySettings difficulty;
 
         public void InitialiseStatsRelation(int baseCreatureHealth)
         {
@@ -86,12 +86,12 @@ namespace Watermelon.SquadShooter
 
             enemyHpToCreatureDmgRelations = new List<HpToWeaponRelation>();
 
-            for (int i = 0; i < WeaponsController.Database.Weapons.Length; i++)
+            for (var i = 0; i < WeaponsController.Database.Weapons.Length; i++)
             {
-                BaseWeaponUpgrade weaponUpg = UpgradesController.GetUpgrade<BaseUpgrade>(WeaponsController.Database.Weapons[i].UpgradeType) as BaseWeaponUpgrade;
-                BaseWeaponUpgradeStage firstStage = weaponUpg.Upgrades[1] as BaseWeaponUpgradeStage; // 0 stage is for locked weapon - has no stats
+                var weaponUpg = UpgradesController.GetUpgrade<BaseUpgrade>(WeaponsController.Database.Weapons[i].UpgradeType) as BaseWeaponUpgrade;
+                var firstStage = weaponUpg.Upgrades[1] as BaseWeaponUpgradeStage; // 0 stage is for locked weapon - has no stats
 
-                HpToWeaponRelation relation = new HpToWeaponRelation(WeaponsController.Database.Weapons[i].Type, hp / firstStage.Damage.Lerp(0.5f));
+                var relation = new HpToWeaponRelation(WeaponsController.Database.Weapons[i].Type, hp / firstStage.Damage.Lerp(0.5f));
                 enemyHpToCreatureDmgRelations.Add(relation);
             }
 
@@ -104,24 +104,24 @@ namespace Watermelon.SquadShooter
             this.creatureDamage = weaponDmg;
             this.difficulty = difficulty;
 
-            WeaponData currentWeapon = WeaponsController.GetCurrentWeapon();
-            HpToWeaponRelation relation = enemyHpToCreatureDmgRelations.Find(r => r.weapon.Equals(currentWeapon.Type));
+            var currentWeapon = WeaponsController.GetCurrentWeapon();
+            var relation = enemyHpToCreatureDmgRelations.Find(r => r.weapon.Equals(currentWeapon.Type));
 
             calculatedHp = (int)(creatureDamage * relation.enemyHpToCreatureDmg);
 
-            float dmgMid = characterHealth / enemyDmgToPlayerHp;
-            float damageSpreadUp = (float)damage.secondValue / (float)damage.Lerp(0.5f);
-            float damageSpreadDown = (float)damage.firstValue / (float)damage.Lerp(0.5f);
+            var dmgMid = characterHealth / enemyDmgToPlayerHp;
+            var damageSpreadUp = (float)damage.secondValue / (float)damage.Lerp(0.5f);
+            var damageSpreadDown = (float)damage.firstValue / (float)damage.Lerp(0.5f);
             calculatedDamage = new DuoInt((int)(dmgMid * damageSpreadDown), (int)(dmgMid * damageSpreadUp));
 
-            float restoredHpMid = dmgMid * restoredHpToDamage;
-            float hpSpreadUp = (float)healForPlayer.secondValue / (float)healForPlayer.Lerp(0.5f);
-            float hpSpreadDown = (float)healForPlayer.firstValue / (float)healForPlayer.Lerp(0.5f);
+            var restoredHpMid = dmgMid * restoredHpToDamage;
+            var hpSpreadUp = (float)healForPlayer.secondValue / (float)healForPlayer.Lerp(0.5f);
+            var hpSpreadDown = (float)healForPlayer.firstValue / (float)healForPlayer.Lerp(0.5f);
             calculatedHpForPlayer = new DuoInt((int)(restoredHpMid * hpSpreadDown), (int)(restoredHpMid * hpSpreadUp));
         }
 
         [System.Serializable]
-        private class HpToWeaponRelation
+        class HpToWeaponRelation
         {
             public WeaponType weapon;
             public float enemyHpToCreatureDmg;  // how much times player needs to hit for kill

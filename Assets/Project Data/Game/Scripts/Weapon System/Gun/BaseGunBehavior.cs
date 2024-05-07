@@ -5,7 +5,7 @@ namespace Watermelon.SquadShooter
 {
     public abstract class BaseGunBehavior : MonoBehaviour
     {
-        private static readonly int PARTICLE_UPGRADE = ParticlesController.GetHash("Gun Upgrade");
+        static readonly int PARTICLE_UPGRADE = ParticlesController.GetHash("Gun Upgrade");
 
         [Header("Animations")]
         [SerializeField] AnimationClip characterShootAnimation;
@@ -28,11 +28,11 @@ namespace Watermelon.SquadShooter
         protected DuoInt damage;
         public DuoInt Damage => damage;
 
-        private Transform leftHandRigController;
-        private Vector3 leftHandExtraRotation;
+        Transform leftHandRigController;
+        Vector3 leftHandExtraRotation;
 
-        private Transform rightHandRigController;
-        private Vector3 rightHandExtraRotation;
+        Transform rightHandRigController;
+        Vector3 rightHandExtraRotation;
 
         public virtual void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
@@ -107,28 +107,28 @@ namespace Watermelon.SquadShooter
 
         public void PlayUpgradeParticle()
         {
-            ParticleCase particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE).SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
+            var particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE).SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
             particleCase.ParticleSystem.transform.rotation = CameraController.MainCamera.transform.rotation;
             particleCase.ParticleSystem.transform.Rotate(Vector3.up, 180);
         }
 
-        private void OnDrawGizmosSelected()
+        void OnDrawGizmosSelected()
         {
             Gizmos.DrawWireCube(transform.position + upgradeParticleOffset, upgradeParticleSize.ToVector3());
         }
 
 #if UNITY_EDITOR
         [Button("Prepare Weapon")]
-        private void PrepareWeapon()
+        void PrepareWeapon()
         {
             if(leftHandHolder == null)
             {
-                GameObject leftHandHolderObject = new GameObject("Left Hand Holder");
+                var leftHandHolderObject = new GameObject("Left Hand Holder");
                 leftHandHolderObject.transform.SetParent(transform);
                 leftHandHolderObject.transform.ResetLocal();
                 leftHandHolderObject.transform.localPosition = new Vector3(-0.4f, 0, 0);
 
-                GUIContent iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_3");
+                var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_3");
                 UnityEditor.EditorGUIUtility.SetIconForObject(leftHandHolderObject, (Texture2D)iconContent.image);
 
                 leftHandHolder = leftHandHolderObject.transform;
@@ -136,12 +136,12 @@ namespace Watermelon.SquadShooter
 
             if (rightHandHolder == null)
             {
-                GameObject rightHandHolderObject = new GameObject("Right Hand Holder");
+                var rightHandHolderObject = new GameObject("Right Hand Holder");
                 rightHandHolderObject.transform.SetParent(transform);
                 rightHandHolderObject.transform.ResetLocal();
                 rightHandHolderObject.transform.localPosition = new Vector3(0.4f, 0, 0);
 
-                GUIContent iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_4");
+                var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_4");
                 UnityEditor.EditorGUIUtility.SetIconForObject(rightHandHolderObject, (Texture2D)iconContent.image);
 
                 rightHandHolder = rightHandHolderObject.transform;
@@ -149,12 +149,12 @@ namespace Watermelon.SquadShooter
 
             if(shootPoint == null)
             {
-                GameObject shootingPointObject = new GameObject("Shooting Point");
+                var shootingPointObject = new GameObject("Shooting Point");
                 shootingPointObject.transform.SetParent(transform);
                 shootingPointObject.transform.ResetLocal();
                 shootingPointObject.transform.localPosition = new Vector3(0, 0, 1);
 
-                GUIContent iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_1");
+                var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_1");
                 UnityEditor.EditorGUIUtility.SetIconForObject(shootingPointObject, (Texture2D)iconContent.image);
 
                 shootPoint = shootingPointObject.transform;

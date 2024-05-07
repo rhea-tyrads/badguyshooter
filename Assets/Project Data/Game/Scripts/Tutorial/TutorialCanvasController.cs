@@ -4,7 +4,7 @@ namespace Watermelon
 {
     public class TutorialCanvasController : MonoBehaviour
     {
-        private static TutorialCanvasController instance;
+        static TutorialCanvasController instance;
 
         public static readonly int POINTER_DEFAULT = Animator.StringToHash("Default");
         public static readonly int POINTER_TOPDOWN = Animator.StringToHash("Top Down");
@@ -14,12 +14,12 @@ namespace Watermelon
         [Space]
         [SerializeField] Animator pointerAnimator;
 
-        private static Canvas tutorialCanvas;
-        private static bool isActive;
+        static Canvas tutorialCanvas;
+        static bool isActive;
 
-        private static TransformCase activeTransformCase;
+        static TransformCase activeTransformCase;
 
-        private static TweenCase fadeTweenCase;
+        static TweenCase fadeTweenCase;
 
         public void Initialise()
         {
@@ -31,7 +31,7 @@ namespace Watermelon
 
         public static void ActivatePointer(Vector3 position, int animationHash)
         {
-            Transform pointerTransform = instance.pointerAnimator.transform;
+            var pointerTransform = instance.pointerAnimator.transform;
             pointerTransform.gameObject.SetActive(true);
             pointerTransform.position = position;
             pointerTransform.SetAsLastSibling();
@@ -80,20 +80,20 @@ namespace Watermelon
             isActive = false;
         }
 
-        private class TransformCase
+        class TransformCase
         {
-            private RectTransform rectTransform;
+            RectTransform rectTransform;
 
-            private Transform parentTransform;
+            Transform parentTransform;
 
-            private Vector2 anchoredPosition;
-            private Vector2 size;
-            private Vector3 scale;
-            private Quaternion rotation;
+            Vector2 anchoredPosition;
+            Vector2 size;
+            Vector3 scale;
+            Quaternion rotation;
 
-            private int siblingIndex;
+            int siblingIndex;
 
-            private GameObject dummyObject;
+            GameObject dummyObject;
 
             public TransformCase(RectTransform element)
             {
@@ -117,7 +117,7 @@ namespace Watermelon
                     dummyObject.transform.SetParent(parentTransform);
                     dummyObject.transform.SetSiblingIndex(siblingIndex);
 
-                    RectTransform dummyRectTransform = (RectTransform)dummyObject.transform;
+                    var dummyRectTransform = (RectTransform)dummyObject.transform;
                     dummyRectTransform.anchoredPosition = anchoredPosition;
                     dummyRectTransform.sizeDelta = size;
                     dummyRectTransform.localScale = scale;

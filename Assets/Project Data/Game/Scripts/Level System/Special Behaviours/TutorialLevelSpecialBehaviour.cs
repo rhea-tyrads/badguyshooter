@@ -9,25 +9,24 @@ namespace Watermelon.LevelSystem
         [SerializeField] TutorialID tutorialId;
         public TutorialID TutorialID => tutorialId;
 
-        [System.NonSerialized]
-        private bool isInitialised;
+        [System.NonSerialized] bool isInitialised;
         public bool IsInitialised => isInitialised;
 
-        private Transform finishPointTransform;
-        private TutorialLabelBehaviour tutorialLabelBehaviour;
+        Transform finishPointTransform;
+        TutorialLabelBehaviour tutorialLabelBehaviour;
 
         public bool IsActive => saveData.isActive;
         public bool IsFinished => saveData.isFinished;
         public int Progress => saveData.progress;
 
-        private TutorialBaseSave saveData;
+        TutorialBaseSave saveData;
 
-        private LineNavigationArrowCase arrowCase;
+        LineNavigationArrowCase arrowCase;
 
-        private CharacterBehaviour characterBehaviour;
-        private BaseEnemyBehavior enemyBehavior;
+        CharacterBehaviour characterBehaviour;
+        BaseEnemyBehavior enemyBehavior;
 
-        private UIGame gameUI;
+        UIGame gameUI;
 
         public void Initialise()
         {
@@ -52,7 +51,7 @@ namespace Watermelon.LevelSystem
             LevelController.OnGameStarted(immediately: true);
         }
 
-        private void OnEnemyDied(BaseEnemyBehavior enemy)
+        void OnEnemyDied(BaseEnemyBehavior enemy)
         {
             if (enemy == enemyBehavior)
             {
@@ -74,7 +73,7 @@ namespace Watermelon.LevelSystem
             }
         }
 
-        private void OnPlayerExitLevel()
+        void OnPlayerExitLevel()
         {
             LevelController.OnPlayerExitLevelEvent -= OnPlayerExitLevel;
 

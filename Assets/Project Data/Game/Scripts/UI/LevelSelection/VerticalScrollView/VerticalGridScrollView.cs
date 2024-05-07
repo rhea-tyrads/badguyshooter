@@ -10,8 +10,8 @@ namespace Watermelon
     [Serializable]
     public class VerticalGridScrollView : Image, IDragHandler, IPointerDownHandler, IPointerUpHandler
     {
-        private static readonly string GRID_ROW_POOL_NAME = "grid_row";
-        private static Pool gridRowPool;
+        static readonly string GRID_ROW_POOL_NAME = "grid_row";
+        static Pool gridRowPool;
 
         [SerializeField] Vector2 childSize = new Vector2(200, 200);
         [SerializeField] Vector2 spacings = new Vector2(20, 20);
@@ -29,8 +29,8 @@ namespace Watermelon
         [Space]
         [SerializeField] float inertion = 0.2f;
 
-        private string gridItemPoolName;
-        private Pool itemsPool;
+        string gridItemPoolName;
+        Pool itemsPool;
 
         int rowsAmount;
         int itemsAmount;
@@ -60,7 +60,7 @@ namespace Watermelon
             set => spacings = value;
         }
 
-        private List<GridRow> rows;
+        List<GridRow> rows;
 
         protected override void Awake()
         {
@@ -74,7 +74,7 @@ namespace Watermelon
 
             if (gridRowPool == null)
             {
-                GameObject gridRowObject = new GameObject("Grid Row");
+                var gridRowObject = new GameObject("Grid Row");
                 gridRowObject.AddComponent<RectTransform>();
                 gridRowObject.AddComponent<GridRow>();
 
@@ -134,7 +134,7 @@ namespace Watermelon
             if (firstItem >= itemsAmount) firstItem = itemsAmount - 1;
             if (firstItem < 0) firstItem = 0;
 
-            int firstRowId = firstItem / columnsAmount;
+            var firstRowId = firstItem / columnsAmount;
 
             this.itemsAmount = itemsAmount;
 
@@ -171,9 +171,9 @@ namespace Watermelon
 
             // Initializing rows
 
-            for(int i = 0; i < visibleRowsAmount; i++)
+            for(var i = 0; i < visibleRowsAmount; i++)
             {
-                GridRow row = gridRowPool.GetPooledObject().GetComponent<GridRow>();
+                var row = gridRowPool.GetPooledObject().GetComponent<GridRow>();
 
                 row.transform.SetParent(rectTransform);
                 row.transform.localScale = Vector3.one;
@@ -191,7 +191,7 @@ namespace Watermelon
         /// This method initializes grid item pool
         /// </summary>
         /// <param name="gridItem">Item of grid scroll view. Should implement GridItem interface</param>
-        private void SetGridItem(GameObject gridItem)
+        void SetGridItem(GameObject gridItem)
         {
             if (gridItem.GetComponent<GridItem>() == null) throw new GridScrollViewException("Object does not implement 'GridItem' interface");
 
@@ -220,7 +220,7 @@ namespace Watermelon
             isDragging = false;
         }
 
-        private void Update()
+        void Update()
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return; //suppress second execution when leaving Play-Mode
@@ -251,7 +251,7 @@ namespace Watermelon
                 {
                     if(first.rectTransform.anchoredPosition.y < 0)
                     {
-                        float rubberDelta = Ease.GetFunction(Ease.Type.SineIn).Interpolate(Mathf.InverseLerp(20, -rubberLength, first.rectTransform.anchoredPosition.y)) * rubberPower;
+                        var rubberDelta = Ease.GetFunction(Ease.Type.SineIn).Interpolate(Mathf.InverseLerp(20, -rubberLength, first.rectTransform.anchoredPosition.y)) * rubberPower;
 
                         if (rubberDelta < 5) rubberDelta = 0;
 
@@ -263,11 +263,11 @@ namespace Watermelon
                 // Bottom Rubber
                 if(last.Id == rowsAmount - 1)
                 {
-                    float minPos = -gridViewHeight + last.rectTransform.rect.height;
+                    var minPos = -gridViewHeight + last.rectTransform.rect.height;
 
                     if (last.rectTransform.anchoredPosition.y > minPos)
                     {
-                        float rubberDelta = Ease.GetFunction(Ease.Type.SineIn).Interpolate(Mathf.InverseLerp(minPos - 20, minPos + rubberLength, last.rectTransform.anchoredPosition.y)) * -rubberPower;
+                        var rubberDelta = Ease.GetFunction(Ease.Type.SineIn).Interpolate(Mathf.InverseLerp(minPos - 20, minPos + rubberLength, last.rectTransform.anchoredPosition.y)) * -rubberPower;
 
                         if (rubberDelta > -5) rubberDelta = 0;
 
@@ -285,7 +285,7 @@ namespace Watermelon
         
         public void OnDrag(PointerEventData eventData)
         {
-            float yOffset = eventData.delta.y;
+            var yOffset = eventData.delta.y;
 
             lastDragDelta = Mathf.Lerp(lastDragDelta, yOffset, inertion);
 
@@ -297,7 +297,7 @@ namespace Watermelon
         /// This method scrolls Grid Scroll view verticaly 
         /// </summary>
         /// <param name="deltaY">scroll amount</param>
-        private void Move(float deltaY)
+        void Move(float deltaY)
         {
             var first = rows[0];
             var last = rows[rows.Count - 1];
@@ -316,7 +316,7 @@ namespace Watermelon
             // Bottom constrain and rubber
             if (rows[rows.Count - 1].Id == rowsAmount - 1)
             {
-                float minPos = -gridViewHeight + childHeight;
+                var minPos = -gridViewHeight + childHeight;
 
                 if (last.rectTransform.anchoredPosition.y + deltaY > minPos && deltaY > 0)
                 {
@@ -327,7 +327,7 @@ namespace Watermelon
             }
             
             // Actual movement
-            for (int i = 0; i < rows.Count; i++)
+            for (var i = 0; i < rows.Count; i++)
             {
                 rows[i].rectTransform.anchoredPosition += Vector2.up * deltaY;
             }
@@ -341,7 +341,7 @@ namespace Watermelon
 
                     first.ReturnItemsToPool();
 
-                    int newId = last.Id + 1;
+                    var newId = last.Id + 1;
 
                     first.Init(childSize, spacings.x, columnsAmount, newId * columnsAmount, itemsPool, newId, itemsAmount);
 
@@ -360,7 +360,7 @@ namespace Watermelon
 
                     last.ReturnItemsToPool();
 
-                    int newId = first.Id - 1;
+                    var newId = first.Id - 1;
 
                     last.Init(childSize, spacings.x, columnsAmount, newId * columnsAmount, itemsPool, newId, itemsAmount);
 
@@ -391,7 +391,7 @@ namespace Watermelon
             }
         }
 
-        private class GridScrollViewException : Exception
+        class GridScrollViewException : Exception
         {
             public GridScrollViewException() { }
 

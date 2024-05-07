@@ -7,11 +7,11 @@ namespace Watermelon
     {
         [SerializeField] Image backgroundImage;
 
-        private RectTransform pageRectTransform;
+        RectTransform pageRectTransform;
 
-        private Color defaultBackgroundColor;
+        Color defaultBackgroundColor;
 
-        private UIGame gamePage;
+        UIGame gamePage;
 
         public override void Initialise()
         {

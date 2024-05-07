@@ -12,10 +12,10 @@ namespace Watermelon.Enemy.Melee
 
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
 
-        private Vector3 cachedTargetPos;
-        private bool isSlowed = false;
+        Vector3 cachedTargetPos;
+        bool isSlowed = false;
 
-        private bool isAttacking = false;
+        bool isAttacking = false;
 
         public override void OnStart()
         {
@@ -63,7 +63,7 @@ namespace Watermelon.Enemy.Melee
             }
         }
 
-        private void OnAttackFinished()
+        void OnAttackFinished()
         {
             Target.OnAttackFinished -= OnAttackFinished;
             isAttacking = false;

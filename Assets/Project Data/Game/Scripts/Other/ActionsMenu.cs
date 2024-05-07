@@ -13,7 +13,7 @@ namespace Watermelon
     {
 #if UNITY_EDITOR
         [MenuItem("Actions/Next XP Lvl", priority = 36)]
-        private static void GetNextLevel()
+        static void GetNextLevel()
         {
             if (Application.isPlaying)
             {
@@ -22,7 +22,7 @@ namespace Watermelon
         }
 
         [MenuItem("Actions/Set No XP", priority = 37)]
-        private static void NoXP()
+        static void NoXP()
         {
             if (Application.isPlaying)
             {
@@ -31,7 +31,7 @@ namespace Watermelon
         }
 
         [MenuItem("Actions/All Weapons", priority = 51)]
-        private static void UnlockAllWeapons()
+        static void UnlockAllWeapons()
         {
             if (Application.isPlaying)
             {
@@ -53,7 +53,7 @@ namespace Watermelon
         }
 
         [MenuItem("Actions/Print Shorcuts", priority = 150)]
-        private static void PrintShortcuts()
+        static void PrintShortcuts()
         {
             Debug.Log("H - heal player \nD - toggle player damage \nN - skip level\nR - skip room\n\n");
         }

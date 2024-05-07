@@ -7,8 +7,7 @@ namespace Watermelon
     [RequireComponent(typeof(Graphic)), RequireComponent(typeof(CanvasGroup))]
     public abstract class BaseButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
     {
-        [SerializeField, OnValueChanged("OnInteractableChange")]
-        private bool interactable = true;
+        [SerializeField, OnValueChanged("OnInteractableChange")] bool interactable = true;
 
         [Space]
         public Color normalColor;
@@ -24,11 +23,11 @@ namespace Watermelon
         public string pointerDownTrigger = "PointerDown";
         public string pointerUpTrigger = "PointerUp";
 
-        private TweenCase tween;
-        private bool isClickCanceled = false;
-        private int pointerDownTriggerParameter;
-        private int pointerUpTriggerParameter;
-        private int lastPointerDownObjectHash;
+        TweenCase tween;
+        bool isClickCanceled = false;
+        int pointerDownTriggerParameter;
+        int pointerUpTriggerParameter;
+        int lastPointerDownObjectHash;
 
         public enum AnimationType
         {
@@ -94,7 +93,7 @@ namespace Watermelon
             PointerDownAnimation();
         }
 
-        private void PointerDownAnimation()
+        void PointerDownAnimation()
         {
             if (tween != null && !tween.IsCompleted)
                 tween.Complete();

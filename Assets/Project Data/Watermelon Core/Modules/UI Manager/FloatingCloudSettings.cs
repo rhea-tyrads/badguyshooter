@@ -7,22 +7,22 @@ namespace Watermelon
     {
         public const float DEFAULT_RADIUS = 200;
 
-        private string name;
+        string name;
         public string Name => name;
 
-        private float cloudRadius;
+        float cloudRadius;
         public float CloudRadius => cloudRadius;
 
-        private GameObject prefab;
+        GameObject prefab;
         public GameObject Prefab => prefab;
 
-        private Sprite sprite;
+        Sprite sprite;
         public Sprite Sprite => sprite;
 
-        private AudioClip appearAudioClip;
+        AudioClip appearAudioClip;
         public AudioClip AppearAudioClip => appearAudioClip;
 
-        private AudioClip collectAudioClip;
+        AudioClip collectAudioClip;
         public AudioClip CollectAudioClip => collectAudioClip;
 
         public FloatingCloudSettings(string name, GameObject prefab)
@@ -37,13 +37,13 @@ namespace Watermelon
             this.name = name;
             this.cloudRadius = DEFAULT_RADIUS;
 
-            GameObject tempPrefab = new GameObject(name);
+            var tempPrefab = new GameObject(name);
             tempPrefab.hideFlags = HideFlags.HideInHierarchy;
 
-            Image image = tempPrefab.AddComponent<Image>();
+            var image = tempPrefab.AddComponent<Image>();
             image.sprite = sprite;
 
-            RectTransform rectTransform = (RectTransform)tempPrefab.transform;
+            var rectTransform = (RectTransform)tempPrefab.transform;
             rectTransform.sizeDelta = size;
 
             this.prefab = tempPrefab;

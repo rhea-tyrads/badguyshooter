@@ -4,13 +4,13 @@ namespace Watermelon
 {
     public class FPSCounter : MonoBehaviour
     {
-        private float fps = 0.0f;
+        float fps = 0.0f;
 
-        private bool isStyleInitted = false;
+        bool isStyleInitted = false;
 
-        private GUIStyle labelStyle;
+        GUIStyle labelStyle;
 
-        private void OnGUI()
+        void OnGUI()
         {
             if (!isStyleInitted)
             {
@@ -24,7 +24,7 @@ namespace Watermelon
             GUI.Label(new Rect(Screen.width - 210, 0, 200, 20), fps.ToString("00"), labelStyle);
         }
 
-        private void Update()
+        void Update()
         {
             fps = (int)(1f / Time.unscaledDeltaTime);
         }

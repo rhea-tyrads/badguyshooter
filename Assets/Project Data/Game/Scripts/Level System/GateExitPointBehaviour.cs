@@ -4,8 +4,8 @@ namespace Watermelon.LevelSystem
 {
     public sealed class GateExitPointBehaviour : ExitPointBehaviour
     {
-        private readonly int IDLE_HASH = Animator.StringToHash("Idle");
-        private readonly int OPEN_HASH = Animator.StringToHash("Open");
+        readonly int IDLE_HASH = Animator.StringToHash("Idle");
+        readonly int OPEN_HASH = Animator.StringToHash("Open");
 
         [SerializeField] Animator gatesAnimator;
 

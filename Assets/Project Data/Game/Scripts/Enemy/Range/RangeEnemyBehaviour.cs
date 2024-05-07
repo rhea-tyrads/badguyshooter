@@ -5,7 +5,7 @@ namespace Watermelon.SquadShooter
 {
     public class RangeEnemyBehaviour : BaseEnemyBehavior
     {
-        private readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
+        readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
 
         [Header("Fighting")]
         [SerializeField] GameObject bulletPrefab;
@@ -23,9 +23,9 @@ namespace Watermelon.SquadShooter
         [SerializeField] bool canReload;
         public bool CanReload => canReload;
 
-        private bool isHitting;
+        bool isHitting;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
         protected override void Awake()
         {
@@ -47,7 +47,7 @@ namespace Watermelon.SquadShooter
             isHitting = false;
         }
 
-        private void PerformHit()
+        void PerformHit()
         {
             if (isHitting)
                 return;
@@ -88,7 +88,7 @@ namespace Watermelon.SquadShooter
         {
             if (enemyCallbackType == EnemyCallbackType.Hit)
             {
-                EnemyBulletBehavior bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(shootPointTransform.position).SetEulerRotation(shootPointTransform.eulerAngles)).GetComponent<EnemyBulletBehavior>();
+                var bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(shootPointTransform.position).SetEulerRotation(shootPointTransform.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                 bullet.transform.forward = transform.forward.SetY(0).normalized;
                 bullet.Initialise(GetCurrentDamage(), bulletSpeed, 200);
 

@@ -7,9 +7,9 @@ namespace Watermelon.Enemy.Melee
     [RequireComponent(typeof(MeleeEnemyBehaviour))]
     public class MeleeStateMachine : AbstractStateMachine<State>
     {
-        private MeleeEnemyBehaviour enemy;
+        MeleeEnemyBehaviour enemy;
 
-        private void Awake()
+        void Awake()
         {
             enemy = GetComponent<MeleeEnemyBehaviour>();
 
@@ -33,7 +33,7 @@ namespace Watermelon.Enemy.Melee
             states.Add(State.Attacking, followingAttackingStateCase);
         }
 
-        private bool PatrollingStateTransition(out State nextState)
+        bool PatrollingStateTransition(out State nextState)
         {
             var isTargetSpotted = enemy.IsTargetInVisionRange || (!EnemyController.IgnoreAttackAfterDamage && enemy.HasTakenDamage);
 

@@ -8,9 +8,9 @@ namespace Watermelon
         [SerializeField] Ease.Type showEasingType;
         [SerializeField] Ease.Type hideEasingType;
 
-        private CanvasGroup canvasGroup;
-        private TweenCase tweenCase;
-        private Canvas canvas;
+        CanvasGroup canvasGroup;
+        TweenCase tweenCase;
+        Canvas canvas;
 
         public void Initialise()
         {

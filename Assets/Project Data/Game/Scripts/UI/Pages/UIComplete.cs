@@ -7,8 +7,8 @@ namespace Watermelon
 {
     public class UIComplete : UIPage
     {
-        private const string LEVEL_TEXT = "LEVEL {0}-{1}";
-        private const string PLUS_TEXT = "+{0}";
+        const string LEVEL_TEXT = "LEVEL {0}-{1}";
+        const string PLUS_TEXT = "+{0}";
 
         [SerializeField] DotsBackground dotsBackground;
         [SerializeField] RectTransform panelRectTransform;
@@ -24,13 +24,13 @@ namespace Watermelon
         [SerializeField] TextMeshProUGUI experienceGainedText;
         [SerializeField] TextMeshProUGUI moneyGainedText;
 
-        private int currentWorld;
-        private int currentLevel;
-        private int collectedMoney;
-        private int collectedExperience;
-        private List<WeaponType> collectedCards;
+        int currentWorld;
+        int currentLevel;
+        int collectedMoney;
+        int collectedExperience;
+        List<WeaponType> collectedCards;
 
-        private Pool cardsUIPool;
+        Pool cardsUIPool;
 
         public override void Initialise()
         {
@@ -49,7 +49,7 @@ namespace Watermelon
         #region Show/Hide
         public override void PlayShowAnimation()
         {
-            float showTime = 0.7f;
+            var showTime = 0.7f;
 
             dotsBackground.ApplyParams();
 
@@ -77,11 +77,11 @@ namespace Watermelon
                 experienceGainedText.text = string.Format(PLUS_TEXT, result.ToString("00"));
             }, 0.3f);
 
-            bool cardsDropped = !collectedCards.IsNullOrEmpty();
+            var cardsDropped = !collectedCards.IsNullOrEmpty();
             if(cardsDropped)
             {
-                List<WeaponType> uniqueCards = new List<WeaponType>();
-                for(int i = 0; i < collectedCards.Count; i++)
+                var uniqueCards = new List<WeaponType>();
+                for(var i = 0; i < collectedCards.Count; i++)
                 {
                     if(uniqueCards.FindIndex(x => x == collectedCards[i]) == -1)
                     {
@@ -89,15 +89,15 @@ namespace Watermelon
                     }
                 }
 
-                for (int i = 0; i < uniqueCards.Count; i++)
+                for (var i = 0; i < uniqueCards.Count; i++)
                 {
-                    GameObject cardUIObject = cardsUIPool.GetPooledObject();
+                    var cardUIObject = cardsUIPool.GetPooledObject();
                     cardUIObject.SetActive(true);
 
-                    DroppedCardPanel droppedCardPanel = cardUIObject.GetComponent<DroppedCardPanel>();
+                    var droppedCardPanel = cardUIObject.GetComponent<DroppedCardPanel>();
                     droppedCardPanel.Initialise(uniqueCards[i]);
 
-                    CanvasGroup droppedCardCanvasGroup = droppedCardPanel.CanvasGroup;
+                    var droppedCardCanvasGroup = droppedCardPanel.CanvasGroup;
                     droppedCardCanvasGroup.alpha = 0.0f;
                     droppedCardCanvasGroup.DOFade(1.0f, 0.5f, 0.1f * i + 0.45f).OnComplete(delegate
                     {

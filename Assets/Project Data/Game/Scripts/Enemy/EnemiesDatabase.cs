@@ -10,7 +10,7 @@ namespace Watermelon.SquadShooter
 
         public void InitialiseStatsRealation(int baseCharacterHealth)
         {
-            for (int i = 0; i < enemies.Length; i++)
+            for (var i = 0; i < enemies.Length; i++)
             {
                 enemies[i].Stats.InitialiseStatsRelation(baseCharacterHealth);
             }
@@ -18,7 +18,7 @@ namespace Watermelon.SquadShooter
 
         public void SetCurrentCharacterStats(int characterHealth, int weaponDmg)
         {
-            for (int i = 0; i < enemies.Length; i++)
+            for (var i = 0; i < enemies.Length; i++)
             {
                 enemies[i].Stats.SetCurrentCreatureStats(characterHealth, weaponDmg, BalanceController.GetActiveDifficultySettings());
             }
@@ -26,7 +26,7 @@ namespace Watermelon.SquadShooter
 
         public EnemyData GetEnemyData(EnemyType type)
         {
-            for (int i = 0; i < enemies.Length; i++)
+            for (var i = 0; i < enemies.Length; i++)
             {
                 if (enemies[i].EnemyType.Equals(type))
                     return enemies[i];

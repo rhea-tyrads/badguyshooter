@@ -12,7 +12,7 @@ namespace Watermelon.LevelSystem
         public abstract void OnPlayerEnteredExit();
         public abstract void Unload();
 
-        private void OnTriggerEnter(Collider other)
+        void OnTriggerEnter(Collider other)
         {
             if (!isExitActivated)
                 return;
@@ -23,7 +23,7 @@ namespace Watermelon.LevelSystem
             }
         }
 
-        private void OnTriggerStay(Collider other)
+        void OnTriggerStay(Collider other)
         {
             if (!isExitActivated)
                 return;

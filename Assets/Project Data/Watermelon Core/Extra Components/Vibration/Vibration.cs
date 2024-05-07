@@ -41,7 +41,7 @@ namespace Watermelon
             Vibrate(IntencityToMs(intensity));
         }
 
-        private  static long IntencityToMs(VibrationIntensity intensity)
+        static long IntencityToMs(VibrationIntensity intensity)
         {
             if(intensity == VibrationIntensity.Light)
             {
@@ -123,7 +123,7 @@ namespace Watermelon
 #endif
         }
 
-        private static bool IsOnMobile()
+        static bool IsOnMobile()
         {
             if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
                 return true;

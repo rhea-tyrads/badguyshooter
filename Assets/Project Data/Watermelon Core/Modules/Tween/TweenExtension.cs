@@ -18,7 +18,7 @@
         {
             if(tweenCases != null)
             {
-                foreach (TweenCase tweenCase in tweenCases)
+                foreach (var tweenCase in tweenCases)
                 {
                     if (tweenCase != null && tweenCase.IsActive)
                     {
@@ -44,7 +44,7 @@
         {
             if (tweenCases != null)
             {
-                foreach (TweenCase tweenCase in tweenCases)
+                foreach (var tweenCase in tweenCases)
                 {
                     if (tweenCase != null && tweenCase.IsActive)
                     {

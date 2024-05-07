@@ -4,7 +4,7 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterAnimationHandler : MonoBehaviour
     {
-        private CharacterBehaviour characterBehaviour;
+        CharacterBehaviour characterBehaviour;
 
         public void Inititalise(CharacterBehaviour characterBehaviour)
         {

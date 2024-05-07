@@ -5,18 +5,18 @@ namespace Watermelon
 {
     public class DummyOverlayPanel : IOverlayPanel
     {
-        private Canvas canvas;
+        Canvas canvas;
 
-        private Image image;
-        private TweenCase fadeTweenCase;
+        Image image;
+        TweenCase fadeTweenCase;
 
         public void Initialise()
         {
-            GameObject overlayObject = new GameObject("Overlay Image");
+            var overlayObject = new GameObject("Overlay Image");
             overlayObject.transform.SetParent(canvas.transform);
             overlayObject.transform.ResetLocal();
 
-            RectTransform overlayRectTransform = overlayObject.AddComponent<RectTransform>();
+            var overlayRectTransform = overlayObject.AddComponent<RectTransform>();
             overlayRectTransform.anchorMin = new Vector2(0, 0);
             overlayRectTransform.anchorMax = new Vector2(1, 1);
             overlayRectTransform.sizeDelta = Vector2.zero;

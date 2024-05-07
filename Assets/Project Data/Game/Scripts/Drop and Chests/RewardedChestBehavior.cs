@@ -14,13 +14,13 @@ namespace Watermelon.SquadShooter
         [SerializeField] Canvas adCanvas;
         [SerializeField] UIGamepadButton gamepadButton;
 
-        private void Awake()
+        void Awake()
         {
             rvButton.onClick.AddListener(OnButtonClick);
             adHolder.transform.localScale = Vector3.zero;
         }
 
-        private void LateUpdate()
+        void LateUpdate()
         {
             adCanvas.transform.forward = Camera.main.transform.forward;
         }
@@ -56,7 +56,7 @@ namespace Watermelon.SquadShooter
             gamepadButton.SetFocus(false);
         }
 
-        private void OnButtonClick()
+        void OnButtonClick()
         {
             AdsManager.ShowRewardBasedVideo((success) =>
             {

@@ -11,9 +11,9 @@ namespace Watermelon.SquadShooter
         [Space]
         [SerializeField] GameObject stageStarPrefab;
 
-        private CharactersDatabase charactersDatabase;
+        CharactersDatabase charactersDatabase;
 
-        private Pool stageStarPool;
+        Pool stageStarPool;
 
         protected override int SelectedIndex => Mathf.Clamp(CharactersController.GetCharacterIndex(CharactersController.SelectedCharacter.Type), 0, int.MaxValue);
 
@@ -24,7 +24,7 @@ namespace Watermelon.SquadShooter
 
         public bool IsAnyActionAvailable()
         {
-            for (int i = 0; i < itemPanels.Count; i++)
+            for (var i = 0; i < itemPanels.Count; i++)
             {
                 if (itemPanels[i].IsNewCharacterOpened())
                     return true;
@@ -38,15 +38,15 @@ namespace Watermelon.SquadShooter
 
         #region Animation
 
-        private bool isAnimationPlaying;
-        private Coroutine animationCoroutine;
+        bool isAnimationPlaying;
+        Coroutine animationCoroutine;
 
-        private static bool isControlBlocked = false;
+        static bool isControlBlocked = false;
         public static bool IsControlBlocked => isControlBlocked;
 
-        private static List<CharacterDynamicAnimation> characterDynamicAnimations = new List<CharacterDynamicAnimation>();
+        static List<CharacterDynamicAnimation> characterDynamicAnimations = new List<CharacterDynamicAnimation>();
 
-        private void ResetAnimations()
+        void ResetAnimations()
         {
             if (isAnimationPlaying)
             {
@@ -59,7 +59,7 @@ namespace Watermelon.SquadShooter
             characterDynamicAnimations = new List<CharacterDynamicAnimation>();
         }
 
-        private void StartAnimations()
+        void StartAnimations()
         {
             if (isAnimationPlaying)
                 return;
@@ -75,20 +75,20 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private IEnumerator ScrollCoroutine(CharacterPanelUI characterPanelUI)
+        IEnumerator ScrollCoroutine(CharacterPanelUI characterPanelUI)
         {
-            float scrollOffsetX = -(characterPanelUI.RectTransform.anchoredPosition.x - SCROLL_ELEMENT_WIDTH - SCROLL_SIDE_OFFSET);
+            var scrollOffsetX = -(characterPanelUI.RectTransform.anchoredPosition.x - SCROLL_ELEMENT_WIDTH - SCROLL_SIDE_OFFSET);
 
-            float positionDiff = Mathf.Abs(scrollView.content.anchoredPosition.x - scrollOffsetX);
+            var positionDiff = Mathf.Abs(scrollView.content.anchoredPosition.x - scrollOffsetX);
 
             if (positionDiff > 80)
             {
-                Ease.IEasingFunction easeFunctionCubicIn = Ease.GetFunction(Ease.Type.CubicOut);
+                var easeFunctionCubicIn = Ease.GetFunction(Ease.Type.CubicOut);
 
-                Vector2 currentPosition = scrollView.content.anchoredPosition;
-                Vector2 targetPosition = new Vector2(scrollOffsetX, 0);
+                var currentPosition = scrollView.content.anchoredPosition;
+                var targetPosition = new Vector2(scrollOffsetX, 0);
 
-                float speed = positionDiff / 2500;
+                var speed = positionDiff / 2500;
 
                 for (float s = 0; s < 1.0f; s += Time.deltaTime / speed)
                 {
@@ -99,11 +99,11 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private IEnumerator DynamicAnimationCoroutine()
+        IEnumerator DynamicAnimationCoroutine()
         {
-            int currentAnimationIndex = 0;
+            var currentAnimationIndex = 0;
             CharacterDynamicAnimation tempAnimation;
-            WaitForSeconds delayWait = new WaitForSeconds(0.4f);
+            var delayWait = new WaitForSeconds(0.4f);
 
             yield return delayWait;
 
@@ -153,7 +153,7 @@ namespace Watermelon.SquadShooter
 
             stageStarPool = new Pool(new PoolSettings(stageStarPrefab.name, stageStarPrefab, 1, true));
 
-            for (int i = 0; i < charactersDatabase.Characters.Length; i++)
+            for (var i = 0; i < charactersDatabase.Characters.Length; i++)
             {
                 var newPanel = AddNewPanel();
                 newPanel.Initialise(charactersDatabase.Characters[i], this);
@@ -186,7 +186,7 @@ namespace Watermelon.SquadShooter
 
         public override CharacterPanelUI GetPanel(CharacterType characterType)
         {
-            for (int i = 0; i < itemPanels.Count; i++)
+            for (var i = 0; i < itemPanels.Count; i++)
             {
                 if (itemPanels[i].Character.Type == characterType)
                     return itemPanels[i];

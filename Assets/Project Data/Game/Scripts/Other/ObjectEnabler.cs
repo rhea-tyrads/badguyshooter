@@ -13,7 +13,7 @@ namespace Watermelon.SquadShooter
         {
             Tween.DelayedCall(delay, () =>
             {
-                for (int i = 0; i < objects.Count; i++)
+                for (var i = 0; i < objects.Count; i++)
                 {
                     objects[i].SetActive(true);
                 }

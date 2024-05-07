@@ -15,7 +15,7 @@ namespace Watermelon.SquadShooter
         [Space]
         [SerializeField] GameObject grenadeObject;
 
-        private static PoolGeneric<GrenadeBehavior> grenadePool;
+        static PoolGeneric<GrenadeBehavior> grenadePool;
         protected override void Awake()
         {
             base.Awake();

@@ -6,21 +6,21 @@ namespace Watermelon.LevelSystem
 {
     public static class Drop
     {
-        private static List<IDropItem> dropItems = new List<IDropItem>();
-        private static DropAnimation[] dropAnimations;
+        static List<IDropItem> dropItems = new List<IDropItem>();
+        static DropAnimation[] dropAnimations;
 
         public static void Initialise(DropableItemSettings dropSettings)
         {
             dropAnimations = dropSettings.DropAnimations;
 
-            CustomDropItem[] customDropItems = dropSettings.CustomDropItems;
-            for(int i = 0; i < customDropItems.Length; i++)
+            var customDropItems = dropSettings.CustomDropItems;
+            for(var i = 0; i < customDropItems.Length; i++)
             {
                 RegisterDropItem(customDropItems[i]);
             }
 
             // Register currencies drop
-            CurrencyDropItem currencyDropItem = new CurrencyDropItem();
+            var currencyDropItem = new CurrencyDropItem();
             currencyDropItem.SetCurrencies(CurrenciesController.Currencies);
 
             RegisterDropItem(currencyDropItem);
@@ -29,7 +29,7 @@ namespace Watermelon.LevelSystem
         public static void RegisterDropItem(IDropItem dropItem)
         {
 #if UNITY_EDITOR
-            for(int i = 0; i < dropItems.Count; i++)
+            for(var i = 0; i < dropItems.Count; i++)
             {
                 if(dropItems[i].DropItemType == dropItem.DropItemType)
                 {
@@ -47,7 +47,7 @@ namespace Watermelon.LevelSystem
 
         public static IDropItem GetDropItem(DropableItemType dropableItemType)
         {
-            for (int i = 0; i < dropItems.Count; i++)
+            for (var i = 0; i < dropItems.Count; i++)
             {
                 if (dropItems[i].DropItemType == dropableItemType)
                 {
@@ -60,7 +60,7 @@ namespace Watermelon.LevelSystem
 
         public static DropAnimation GetAnimation(DropFallingStyle dropFallingStyle)
         {
-            for (int i = 0; i < dropAnimations.Length; i++)
+            for (var i = 0; i < dropAnimations.Length; i++)
             {
                 if (dropAnimations[i].FallStyle == dropFallingStyle)
                 {
@@ -73,19 +73,19 @@ namespace Watermelon.LevelSystem
 
         public static GameObject DropItem(DropData dropData, Vector3 spawnPosition, Vector3 rotation, DropFallingStyle fallingStyle, float availableToPickDelay = -1f, float autoPickDelay = -1f, bool rewarded = false)
         {
-            IDropItem dropItem = GetDropItem(dropData.dropType);
-            GameObject itemGameObject = dropItem.GetDropObject(dropData);
-            IDropableItem item = itemGameObject.GetComponent<IDropableItem>();
+            var dropItem = GetDropItem(dropData.dropType);
+            var itemGameObject = dropItem.GetDropObject(dropData);
+            var item = itemGameObject.GetComponent<IDropableItem>();
             item.IsRewarded = rewarded;
 
-            DropAnimation dropAnimation = GetAnimation(fallingStyle);
+            var dropAnimation = GetAnimation(fallingStyle);
 
             itemGameObject.transform.position = spawnPosition + (Random.insideUnitSphere * 0.05f).SetY(dropAnimation.OffsetY);
             itemGameObject.transform.localScale = Vector3.one;
             itemGameObject.transform.eulerAngles = rotation;
             itemGameObject.SetActive(true);
 
-            Vector3 targetPosition = spawnPosition.GetRandomPositionAroundObject(dropAnimation.Radius * 0.9f, dropAnimation.Radius * 1.2f).AddToY(0.1f);
+            var targetPosition = spawnPosition.GetRandomPositionAroundObject(dropAnimation.Radius * 0.9f, dropAnimation.Radius * 1.2f).AddToY(0.1f);
 
             item.Initialise(dropData, availableToPickDelay, autoPickDelay);
             item.Throw(targetPosition, dropAnimation.FallAnimationCurve, dropAnimation.FallYAnimationCurve, dropAnimation.FallTime);

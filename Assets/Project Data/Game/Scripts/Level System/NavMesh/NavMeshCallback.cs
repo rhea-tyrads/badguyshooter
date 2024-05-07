@@ -2,7 +2,7 @@
 {
     public class NavMeshCallback : INavMeshAgent
     {
-        private SimpleCallback onNavMeshInitialised;
+        SimpleCallback onNavMeshInitialised;
 
         public NavMeshCallback(SimpleCallback onNavMeshInitialised)
         {

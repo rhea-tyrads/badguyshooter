@@ -14,12 +14,12 @@ namespace Watermelon
         [SerializeField] Ease.Type showEasing = Ease.Type.BackOut;
         [SerializeField] Ease.Type hideEasing = Ease.Type.BackIn;
 
-        private CanvasGroup[] canvasGroups;
+        CanvasGroup[] canvasGroups;
 
         protected override void AddExtraComponents()
         {
             canvasGroups = new CanvasGroup[settingsButtonsInfo.Length];
-            for (int i = 0; i < settingsButtonsInfo.Length; i++)
+            for (var i = 0; i < settingsButtonsInfo.Length; i++)
             {
                 canvasGroups[i] = settingsButtonsInfo[i].SettingsButton.gameObject.GetOrSetComponent<CanvasGroup>();
                 canvasGroups[i].alpha = 0;
@@ -31,7 +31,7 @@ namespace Watermelon
             yield return new WaitForSeconds(initialDelay);
 
             TweenCase lastTweenCase = null;
-            for (int i = 0; i < settingsButtonsInfo.Length; i++)
+            for (var i = 0; i < settingsButtonsInfo.Length; i++)
             {
                 if (!settingsButtonsInfo[i].SettingsButton.IsActive()) continue;
 
@@ -64,11 +64,11 @@ namespace Watermelon
             yield return new WaitForSeconds(initialDelay);
 
             TweenCase lastTweenCase = null;
-            for (int i = settingsButtonsInfo.Length - 1; i >= 0; i--)
+            for (var i = settingsButtonsInfo.Length - 1; i >= 0; i--)
             {
                 if (!settingsButtonsInfo[i].SettingsButton.IsActive()) continue;
 
-                int index = i;
+                var index = i;
                 lastTweenCase = canvasGroups[i].DOFade(0, elementFadeDuration).SetEasing(hideEasing).OnComplete(delegate
                 {
                     settingsButtonsInfo[index].SettingsButton.gameObject.SetActive(false);

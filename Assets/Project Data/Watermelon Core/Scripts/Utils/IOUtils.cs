@@ -15,14 +15,14 @@ namespace Watermelon
             if (Directory.Exists(path))
                 return;
 
-            bool pathCreated = false;
+            var pathCreated = false;
 
-            string[] pathFolders = path.Split(separator);
-            for (int i = 0; i < pathFolders.Length; i++)
+            var pathFolders = path.Split(separator);
+            for (var i = 0; i < pathFolders.Length; i++)
             {
-                string tempPath = "";
+                var tempPath = "";
 
-                for (int j = 0; j < i; j++)
+                for (var j = 0; j < i; j++)
                 {
                     tempPath += pathFolders[j] + "/";
                 }

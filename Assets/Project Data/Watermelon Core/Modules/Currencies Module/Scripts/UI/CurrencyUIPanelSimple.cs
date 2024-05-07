@@ -23,15 +23,15 @@ namespace Watermelon
         public Sprite Icon { get => icon.sprite; set => icon.sprite = value; }
         public Button AddButton => addButton;
 
-        private Currency currency;
+        Currency currency;
         public Currency Currency => currency;
-        
-        private RectTransform rectTransformRef;
+
+        RectTransform rectTransformRef;
         public RectTransform RectTransform => rectTransformRef;
 
-        private bool isInitialised;
+        bool isInitialised;
 
-        private void Awake()
+        void Awake()
         {
             rectTransformRef = GetComponent<RectTransform>();
             
@@ -81,7 +81,7 @@ namespace Watermelon
             }
         }
 
-        private void OnCurrencyAmountChanged(Currency currency, int amountDifference)
+        void OnCurrencyAmountChanged(Currency currency, int amountDifference)
         {
             text.text = useFormattedAmount ? currency.AmountFormatted : currency.Amount.ToString();
         }

@@ -7,16 +7,16 @@ namespace Watermelon.SquadShooter
     {
         protected static readonly int PARTICLE_BOSS_EAT_HASH = ParticlesController.GetHash("Boss Eat");
 
-        private readonly int PARTICLE_STEP_HASH = ParticlesController.GetHash("Boss Step");
-        private readonly int PARTICLE_DEATH_FALL_HASH = ParticlesController.GetHash("Boss Death Fall");
-        private readonly int PARTICLE_ENTER_FALL_HASH = ParticlesController.GetHash("Boss Enter Fall");
-        private readonly int PARTICLE_KICK_HASH = ParticlesController.GetHash("Boss Kick");
+        readonly int PARTICLE_STEP_HASH = ParticlesController.GetHash("Boss Step");
+        readonly int PARTICLE_DEATH_FALL_HASH = ParticlesController.GetHash("Boss Death Fall");
+        readonly int PARTICLE_ENTER_FALL_HASH = ParticlesController.GetHash("Boss Enter Fall");
+        readonly int PARTICLE_KICK_HASH = ParticlesController.GetHash("Boss Kick");
 
-        private readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
-        private readonly int ANIMATOR_DIE_HASH = Animator.StringToHash("Death");
-        private readonly int ANIMATOR_ENTER_HASH = Animator.StringToHash("Enter");
-        private readonly int ANIMATOR_SHOOTING_HASH = Animator.StringToHash("Shooting");
-        private readonly int ANIMATOR_KICK_HASH = Animator.StringToHash("Kick");
+        readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
+        readonly int ANIMATOR_DIE_HASH = Animator.StringToHash("Death");
+        readonly int ANIMATOR_ENTER_HASH = Animator.StringToHash("Enter");
+        readonly int ANIMATOR_SHOOTING_HASH = Animator.StringToHash("Shooting");
+        readonly int ANIMATOR_KICK_HASH = Animator.StringToHash("Kick");
 
         [SerializeField] GameObject graphicsObject;
 
@@ -61,15 +61,15 @@ namespace Watermelon.SquadShooter
         [SerializeField] Collider bossCollider;
         [SerializeField] WeaponRigBehavior weaponRigBehavior;
 
-        private float sqrSpeed;
+        float sqrSpeed;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
-        private Vector3 bombPoint;
+        Vector3 bombPoint;
 
-        private int shotsAmount;
+        int shotsAmount;
 
-        private VirtualCameraCase mainCameraCase;
+        VirtualCameraCase mainCameraCase;
 
         public event SimpleCallback OnEntered;
 
@@ -226,7 +226,7 @@ namespace Watermelon.SquadShooter
                 return;
             }
 
-            float distanceMultiplier = 1.0f - Mathf.InverseLerp(0, bombShakeDistance, Vector3.Distance(characterBehaviour.transform.position, bossBombBehaviour.transform.position));
+            var distanceMultiplier = 1.0f - Mathf.InverseLerp(0, bombShakeDistance, Vector3.Distance(characterBehaviour.transform.position, bossBombBehaviour.transform.position));
             if (distanceMultiplier != 0.0f)
                 mainCameraCase.Shake(0.04f, 0.04f, Mathf.Lerp(bombShakeDurationMin, bombShakeDurationMax, distanceMultiplier), 1.4f);
         }
@@ -278,15 +278,15 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnBossHit()
+        void OnBossHit()
         {
             shootParticleSystem.Play();
 
-            GameObject bombObject = bulletPool.GetPooledObject();
+            var bombObject = bulletPool.GetPooledObject();
             bombObject.transform.position = shootPointTransform.position;
             bombObject.transform.LookAt(bombPoint);
 
-            BossBombBehaviour bossBombBehaviour = bombObject.GetComponent<BossBombBehaviour>();
+            var bossBombBehaviour = bombObject.GetComponent<BossBombBehaviour>();
             bossBombBehaviour.Initialise(this, bombExplosionDuration, Random.Range(bombDamageMin, bombDamageMax), bombExplosionRadius);
 
             bossBombBehaviour.transform.DOMoveXZ(bombPoint.x, bombPoint.z, 1.0f);
@@ -312,7 +312,7 @@ namespace Watermelon.SquadShooter
             AudioController.PlaySound(AudioController.Sounds.shoot2, 0.3f);
         }
 
-        private void OnBossEnterFall()
+        void OnBossEnterFall()
         {
             isDead = false;
 

@@ -18,9 +18,9 @@ namespace Watermelon
         [SerializeField] float scaleTime;
         [SerializeField] AnimationCurve scaleAnimationCurve;
 
-        private Vector3 defaultScale;
+        Vector3 defaultScale;
 
-        private void Awake()
+        void Awake()
         {
             defaultScale = transform.localScale;
         }

@@ -15,8 +15,8 @@ namespace Watermelon
                 throw new ArgumentException("T must be an enumerated type");
 #endif
 
-            Array allValues = Enum.GetValues(typeof(T));
-            T randomValue = (T)allValues.GetValue(Random.Range(0, allValues.Length));
+            var allValues = Enum.GetValues(typeof(T));
+            var randomValue = (T)allValues.GetValue(Random.Range(0, allValues.Length));
             return randomValue;
         }
 

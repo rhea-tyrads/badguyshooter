@@ -28,19 +28,19 @@ namespace Watermelon.SquadShooter
         [SerializeField] Color standartShieldColor;
         [SerializeField] Color specialShieldColor;
 
-        private IHealth targetHealth;
-        private Transform parentTransform;
-        private bool showAlways;
+        IHealth targetHealth;
+        Transform parentTransform;
+        bool showAlways;
 
-        private Vector3 defaultOffset;
+        Vector3 defaultOffset;
 
-        private bool isInitialised;
-        private bool isPanelActive;
-        private bool isDisabled;
-        private int level;
+        bool isInitialised;
+        bool isPanelActive;
+        bool isDisabled;
+        int level;
 
-        private TweenCase maskTweenCase;
-        private TweenCase panelTweenCase;
+        TweenCase maskTweenCase;
+        TweenCase panelTweenCase;
 
         public void Initialise(Transform parentTransform, IHealth targetHealth, bool showAlways, Vector3 defaultOffset, int level = -1, bool isSpecial = false)
         {

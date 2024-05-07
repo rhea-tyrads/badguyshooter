@@ -6,13 +6,13 @@ namespace Watermelon.SquadShooter
 {
     public class PreviewCase
     {
-        private GameObject gameObject;
-        private LevelTypeSettings levelTypeSettings;
+        GameObject gameObject;
+        LevelTypeSettings levelTypeSettings;
 
-        private RectTransform rectTransform;
+        RectTransform rectTransform;
         public RectTransform RectTransform => rectTransform;
 
-        private LevelPreviewBaseBehaviour previewBehaviour;
+        LevelPreviewBaseBehaviour previewBehaviour;
         public LevelPreviewBaseBehaviour PreviewBehaviour => previewBehaviour;
 
         public PreviewCase(GameObject gameObject, LevelTypeSettings levelTypeSettings)

@@ -15,7 +15,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] float spreadAngle;
         [SerializeField] DuoInt bulletsCount;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
         protected override void Awake()
         {
@@ -34,8 +34,8 @@ namespace Watermelon.SquadShooter
             switch (enemyCallbackType)
             {
                 case EnemyCallbackType.Hit:
-                    int bullets = bulletsCount.Random();
-                    for (int i = 0; i < bullets; i++)
+                    var bullets = bulletsCount.Random();
+                    for (var i = 0; i < bullets; i++)
                     {
                         var bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(shootPoint.position).SetEulerRotation(shootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                         bullet.transform.LookAt(target.position.SetY(shootPoint.position.y));

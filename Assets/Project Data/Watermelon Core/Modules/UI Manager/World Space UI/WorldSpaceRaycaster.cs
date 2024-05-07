@@ -7,7 +7,7 @@ namespace Watermelon
 {
     public static class WorldSpaceRaycaster
     {
-        private static List<WorldSpaceButton> buttons;
+        static List<WorldSpaceButton> buttons;
 
         public static void AddWorldSpaceButton(WorldSpaceButton button)
         {
@@ -23,7 +23,7 @@ namespace Watermelon
             buttons.Remove(button);
         }
 
-        private static WorldSpaceButton pressedButton;
+        static WorldSpaceButton pressedButton;
 
         public static bool Raycast(PointerEventData eventData)
         {
@@ -34,7 +34,7 @@ namespace Watermelon
             var closestDistance = float.MaxValue;
             pressedButton = null;
 
-            for (int i = 0; i < buttons.Count; i++)
+            for (var i = 0; i < buttons.Count; i++)
             {
                 var button = buttons[i];
 

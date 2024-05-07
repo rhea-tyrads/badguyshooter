@@ -5,14 +5,14 @@ namespace Watermelon
     [System.Serializable]
     public class RingEffectController : MonoBehaviour
     {
-        private static RingEffectController ringEffectController;
+        static RingEffectController ringEffectController;
 
         [SerializeField] GameObject ringEffectPrefab;
         [SerializeField] Gradient defaultGradient;
 
-        private Pool ringEffectPool;
+        Pool ringEffectPool;
 
-        private void Awake()
+        void Awake()
         {
             ringEffectController = this;
 
@@ -26,12 +26,12 @@ namespace Watermelon
 
         public static RingEffectCase SpawnEffect(Vector3 position, Gradient gradient, float targetSize, float time, Ease.Type easing)
         {
-            GameObject ringObject = ringEffectController.ringEffectPool.GetPooledObject();
+            var ringObject = ringEffectController.ringEffectPool.GetPooledObject();
             ringObject.transform.position = position;
             ringObject.transform.localScale = Vector3.zero;
             ringObject.SetActive(true);
 
-            RingEffectCase ringEffectCase = new RingEffectCase(ringObject, targetSize, gradient);
+            var ringEffectCase = new RingEffectCase(ringObject, targetSize, gradient);
 
             ringEffectCase.SetDuration(time);
             ringEffectCase.SetEasing(easing);

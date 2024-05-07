@@ -6,7 +6,7 @@ namespace Watermelon
     {
         public const float PANEL_HEIGHT = 115.0f;
 
-        private static readonly Vector2[] PANEL_SIZES = new Vector2[]
+        static readonly Vector2[] PANEL_SIZES = new Vector2[]
         {
             new Vector2(200.0f, PANEL_HEIGHT),
             new Vector2(215.0f, PANEL_HEIGHT),

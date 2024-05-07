@@ -7,13 +7,13 @@ namespace Watermelon.Enemy.BossSniper
     [RequireComponent(typeof(BossSniperBehavior))]
     public class BossSniperStateMachine : AbstractStateMachine<BossSniperStates>
     {
-        private BossSniperBehavior enemy;
+        BossSniperBehavior enemy;
 
-        private BossSniperChangingPositionState changePosState;
-        private BossSniperAimState aimState;
-        private BossSniperAttackState attackState;
+        BossSniperChangingPositionState changePosState;
+        BossSniperAimState aimState;
+        BossSniperAttackState attackState;
 
-        private void Awake()
+        void Awake()
         {
             enemy = GetComponent<BossSniperBehavior>();
 
@@ -46,21 +46,21 @@ namespace Watermelon.Enemy.BossSniper
             states.Add(BossSniperStates.Shooting, shootCase);
         }
 
-        private bool ChangePosTransition(out BossSniperStates nextState)
+        bool ChangePosTransition(out BossSniperStates nextState)
         {
             nextState = BossSniperStates.Aiming;
             return true;
         }
 
-        private bool AimTransition(out BossSniperStates nextState)
+        bool AimTransition(out BossSniperStates nextState)
         {
             nextState = BossSniperStates.Shooting;
             return true;
         }
 
-        private int shootCount = 0;
+        int shootCount = 0;
 
-        private bool ShootTransition(out BossSniperStates nextState)
+        bool ShootTransition(out BossSniperStates nextState)
         {
             shootCount++;
             if (shootCount == 1)

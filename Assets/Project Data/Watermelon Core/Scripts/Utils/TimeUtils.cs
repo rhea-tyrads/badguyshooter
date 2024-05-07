@@ -4,7 +4,7 @@ namespace Watermelon
 {
     public static class TimeUtils
     {
-        private static readonly DateTime DEFAULT_DATE_UNIX = new DateTime(1970, 1, 1, 0, 0, 0);
+        static readonly DateTime DEFAULT_DATE_UNIX = new DateTime(1970, 1, 1, 0, 0, 0);
 
         public const string FORMAT_FULL = "d/M/yyyy HH:mm:ss";
         public const string FORMAT_SHORT = "t";
@@ -14,7 +14,7 @@ namespace Watermelon
         /// </summary>
         public static double GetCurrentUnixTimestamp()
         {
-            double unixTimestamp = (DateTime.Now - DEFAULT_DATE_UNIX).TotalSeconds;
+            var unixTimestamp = (DateTime.Now - DEFAULT_DATE_UNIX).TotalSeconds;
 
             return unixTimestamp;
         }
@@ -24,14 +24,14 @@ namespace Watermelon
         /// </summary>
         public static double GetCurrentUnixTimestampWithExtraTime(int weeks = 0, int days = 0, int hours = 0, int minutes = 0, int seconds = 0)
         {
-            DateTime nowDate = DateTime.Now;
+            var nowDate = DateTime.Now;
             nowDate = nowDate.AddDays(weeks * 7);
             nowDate = nowDate.AddDays(days);
             nowDate = nowDate.AddHours(hours);
             nowDate = nowDate.AddMinutes(minutes);
             nowDate = nowDate.AddSeconds(seconds);
 
-            double unixTimestamp = (nowDate - DEFAULT_DATE_UNIX).TotalSeconds;
+            var unixTimestamp = (nowDate - DEFAULT_DATE_UNIX).TotalSeconds;
 
             return unixTimestamp;
         }
@@ -41,12 +41,12 @@ namespace Watermelon
         /// </summary>
         public static double GetCurrentDayUnixTimestamp()
         {
-            DateTime nowDate = DateTime.Now;
+            var nowDate = DateTime.Now;
             nowDate = nowDate.AddHours(-nowDate.Hour);
             nowDate = nowDate.AddMinutes(-nowDate.Minute);
             nowDate = nowDate.AddSeconds(-nowDate.Second);
 
-            double unixTimestamp = (nowDate - DEFAULT_DATE_UNIX).TotalSeconds;
+            var unixTimestamp = (nowDate - DEFAULT_DATE_UNIX).TotalSeconds;
 
             return unixTimestamp;
         }
@@ -56,9 +56,9 @@ namespace Watermelon
         /// </summary>
         public static double GetUnixTimestampFromDateTime(DateTime target)
         {
-            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0, target.Kind);
+            var date = new DateTime(1970, 1, 1, 0, 0, 0, target.Kind);
 
-            double unixTimestamp = (target - date).TotalSeconds;
+            var unixTimestamp = (target - date).TotalSeconds;
 
             return unixTimestamp;
         }

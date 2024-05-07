@@ -46,12 +46,12 @@ namespace Watermelon.LevelSystem
         [SerializeField] CurrencyPrice revivePrice;
         public CurrencyPrice RevivePrice => revivePrice;
 
-        private Dictionary<LevelType, int> levelTypesLink;
+        Dictionary<LevelType, int> levelTypesLink;
 
         public void Initialise()
         {
             levelTypesLink = new Dictionary<LevelType, int>();
-            for (int i = 0; i < levelTypes.Length; i++)
+            for (var i = 0; i < levelTypes.Length; i++)
             {
                 if (!levelTypesLink.ContainsKey(levelTypes[i].LevelType))
                 {
@@ -67,7 +67,7 @@ namespace Watermelon.LevelSystem
             
             Drop.Initialise(dropSettings);
 
-            for(int i = 0; i < chestData.Length; i++)
+            for(var i = 0; i < chestData.Length; i++)
             {
                 chestData[i].Initialise();
             }
@@ -86,7 +86,7 @@ namespace Watermelon.LevelSystem
 
         public ChestData GetChestData(LevelChestType chestType)
         {
-            for(int i = 0; i < chestData.Length; i++)
+            for(var i = 0; i < chestData.Length; i++)
             {
                 var data = chestData[i];
                 if(chestType == data.Type)

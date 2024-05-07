@@ -7,9 +7,9 @@ namespace Watermelon.Enemy.Demo
     [RequireComponent(typeof(DemoEnemyBehavior))]
     public class DemoStateMachine : AbstractStateMachine<State>
     {
-        private DemoEnemyBehavior enemy;
+        DemoEnemyBehavior enemy;
 
-        private void Awake()
+        void Awake()
         {
             enemy = GetComponent<DemoEnemyBehavior>();
 
@@ -35,7 +35,7 @@ namespace Watermelon.Enemy.Demo
             states.Add(State.Attacking, attackingStateCase);
         }
 
-        private bool PatrollingStateTransition(out State nextState)
+        bool PatrollingStateTransition(out State nextState)
         {
             var isTargetSpotted = enemy.IsTargetInVisionRange || (!EnemyController.IgnoreAttackAfterDamage && enemy.HasTakenDamage);
 
@@ -54,7 +54,7 @@ namespace Watermelon.Enemy.Demo
             return true;
         }
 
-        private bool FollowingStateTransition(out State nextState)
+        bool FollowingStateTransition(out State nextState)
         {
             var shouldAttack = enemy.IsTargetInAttackRange && enemy.IsTargetInSight() && !CharacterBehaviour.IsDead;
             nextState = shouldAttack ? State.Attacking : State.Following;

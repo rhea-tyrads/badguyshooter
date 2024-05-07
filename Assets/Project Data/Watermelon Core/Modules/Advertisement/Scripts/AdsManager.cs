@@ -9,18 +9,18 @@ namespace Watermelon
 {
     public static class AdsManager
     {
-        private const int INIT_ATTEMPTS_AMOUNT = 30;
+        const int INIT_ATTEMPTS_AMOUNT = 30;
 
         public const ProductKeyType NO_ADS_PRODUCT_KEY = ProductKeyType.NoAds;
 
-        private const string FIRST_LAUNCH_PREFS = "FIRST_LAUNCH";
+        const string FIRST_LAUNCH_PREFS = "FIRST_LAUNCH";
 
-        private const string NO_ADS_PREF_NAME = "ADS_STATE";
-        private const string NO_ADS_ACTIVE_HASH = "809d08040da0182f4fffa4702095e69e";
+        const string NO_ADS_PREF_NAME = "ADS_STATE";
+        const string NO_ADS_ACTIVE_HASH = "809d08040da0182f4fffa4702095e69e";
 
-        private const string GDPR_PREF_NAME = "GDPR_STATE";
+        const string GDPR_PREF_NAME = "GDPR_STATE";
 
-        private static readonly AdProviderHandler[] AD_PROVIDERS = new AdProviderHandler[]
+        static readonly AdProviderHandler[] AD_PROVIDERS = new AdProviderHandler[]
         {
             new AdDummyHandler(AdProvider.Dummy), 
 
@@ -37,31 +37,31 @@ namespace Watermelon
 #endif
         };
 
-        private static bool isModuleInitialised;
+        static bool isModuleInitialised;
 
-        private static AdsSettings settings;
+        static AdsSettings settings;
         public static AdsSettings Settings => settings;
 
-        private static double lastInterstitialTime;
+        static double lastInterstitialTime;
 
-        private static AdProviderHandler.RewardedVideoCallback rewardedVideoCallback;
-        private static AdProviderHandler.InterstitialCallback interstitalCallback;
+        static AdProviderHandler.RewardedVideoCallback rewardedVideoCallback;
+        static AdProviderHandler.InterstitialCallback interstitalCallback;
 
-        private static List<SimpleCallback> mainThreadEvents = new List<SimpleCallback>();
-        private static int mainThreadEventsCount;
+        static List<SimpleCallback> mainThreadEvents = new List<SimpleCallback>();
+        static int mainThreadEventsCount;
 
-        private static bool isFirstAdLoaded = false;
-        private static bool waitingForRewardVideoCallback;
+        static bool isFirstAdLoaded = false;
+        static bool waitingForRewardVideoCallback;
 
-        private static bool isBannerActive = true;
+        static bool isBannerActive = true;
 
-        private static Coroutine loadingCoroutine;
+        static Coroutine loadingCoroutine;
 
-        private static bool isForcedAdEnabled;
+        static bool isForcedAdEnabled;
 
-        private static Dictionary<AdProvider, AdProviderHandler> advertisingActiveModules = new Dictionary<AdProvider, AdProviderHandler>();
+        static Dictionary<AdProvider, AdProviderHandler> advertisingActiveModules = new Dictionary<AdProvider, AdProviderHandler>();
 
-        private static AdsManagerInitModule initModule;
+        static AdsManagerInitModule initModule;
         public static AdsManagerInitModule InitModule => initModule;
 
         // Events
@@ -113,7 +113,7 @@ namespace Watermelon
             Initialiser.InitialiserGameObject.AddComponent<AdsManager.AdEventExecutor>();
 
             advertisingActiveModules = new Dictionary<AdProvider, AdProviderHandler>();
-            for (int i = 0; i < AD_PROVIDERS.Length; i++)
+            for (var i = 0; i < AD_PROVIDERS.Length; i++)
             {
                 if (IsModuleEnabled(AD_PROVIDERS[i].ProviderType))
                 {
@@ -138,7 +138,7 @@ namespace Watermelon
             // Add loading task if GDPR isn't created
             if (settings.IsGDPREnabled && !IsGDPRStateExist())
             {
-                GDPRLoadingTask gdprLoadingTask = new GDPRLoadingTask();
+                var gdprLoadingTask = new GDPRLoadingTask();
                 gdprLoadingTask.OnTaskCompleted += () =>
                 {
                     InitialiseModules(loadOnStart);
@@ -152,7 +152,7 @@ namespace Watermelon
             InitialiseModules(loadOnStart);
         }
 
-        private static void InitialiseModules(bool loadAds)
+        static void InitialiseModules(bool loadAds)
         {
             foreach (var advertisingModule in advertisingActiveModules.Keys)
             {
@@ -165,7 +165,7 @@ namespace Watermelon
             }
         }
 
-        private static void InitialiseModule(AdProvider advertisingModule)
+        static void InitialiseModule(AdProvider advertisingModule)
         {
             if (advertisingActiveModules.ContainsKey(advertisingModule))
             {
@@ -190,11 +190,11 @@ namespace Watermelon
         }
 #endregion
 
-        private static void Update()
+static void Update()
         {
             if (mainThreadEventsCount > 0)
             {
-                for (int i = 0; i < mainThreadEventsCount; i++)
+                for (var i = 0; i < mainThreadEventsCount; i++)
                 {
                     mainThreadEvents[i]?.Invoke();
                 }
@@ -220,9 +220,9 @@ namespace Watermelon
                 loadingCoroutine = Tween.InvokeCoroutine(TryToLoadAdsCoroutine());
         }
 
-        private static IEnumerator TryToLoadAdsCoroutine()
+        static IEnumerator TryToLoadAdsCoroutine()
         {
-            int initAttemps = 0;
+            var initAttemps = 0;
 
             yield return new WaitForSeconds(1.0f);
 
@@ -240,7 +240,7 @@ namespace Watermelon
                 Debug.Log("[AdsManager]: First ads have loaded!");
         }
 
-        private static bool LoadFirstAds()
+        static bool LoadFirstAds()
         {
             if (isFirstAdLoaded)
                 return true;
@@ -251,20 +251,20 @@ namespace Watermelon
             if (settings.IsIDFAEnabled && !AdsManager.IsIDFADetermined())
                 return false;
 
-            bool isRewardedVideoModuleInititalized = AdsManager.IsModuleInititalized(AdsManager.Settings.RewardedVideoType);
-            bool isInterstitialModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.InterstitialType);
-            bool isBannerModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.BannerType);
+            var isRewardedVideoModuleInititalized = AdsManager.IsModuleInititalized(AdsManager.Settings.RewardedVideoType);
+            var isInterstitialModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.InterstitialType);
+            var isBannerModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.BannerType);
 
-            bool isRewardedVideoActive = AdsManager.Settings.RewardedVideoType != AdProvider.Disable;
-            bool isInterstitialActive = AdsManager.Settings.InterstitialType != AdProvider.Disable;
-            bool isBannerActive = AdsManager.Settings.BannerType != AdProvider.Disable;
+            var isRewardedVideoActive = AdsManager.Settings.RewardedVideoType != AdProvider.Disable;
+            var isInterstitialActive = AdsManager.Settings.InterstitialType != AdProvider.Disable;
+            var isBannerActive = AdsManager.Settings.BannerType != AdProvider.Disable;
 
             if ((!isRewardedVideoActive || isRewardedVideoModuleInititalized) && (!isInterstitialActive || isInterstitialModuleInitialized) && (!isBannerActive || isBannerModuleInitialized))
             {
                 if (isRewardedVideoActive)
                     AdsManager.RequestRewardBasedVideo();
 
-                bool isForcedAdEnabled = AdsManager.IsForcedAdEnabled(false);
+                var isForcedAdEnabled = AdsManager.IsForcedAdEnabled(false);
                 if (isInterstitialActive && isForcedAdEnabled)
                     AdsManager.RequestInterstitial();
 
@@ -332,7 +332,7 @@ namespace Watermelon
 
         public static void RequestInterstitial()
         {
-            AdProvider advertisingModules = settings.InterstitialType;
+            var advertisingModules = settings.InterstitialType;
 
             if (!isForcedAdEnabled || !IsModuleActive(advertisingModules) || !advertisingActiveModules[advertisingModules].IsInitialised() || advertisingActiveModules[advertisingModules].IsInterstitialLoaded())
                 return;
@@ -342,7 +342,7 @@ namespace Watermelon
 
         public static void ShowInterstitial(AdProviderHandler.InterstitialCallback callback, bool ignoreConditions = false)
         {
-            AdProvider advertisingModules = settings.InterstitialType;
+            var advertisingModules = settings.InterstitialType;
 
             interstitalCallback = callback;
 
@@ -374,7 +374,7 @@ namespace Watermelon
             lastInterstitialTime = Time.time + settings.InterstitialShowingDelay;
         }
 
-        private static bool CheckInterstitialTime()
+        static bool CheckInterstitialTime()
         {
             if (settings.SystemLogs)
                 Debug.Log("[AdsManager]: Interstitial Time: " + lastInterstitialTime + "; Time: " + Time.time);
@@ -386,10 +386,10 @@ namespace Watermelon
         {
             if (InterstitialConditions != null)
             {
-                bool state = true;
+                var state = true;
 
-                System.Delegate[] listDelegates = InterstitialConditions.GetInvocationList();
-                for (int i = 0; i < listDelegates.Length; i++)
+                var listDelegates = InterstitialConditions.GetInvocationList();
+                for (var i = 0; i < listDelegates.Length; i++)
                 {
                     if (!(bool)listDelegates[i].DynamicInvoke())
                     {
@@ -412,7 +412,7 @@ namespace Watermelon
 #region Rewarded Video
         public static bool IsRewardBasedVideoLoaded()
         {
-            AdProvider advertisingModule = settings.RewardedVideoType;
+            var advertisingModule = settings.RewardedVideoType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
                 return false;
@@ -422,7 +422,7 @@ namespace Watermelon
 
         public static void RequestRewardBasedVideo()
         {
-            AdProvider advertisingModule = settings.RewardedVideoType;
+            var advertisingModule = settings.RewardedVideoType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised() || advertisingActiveModules[advertisingModule].IsRewardedVideoLoaded())
                 return;
@@ -432,7 +432,7 @@ namespace Watermelon
 
         public static void ShowRewardBasedVideo(AdProviderHandler.RewardedVideoCallback callback, bool showErrorMessage = true)
         {
-            AdProvider advertisingModule = settings.RewardedVideoType;
+            var advertisingModule = settings.RewardedVideoType;
 
             rewardedVideoCallback = callback;
             waitingForRewardVideoCallback = true;
@@ -471,7 +471,7 @@ namespace Watermelon
         {
             if (!isBannerActive) return;
 
-            AdProvider advertisingModule = settings.BannerType;
+            var advertisingModule = settings.BannerType;
 
             if (!isForcedAdEnabled || !IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
                 return;
@@ -481,7 +481,7 @@ namespace Watermelon
 
         public static void DestroyBanner()
         {
-            AdProvider advertisingModule = settings.BannerType;
+            var advertisingModule = settings.BannerType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
                 return;
@@ -491,7 +491,7 @@ namespace Watermelon
 
         public static void HideBanner()
         {
-            AdProvider advertisingModule = settings.BannerType;
+            var advertisingModule = settings.BannerType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
                 return;
@@ -545,7 +545,8 @@ namespace Watermelon
         }
 
 #region IAP
-        private static void OnPurchaseComplete(ProductKeyType productKeyType)
+
+static void OnPurchaseComplete(ProductKeyType productKeyType)
         {
             if (productKeyType == NO_ADS_PRODUCT_KEY)
             {
@@ -580,7 +581,7 @@ namespace Watermelon
         {
             PlayerPrefs.SetInt(GDPR_PREF_NAME, state ? 1 : 0);
 
-            foreach (AdProvider activeModule in advertisingActiveModules.Keys)
+            foreach (var activeModule in advertisingActiveModules.Keys)
             {
                 if (advertisingActiveModules[activeModule].IsInitialised())
                 {
@@ -622,9 +623,9 @@ namespace Watermelon
         public delegate void AdsEventsCallback(AdProvider advertisingModules, AdType advertisingType);
         public delegate bool AdsBoolCallback();
 
-        private class AdEventExecutor : MonoBehaviour
+        class AdEventExecutor : MonoBehaviour
         {
-            private void Update()
+            void Update()
             {
                 AdsManager.Update();
             }

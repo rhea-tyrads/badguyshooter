@@ -2,7 +2,7 @@
 {
     public sealed class DefaultSaveWrapper : BaseSaveWrapper
     {
-        private const Serializer.SerializeType SAVE_SERIALIZE_TYPE = Serializer.SerializeType.Binary;
+        const Serializer.SerializeType SAVE_SERIALIZE_TYPE = Serializer.SerializeType.Binary;
 
         public override GlobalSave Load(string fileName)
         {

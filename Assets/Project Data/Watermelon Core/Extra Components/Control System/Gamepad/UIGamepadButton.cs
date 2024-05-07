@@ -25,11 +25,11 @@ namespace Watermelon
         [Space]
         [SerializeField] Image gamepadButtonIcon;
 
-        private Button button;
+        Button button;
 
-        private static UIGamepadButtonTag ActiveButtonTags { get; set; } = UIGamepadButtonTag.MainMenu;
+        static UIGamepadButtonTag ActiveButtonTags { get; set; } = UIGamepadButtonTag.MainMenu;
 
-        private void Awake()
+        void Awake()
         {
             button = GetComponent<Button>();
 
@@ -40,7 +40,7 @@ namespace Watermelon
             button.onClick.AddListener(OnButtonClick);
         }
 
-        private void Update()
+        void Update()
         {
             if (Control.InputType != InputType.Gamepad || (ActiveButtonTags & buttonTag) == 0 || !IsInFocus) return;
 
@@ -58,7 +58,7 @@ namespace Watermelon
         }
 
         // Showing or hiding gamepad icon on a button if necessary
-        private void OnInputChanged(InputType type)
+        void OnInputChanged(InputType type)
         {
             if (Control.InputType == InputType.Gamepad && IsInFocus)
             {
@@ -73,7 +73,7 @@ namespace Watermelon
         }
 
         // We still need to keep track of the active buttons in order to be able to swap the control from gamepad to keyboard and vice versa
-        private void OnButtonClick()
+        void OnButtonClick()
         {
             if(Control.InputType != InputType.Gamepad)
             {
@@ -109,9 +109,9 @@ namespace Watermelon
 
 #region Highlight
 
-        private TweenCase highlightScaleCase;
-        private TweenCase returnCase;
-        private bool isHighlightActive;
+TweenCase highlightScaleCase;
+TweenCase returnCase;
+bool isHighlightActive;
 
         public void StartHighlight()
         {
@@ -135,7 +135,7 @@ namespace Watermelon
             returnCase = gamepadButtonIcon.DOScale(1f, 0.2f).SetEasing(Ease.Type.SineOut);
         }
 
-        private void PingPongAnimation()
+        void PingPongAnimation()
         {
             // Shouldn trigger stack overflown because of how tween works
             highlightScaleCase = gamepadButtonIcon.DOPingPongScale(0.9f, 1.2f, 1, Ease.Type.SineInOut, Ease.Type.SineInOut).OnComplete(PingPongAnimation);

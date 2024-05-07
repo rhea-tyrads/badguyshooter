@@ -43,7 +43,7 @@ namespace Watermelon
             BounceInOut
         }
 
-        private static readonly IEasingFunction[] easingFunctions = new IEasingFunction[30]
+        static readonly IEasingFunction[] easingFunctions = new IEasingFunction[30]
         {
             new LinearEasingFunction(), // Linear
             new QuadInEasingFunction(), // QuadIn,
@@ -77,12 +77,12 @@ namespace Watermelon
             new BounceOutEasingFunction(), // BounceOut,
         };
 
-        private const float PI = Mathf.PI;
-        private const float HALF_PI = Mathf.PI / 2.0f;
+        const float PI = Mathf.PI;
+        const float HALF_PI = Mathf.PI / 2.0f;
 
-        private static CustomEasingFunction defaultEasingFunction;
-        private static CustomEasingFunction[] customEasingFunctions;
-        private static Dictionary<int, int> customEasingFunctionsLink;
+        static CustomEasingFunction defaultEasingFunction;
+        static CustomEasingFunction[] customEasingFunctions;
+        static Dictionary<int, int> customEasingFunctionsLink;
 
         public static void Initialise(EasingSettings easingSettings)
         {
@@ -91,11 +91,11 @@ namespace Watermelon
             if(easingSettings != null)
             {
                 customEasingFunctions = easingSettings.CustomEasingFunctions;
-                for (int i = 0; i < customEasingFunctions.Length; i++)
+                for (var i = 0; i < customEasingFunctions.Length; i++)
                 {
                     customEasingFunctions[i].Initialise();
 
-                    int functionNameHash = customEasingFunctions[i].Name.GetHashCode();
+                    var functionNameHash = customEasingFunctions[i].Name.GetHashCode();
                     if (!customEasingFunctionsLink.ContainsKey(functionNameHash))
                     {
                         customEasingFunctionsLink.Add(functionNameHash, i);
@@ -108,7 +108,7 @@ namespace Watermelon
 
         public static CustomEasingFunction GetCustomEasingFunction(string name)
         {
-            int hash = name.GetHashCode();
+            var hash = name.GetHashCode();
             if (customEasingFunctionsLink.ContainsKey(hash))
             {
                 return customEasingFunctions[customEasingFunctionsLink[hash]];
@@ -142,12 +142,13 @@ namespace Watermelon
         }
 
         #region Bounce
-        private static float BounceEaseIn(float p)
+
+        static float BounceEaseIn(float p)
         {
             return 1 - BounceEaseOut(1 - p);
         }
 
-        private static float BounceEaseOut(float p)
+        static float BounceEaseOut(float p)
         {
             if (p < 4 / 11.0f)
             {
@@ -167,7 +168,7 @@ namespace Watermelon
             }
         }
 
-        private static float BounceEaseInOut(float p)
+        static float BounceEaseInOut(float p)
         {
             if (p < 0.5f)
             {
@@ -187,16 +188,16 @@ namespace Watermelon
         public class QuadOutInEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 2 * p * p; } else { return (-2 * p * p) + (4 * p) - 1; }; } }
 
         public class CubicInEasingFunction : IEasingFunction { public float Interpolate(float p) { return p * p * p; } }
-        public class CubicOutEasingFunction : IEasingFunction { public float Interpolate(float p) { float f1 = (p - 1); return f1 * f1 * f1 + 1; } }
-        public class CubicInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 4 * p * p * p; } else { float f2 = ((2 * p) - 2); return 0.5f * f2 * f2 * f2 + 1; } } }
+        public class CubicOutEasingFunction : IEasingFunction { public float Interpolate(float p) { var f1 = (p - 1); return f1 * f1 * f1 + 1; } }
+        public class CubicInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 4 * p * p * p; } else { var f2 = ((2 * p) - 2); return 0.5f * f2 * f2 * f2 + 1; } } }
 
         public class QuartInEasingFunction : IEasingFunction { public float Interpolate(float p) { return p * p * p * p; } }
-        public class QuartOutEasingFunction : IEasingFunction { public float Interpolate(float p) { float f3 = (p - 1); return f3 * f3 * f3 * (1 - p) + 1; } }
-        public class QuartInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 8 * p * p * p * p; } else { float f4 = (p - 1); return -8 * f4 * f4 * f4 * f4 + 1; } } }
+        public class QuartOutEasingFunction : IEasingFunction { public float Interpolate(float p) { var f3 = (p - 1); return f3 * f3 * f3 * (1 - p) + 1; } }
+        public class QuartInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 8 * p * p * p * p; } else { var f4 = (p - 1); return -8 * f4 * f4 * f4 * f4 + 1; } } }
 
         public class QuintInEasingFunction : IEasingFunction { public float Interpolate(float p) { return p * p * p * p * p; } }
-        public class QuintOutEasingFunction : IEasingFunction { public float Interpolate(float p) { float f = (p - 1); return f * f * f * f * f + 1; } }
-        public class QuintInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 16 * p * p * p * p * p; } else { float f = ((2 * p) - 2); return 0.5f * f * f * f * f * f + 1; } } }
+        public class QuintOutEasingFunction : IEasingFunction { public float Interpolate(float p) { var f = (p - 1); return f * f * f * f * f + 1; } }
+        public class QuintInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 16 * p * p * p * p * p; } else { var f = ((2 * p) - 2); return 0.5f * f * f * f * f * f + 1; } } }
 
         public class SineInEasingFunction : IEasingFunction { public float Interpolate(float p) { return Mathf.Sin((p - 1) * HALF_PI) + 1; } }
         public class SineOutEasingFunction : IEasingFunction { public float Interpolate(float p) { return Mathf.Sin(p * HALF_PI); } }
@@ -215,8 +216,8 @@ namespace Watermelon
         public class ElastinInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { return 0.5f * Mathf.Sin(13 * HALF_PI * (2 * p)) * Mathf.Pow(2, 10 * ((2 * p) - 1)); } else { return 0.5f * (Mathf.Sin(-13 * HALF_PI * ((2 * p - 1) + 1)) * Mathf.Pow(2, -10 * (2 * p - 1)) + 2); } } }
 
         public class BackInEasingFunction : IEasingFunction { public float Interpolate(float p) { return p * p * p - p * Mathf.Sin(p * PI); } }
-        public class BackOutEasingFunction : IEasingFunction { public float Interpolate(float p) { float f = (1 - p); return 1 - (f * f * f - f * Mathf.Sin(f * PI)); } }
-        public class BackInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { float f = 2 * p; return 0.5f * (f * f * f - f * Mathf.Sin(f * PI)); } else { float f = (1 - (2 * p - 1)); return 0.5f * (1 - (f * f * f - f * Mathf.Sin(f * PI))) + 0.5f; } } }
+        public class BackOutEasingFunction : IEasingFunction { public float Interpolate(float p) { var f = (1 - p); return 1 - (f * f * f - f * Mathf.Sin(f * PI)); } }
+        public class BackInOutEasingFunction : IEasingFunction { public float Interpolate(float p) { if (p < 0.5f) { var f = 2 * p; return 0.5f * (f * f * f - f * Mathf.Sin(f * PI)); } else { var f = (1 - (2 * p - 1)); return 0.5f * (1 - (f * f * f - f * Mathf.Sin(f * PI))) + 0.5f; } } }
 
         public class BounceInEasingFunction : IEasingFunction { public float Interpolate(float p) { return BounceEaseIn(p); } }
         public class BounceOutEasingFunction : IEasingFunction { public float Interpolate(float p) { return BounceEaseOut(p); } }

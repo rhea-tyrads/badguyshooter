@@ -8,10 +8,10 @@ namespace Watermelon
     {
         [SerializeField] GameObject lineArrowPrefab;
 
-        private static List<BaseNavigationArrowCase> activeArrows = new List<BaseNavigationArrowCase>();
-        private static int activeArrowsCount;
+        static List<BaseNavigationArrowCase> activeArrows = new List<BaseNavigationArrowCase>();
+        static int activeArrowsCount;
 
-        private static Pool lineArrowPool;
+        static Pool lineArrowPool;
 
         public void Initialise()
         {
@@ -30,7 +30,7 @@ namespace Watermelon
 
         public static LineNavigationArrowCase RegisterLineArrow(Transform parent, Vector3 target)
         {
-            LineNavigationArrowCase arrowCase = new LineNavigationArrowCase(parent, lineArrowPool.GetPooledObject(), target);
+            var arrowCase = new LineNavigationArrowCase(parent, lineArrowPool.GetPooledObject(), target);
 
             activeArrows.Add(arrowCase);
             activeArrowsCount++;
@@ -42,7 +42,7 @@ namespace Watermelon
         {
             if (activeArrowsCount > 0)
             {
-                for (int i = 0; i < activeArrowsCount; i++)
+                for (var i = 0; i < activeArrowsCount; i++)
                 {
                     if (activeArrows[i].IsArrowFixed)
                         activeArrows[i].UpdateFixedPosition();

@@ -19,7 +19,7 @@ namespace Watermelon
 
         public override void CreateComponent(Initialiser Initialiser)
         {
-            Tween tween = Initialiser.gameObject.AddComponent<Tween>();
+            var tween = Initialiser.gameObject.AddComponent<Tween>();
             tween.Initialise(tweensUpdateCount, tweensFixedUpdateCount, tweensLateUpdateCount, verboseLogging);
 
             Ease.Initialise(easingSettings);

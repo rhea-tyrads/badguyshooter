@@ -57,7 +57,7 @@ namespace Watermelon
         /// </summary>
         public static string FindStringInsideBrackets(this string value)
         {
-            Match match = Regex.Match(value, @"\[([^)]*)\]");
+            var match = Regex.Match(value, @"\[([^)]*)\]");
 
             return match.Result("$1");
         }
@@ -106,11 +106,11 @@ namespace Watermelon
                 Debug.LogWarning("Don't use GetUniqueRandomObjectIDs if count is 1!");
 #endif
 
-            List<int> objectIDs = new List<int>();
+            var objectIDs = new List<int>();
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                int randomValue = -1;
+                var randomValue = -1;
 
                 do
                 {
@@ -139,12 +139,12 @@ namespace Watermelon
                 Debug.LogWarning("Don't use GetUniqueRandomObjects if count is 1!");
 #endif
 
-            List<int> objectIDs = new List<int>();
-            List<T> resultList = new List<T>();
+            var objectIDs = new List<int>();
+            var resultList = new List<T>();
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                int randomValue = -1;
+                var randomValue = -1;
 
                 do
                 {
@@ -175,11 +175,11 @@ namespace Watermelon
                 Debug.LogWarning("Don't use GetUniqueRandomObjectIDs if count is 1!");
 #endif
 
-            List<int> objectIDs = new List<int>();
+            var objectIDs = new List<int>();
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                int randomValue = -1;
+                var randomValue = -1;
 
                 do
                 {
@@ -208,12 +208,12 @@ namespace Watermelon
                 Debug.LogWarning("Don't use GetUniqueRandomObjects if count is 1!");
 #endif
 
-            List<int> objectIDs = new List<int>();
-            List<T> resultList = new List<T>();
+            var objectIDs = new List<int>();
+            var resultList = new List<T>();
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                int randomValue = -1;
+                var randomValue = -1;
 
                 do
                 {
@@ -255,9 +255,9 @@ namespace Watermelon
 
         public static int Sum<T>(this T[] array, Func<T, int> sumFun)
         {
-            int sum = 0;
+            var sum = 0;
 
-            for(int i = 0; i < array.Length; i++)
+            for(var i = 0; i < array.Length; i++)
             {
                 sum += sumFun(array[i]);
             }
@@ -269,7 +269,7 @@ namespace Watermelon
         {
             float sum = 0;
 
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 sum += sumFun(array[i]);
             }
@@ -279,9 +279,9 @@ namespace Watermelon
 
         public static int Sum<T>(this List<T> list, Func<T, int> sumFun)
         {
-            int sum = 0;
+            var sum = 0;
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 sum += sumFun(list[i]);
             }
@@ -293,7 +293,7 @@ namespace Watermelon
         {
             float sum = 0;
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 sum += sumFun(list[i]);
             }
@@ -303,7 +303,7 @@ namespace Watermelon
 
         public static bool Has<T>(this T[] array, Func<T, bool> searchFun)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 if (searchFun(array[i])) return true;
             }
@@ -313,7 +313,7 @@ namespace Watermelon
 
         public static bool Has<T>(this List<T> list, Func<T, bool> searchFun)
         {
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 if (searchFun(list[i])) return true;
             }
@@ -324,7 +324,7 @@ namespace Watermelon
         public static List<T> MakeCopy<T>(this List<T> list)
         {
             var copy = new List<T>();
-            for(int i = 0; i < list.Count; i++)
+            for(var i = 0; i < list.Count; i++)
             {
                 copy.Add(list[i]);
             }
@@ -335,9 +335,9 @@ namespace Watermelon
         {
             if (count >= array.Length) return new T[0];
 
-            T[] result = new T[array.Length - count];
+            var result = new T[array.Length - count];
 
-            for (int i = 0; i < result.Length; i++) {
+            for (var i = 0; i < result.Length; i++) {
                 result[i] = array[i];
             }
 
@@ -370,7 +370,7 @@ namespace Watermelon
         {
             var result = new List<T>();
 
-            for(int i = 0; i < array.Length; i++)
+            for(var i = 0; i < array.Length; i++)
             {
                 if(!array[i].Equals(itemToRemove))
                 {
@@ -383,7 +383,7 @@ namespace Watermelon
 
         public static void ForEach<T>(this T[] array, Action<T> action)
         {
-            for(int i = 0; i < array.Length; i++)
+            for(var i = 0; i < array.Length; i++)
             {
                 action(array[i]);
             }
@@ -391,7 +391,7 @@ namespace Watermelon
 
         public static T Find<T>(this T[] array, Func<T, bool> action)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 if(action(array[i])) return array[i];
             }
@@ -401,7 +401,7 @@ namespace Watermelon
 
         public static int IndexOf<T>(this T[] array, T t)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 if (array[i].Equals(t)) return i;
             }
@@ -422,7 +422,7 @@ namespace Watermelon
         /// </summary>
         public static void Display<T>(this T[] array, Func<T, string> function)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 Debug.Log(function(array[i]));
             }
@@ -433,7 +433,7 @@ namespace Watermelon
         /// </summary>
         public static void Display<T>(this List<T> array, Func<T, string> function)
         {
-            for (int i = 0; i < array.Count; i++)
+            for (var i = 0; i < array.Count; i++)
             {
                 Debug.Log(function(array[i]));
             }
@@ -486,7 +486,7 @@ namespace Watermelon
         /// </summary>
         public static void Shuffle<T>(this T[] array)
         {
-            int n = array.Length;
+            var n = array.Length;
             int k;
             T temp;
 
@@ -504,7 +504,7 @@ namespace Watermelon
         /// </summary>
         public static void Shuffle<T>(this List<T> list)
         {
-            int n = list.Count;
+            var n = list.Count;
             int k;
             T temp;
 
@@ -520,7 +520,7 @@ namespace Watermelon
         public static T FindRandomOrder<T>(this List<T> list, Func<T, bool> action) 
         {
             var tabsIndices = new List<int>(list.Count);
-            for (int i = 0; i < list.Count; i++) tabsIndices.Add(i);
+            for (var i = 0; i < list.Count; i++) tabsIndices.Add(i);
 
             while (tabsIndices.Count > 0)
             {
@@ -541,7 +541,7 @@ namespace Watermelon
         public static T FindRandomOrder<T>(this T[] array, Func<T, bool> action)
         {
             var tabsIndices = new List<int>(array.Length);
-            for (int i = 0; i < array.Length; i++) tabsIndices.Add(i);
+            for (var i = 0; i < array.Length; i++) tabsIndices.Add(i);
 
             while (tabsIndices.Count > 0)
             {
@@ -573,8 +573,8 @@ namespace Watermelon
             if (a1.Length != a2.Length)
                 return false;
 
-            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            for (int i = 0; i < a1.Length; i++)
+            var comparer = EqualityComparer<T>.Default;
+            for (var i = 0; i < a1.Length; i++)
             {
                 if (!comparer.Equals(a1[i], a2[i]))
                     return false;
@@ -597,8 +597,8 @@ namespace Watermelon
             if (a1.Count != a2.Count)
                 return false;
 
-            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            for (int i = 0; i < a1.Count; i++)
+            var comparer = EqualityComparer<T>.Default;
+            for (var i = 0; i < a1.Count; i++)
             {
                 if (!comparer.Equals(a1[i], a2[i]))
                     return false;
@@ -611,7 +611,7 @@ namespace Watermelon
         /// </summary>
         public static T[] SubArray<T>(this T[] data, int index, int length)
         {
-            T[] result = new T[length];
+            var result = new T[length];
             Array.Copy(data, index, result, 0, length);
             return result;
         }
@@ -636,7 +636,7 @@ namespace Watermelon
         {
             var resultList = new List<T>();
 
-            for(int i = 0; i < array.Length; i++)
+            for(var i = 0; i < array.Length; i++)
             {
                 if (func(array[i])) resultList.Add(array[i]);
             }
@@ -661,7 +661,7 @@ namespace Watermelon
         /// </summary>
         public static T GetOrSetComponent<T>(this GameObject gameObject) where T : Component
         {
-            Component component = gameObject.GetComponent(typeof(T));
+            var component = gameObject.GetComponent(typeof(T));
 
             if (component != null)
                 return (T)component;
@@ -939,12 +939,12 @@ namespace Watermelon
         /// </summary>
         public static Vector3 GetRandomPositionAroundObject(this Vector3 position, float minRadius, float maxRadius)
         {
-            float radius = Random.Range(minRadius, maxRadius);
+            var radius = Random.Range(minRadius, maxRadius);
 
             float angle = Random.Range(0, 360);
 
-            float x = radius * Mathf.Cos(angle);
-            float z = radius * Mathf.Sin(angle);
+            var x = radius * Mathf.Cos(angle);
+            var z = radius * Mathf.Sin(angle);
 
             return new Vector3(position.x + x, position.y, position.z + z);
         }
@@ -956,8 +956,8 @@ namespace Watermelon
         {
             float angle = Random.Range(0, 360);
 
-            float x = radius * Mathf.Cos(angle);
-            float z = radius * Mathf.Sin(angle);
+            var x = radius * Mathf.Cos(angle);
+            var z = radius * Mathf.Sin(angle);
 
             return new Vector3(position.x + x, position.y, position.z + z);
         }
@@ -1237,11 +1237,11 @@ namespace Watermelon
 
             maxDepth = Mathf.Clamp(maxDepth, 1, 10);
 
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("<b>" + parentObject.ToString() + "</b>");
             stringBuilder.AppendLine("");
 
-            string fieldsString = GetFields(0, maxDepth, "  ", parentObject);
+            var fieldsString = GetFields(0, maxDepth, "  ", parentObject);
             if(!string.IsNullOrEmpty(fieldsString))
             {
                 stringBuilder.AppendLine("Variables:");
@@ -1251,21 +1251,21 @@ namespace Watermelon
             return stringBuilder.ToString();
         }
 
-        private static string GetFields(int depth, int maxDepth, string space, object parentObject)
+        static string GetFields(int depth, int maxDepth, string space, object parentObject)
         {
             depth += 1;
                
-            StringBuilder stringBuilder = new StringBuilder();
-            Type parentObjectType = parentObject.GetType();
+            var stringBuilder = new StringBuilder();
+            var parentObjectType = parentObject.GetType();
 
-            FieldInfo[] fieldInfos = parentObjectType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var fieldInfos = parentObjectType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
             string fieldName;
             object value;
 
-            for (int i = 0; i < fieldInfos.Length; i++)
+            for (var i = 0; i < fieldInfos.Length; i++)
             {
-                Type fieldType = fieldInfos[i].FieldType;
+                var fieldType = fieldInfos[i].FieldType;
 
                 fieldName = fieldInfos[i].Name;
                 value = fieldInfos[i].GetValue(parentObject);
@@ -1274,25 +1274,25 @@ namespace Watermelon
                 {
                     if (fieldType.IsArray)
                     {
-                        Type elementType = fieldType.GetElementType();
+                        var elementType = fieldType.GetElementType();
                         if (elementType != null)
                         {
-                            FieldInfo[] arrayFieldInfos = elementType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                            var arrayFieldInfos = elementType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-                            IList list = (IList)value;
+                            var list = (IList)value;
                             if(list != null)
                             {
                                 stringBuilder.AppendLine(space + fieldName + " - " + fieldType.ToString());
 
-                                int listCount = list.Count;
-                                for (int j = 0; j < listCount; j++)
+                                var listCount = list.Count;
+                                for (var j = 0; j < listCount; j++)
                                 {
                                     stringBuilder.AppendLine(space + " - Element " + (j + 1));
                                     if (list[j] != null)
                                     {
-                                        for (int f = 0; f < arrayFieldInfos.Length; f++)
+                                        for (var f = 0; f < arrayFieldInfos.Length; f++)
                                         {
-                                            object arrayValue = arrayFieldInfos[f].GetValue(list[j]);
+                                            var arrayValue = arrayFieldInfos[f].GetValue(list[j]);
 
                                             stringBuilder.AppendLine(space + "    " + arrayFieldInfos[f].Name + " - " + (arrayValue != null ? arrayValue.ToString() : "NULL"));
                                         }

@@ -12,28 +12,28 @@ namespace Watermelon.SquadShooter
 
         [SerializeField] LayerMask targetLayers;
         [SerializeField] float chargeDuration;
-        private DuoFloat bulletSpeed;
+        DuoFloat bulletSpeed;
         [SerializeField] DuoInt targetsHitGoal;
         [SerializeField] float stunDuration = 0.2f;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
-        private TweenCase shootTweenCase;
-        private Vector3 shootDirection;
+        TweenCase shootTweenCase;
+        Vector3 shootDirection;
 
-        private bool isCharging;
-        private bool isCharged;
-        private bool isChargeParticleActivated;
-        private float fullChargeTime;
+        bool isCharging;
+        bool isCharged;
+        bool isChargeParticleActivated;
+        float fullChargeTime;
 
-        private TeslaGunUpgrade upgrade;
+        TeslaGunUpgrade upgrade;
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
             base.Initialise(characterBehaviour, data);
 
             upgrade = UpgradesController.GetUpgrade<TeslaGunUpgrade>(data.UpgradeType);
-            GameObject bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
+            var bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
 
             bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
@@ -113,11 +113,11 @@ namespace Watermelon.SquadShooter
                     shootTweenCase = transform.DOLocalMoveZ(0, chargeDuration * 0.6f);
                 });
 
-                int bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
+                var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
 
-                for (int k = 0; k < bulletsNumber; k++)
+                for (var k = 0; k < bulletsNumber; k++)
                 {
-                    TeslaBulletBehavior bullet = bulletPool.GetPooledObject(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<TeslaBulletBehavior>();
+                    var bullet = bulletPool.GetPooledObject(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<TeslaBulletBehavior>();
                     bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, 5f, false, stunDuration);
                     bullet.SetTargetsHitGoal(targetsHitGoal.Random());
                 }
@@ -169,7 +169,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void CancelCharge()
+        void CancelCharge()
         {
             isCharging = false;
             isCharged = false;
@@ -178,7 +178,7 @@ namespace Watermelon.SquadShooter
             shootParticleSystem.Stop();
         }
 
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             if (characterBehaviour == null)
                 return;
@@ -186,10 +186,10 @@ namespace Watermelon.SquadShooter
             if (characterBehaviour.ClosestEnemyBehaviour == null)
                 return;
 
-            Color defCol = Gizmos.color;
+            var defCol = Gizmos.color;
             Gizmos.color = Color.red;
 
-            Vector3 shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            var shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
 
             Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 1.5f, characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
 

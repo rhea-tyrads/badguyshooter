@@ -7,7 +7,7 @@ namespace Watermelon.SquadShooter
 {
     public class DroppedCardPanel : MonoBehaviour
     {
-        private const string CARDS_TEXT = "{0}/{1}";
+        const string CARDS_TEXT = "{0}/{1}";
 
         [SerializeField] TextMeshProUGUI titleText;
         [SerializeField] Image weaponPreviewImage;
@@ -24,14 +24,14 @@ namespace Watermelon.SquadShooter
         [SerializeField] GameObject progressEquipButtonObject;
         [SerializeField] GameObject progressEquipedObject;
 
-        private CanvasGroup canvasGroup;
+        CanvasGroup canvasGroup;
         public CanvasGroup CanvasGroup => canvasGroup;
 
-        private WeaponData weaponData;
-        private RarityData rarityData;
-        private BaseWeaponUpgrade weaponUpgrade;
+        WeaponData weaponData;
+        RarityData rarityData;
+        BaseWeaponUpgrade weaponUpgrade;
 
-        private int currentCardsAmount;
+        int currentCardsAmount;
 
         public void Initialise(WeaponType weaponType)
         {
@@ -57,7 +57,7 @@ namespace Watermelon.SquadShooter
 
         public void OnDisplayed()
         {
-            int target = weaponUpgrade.Upgrades[1].Price;
+            var target = weaponUpgrade.Upgrades[1].Price;
 
             progressPanelObject.SetActive(true);
             progressFillbarObject.SetActive(true);

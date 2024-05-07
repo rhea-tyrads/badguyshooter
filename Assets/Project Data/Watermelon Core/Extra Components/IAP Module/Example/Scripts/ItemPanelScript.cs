@@ -33,7 +33,7 @@ namespace Watermelon
             IAPManager.OnPurchaseComplete += HandlePurchaseComplete;
         }
 
-        private void HandlePurchaseComplete(ProductKeyType productKeyType)
+        void HandlePurchaseComplete(ProductKeyType productKeyType)
         {
             if(productKeyType == item)
             {

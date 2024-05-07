@@ -8,17 +8,17 @@ namespace Watermelon
     {
         [SerializeField] Particle[] particles;
 
-        private static Dictionary<int, Particle> registerParticles = new Dictionary<int, Particle>();
+        static Dictionary<int, Particle> registerParticles = new Dictionary<int, Particle>();
 
-        private static List<ParticleCase> activeParticles = new List<ParticleCase>();
-        private static int activeParticlesCount = 0;
+        static List<ParticleCase> activeParticles = new List<ParticleCase>();
+        static int activeParticlesCount = 0;
 
-        private static List<TweenCase> delayedParticles = new List<TweenCase>();
+        static List<TweenCase> delayedParticles = new List<TweenCase>();
 
         public void Initialise()
         {
             // Register particles
-            for (int i = 0; i < particles.Length; i++)
+            for (var i = 0; i < particles.Length; i++)
             {
                 RegisterParticle(particles[i]);
             }
@@ -28,14 +28,14 @@ namespace Watermelon
 
         public static void Clear()
         {
-            for(int i = 0; i < delayedParticles.Count; i++)
+            for(var i = 0; i < delayedParticles.Count; i++)
             {
                 delayedParticles[i].KillActive();
             }
 
             delayedParticles.Clear();
 
-            for (int i = activeParticlesCount - 1; i >= 0; i--)
+            for (var i = activeParticlesCount - 1; i >= 0; i--)
             {
                 activeParticles[i].OnDisable();
 
@@ -44,7 +44,7 @@ namespace Watermelon
             }
         }
 
-        private IEnumerator CheckForActiveParticles()
+        IEnumerator CheckForActiveParticles()
         {
             while (true)
             {
@@ -54,7 +54,7 @@ namespace Watermelon
                 yield return null;
                 yield return null;
 
-                for (int i = activeParticlesCount - 1; i >= 0; i--)
+                for (var i = activeParticlesCount - 1; i >= 0; i--)
                 {
                     if (activeParticles[i] != null)
                     {
@@ -80,9 +80,9 @@ namespace Watermelon
 
         public static ParticleCase ActivateParticle(Particle particle, float delay = 0)
         {
-            bool isDelayed = delay > 0;
+            var isDelayed = delay > 0;
 
-            ParticleCase particleCase = new ParticleCase(particle, isDelayed);
+            var particleCase = new ParticleCase(particle, isDelayed);
 
             if(isDelayed)
             {
@@ -112,7 +112,7 @@ namespace Watermelon
         #region Register
         public static int RegisterParticle(Particle particle)
         {
-            int particleHash = particle.ParticleName.GetHashCode();
+            var particleHash = particle.ParticleName.GetHashCode();
             if (!registerParticles.ContainsKey(particleHash))
             {
                 particle.Initialise();
@@ -138,7 +138,7 @@ namespace Watermelon
         #region Play
         public static ParticleCase PlayParticle(string particleName, float delay = 0)
         {
-            int particleHash = particleName.GetHashCode();
+            var particleHash = particleName.GetHashCode();
 
             if (registerParticles.ContainsKey(particleHash))
             {
@@ -164,7 +164,7 @@ namespace Watermelon
 
         public static ParticleCase PlayParticle(Particle particle, float delay = 0)
         {
-            int particleHash = particle.ParticleName.GetHashCode();
+            var particleHash = particle.ParticleName.GetHashCode();
             if (registerParticles.ContainsKey(particleHash))
             {
                 return ActivateParticle(registerParticles[particleHash], delay);

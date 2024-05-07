@@ -4,7 +4,7 @@ namespace Watermelon.Enemy.BossSniper
 {
     public class BossSniperLaserLine
     {
-        private MeshRenderer meshRenderer;
+        MeshRenderer meshRenderer;
 
         public void Init(MeshRenderer meshRenderer)
         {

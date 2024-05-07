@@ -5,17 +5,17 @@ namespace Watermelon.SquadShooter
 {
     public class RagdollBehavior
     {
-        private List<RigidbodyCase> rbCases;
+        List<RigidbodyCase> rbCases;
 
         public void Initialise(Transform ragdollParentTransform)
         {
-            List<Rigidbody> rigidbodies = new List<Rigidbody>();
+            var rigidbodies = new List<Rigidbody>();
 
             ragdollParentTransform.GetComponentsInChildren(rigidbodies);
 
             rbCases = new List<RigidbodyCase>();
 
-            for (int i = 0; i < rigidbodies.Count; i++)
+            for (var i = 0; i < rigidbodies.Count; i++)
             {
                 var rigidbody = rigidbodies[i];
 
@@ -31,7 +31,7 @@ namespace Watermelon.SquadShooter
 
         public void Activate()
         {
-            for (int i = 0; i < rbCases.Count; i++)
+            for (var i = 0; i < rbCases.Count; i++)
             {
                 rbCases[i].Activate();
             }
@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
 
         public void ActivateWithForce(Vector3 point, float force, float radius)
         {
-            for (int i = 0; i < rbCases.Count; i++)
+            for (var i = 0; i < rbCases.Count; i++)
             {
                 rbCases[i].Activate();
                 rbCases[i].AddForce(point, force, radius);
@@ -51,7 +51,7 @@ namespace Watermelon.SquadShooter
             if (rbCases.IsNullOrEmpty())
                 return;
 
-            for (int i = 0; i < rbCases.Count; i++)
+            for (var i = 0; i < rbCases.Count; i++)
             {
                 if (rbCases[i] != null && rbCases[i].rigidbody != null)
                     rbCases[i].Disable();
@@ -63,13 +63,13 @@ namespace Watermelon.SquadShooter
             if (rbCases.IsNullOrEmpty())
                 return;
 
-            for (int i = 0; i < rbCases.Count; i++)
+            for (var i = 0; i < rbCases.Count; i++)
             {
                 rbCases[i].Reset();
             }
         }
 
-        private class RigidbodyCase
+        class RigidbodyCase
         {
             public Rigidbody rigidbody;
             public Collider collider;

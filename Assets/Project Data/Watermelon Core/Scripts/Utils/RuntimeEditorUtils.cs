@@ -12,7 +12,7 @@ namespace Watermelon
         public static T GetAssetByName<T>(string name = "") where T : Object
         {
 #if UNITY_EDITOR
-            string[] assets = AssetDatabase.FindAssets((string.IsNullOrEmpty(name) ? "" : name + " ") + "t:" + typeof(T).Name);
+            var assets = AssetDatabase.FindAssets((string.IsNullOrEmpty(name) ? "" : name + " ") + "t:" + typeof(T).Name);
             if (assets.Length > 0)
             {
                 if (string.IsNullOrEmpty(name))
@@ -22,7 +22,7 @@ namespace Watermelon
                 else
                 {
                     string assetPath;
-                    for (int i = 0; i < assets.Length; i++)
+                    for (var i = 0; i < assets.Length; i++)
                     {
                         assetPath = AssetDatabase.GUIDToAssetPath(assets[i]);
                         if (Path.GetFileNameWithoutExtension(assetPath) == name)

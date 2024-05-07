@@ -23,7 +23,7 @@ namespace Watermelon.SquadShooter
 
         public RarityData RarityData => WeaponsController.GetRarityData(rarity);
 
-        private WeaponSave save;
+        WeaponSave save;
         public WeaponSave Save => save;
 
         public int CardsAmount => save.CardsAmount;

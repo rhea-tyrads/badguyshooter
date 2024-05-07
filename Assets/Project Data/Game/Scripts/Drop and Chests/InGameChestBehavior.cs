@@ -12,8 +12,8 @@ namespace Watermelon.SquadShooter
         [SerializeField] Transform fillCircleHolder;
         [SerializeField] Image fillCircleImage;
 
-        private Coroutine openCoroutine;
-        private TweenCase circleTween;
+        Coroutine openCoroutine;
+        TweenCase circleTween;
 
         public override void Init(List<DropData> drop)
         {
@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
             openCoroutine = StartCoroutine(ChestOpenCoroutine());
         }
 
-        private IEnumerator ChestOpenCoroutine()
+        IEnumerator ChestOpenCoroutine()
         {
             animatorRef.SetTrigger(SHAKE_HASH);
 

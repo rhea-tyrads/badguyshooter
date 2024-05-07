@@ -24,7 +24,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] CharacterUpgrade[] upgrades;
         public CharacterUpgrade[] Upgrades => upgrades;
 
-        private CharacterSave save;
+        CharacterSave save;
         public CharacterSave Save => save;
 
         public void Initialise()
@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
 
         public CharacterStageData GetCurrentStage()
         {
-            for (int i = save.UpgradeLevel; i >= 0; i--)
+            for (var i = save.UpgradeLevel; i >= 0; i--)
             {
                 if (upgrades[i].ChangeStage)
                     return stages[upgrades[i].StageIndex];
@@ -50,7 +50,7 @@ namespace Watermelon.SquadShooter
 
         public int GetCurrentStageIndex()
         {
-            for (int i = save.UpgradeLevel; i >= 0; i--)
+            for (var i = save.UpgradeLevel; i >= 0; i--)
             {
                 if (upgrades[i].ChangeStage)
                     return i;

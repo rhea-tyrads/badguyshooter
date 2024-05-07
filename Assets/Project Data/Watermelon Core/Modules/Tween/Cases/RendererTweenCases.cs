@@ -24,9 +24,9 @@ namespace Watermelon
 
         public class PropertyBlockFloat : TweenCaseFunction<Renderer, float>
         {
-            private MaterialPropertyBlock materialPropertyBlock;
+            MaterialPropertyBlock materialPropertyBlock;
 
-            private int floatID;
+            int floatID;
 
             public PropertyBlockFloat(int floatID, MaterialPropertyBlock materialPropertyBlock, Renderer tweenObject, float resultValue) : base(tweenObject, resultValue)
             {
@@ -59,9 +59,9 @@ namespace Watermelon
 
         public class PropertyBlockColor : TweenCaseFunction<Renderer, Color>
         {
-            private MaterialPropertyBlock materialPropertyBlock;
+            MaterialPropertyBlock materialPropertyBlock;
 
-            private int colorID;
+            int colorID;
 
             public PropertyBlockColor(int colorID, MaterialPropertyBlock materialPropertyBlock, Renderer tweenObject, Color resultValue) : base(tweenObject, resultValue)
             {

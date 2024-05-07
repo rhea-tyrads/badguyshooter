@@ -11,7 +11,7 @@ namespace Watermelon.SquadShooter
         public float gravity = 150f;
 
         public DuoVector3 angularVelocityDuo;
-        private Vector3 angularVelocity;
+        Vector3 angularVelocity;
 
         [SerializeField] Rigidbody rb;
         [SerializeField] MeshRenderer sphereRenderer;
@@ -21,11 +21,11 @@ namespace Watermelon.SquadShooter
         [SerializeField] Color endColor;
         [SerializeField] Ease.Type easing;
 
-        private int explosionParticleHash;
-        private int explosionDecalParticleHash;
+        int explosionParticleHash;
+        int explosionDecalParticleHash;
         float duration;
 
-        private void Awake()
+        void Awake()
         {
             explosionParticleHash = ParticlesController.GetHash("Bomber Explosion");
             explosionDecalParticleHash = ParticlesController.GetHash("Bomber Explosion Decal");
@@ -80,8 +80,8 @@ namespace Watermelon.SquadShooter
             rb.isKinematic = false;
             rb.useGravity = true;
 
-            Vector3 calculatedVelocity = (transform.position - prevPos) / Time.deltaTime;
-            Vector3 clampedVelocity = new Vector3(Mathf.Clamp(calculatedVelocity.x, -100f, 100f), Mathf.Clamp(calculatedVelocity.y, -100f, 100f), Mathf.Clamp(calculatedVelocity.z, -100f, 100f));
+            var calculatedVelocity = (transform.position - prevPos) / Time.deltaTime;
+            var clampedVelocity = new Vector3(Mathf.Clamp(calculatedVelocity.x, -100f, 100f), Mathf.Clamp(calculatedVelocity.y, -100f, 100f), Mathf.Clamp(calculatedVelocity.z, -100f, 100f));
             rb.velocity = clampedVelocity;
             rb.angularVelocity = angularVelocity;
 
@@ -96,7 +96,7 @@ namespace Watermelon.SquadShooter
 
             gameObject.SetActive(false);
 
-            CharacterBehaviour characterBehaviour = CharacterBehaviour.GetBehaviour();
+            var characterBehaviour = CharacterBehaviour.GetBehaviour();
 
             if (Vector3.Distance(transform.position, characterBehaviour.transform.position) <= explosionRadius)
             {
@@ -105,7 +105,7 @@ namespace Watermelon.SquadShooter
 
             var aliveEnemies = ActiveRoom.GetAliveEnemies();
 
-            for (int i = 0; i < aliveEnemies.Count; i++)
+            for (var i = 0; i < aliveEnemies.Count; i++)
             {
                 var enemy = aliveEnemies[i];
 

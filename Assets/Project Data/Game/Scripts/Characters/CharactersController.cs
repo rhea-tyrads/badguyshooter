@@ -7,26 +7,26 @@ namespace Watermelon.SquadShooter
 {
     public class CharactersController : MonoBehaviour
     {
-        private const CharacterType DEFAULT_CHARACTER_TYPE = CharacterType.Character_01;
+        const CharacterType DEFAULT_CHARACTER_TYPE = CharacterType.Character_01;
 
-        private static CharactersController charactersController;
+        static CharactersController charactersController;
 
         [SerializeField] CharactersDatabase database;
 
         public static int BasePower { get; private set; }
 
-        private static Character selectedCharacter;
+        static Character selectedCharacter;
         public static Character SelectedCharacter => selectedCharacter;
 
         public static Character LastUnlockedCharacter => charactersController.database.GetLastUnlockedCharacter();
         public static Character NextCharacterToUnlock => charactersController.database.GetNextCharacterToUnlock();
 
-        private static CharacterGlobalSave characterSave;
+        static CharacterGlobalSave characterSave;
 
         public static event CharacterCallback OnCharacterSelectedEvent;
         public static event CharacterCallback OnCharacterUpgradedEvent;
 
-        private static List<CharacterUpgrade> keyUpgrades = new List<CharacterUpgrade>();
+        static List<CharacterUpgrade> keyUpgrades = new List<CharacterUpgrade>();
 
         public void Initialise()
         {
@@ -50,11 +50,11 @@ namespace Watermelon.SquadShooter
                 selectedCharacter = database.GetCharacter(DEFAULT_CHARACTER_TYPE);
             }
 
-            for (int i = 0; i < database.Characters.Length; i++)
+            for (var i = 0; i < database.Characters.Length; i++)
             {
-                Character character = database.Characters[i];
+                var character = database.Characters[i];
 
-                for (int j = 0; j < character.Upgrades.Length; j++)
+                for (var j = 0; j < character.Upgrades.Length; j++)
                 {
                     if (character.Upgrades[j].Stats.KeyUpgradeNumber != -1)
                     {
@@ -73,7 +73,7 @@ namespace Watermelon.SquadShooter
 
         public static bool IsCharacterUnlocked(CharacterType characterType)
         {
-            Character character = charactersController.database.GetCharacter(characterType);
+            var character = charactersController.database.GetCharacter(characterType);
             if (character != null)
                 return character.IsUnlocked();
 
@@ -85,17 +85,17 @@ namespace Watermelon.SquadShooter
             if (selectedCharacter.Type == characterType)
                 return;
 
-            Character character = charactersController.database.GetCharacter(characterType);
+            var character = charactersController.database.GetCharacter(characterType);
             if (character != null)
             {
                 selectedCharacter = character;
 
                 characterSave.SelectedCharacterType = characterType;
 
-                CharacterBehaviour characterBehaviour = CharacterBehaviour.GetBehaviour();
+                var characterBehaviour = CharacterBehaviour.GetBehaviour();
 
-                CharacterStageData characterStage = character.GetCurrentStage();
-                CharacterUpgrade characterUpgrade = character.GetCurrentUpgrade();
+                var characterStage = character.GetCurrentStage();
+                var characterUpgrade = character.GetCurrentUpgrade();
 
                 characterBehaviour.SetStats(characterUpgrade.Stats);
                 characterBehaviour.SetGraphics(characterStage.Prefab, false, false);
@@ -129,7 +129,7 @@ namespace Watermelon.SquadShooter
 
         public static int GetCeilingUpgradePower(int currentKeyUpgrade)
         {
-            for (int i = keyUpgrades.Count - 1; i >= 0; i--)
+            for (var i = keyUpgrades.Count - 1; i >= 0; i--)
             {
                 if (keyUpgrades[i].Stats.KeyUpgradeNumber <= currentKeyUpgrade)
                 {

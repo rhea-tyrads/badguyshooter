@@ -4,25 +4,25 @@ namespace Watermelon
 {
     public class CameraCorners
     {
-        private float left;
+        float left;
         public float Left
         {
             get { return left; }
         }
 
-        private float right;
+        float right;
         public float Right
         {
             get { return right; }
         }
 
-        private float top;
+        float top;
         public float Top
         {
             get { return top; }
         }
 
-        private float bottom;
+        float bottom;
         public float Bottom
         {
             get { return bottom; }
@@ -40,8 +40,8 @@ namespace Watermelon
 
         public CameraCorners(Camera camera)
         {
-            Vector3 leftPoint = camera.ScreenToWorldPoint(new Vector3(0, 0, 0));
-            Vector3 rightPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+            var leftPoint = camera.ScreenToWorldPoint(new Vector3(0, 0, 0));
+            var rightPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
 
             left = leftPoint.x;
 #if UNITY_EDITOR

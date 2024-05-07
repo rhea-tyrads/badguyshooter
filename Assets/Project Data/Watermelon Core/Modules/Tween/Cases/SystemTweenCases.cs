@@ -58,10 +58,10 @@ namespace Watermelon
 
         public class Action<T> : TweenCase
         {
-            private System.Action<T, T, float> action;
+            System.Action<T, T, float> action;
 
-            private T startValue;
-            private T resultValue;
+            T startValue;
+            T resultValue;
 
             public Action(T startValue, T resultValue, System.Action<T, T, float> action)
             {
@@ -89,7 +89,7 @@ namespace Watermelon
 
         public abstract class NextFrame : TweenCase
         {
-            private SimpleCallback callback;
+            SimpleCallback callback;
             protected int resultFrame;
             protected int framesOffset;
 

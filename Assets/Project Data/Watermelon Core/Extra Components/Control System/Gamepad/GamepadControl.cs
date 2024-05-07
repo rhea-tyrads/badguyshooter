@@ -34,7 +34,7 @@ namespace Watermelon
             }
         }
 
-        private void Update()
+        void Update()
         {
 #if MODULE_INPUT_SYSTEM
             // Dev: not 100% sure this 'if' statement works in every scenario, but so far so good
@@ -47,8 +47,8 @@ namespace Watermelon
 
             if (!IsMovementControlActive) return;
 
-            float horizontalInput = Gamepad.current.leftStick.x.value;
-            float verticalInput = Gamepad.current.leftStick.y.value;
+            var horizontalInput = Gamepad.current.leftStick.x.value;
+            var verticalInput = Gamepad.current.leftStick.y.value;
 
             MovementInput = Vector3.ClampMagnitude(new Vector3(horizontalInput, 0, verticalInput), 1);
 

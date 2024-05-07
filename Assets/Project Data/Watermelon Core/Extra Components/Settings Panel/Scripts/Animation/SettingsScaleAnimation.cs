@@ -19,7 +19,7 @@ namespace Watermelon
             yield return new WaitForSeconds(initialDelay);
 
             TweenCase lastTweenCase = null;
-            for (int i = 0; i < settingsButtonsInfo.Length; i++)
+            for (var i = 0; i < settingsButtonsInfo.Length; i++)
             {
                 if (!settingsButtonsInfo[i].SettingsButton.IsActive()) continue;
 
@@ -54,11 +54,11 @@ namespace Watermelon
             yield return new WaitForSeconds(initialDelay);
 
             TweenCase lastTweenCase = null;
-            for (int i = settingsButtonsInfo.Length - 1; i >= 0; i--)
+            for (var i = settingsButtonsInfo.Length - 1; i >= 0; i--)
             {
                 if (!settingsButtonsInfo[i].SettingsButton.IsActive()) continue;
 
-                int index = i;
+                var index = i;
                 lastTweenCase = settingsButtonsInfo[i].SettingsButton.RectTransform.DOScale(0, elementMovementDuration).SetEasing(hideEasing).OnComplete(delegate
                 {
                     settingsButtonsInfo[index].SettingsButton.gameObject.SetActive(false);

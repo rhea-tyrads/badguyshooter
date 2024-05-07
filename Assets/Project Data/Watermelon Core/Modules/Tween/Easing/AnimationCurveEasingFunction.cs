@@ -4,8 +4,8 @@ namespace Watermelon
 {
     public class AnimationCurveEasingFunction : Ease.IEasingFunction
     {
-        private AnimationCurve easingCurve;
-        private float totalEasingTime;
+        AnimationCurve easingCurve;
+        float totalEasingTime;
 
         public AnimationCurveEasingFunction(AnimationCurve easingCurve)
         {

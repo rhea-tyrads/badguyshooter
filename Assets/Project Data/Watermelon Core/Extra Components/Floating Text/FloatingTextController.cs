@@ -5,17 +5,17 @@ namespace Watermelon
 {
     public class FloatingTextController : MonoBehaviour
     {
-        private static FloatingTextController floatingTextController;
+        static FloatingTextController floatingTextController;
 
         [SerializeField] FloatingTextCase[] floatingTextCases;
-        private Dictionary<int, FloatingTextCase> floatingTextLink;
+        Dictionary<int, FloatingTextCase> floatingTextLink;
 
         public void Inititalise()
         {
             floatingTextController = this;
 
             floatingTextLink = new Dictionary<int, FloatingTextCase>();
-            for (int i = 0; i < floatingTextCases.Length; i++)
+            for (var i = 0; i < floatingTextCases.Length; i++)
             {
                 floatingTextCases[i].Initialise();
 
@@ -32,14 +32,14 @@ namespace Watermelon
         {
             if (floatingTextController.floatingTextLink.ContainsKey(floatingTextNameHash))
             {
-                FloatingTextCase floatingTextCase = floatingTextController.floatingTextLink[floatingTextNameHash];
+                var floatingTextCase = floatingTextController.floatingTextLink[floatingTextNameHash];
 
-                GameObject floatingTextObject = floatingTextCase.FloatingTextPool.GetPooledObject();
+                var floatingTextObject = floatingTextCase.FloatingTextPool.GetPooledObject();
                 floatingTextObject.transform.position = position;
                 floatingTextObject.transform.rotation = rotation;
                 floatingTextObject.SetActive(true);
 
-                FloatingTextBaseBehaviour floatingTextBehaviour = floatingTextObject.GetComponent<FloatingTextBaseBehaviour>();
+                var floatingTextBehaviour = floatingTextObject.GetComponent<FloatingTextBaseBehaviour>();
                 floatingTextBehaviour.Activate(text, scale);
 
                 return floatingTextBehaviour;
@@ -50,8 +50,8 @@ namespace Watermelon
 
         public static void Unload()
         {
-            FloatingTextCase[] floatingTextCases = floatingTextController.floatingTextCases;
-            for(int i = 0; i < floatingTextCases.Length; i++)
+            var floatingTextCases = floatingTextController.floatingTextCases;
+            for(var i = 0; i < floatingTextCases.Length; i++)
             {
                 floatingTextCases[i].FloatingTextPool.ReturnToPoolEverything(true);
             }

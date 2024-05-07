@@ -9,13 +9,13 @@ namespace Watermelon
     {
         [SerializeField] List<ButtonData> data;
 
-        private Dictionary<GamepadButtonType, Sprite> iconsDictionary;
+        Dictionary<GamepadButtonType, Sprite> iconsDictionary;
 
         public void Initialise()
         {
             iconsDictionary = new Dictionary<GamepadButtonType, Sprite>();
 
-            for(int i = 0; i < data.Count; i++)
+            for(var i = 0; i < data.Count; i++)
             {
                 iconsDictionary.Add(data[i].button, data[i].icon);
             }

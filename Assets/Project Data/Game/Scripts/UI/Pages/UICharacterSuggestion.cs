@@ -19,9 +19,9 @@ namespace Watermelon.SquadShooter
         [SerializeField] GameObject continueText;
         [SerializeField] TextMeshProUGUI persentageText;
 
-        private float lastProgression;
-        private float currentProgression;
-        private Character characterData;
+        float lastProgression;
+        float currentProgression;
+        Character characterData;
 
         public override void Initialise()
         {

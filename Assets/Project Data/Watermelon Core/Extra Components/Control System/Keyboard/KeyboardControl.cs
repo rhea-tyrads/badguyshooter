@@ -15,7 +15,7 @@ namespace Watermelon
         public Vector3 MovementInput { get; private set; }
         public bool IsMovementInputNonZero { get; private set; }
 
-        private bool IsMovementControlActive;
+        bool IsMovementControlActive;
 
         public event SimpleCallback OnMovementInputActivated;
 
@@ -35,7 +35,7 @@ namespace Watermelon
             }
         }
 
-        private void Update()
+        void Update()
         {
 #if MODULE_INPUT_SYSTEM
             // Dev: not 100% sure this 'if' statement works in every scenario, but so far so good

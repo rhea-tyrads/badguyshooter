@@ -15,7 +15,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Transform rightShootPoint;
         [SerializeField] ParticleSystem rightGunFireParticle;
 
-        private Pool bulletPool;
+        Pool bulletPool;
 
         protected override void Awake()
         {

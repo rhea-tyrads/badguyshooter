@@ -4,8 +4,8 @@ namespace Watermelon.SquadShooter
 {
     public class MinigunBulletBehavior : PlayerBulletBehavior
     {
-        private static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Minigun Hit");
-        private static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
+        static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Minigun Hit");
+        static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
 
         [SerializeField] TrailRenderer trailRenderer;
 

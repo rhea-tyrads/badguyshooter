@@ -13,7 +13,7 @@ namespace Watermelon.SquadShooter
 
         public WeaponData GetWeapon(WeaponType type)
         {
-            for (int i = 0; i < weapons.Length; i++)
+            for (var i = 0; i < weapons.Length; i++)
             {
                 if (weapons[i].Type.Equals(type))
                     return weapons[i];
@@ -30,7 +30,7 @@ namespace Watermelon.SquadShooter
 
         public RarityData GetRarityData(Rarity rarity)
         {
-            for (int i = 0; i < raritySettings.Length; i++)
+            for (var i = 0; i < raritySettings.Length; i++)
             {
                 if (raritySettings[i].Rarity.Equals(rarity))
                     return raritySettings[i];

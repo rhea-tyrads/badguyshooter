@@ -18,7 +18,7 @@ namespace Watermelon.SquadShooter
 
         [Header("Laser")]
         [SerializeField] List<MeshRenderer> laserRenderers;
-        private List<BossSniperLaserLine> lasers;
+        List<BossSniperLaserLine> lasers;
 
         [Space]
         [SerializeField] float yellowAimingDuration;
@@ -41,7 +41,7 @@ namespace Watermelon.SquadShooter
         [Header("Other")]
         [SerializeField] GameObject auraParticle;
 
-        private static Pool bulletPool;
+        static Pool bulletPool;
 
         protected override void Awake()
         {
@@ -50,7 +50,7 @@ namespace Watermelon.SquadShooter
             if(bulletPool == null) bulletPool = new Pool(new PoolSettings(bulletPrefab.name, bulletPrefab, 4, true));
 
             lasers = new List<BossSniperLaserLine>();
-            for (int i = 0; i < laserRenderers.Count; i++) 
+            for (var i = 0; i < laserRenderers.Count; i++) 
             {
                 var laser = new BossSniperLaserLine();
                 laser.Init(laserRenderers[i]);
@@ -108,7 +108,7 @@ namespace Watermelon.SquadShooter
 
         #region Aiming
 
-        private List<Vector3> lasetHitPoints;
+        List<Vector3> lasetHitPoints;
 
         public void MakeLaserYellow()
         {
@@ -137,7 +137,7 @@ namespace Watermelon.SquadShooter
 
             lasetHitPoints = new List<Vector3>();
 
-            for (int i = 0; i < lasers.Count; i++)
+            for (var i = 0; i < lasers.Count; i++)
             {
                 var laserObject = lasers[i];
 
@@ -193,7 +193,7 @@ namespace Watermelon.SquadShooter
 
                 if (shouldEndCalculations)
                 {
-                    for (int j = i + 1; j < lasers.Count; j++)
+                    for (var j = i + 1; j < lasers.Count; j++)
                     {
                         var laserToDisable = lasers[j];
 

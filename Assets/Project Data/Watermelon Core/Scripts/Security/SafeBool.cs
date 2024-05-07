@@ -5,8 +5,8 @@ namespace Watermelon
     [System.Serializable]
     public struct SafeBool
     {
-        private int value;
-        private int trueValue;
+        int value;
+        int trueValue;
 
         public bool Value
         {

@@ -14,7 +14,7 @@ namespace Watermelon
 
         public override void CreateComponent(Initialiser initialiser)
         {
-            AudioController audioController = new AudioController();
+            var audioController = new AudioController();
             audioController.Initialise(audioSettings, initialiser.gameObject);
 
             // Create audio listener

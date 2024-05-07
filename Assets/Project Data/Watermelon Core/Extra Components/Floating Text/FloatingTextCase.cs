@@ -11,7 +11,7 @@ namespace Watermelon
         [SerializeField] FloatingTextBaseBehaviour floatingTextBehaviour;
         public FloatingTextBaseBehaviour FloatingTextBehaviour => floatingTextBehaviour;
 
-        private Pool floatingTextPool;
+        Pool floatingTextPool;
         public Pool FloatingTextPool => floatingTextPool;
 
         public void Initialise()

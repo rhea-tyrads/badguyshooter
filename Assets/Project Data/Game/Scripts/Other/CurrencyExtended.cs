@@ -9,7 +9,7 @@ namespace Watermelon
         [SerializeField] GameObject model;
         public GameObject Model => model;
 
-        private Pool pool;
+        Pool pool;
         public Pool Pool => pool;
 
         partial void OnInitialised()

@@ -12,8 +12,8 @@ namespace Watermelon
         [SerializeField] AnimationCurve bounceScaleY;
         [SerializeField] AnimationCurve bounceScaleZ;
 
-        private TweenCase bounceCase;
-        private Transform transform;
+        TweenCase bounceCase;
+        Transform transform;
 
         public void Initialise(Transform transform)
         {
@@ -28,7 +28,7 @@ namespace Watermelon
             bounceCase = new TweenCaseSimpleBounce(this, 0, 1).SetDuration(bounceDuration).OnComplete(onComplete).StartTween();
         }
 
-        private void BounceTween(float t)
+        void BounceTween(float t)
         {
             transform.localScale = new Vector3(bounceScaleX.Evaluate(t), bounceScaleY.Evaluate(t), bounceScaleZ.Evaluate(t));
         }
@@ -44,10 +44,10 @@ namespace Watermelon
 
         public class TweenCaseSimpleBounce : TweenCase
         {
-            private float startValue;
-            private float resultValue;
+            float startValue;
+            float resultValue;
 
-            private SimpleBounce simpleBounce;
+            SimpleBounce simpleBounce;
 
             public TweenCaseSimpleBounce(SimpleBounce simpleBounce, float startValue, float resultValue)
             {

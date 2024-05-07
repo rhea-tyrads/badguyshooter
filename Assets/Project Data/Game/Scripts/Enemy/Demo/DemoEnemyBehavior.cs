@@ -6,7 +6,7 @@ namespace Watermelon.SquadShooter
 {
     public class DemoEnemyBehavior : BaseEnemyBehavior
     {
-        private static readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
+        static readonly int ANIMATOR_ATTACK_HASH = Animator.StringToHash("Attack");
 
         [SerializeField] float explosionRadius;
         [SerializeField] GameObject explosionCircle;
@@ -17,11 +17,11 @@ namespace Watermelon.SquadShooter
         [Space]
         [SerializeField] WeaponRigBehavior weaponRigBehavior;
 
-        private TweenCase explosionRadiusScaleCase;
-        private bool exploded = false;
+        TweenCase explosionRadiusScaleCase;
+        bool exploded = false;
 
-        private int explosionParticleHash;
-        private int explosionDecalParticleHash;
+        int explosionParticleHash;
+        int explosionDecalParticleHash;
 
         protected override void Awake()
         {
@@ -48,12 +48,12 @@ namespace Watermelon.SquadShooter
         {
             if (enemyCallbackType == EnemyCallbackType.HitFinish)
             {
-                ParticleCase particleCase = ParticlesController.PlayParticle(explosionParticleHash);
+                var particleCase = ParticlesController.PlayParticle(explosionParticleHash);
 
                 particleCase.SetPosition(bombBone.position.SetY(0.1f));
                 particleCase.SetDuration(1f);
 
-                ParticleCase decalCase = ParticlesController.PlayParticle(explosionDecalParticleHash).SetRotation(Quaternion.Euler(-90, 0, 0)).SetScale((10.0f).ToVector3());
+                var decalCase = ParticlesController.PlayParticle(explosionDecalParticleHash).SetRotation(Quaternion.Euler(-90, 0, 0)).SetScale((10.0f).ToVector3());
 
                 decalCase.SetPosition(transform.position);
                 decalCase.SetDuration(5f);
@@ -65,19 +65,19 @@ namespace Watermelon.SquadShooter
                     characterBehaviour.TakeDamage(GetCurrentDamage());
                 }
 
-                List<BaseEnemyBehavior> aliveEnemies = ActiveRoom.GetAliveEnemies();
+                var aliveEnemies = ActiveRoom.GetAliveEnemies();
 
-                for (int i = 0; i < aliveEnemies.Count; i++)
+                for (var i = 0; i < aliveEnemies.Count; i++)
                 {
-                    BaseEnemyBehavior enemy = aliveEnemies[i];
+                    var enemy = aliveEnemies[i];
 
                     if (enemy == this)
                         continue;
 
                     if (Vector3.Distance(transform.position, enemy.transform.position) <= explosionRadius)
                     {
-                        Vector3 bombPos = bombObj.transform.position;
-                        Vector3 direction = (enemy.transform.position.SetY(0) - bombPos.SetY(0)).normalized;
+                        var bombPos = bombObj.transform.position;
+                        var direction = (enemy.transform.position.SetY(0) - bombPos.SetY(0)).normalized;
 
                         enemy.TakeDamage(GetCurrentDamage(), bombPos, direction);
                     }
@@ -95,7 +95,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void Update()
+        void Update()
         {
             if (!LevelController.IsGameplayActive)
                 return;

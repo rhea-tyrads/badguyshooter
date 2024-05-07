@@ -9,13 +9,13 @@ namespace Watermelon
         [SerializeField] RawImage image;
         [SerializeField] Gradient gradient;
 
-        private Vector2 size;
-        private Vector2 center;
+        Vector2 size;
+        Vector2 center;
 
-        private Canvas canvas;
-        private CanvasScaler scaler;
+        Canvas canvas;
+        CanvasScaler scaler;
 
-        private TweenCase tweenCase;
+        TweenCase tweenCase;
 
         public void Initialise()
         {
@@ -43,7 +43,7 @@ namespace Watermelon
             var start = 0f;
             var end = 1f;
 
-            for (int i = 0; i < gradient.alphaKeys.Length; i++)
+            for (var i = 0; i < gradient.alphaKeys.Length; i++)
             {
                 var key = gradient.alphaKeys[i];
 
@@ -54,7 +54,7 @@ namespace Watermelon
                 }
             }
 
-            for (int i = gradient.alphaKeys.Length - 1; i >= 0; i--)
+            for (var i = gradient.alphaKeys.Length - 1; i >= 0; i--)
             {
                 var key = gradient.alphaKeys[i];
 
@@ -65,19 +65,19 @@ namespace Watermelon
                 }
             }
 
-            float sum = end - start;
+            var sum = end - start;
 
-            float imageHeight = screenHeight / sum;
+            var imageHeight = screenHeight / sum;
 
             size = new Vector2(screenWidth + 10, imageHeight);
             image.rectTransform.anchoredPosition = new Vector2(0, imageHeight);
             image.rectTransform.sizeDelta = size;
 
-            Texture2D texture = new Texture2D(1, 100);
+            var texture = new Texture2D(1, 100);
             texture.wrapMode = TextureWrapMode.Clamp;
 
-            Color32[] colors = new Color32[100];
-            for (int i = 0; i < 100; i++)
+            var colors = new Color32[100];
+            for (var i = 0; i < 100; i++)
             {
                 colors[i] = gradient.Evaluate(i / 99f);
             }

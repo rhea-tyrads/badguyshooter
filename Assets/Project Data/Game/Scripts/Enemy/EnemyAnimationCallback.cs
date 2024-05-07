@@ -4,7 +4,7 @@ namespace Watermelon.SquadShooter
 {
     public class EnemyAnimationCallback : MonoBehaviour
     {
-        private BaseEnemyBehavior baseEnemyBehavior;
+        BaseEnemyBehavior baseEnemyBehavior;
 
         public void Initialise(BaseEnemyBehavior baseEnemyBehavior)
         {
@@ -74,16 +74,16 @@ namespace Watermelon.SquadShooter
         [SerializeField] float ragdollSizeMultiplier = 1;
 
         [Button("Multiply Ragdoll Size")]
-        private void MultiplyRagdollWidth()
+        void MultiplyRagdollWidth()
         {
             if (Application.isPlaying) return;
 
             MultiplyRagdollWidthRecursively(transform);
         }
 
-        private void MultiplyRagdollWidthRecursively(Transform parent)
+        void MultiplyRagdollWidthRecursively(Transform parent)
         {
-            for (int i = 0; i < parent.childCount; i++)
+            for (var i = 0; i < parent.childCount; i++)
             {
                 var child = parent.GetChild(i);
 
@@ -107,16 +107,16 @@ namespace Watermelon.SquadShooter
         }
 
         [Button("Clear Ragdoll")]
-        private void ClearRagdoll()
+        void ClearRagdoll()
         {
             if (Application.isPlaying) return;
 
             ClearRagdollRecursively(transform);
         }
 
-        private void ClearRagdollRecursively(Transform parent)
+        void ClearRagdollRecursively(Transform parent)
         {
-            for(int i = 0; i < parent.childCount; i++)
+            for(var i = 0; i < parent.childCount; i++)
             {
                 var child = parent.GetChild(i);
 

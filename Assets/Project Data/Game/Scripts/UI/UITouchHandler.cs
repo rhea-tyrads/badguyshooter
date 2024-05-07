@@ -9,7 +9,7 @@ namespace Watermelon
     {
         public static bool Enabled { get; set; }
 
-        private static bool isPointerDown;
+        static bool isPointerDown;
 
         public static float ClampedOffset { get; private set; }
 
@@ -18,12 +18,12 @@ namespace Watermelon
 
         [SerializeField] float snappingLerp;
 
-        private static Vector2 center;
-        private static Vector2 absolutePosition;
+        static Vector2 center;
+        static Vector2 absolutePosition;
 
         public static Vector2 Offset { get => absolutePosition - center; set => absolutePosition = center + value; }
 
-        private void Awake()
+        void Awake()
         {
             isPointerDown = false;
         }
@@ -56,7 +56,7 @@ namespace Watermelon
             ClampedOffset = Mathf.Clamp01(Mathf.InverseLerp(minOffset, maxOffset, Offset.magnitude));
         }
 
-        private void Update()
+        void Update()
         {
             if (isPointerDown)
             {
@@ -78,8 +78,8 @@ namespace Watermelon
             prevPoint.z = 1;
             currentpoint.z = 1;
 
-            Vector3 worldPrevPoint = Camera.main.ScreenToWorldPoint(prevPoint);
-            Vector3 worldCurrentPoint = Camera.main.ScreenToWorldPoint(currentpoint);
+            var worldPrevPoint = Camera.main.ScreenToWorldPoint(prevPoint);
+            var worldCurrentPoint = Camera.main.ScreenToWorldPoint(currentpoint);
 
             return (worldCurrentPoint - worldPrevPoint).normalized;
         }

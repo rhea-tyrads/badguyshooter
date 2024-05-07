@@ -27,17 +27,17 @@ namespace Watermelon
         [SerializeField] Image currencyImage;
         [SerializeField] CanvasGroup textAndIconCanvasGroup;
 
-        private int currentPrice;
-        private Currency currency;
+        int currentPrice;
+        Currency currency;
 
-        private bool isSubscribed;
+        bool isSubscribed;
 
-        private void OnEnable()
+        void OnEnable()
         {
             Subscribe();
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             Unsubscribe();
         }
@@ -62,7 +62,7 @@ namespace Watermelon
             UpdateVisuals();
         }
 
-        private void UpdateVisuals()
+        void UpdateVisuals()
         {
             // activate button
             if (currency.Amount >= currentPrice)
@@ -96,7 +96,7 @@ namespace Watermelon
             }
         }
 
-        private void Subscribe()
+        void Subscribe()
         {
             if (isSubscribed)
                 return;
@@ -108,7 +108,7 @@ namespace Watermelon
             currency.OnCurrencyChanged += OnCurrencyChanged;
         }
 
-        private void Unsubscribe()
+        void Unsubscribe()
         {
             if (!isSubscribed)
                 return;
@@ -120,25 +120,25 @@ namespace Watermelon
             currency.OnCurrencyChanged -= OnCurrencyChanged;
         }
 
-        private void OnCurrencyChanged(Currency currency, int amountDifference)
+        void OnCurrencyChanged(Currency currency, int amountDifference)
         {
             UpdateVisuals();
         }
 
         #region Editor
 
-        private enum DisableMode
+        enum DisableMode
         {
             Sprite = 0,
             Color = 1,
         }
 
-        private bool IsColorMode()
+        bool IsColorMode()
         {
             return disableMode == DisableMode.Color;
         }
 
-        private bool IsSpriteMode()
+        bool IsSpriteMode()
         {
             return disableMode == DisableMode.Sprite;
         }

@@ -5,7 +5,7 @@ namespace Watermelon
 {
     public class IAPCanvas : MonoBehaviour
     {
-        private static IAPCanvas iapCanvas;
+        static IAPCanvas iapCanvas;
 
         [Header("Message")]
         [SerializeField] GameObject messagePanel;
@@ -18,8 +18,8 @@ namespace Watermelon
         [Space]
         [SerializeField] Animator circleAnimation;
 
-        private TweenCase messageScaleTweenCase;
-        private TweenCase loadingScaleTweenCase;
+        TweenCase messageScaleTweenCase;
+        TweenCase loadingScaleTweenCase;
 
         public void Init()
         {

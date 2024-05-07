@@ -6,8 +6,8 @@ namespace Watermelon
 {
     public class TutorialController : MonoBehaviour
     {
-        private static TutorialController tutorialController;
-        private static List<ITutorial> registeredTutorials = new List<ITutorial>();
+        static TutorialController tutorialController;
+        static List<ITutorial> registeredTutorials = new List<ITutorial>();
 
         [SerializeField] TutorialCanvasController tutorialCanvasController;
         [SerializeField] NavigationArrowController navigationArrowController;
@@ -19,9 +19,9 @@ namespace Watermelon
         [SerializeField] bool activateWeaponTutorial = true;
         [SerializeField] bool activateCharacterTutorial = true;
 
-        private static Pool labelPool;
+        static Pool labelPool;
 
-        private static bool isTutorialSkipped;
+        static bool isTutorialSkipped;
 
         public static bool ActivateWeaponTutorial => tutorialController.activateWeaponTutorial;
         public static bool ActivateCharacterTutorial => tutorialController.activateCharacterTutorial;
@@ -39,14 +39,14 @@ namespace Watermelon
             tutorialCanvasController.Initialise();
         }
 
-        private void LateUpdate()
+        void LateUpdate()
         {
             navigationArrowController.LateUpdate();
         }
 
         public static ITutorial GetTutorial(TutorialID tutorialID)
         {
-            for(int i = 0; i < registeredTutorials.Count; i++)
+            for(var i = 0; i < registeredTutorials.Count; i++)
             {
                 if (registeredTutorials[i].TutorialID == tutorialID)
                 {
@@ -83,7 +83,7 @@ namespace Watermelon
 
         public static void RemoveTutorial(ITutorial tutorial)
         {
-            int tutorialIndex = registeredTutorials.FindIndex(x => x == tutorial);
+            var tutorialIndex = registeredTutorials.FindIndex(x => x == tutorial);
             if (tutorialIndex != -1)
             {
                 // Remove tutorial from list
@@ -93,10 +93,10 @@ namespace Watermelon
 
         public static TutorialLabelBehaviour CreateTutorialLabel(string text, Transform parentTransform, Vector3 offset)
         {
-            GameObject labelObject = labelPool.GetPooledObject();
+            var labelObject = labelPool.GetPooledObject();
             labelObject.transform.position = parentTransform.position + offset;
 
-            TutorialLabelBehaviour tutorialLabelBehaviour = labelObject.GetComponent<TutorialLabelBehaviour>();
+            var tutorialLabelBehaviour = labelObject.GetComponent<TutorialLabelBehaviour>();
             tutorialLabelBehaviour.Activate(text, parentTransform, offset);
 
             return tutorialLabelBehaviour;

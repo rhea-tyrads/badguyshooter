@@ -14,11 +14,10 @@ namespace Watermelon
         [SerializeField] bool specialBehaviour;
         public bool SpecialBehaviour => specialBehaviour;
 
-        private Pool particlePool;
+        Pool particlePool;
         public Pool ParticlePool => particlePool;
 
-        [System.NonSerialized]
-        private bool isInitialised;
+        [System.NonSerialized] bool isInitialised;
 
         public Particle(string particleName, GameObject particlePrefab)
         {

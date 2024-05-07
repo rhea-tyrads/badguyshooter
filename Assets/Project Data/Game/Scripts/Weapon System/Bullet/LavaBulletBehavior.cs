@@ -4,17 +4,17 @@ namespace Watermelon.SquadShooter
 {
     public class LavaBulletBehavior : PlayerBulletBehavior
     {
-        private readonly static int SPLASH_PARTICLE_HASH = ParticlesController.GetHash("Lava Hit");
-        private readonly static int WALL_SPLASH_PARTICLE_HASH = ParticlesController.GetHash("Lava Wall Hit");
+        readonly static int SPLASH_PARTICLE_HASH = ParticlesController.GetHash("Lava Hit");
+        readonly static int WALL_SPLASH_PARTICLE_HASH = ParticlesController.GetHash("Lava Wall Hit");
 
-        private float explosionRadius;
-        private DuoInt damageValue;
-        private CharacterBehaviour characterBehaviour;
+        float explosionRadius;
+        DuoInt damageValue;
+        CharacterBehaviour characterBehaviour;
 
-        private TweenCase movementTween;
+        TweenCase movementTween;
 
-        private Vector3 position;
-        private Vector3 prevPosition;
+        Vector3 position;
+        Vector3 prevPosition;
 
         public void Initialise(DuoInt damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime, bool autoDisableOnHit, float shootingRadius, CharacterBehaviour characterBehaviour, DuoFloat bulletHeight, float explosionRadius)
         {
@@ -23,10 +23,10 @@ namespace Watermelon.SquadShooter
             this.explosionRadius = explosionRadius;
             this.characterBehaviour = characterBehaviour;
 
-            Vector3 targetPosition = currentTarget.transform.position + new Vector3(Random.Range(-0.6f, 0.6f), 0, Random.Range(-0.6f, 0.6f));
+            var targetPosition = currentTarget.transform.position + new Vector3(Random.Range(-0.6f, 0.6f), 0, Random.Range(-0.6f, 0.6f));
 
-            float distanceMultiplier = Mathf.InverseLerp(0, shootingRadius, Vector3.Distance(characterBehaviour.transform.position, targetPosition));
-            float bulletFlyTime = 1 / speed;
+            var distanceMultiplier = Mathf.InverseLerp(0, shootingRadius, Vector3.Distance(characterBehaviour.transform.position, targetPosition));
+            var bulletFlyTime = 1 / speed;
 
             damageValue = damage;
 
@@ -41,7 +41,7 @@ namespace Watermelon.SquadShooter
             });
         }
 
-        private void Update()
+        void Update()
         {
             prevPosition = position;
             position = transform.position;
@@ -56,16 +56,16 @@ namespace Watermelon.SquadShooter
         {
             movementTween.KillActive();
 
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
+            var hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
-            for (int i = 0; i < hitColliders.Length; i++)
+            for (var i = 0; i < hitColliders.Length; i++)
             {
                 if (hitColliders[i].gameObject.layer == PhysicsHelper.LAYER_ENEMY)
                 {
-                    BaseEnemyBehavior enemy = hitColliders[i].GetComponent<BaseEnemyBehavior>();
+                    var enemy = hitColliders[i].GetComponent<BaseEnemyBehavior>();
                     if (enemy != null && !enemy.IsDead)
                     {
-                        float explosionDamageMultiplier = 1.0f - Mathf.InverseLerp(0, explosionRadius, Vector3.Distance(transform.position, hitColliders[i].transform.position));
+                        var explosionDamageMultiplier = 1.0f - Mathf.InverseLerp(0, explosionRadius, Vector3.Distance(transform.position, hitColliders[i].transform.position));
 
                         // Deal damage to enemy
                         enemy.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damageValue.Lerp(explosionDamageMultiplier), transform.position, (transform.position - prevPosition).normalized);

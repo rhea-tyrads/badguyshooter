@@ -8,12 +8,12 @@ namespace Watermelon
     {
         public float delay;
 
-        private void OnEnable()
+        void OnEnable()
         {
             StartCoroutine(DelayedCall());
         }
 
-        private IEnumerator DelayedCall()
+        IEnumerator DelayedCall()
         {
             yield return new WaitForSeconds(delay);
 

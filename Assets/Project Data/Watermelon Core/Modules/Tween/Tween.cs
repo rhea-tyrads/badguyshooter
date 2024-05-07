@@ -7,92 +7,95 @@ namespace Watermelon
 {
     public class Tween : MonoBehaviour
     {
-        private static Tween instance;
+        static Tween instance;
 
         #region Update Tween
-        private static int updateFramesCount;
+
+        static int updateFramesCount;
         public static int UpdateFramesCount { get { return updateFramesCount; } }
 
-        private static TweenCase[] updateTweens;
+        static TweenCase[] updateTweens;
         public TweenCase[] UpdateTweens
         {
             get { return updateTweens; }
         }
 
-        private static int updateTweensCount;
+        static int updateTweensCount;
 
-        private static bool hasActiveUpdateTweens = false;
+        static bool hasActiveUpdateTweens = false;
 
-        private static bool updateRequiresActiveReorganization = false;
-        private static int updateReorganizeFromID = -1;
-        private static int updateMaxActiveLookupID = -1;
+        static bool updateRequiresActiveReorganization = false;
+        static int updateReorganizeFromID = -1;
+        static int updateMaxActiveLookupID = -1;
 
-        private static List<TweenCase> updateKillingTweens = new List<TweenCase>();
+        static List<TweenCase> updateKillingTweens = new List<TweenCase>();
 
 #if UNITY_EDITOR
-        private static int maxUpdateTweensAmount = 0;
+        static int maxUpdateTweensAmount = 0;
 #endif
         #endregion
 
         #region Fixed Tween
-        private static int fixedUpdateFramesCount;
+
+        static int fixedUpdateFramesCount;
         public static int FixedUpdateFramesCount { get { return fixedUpdateFramesCount; } }
 
-        private static TweenCase[] fixedTweens;
+        static TweenCase[] fixedTweens;
         public TweenCase[] FixedTweens
         {
             get { return fixedTweens; }
         }
 
-        private static int fixedTweensCount;
+        static int fixedTweensCount;
 
-        private static bool hasActiveFixedTweens = false;
+        static bool hasActiveFixedTweens = false;
 
-        private static bool fixedRequiresActiveReorganization = false;
-        private static int fixedReorganizeFromID = -1;
-        private static int fixedMaxActiveLookupID = -1;
+        static bool fixedRequiresActiveReorganization = false;
+        static int fixedReorganizeFromID = -1;
+        static int fixedMaxActiveLookupID = -1;
 
-        private static List<TweenCase> fixedKillingTweens = new List<TweenCase>();
+        static List<TweenCase> fixedKillingTweens = new List<TweenCase>();
 
 #if UNITY_EDITOR
-        private static int maxFixedUpdateTweensAmount = 0;
+        static int maxFixedUpdateTweensAmount = 0;
 #endif
         #endregion
 
         #region Late Tween
-        private static int lateUpdateFramesCount;
+
+        static int lateUpdateFramesCount;
         public static int LateUpdateFramesCount { get { return lateUpdateFramesCount; } }
 
-        private static TweenCase[] lateTweens;
+        static TweenCase[] lateTweens;
         public TweenCase[] LateTweens
         {
             get { return lateTweens; }
         }
 
-        private static int lateTweensCount;
+        static int lateTweensCount;
 
-        private static bool hasActiveLateTweens = false;
+        static bool hasActiveLateTweens = false;
 
-        private static bool lateRequiresActiveReorganization = false;
-        private static int lateReorganizeFromID = -1;
-        private static int lateMaxActiveLookupID = -1;
+        static bool lateRequiresActiveReorganization = false;
+        static int lateReorganizeFromID = -1;
+        static int lateMaxActiveLookupID = -1;
 
-        private static List<TweenCase> lateKillingTweens = new List<TweenCase>();
+        static List<TweenCase> lateKillingTweens = new List<TweenCase>();
 
 #if UNITY_EDITOR
-        private static int maxLateUpdateTweensAmount = 0;
+        static int maxLateUpdateTweensAmount = 0;
 #endif
         #endregion
 
-        private bool systemLogs = false;
+        bool systemLogs = false;
 
-        private static TweenCaseCollection activeTweenCaseCollection;
-        private static bool isActiveTweenCaseCollectionEnabled;
+        static TweenCaseCollection activeTweenCaseCollection;
+        static bool isActiveTweenCaseCollectionEnabled;
 
         /// <summary>
         /// Create tween instance.
         /// </summary>
-        private void Awake()
+        void Awake()
         {
             if (instance == null)
             {
@@ -118,7 +121,7 @@ namespace Watermelon
             this.systemLogs = systemLogs;
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
 #if UNITY_EDITOR
             if (systemLogs)
@@ -213,9 +216,9 @@ namespace Watermelon
             switch(tweenType)
             {
                 case UpdateMethod.Update:
-                    for (int i = 0; i < updateTweensCount; i++)
+                    for (var i = 0; i < updateTweensCount; i++)
                     {
-                        TweenCase tween = updateTweens[i];
+                        var tween = updateTweens[i];
                         if (tween != null)
                         {
                             tween.Pause();
@@ -223,9 +226,9 @@ namespace Watermelon
                     }
                     break;
                 case UpdateMethod.FixedUpdate:
-                    for (int i = 0; i < fixedTweensCount; i++)
+                    for (var i = 0; i < fixedTweensCount; i++)
                     {
-                        TweenCase tween = fixedTweens[i];
+                        var tween = fixedTweens[i];
                         if (tween != null)
                         {
                             tween.Pause();
@@ -233,9 +236,9 @@ namespace Watermelon
                     }
                     break;
                 case UpdateMethod.LateUpdate:
-                    for (int i = 0; i < lateTweensCount; i++)
+                    for (var i = 0; i < lateTweensCount; i++)
                     {
-                        TweenCase tween = lateTweens[i];
+                        var tween = lateTweens[i];
                         if (tween != null)
                         {
                             tween.Pause();
@@ -247,27 +250,27 @@ namespace Watermelon
 
         public static void PauseAll()
         {
-            for (int i = 0; i < updateTweensCount; i++)
+            for (var i = 0; i < updateTweensCount; i++)
             {
-                TweenCase tween = updateTweens[i];
+                var tween = updateTweens[i];
                 if (tween != null)
                 {
                     tween.Pause();
                 }
             }
 
-            for (int i = 0; i < fixedTweensCount; i++)
+            for (var i = 0; i < fixedTweensCount; i++)
             {
-                TweenCase tween = fixedTweens[i];
+                var tween = fixedTweens[i];
                 if (tween != null)
                 {
                     tween.Pause();
                 }
             }
 
-            for (int i = 0; i < lateTweensCount; i++)
+            for (var i = 0; i < lateTweensCount; i++)
             {
-                TweenCase tween = lateTweens[i];
+                var tween = lateTweens[i];
                 if (tween != null)
                 {
                     tween.Pause();
@@ -280,9 +283,9 @@ namespace Watermelon
             switch (tweenType)
             {
                 case UpdateMethod.Update:
-                    for (int i = 0; i < updateTweensCount; i++)
+                    for (var i = 0; i < updateTweensCount; i++)
                     {
-                        TweenCase tween = updateTweens[i];
+                        var tween = updateTweens[i];
                         if (tween != null)
                         {
                             tween.Resume();
@@ -290,9 +293,9 @@ namespace Watermelon
                     }
                     break;
                 case UpdateMethod.FixedUpdate:
-                    for (int i = 0; i < fixedTweensCount; i++)
+                    for (var i = 0; i < fixedTweensCount; i++)
                     {
-                        TweenCase tween = fixedTweens[i];
+                        var tween = fixedTweens[i];
                         if (tween != null)
                         {
                             tween.Resume();
@@ -300,9 +303,9 @@ namespace Watermelon
                     }
                     break;
                 case UpdateMethod.LateUpdate:
-                    for (int i = 0; i < lateTweensCount; i++)
+                    for (var i = 0; i < lateTweensCount; i++)
                     {
-                        TweenCase tween = lateTweens[i];
+                        var tween = lateTweens[i];
                         if (tween != null)
                         {
                             tween.Resume();
@@ -314,27 +317,27 @@ namespace Watermelon
 
         public static void ResumeAll()
         {
-            for (int i = 0; i < updateTweensCount; i++)
+            for (var i = 0; i < updateTweensCount; i++)
             {
-                TweenCase tween = updateTweens[i];
+                var tween = updateTweens[i];
                 if (tween != null)
                 {
                     tween.Resume();
                 }
             }
 
-            for (int i = 0; i < fixedTweensCount; i++)
+            for (var i = 0; i < fixedTweensCount; i++)
             {
-                TweenCase tween = fixedTweens[i];
+                var tween = fixedTweens[i];
                 if (tween != null)
                 {
                     tween.Resume();
                 }
             }
 
-            for (int i = 0; i < lateTweensCount; i++)
+            for (var i = 0; i < lateTweensCount; i++)
             {
-                TweenCase tween = lateTweens[i];
+                var tween = lateTweens[i];
                 if (tween != null)
                 {
                     tween.Resume();
@@ -347,9 +350,9 @@ namespace Watermelon
             switch (tweenType)
             {
                 case UpdateMethod.Update:
-                    for (int i = 0; i < updateTweensCount; i++)
+                    for (var i = 0; i < updateTweensCount; i++)
                     {
-                        TweenCase tween = updateTweens[i];
+                        var tween = updateTweens[i];
                         if (tween != null)
                         {
                             tween.Kill();
@@ -357,9 +360,9 @@ namespace Watermelon
                     }
                     break;
                 case UpdateMethod.FixedUpdate:
-                    for (int i = 0; i < fixedTweensCount; i++)
+                    for (var i = 0; i < fixedTweensCount; i++)
                     {
-                        TweenCase tween = fixedTweens[i];
+                        var tween = fixedTweens[i];
                         if (tween != null)
                         {
                             tween.Kill();
@@ -367,9 +370,9 @@ namespace Watermelon
                     }
                     break;
                 case UpdateMethod.LateUpdate:
-                    for (int i = 0; i < lateTweensCount; i++)
+                    for (var i = 0; i < lateTweensCount; i++)
                     {
-                        TweenCase tween = lateTweens[i];
+                        var tween = lateTweens[i];
                         if (tween != null)
                         {
                             tween.Kill();
@@ -381,27 +384,27 @@ namespace Watermelon
 
         public static void RemoveAll()
         {
-            for (int i = 0; i < updateTweensCount; i++)
+            for (var i = 0; i < updateTweensCount; i++)
             {
-                TweenCase tween = updateTweens[i];
+                var tween = updateTweens[i];
                 if (tween != null)
                 {
                     tween.Kill();
                 }
             }
 
-            for (int i = 0; i < fixedTweensCount; i++)
+            for (var i = 0; i < fixedTweensCount; i++)
             {
-                TweenCase tween = fixedTweens[i];
+                var tween = fixedTweens[i];
                 if (tween != null)
                 {
                     tween.Kill();
                 }
             }
 
-            for (int i = 0; i < lateTweensCount; i++)
+            for (var i = 0; i < lateTweensCount; i++)
             {
-                TweenCase tween = lateTweens[i];
+                var tween = lateTweens[i];
                 if (tween != null)
                 {
                     tween.Kill();
@@ -409,7 +412,7 @@ namespace Watermelon
             }
         }
 
-        private void Update()
+        void Update()
         {
             updateFramesCount++;
 
@@ -419,12 +422,12 @@ namespace Watermelon
             if (updateRequiresActiveReorganization)
                 ReorganizeUpdateActiveTweens();
 
-            float deltaTime = Time.deltaTime;
-            float unscaledDeltaTime = Time.unscaledDeltaTime;
+            var deltaTime = Time.deltaTime;
+            var unscaledDeltaTime = Time.unscaledDeltaTime;
 
-            for (int i = 0; i < updateTweensCount; i++)
+            for (var i = 0; i < updateTweensCount; i++)
             {
-                TweenCase tween = updateTweens[i];
+                var tween = updateTweens[i];
                 if (tween != null)
                 {
                     if(!tween.Validate())
@@ -478,15 +481,15 @@ namespace Watermelon
                 }
             }
 
-            int killingTweensCount = updateKillingTweens.Count - 1;
-            for (int i = killingTweensCount; i > -1; i--)
+            var killingTweensCount = updateKillingTweens.Count - 1;
+            for (var i = killingTweensCount; i > -1; i--)
             {
                 RemoveActiveTween(updateKillingTweens[i]);
             }
             updateKillingTweens.Clear();
         }
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
             fixedUpdateFramesCount++;
 
@@ -496,12 +499,12 @@ namespace Watermelon
             if (fixedRequiresActiveReorganization)
                 ReorganizeFixedActiveTweens();
 
-            float deltaTime = Time.fixedDeltaTime;
-            float unscaledDeltaTime = Time.fixedUnscaledDeltaTime;
+            var deltaTime = Time.fixedDeltaTime;
+            var unscaledDeltaTime = Time.fixedUnscaledDeltaTime;
 
-            for (int i = 0; i < fixedTweensCount; i++)
+            for (var i = 0; i < fixedTweensCount; i++)
             {
-                TweenCase tween = fixedTweens[i];
+                var tween = fixedTweens[i];
                 if (tween != null)
                 {
                     if (!tween.Validate())
@@ -541,15 +544,15 @@ namespace Watermelon
                 }
             }
 
-            int killingTweensCount = fixedKillingTweens.Count - 1;
-            for (int i = killingTweensCount; i > -1; i--)
+            var killingTweensCount = fixedKillingTweens.Count - 1;
+            for (var i = killingTweensCount; i > -1; i--)
             {
                 RemoveActiveTween(fixedKillingTweens[i]);
             }
             fixedKillingTweens.Clear();
         }
 
-        private void LateUpdate()
+        void LateUpdate()
         {
             lateUpdateFramesCount++;
 
@@ -559,12 +562,12 @@ namespace Watermelon
             if (lateRequiresActiveReorganization)
                 ReorganizeLateActiveTweens();
 
-            float deltaTime = Time.deltaTime;
-            float unscaledDeltaTime = Time.unscaledDeltaTime;
+            var deltaTime = Time.deltaTime;
+            var unscaledDeltaTime = Time.unscaledDeltaTime;
 
-            for (int i = 0; i < lateTweensCount; i++)
+            for (var i = 0; i < lateTweensCount; i++)
             {
-                TweenCase tween = lateTweens[i];
+                var tween = lateTweens[i];
                 if (tween != null)
                 {
                     if (!tween.Validate())
@@ -604,15 +607,15 @@ namespace Watermelon
                 }
             }
 
-            int killingTweensCount = lateKillingTweens.Count - 1;
-            for (int i = killingTweensCount; i > -1; i--)
+            var killingTweensCount = lateKillingTweens.Count - 1;
+            for (var i = killingTweensCount; i > -1; i--)
             {
                 RemoveActiveTween(lateKillingTweens[i]);
             }
             lateKillingTweens.Clear();
         }
 
-        private static void ReorganizeUpdateActiveTweens()
+        static void ReorganizeUpdateActiveTweens()
         {
             if (updateTweensCount <= 0)
             {
@@ -632,14 +635,14 @@ namespace Watermelon
                 return;
             }
 
-            int defaultOffset = 1;
-            int tweensTempCount = updateMaxActiveLookupID + 1;
+            var defaultOffset = 1;
+            var tweensTempCount = updateMaxActiveLookupID + 1;
 
             updateMaxActiveLookupID = updateReorganizeFromID - 1;
 
-            for (int i = updateReorganizeFromID + 1; i < tweensTempCount; i++)
+            for (var i = updateReorganizeFromID + 1; i < tweensTempCount; i++)
             {
-                TweenCase tween = updateTweens[i];
+                var tween = updateTweens[i];
                 if (tween != null)
                 {
                     tween.ActiveID = (updateMaxActiveLookupID = i - defaultOffset);
@@ -657,7 +660,7 @@ namespace Watermelon
             updateReorganizeFromID = -1;
         }
 
-        private static void ReorganizeFixedActiveTweens()
+        static void ReorganizeFixedActiveTweens()
         {
             if (fixedTweensCount <= 0)
             {
@@ -677,14 +680,14 @@ namespace Watermelon
                 return;
             }
 
-            int defaultOffset = 1;
-            int tweensTempCount = fixedMaxActiveLookupID + 1;
+            var defaultOffset = 1;
+            var tweensTempCount = fixedMaxActiveLookupID + 1;
 
             fixedMaxActiveLookupID = fixedReorganizeFromID - 1;
 
-            for (int i = fixedReorganizeFromID + 1; i < tweensTempCount; i++)
+            for (var i = fixedReorganizeFromID + 1; i < tweensTempCount; i++)
             {
-                TweenCase tween = fixedTweens[i];
+                var tween = fixedTweens[i];
                 if (tween != null)
                 {
                     tween.ActiveID = (fixedMaxActiveLookupID = i - defaultOffset);
@@ -702,7 +705,7 @@ namespace Watermelon
             fixedReorganizeFromID = -1;
         }
 
-        private static void ReorganizeLateActiveTweens()
+        static void ReorganizeLateActiveTweens()
         {
             if (lateTweensCount <= 0)
             {
@@ -722,14 +725,14 @@ namespace Watermelon
                 return;
             }
 
-            int defaultOffset = 1;
-            int tweensTempCount = lateMaxActiveLookupID + 1;
+            var defaultOffset = 1;
+            var tweensTempCount = lateMaxActiveLookupID + 1;
 
             lateMaxActiveLookupID = lateReorganizeFromID - 1;
 
-            for (int i = lateReorganizeFromID + 1; i < tweensTempCount; i++)
+            for (var i = lateReorganizeFromID + 1; i < tweensTempCount; i++)
             {
-                TweenCase tween = lateTweens[i];
+                var tween = lateTweens[i];
                 if (tween != null)
                 {
                     tween.ActiveID = (lateMaxActiveLookupID = i - defaultOffset);
@@ -763,9 +766,9 @@ namespace Watermelon
             }
         }
 
-        private void RemoveActiveTween(TweenCase tween)
+        void RemoveActiveTween(TweenCase tween)
         {
-            int activeId = tween.ActiveID;
+            var activeId = tween.ActiveID;
             tween.ActiveID = -1;
 
             switch (tween.UpdateMethod)
@@ -912,19 +915,19 @@ namespace Watermelon
                 instance.StopAllCoroutines();
 
             // Reset all tweens
-            for (int i = 0; i < updateTweensCount; i++)
+            for (var i = 0; i < updateTweensCount; i++)
             {
                 updateTweens[i] = null;
             }
             updateTweensCount = 0;
 
-            for (int i = 0; i < fixedTweensCount; i++)
+            for (var i = 0; i < fixedTweensCount; i++)
             {
                 fixedTweens[i] = null;
             }
             fixedTweensCount = 0;
 
-            for (int i = 0; i < lateTweensCount; i++)
+            for (var i = 0; i < lateTweensCount; i++)
             {
                 lateTweens[i] = null;
             }

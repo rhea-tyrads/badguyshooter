@@ -19,9 +19,9 @@ namespace Watermelon
 
         public static float GetDeviceDiagonalSizeInInches()
         {
-            float screenWidth = Screen.width / Screen.dpi;
-            float screenHeight = Screen.height / Screen.dpi;
-            float diagonalInches = Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
+            var screenWidth = Screen.width / Screen.dpi;
+            var screenHeight = Screen.height / Screen.dpi;
+            var diagonalInches = Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
 
             return diagonalInches;
         }

@@ -15,7 +15,7 @@ namespace Watermelon.SquadShooter
 
     public abstract class BaseEnemyBehavior : MonoBehaviour, IHealth, INavMeshAgent
     {
-        private static readonly Color HIT_OVERLAY_COLOR = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+        static readonly Color HIT_OVERLAY_COLOR = new Color(0.6f, 0.6f, 0.6f, 1.0f);
 
         protected readonly int ANIMATOR_RUN_HASH = Animator.StringToHash("Running");
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
@@ -24,9 +24,9 @@ namespace Watermelon.SquadShooter
         public static readonly int ANIMATOR_HIT_INDEX_HASH = Animator.StringToHash("Hit Index");
         public static readonly float ANIMATOR_HIT_COOLDOWN = 0.08f;
 
-        private static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
+        static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
 
-        private static readonly int MASK_PERCENT_HASH = Shader.PropertyToID("_MaskPercent");
+        static readonly int MASK_PERCENT_HASH = Shader.PropertyToID("_MaskPercent");
 
         [SerializeField] EnemyType type;
         public EnemyType EnemyType => type;
@@ -117,28 +117,28 @@ namespace Watermelon.SquadShooter
 
         public static OnEnemyDiedDelegate OnDiedEvent;
 
-        private MaterialPropertyBlock hitShinePropertyBlock;
-        private TweenCase hitShineTweenCase;
+        MaterialPropertyBlock hitShinePropertyBlock;
+        TweenCase hitShineTweenCase;
 
-        private float lastFlotingTextTime;
-        private float lastDamagedTime;
-        private float lastHitShineTime;
+        float lastFlotingTextTime;
+        float lastDamagedTime;
+        float lastHitShineTime;
 
         protected float hitAnimationTime;
 
         public HealthbarBehaviour HealthbarBehaviour => healthbarBehaviour;
 
-        private Vector3[] patrollingPoints;
+        Vector3[] patrollingPoints;
         public Vector3[] PatrollingPoints => patrollingPoints;
 
-        private List<DropData> dropData;
+        List<DropData> dropData;
 
         protected EnemyData enemyData;
 
         protected float visionRange;
         protected TweenCase ragdollCase;
 
-        private float hitOffsetMult;
+        float hitOffsetMult;
 
         // Ragdoll
         protected RagdollBehavior ragdoll;
@@ -168,7 +168,7 @@ namespace Watermelon.SquadShooter
 
             StateMachine = GetComponent<IStateMachine>();
 
-            for(int i = 0; i < weapons.Count; i++)
+            for(var i = 0; i < weapons.Count; i++)
             {
                 weapons[i].Initialise(this);
             }
@@ -238,7 +238,7 @@ namespace Watermelon.SquadShooter
 
             StateMachine.StartMachine();
 
-            for(int i = 0; i < weapons.Count; i++)
+            for(var i = 0; i < weapons.Count; i++)
             {
                 if (weapons[i] != null) weapons[i].enabled = true;  
             }
@@ -355,7 +355,7 @@ namespace Watermelon.SquadShooter
 
         protected void ActivateRagdollOnDeath()
         {
-            for (int i = 0; i < weapons.Count; i++)
+            for (var i = 0; i < weapons.Count; i++)
             {
                 if (weapons[i] != null) weapons[i].enabled = false;
             }
@@ -367,12 +367,12 @@ namespace Watermelon.SquadShooter
             });
         }
 
-        private void EnableRagdoll(float force, Vector3 point)
+        void EnableRagdoll(float force, Vector3 point)
         {
             ragdoll?.ActivateWithForce(point, force, deathExplosionRadius);
         }
 
-        private void ShowDeathFallAnimation()
+        void ShowDeathFallAnimation()
         {
             // Enable rigidbody
             enemyRigidbody.isKinematic = true;
@@ -473,17 +473,17 @@ namespace Watermelon.SquadShooter
 
             if (!dropData.IsNullOrEmpty())
             {
-                for (int i = 0; i < dropData.Count; i++)
+                for (var i = 0; i < dropData.Count; i++)
                 {
                     if (dropData[i].dropType == DropableItemType.Currency)
                     {
-                        int itemsAmount = Mathf.Clamp(Tier == EnemyTier.Elite ? Random.Range(7, 11) : Random.Range(3, 6), 1, dropData[i].amount);
+                        var itemsAmount = Mathf.Clamp(Tier == EnemyTier.Elite ? Random.Range(7, 11) : Random.Range(3, 6), 1, dropData[i].amount);
 
-                        List<int> itemValues = LevelController.SplitIntEqually(dropData[i].amount, itemsAmount);
+                        var itemValues = LevelController.SplitIntEqually(dropData[i].amount, itemsAmount);
 
-                        for (int j = 0; j < itemValues.Count; j++)
+                        for (var j = 0; j < itemValues.Count; j++)
                         {
-                            DropData itemDropData = new DropData() { dropType = dropData[i].dropType, currencyType = dropData[i].currencyType, amount = itemValues[j] };
+                            var itemDropData = new DropData() { dropType = dropData[i].dropType, currencyType = dropData[i].currencyType, amount = itemValues[j] };
 
                             Tween.DelayedCall(i * 0.05f, () =>
                             {
@@ -495,15 +495,15 @@ namespace Watermelon.SquadShooter
                     }
                     else if (dropData[i].dropType == DropableItemType.WeaponCard)
                     {
-                        for (int j = 0; j < dropData[i].amount; j++)
+                        for (var j = 0; j < dropData[i].amount; j++)
                         {
-                            WeaponCardDropBehaviour card = Drop.DropItem(new DropData() { dropType = dropData[i].dropType, cardType = dropData[i].cardType, amount = 1 }, transform.position, Vector3.zero, DropFallingStyle.Default, 0.6f).GetComponent<WeaponCardDropBehaviour>();
+                            var card = Drop.DropItem(new DropData() { dropType = dropData[i].dropType, cardType = dropData[i].cardType, amount = 1 }, transform.position, Vector3.zero, DropFallingStyle.Default, 0.6f).GetComponent<WeaponCardDropBehaviour>();
                             card.SetCardData(dropData[i].cardType);
                         }
                     }
                     else
                     {
-                        for (int j = 0; j < dropData[i].amount; j++)
+                        for (var j = 0; j < dropData[i].amount; j++)
                         {
                             Drop.DropItem(new DropData() { dropType = dropData[i].dropType, amount = 1 }, transform.position, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Default, 0.6f);
                         }
@@ -513,7 +513,7 @@ namespace Watermelon.SquadShooter
 
             if (Random.Range(0.0f, 1.0f) <= ActiveRoom.LevelData.HealSpawnPercent)
             {
-                int health = Mathf.RoundToInt(Stats.HpForPlayer.Random());
+                var health = Mathf.RoundToInt(Stats.HpForPlayer.Random());
 
                 Drop.DropItem(new DropData() { dropType = DropableItemType.Heal, amount = health }, transform.position, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, 0.3f, -1);
             }
@@ -565,11 +565,11 @@ namespace Watermelon.SquadShooter
             return false;
         }
 
-        private void OnValidate()
+        void OnValidate()
         {
             if (weapons == null) return;
 
-            for (int i = 0; i < weapons.Count; i++)
+            for (var i = 0; i < weapons.Count; i++)
             {
                 var weapon = weapons[i];
                 if(weapon == null) continue;
@@ -581,7 +581,7 @@ namespace Watermelon.SquadShooter
 #if UNITY_EDITOR
 
         [Button("Toggle Animation Mode")]
-        private void ToggleAnimationMode()
+        void ToggleAnimationMode()
         {
             if (AnimationMode.InAnimationMode())
             {
@@ -595,7 +595,7 @@ namespace Watermelon.SquadShooter
             } 
         }
 
-        private void OnPrefabClosing(PrefabStage obj)
+        void OnPrefabClosing(PrefabStage obj)
         {
             AnimationMode.StopAnimationMode();
             PrefabStage.prefabStageClosing -= OnPrefabClosing;
@@ -603,7 +603,7 @@ namespace Watermelon.SquadShooter
 
         [Button("Sample Random Animation")]
         [ButtonVisability("IsAnimationMode", ButtonVisability.ShowIf)]
-        private void SampleRandomAnimation()
+        void SampleRandomAnimation()
         {
             if (AnimationMode.InAnimationMode())
             {
@@ -617,11 +617,11 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             if (AnimationMode.InAnimationMode())
             {
-                GUIStyle style = new GUIStyle();
+                var style = new GUIStyle();
                 style.fontSize = 30;
                 style.fontStyle = FontStyle.Bold;
                 style.normal.textColor = Color.red;
@@ -629,7 +629,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private bool IsAnimationMode()
+        bool IsAnimationMode()
         {
             return AnimationMode.InAnimationMode();
         }

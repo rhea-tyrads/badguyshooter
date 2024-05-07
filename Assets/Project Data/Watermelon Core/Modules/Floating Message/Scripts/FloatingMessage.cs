@@ -7,7 +7,7 @@ namespace Watermelon
 {
     public class FloatingMessage : MonoBehaviour
     {
-        private static FloatingMessage floatingMessage;
+        static FloatingMessage floatingMessage;
 
         [SerializeField] RectTransform windowRectTransform;
         [SerializeField] CanvasGroup windowCanvasGroup;
@@ -17,17 +17,17 @@ namespace Watermelon
         [Space]
         [SerializeField] Vector2 panelPadding = new Vector2(30, 25);
 
-        private TweenCase animationTweenCase;
+        TweenCase animationTweenCase;
 
         public void Initialise()
         {
             floatingMessage = this;
 
             // Init clickable panel
-            EventTrigger trigger = floatingText.gameObject.AddComponent<EventTrigger>();
+            var trigger = floatingText.gameObject.AddComponent<EventTrigger>();
 
             // Create new event entry
-            EventTrigger.Entry entry = new EventTrigger.Entry();
+            var entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerClick;
             entry.callback.AddListener((eventData) => { OnPanelClick(); });
 
@@ -35,7 +35,7 @@ namespace Watermelon
             trigger.triggers.Add(entry);
         }
 
-        private void OnPanelClick()
+        void OnPanelClick()
         {
             if (floatingMessage.animationTweenCase != null && !floatingMessage.animationTweenCase.IsCompleted)
                 floatingMessage.animationTweenCase.Kill();

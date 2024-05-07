@@ -10,7 +10,7 @@ namespace Watermelon.SquadShooter
 
         [SerializeField] GameObject previewObject;
 
-        private Pool previewPool;
+        Pool previewPool;
         public Pool PreviewPool => previewPool;
 
         public void Initialise()

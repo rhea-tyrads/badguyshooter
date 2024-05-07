@@ -5,16 +5,16 @@ namespace Watermelon
 {
     public class CurrenciesUIController : MonoBehaviour
     {
-        private const float DISALBE_PANEL_IN_SECONDS = 10.0f;
+        const float DISALBE_PANEL_IN_SECONDS = 10.0f;
 
         [SerializeField] StaticCurrencyUI[] staticPanels;
 
         [SerializeField] GameObject panelObject;
         [SerializeField] Transform parentTrasnform;
 
-        private Pool panelPool;
+        Pool panelPool;
 
-        private Dictionary<CurrencyType, CurrencyUI> activePanelsUI;
+        Dictionary<CurrencyType, CurrencyUI> activePanelsUI;
 
         public void Initialise(Currency[] currencies)
         {
@@ -22,28 +22,28 @@ namespace Watermelon
 
             activePanelsUI = new Dictionary<CurrencyType, CurrencyUI>();
 
-            for(int i = 0; i < staticPanels.Length; i++)
+            for(var i = 0; i < staticPanels.Length; i++)
             {
-                Currency currency = CurrenciesController.GetCurrency(staticPanels[i].CurrencyType);
+                var currency = CurrenciesController.GetCurrency(staticPanels[i].CurrencyType);
 
-                CurrencyUI currencyUI = staticPanels[i].CurrencyPanel;
+                var currencyUI = staticPanels[i].CurrencyPanel;
                 currencyUI.Initialise(currency);
                 currencyUI.Show();
 
                 activePanelsUI.Add(staticPanels[i].CurrencyType, staticPanels[i].CurrencyPanel);
             }
 
-            for (int i = 0; i < currencies.Length; i++)
+            for (var i = 0; i < currencies.Length; i++)
             {
                 if (!activePanelsUI.ContainsKey(currencies[i].CurrencyType) && (currencies[i].DisplayAlways || currencies[i].Amount > 0))
                 {
-                    GameObject currencyObject = panelPool.GetPooledObject();
+                    var currencyObject = panelPool.GetPooledObject();
                     currencyObject.transform.SetParent(parentTrasnform);
                     currencyObject.transform.ResetLocal();
                     currencyObject.transform.SetAsLastSibling();
                     currencyObject.SetActive(true);
 
-                    CurrencyUI currencyUI = currencyObject.GetComponent<CurrencyUI>();
+                    var currencyUI = currencyObject.GetComponent<CurrencyUI>();
                     currencyUI.Initialise(currencies[i]);
                     currencyUI.Show();
 
@@ -68,8 +68,8 @@ namespace Watermelon
 
         public void ActivateAllExistingCurrencies()
         {
-            Currency[] activeCurrencies = CurrenciesController.Currencies;
-            for (int i = 0; i < activeCurrencies.Length; i++)
+            var activeCurrencies = CurrenciesController.Currencies;
+            for (var i = 0; i < activeCurrencies.Length; i++)
             {
                 if (activeCurrencies[i].Amount > 0)
                     ActivateCurrency(activeCurrencies[i].CurrencyType);
@@ -78,7 +78,7 @@ namespace Watermelon
 
         public void RedrawCurrency(Currency currency, int amount)
         {
-            CurrencyType type = currency.CurrencyType;
+            var type = currency.CurrencyType;
 
             if (activePanelsUI.ContainsKey(type))
             {
@@ -113,17 +113,17 @@ namespace Watermelon
             if (!activePanelsUI.ContainsKey(type))
             {
                 // Get object from pool
-                GameObject currencyObject = panelPool.GetPooledObject();
+                var currencyObject = panelPool.GetPooledObject();
                 currencyObject.transform.SetParent(parentTrasnform);
                 currencyObject.transform.ResetLocal();
                 currencyObject.transform.SetAsLastSibling();
                 currencyObject.SetActive(true);
 
                 // Get currency from database
-                Currency currency = CurrenciesController.GetCurrency(type);
+                var currency = CurrenciesController.GetCurrency(type);
 
                 // Get UI panel component
-                CurrencyUI currencyUI = currencyObject.GetComponent<CurrencyUI>();
+                var currencyUI = currencyObject.GetComponent<CurrencyUI>();
                 currencyUI.Initialise(currency);
                 currencyUI.Show();
 
@@ -144,7 +144,7 @@ namespace Watermelon
             // Rewrite panel state
             else
             {
-                CurrencyUI currencyUI = activePanelsUI[type];
+                var currencyUI = activePanelsUI[type];
 
                 // Check if panel require disable reset
                 if (!currencyUI.Currency.DisplayAlways)
@@ -174,7 +174,7 @@ namespace Watermelon
         }
 
         [System.Serializable]
-        private class StaticCurrencyUI
+        class StaticCurrencyUI
         {
             public CurrencyType CurrencyType;
             public CurrencyUI CurrencyPanel;

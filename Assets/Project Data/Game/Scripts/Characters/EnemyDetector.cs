@@ -9,21 +9,21 @@ namespace Watermelon.SquadShooter
     {
         [SerializeField] float checkDelay = 1f;
 
-        private SphereCollider detectorCollider;
+        SphereCollider detectorCollider;
         public SphereCollider DetectorCollider => detectorCollider;
 
-        private int detectedEnemiesCount;
-        private List<BaseEnemyBehavior> detectedEnemies;
+        int detectedEnemiesCount;
+        List<BaseEnemyBehavior> detectedEnemies;
         public List<BaseEnemyBehavior> DetectedEnemies => detectedEnemies;
 
-        private BaseEnemyBehavior closestEnemy;
+        BaseEnemyBehavior closestEnemy;
         public BaseEnemyBehavior ClosestEnemy => closestEnemy;
 
         public float DetectorRadius => detectorCollider.radius;
 
-        private float nextClosestCheckTime = 0.0f;
+        float nextClosestCheckTime = 0.0f;
 
-        private IEnemyDetector enemyDetector;
+        IEnemyDetector enemyDetector;
 
         public void Initialise(IEnemyDetector enemyDetector)
         {
@@ -45,7 +45,7 @@ namespace Watermelon.SquadShooter
             detectorCollider.radius = radius;
         }
 
-        private void OnEnemyDied(BaseEnemyBehavior enemy)
+        void OnEnemyDied(BaseEnemyBehavior enemy)
         {
             RemoveEnemy(enemy);
         }
@@ -62,14 +62,14 @@ namespace Watermelon.SquadShooter
                 return;
             }
 
-            float minDistanceSqr = float.MaxValue;
+            var minDistanceSqr = float.MaxValue;
             BaseEnemyBehavior tempEnemy = null;
 
-            for (int i = 0; i < detectedEnemiesCount; i++)
+            for (var i = 0; i < detectedEnemiesCount; i++)
             {
                 var enemy = detectedEnemies[i];
 
-                float distanceSqr = (transform.position - enemy.transform.position).sqrMagnitude;
+                var distanceSqr = (transform.position - enemy.transform.position).sqrMagnitude;
 
                 if (distanceSqr < minDistanceSqr && !enemy.IsDead)
                 {
@@ -84,7 +84,7 @@ namespace Watermelon.SquadShooter
             closestEnemy = tempEnemy;
         }
 
-        private void Update()
+        void Update()
         {
             if (detectedEnemiesCount > 1 && Time.time > nextClosestCheckTime)
             {
@@ -94,9 +94,9 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void RemoveEnemy(BaseEnemyBehavior enemy)
+        void RemoveEnemy(BaseEnemyBehavior enemy)
         {
-            int enemyIndex = detectedEnemies.FindIndex(x => x == enemy);
+            var enemyIndex = detectedEnemies.FindIndex(x => x == enemy);
             if (enemyIndex != -1)
             {
                 detectedEnemies.RemoveAt(enemyIndex);
@@ -106,11 +106,11 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnTriggerEnter(Collider other)
+        void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag(PhysicsHelper.TAG_ENEMY))
             {
-                BaseEnemyBehavior enemy = other.GetComponent<BaseEnemyBehavior>();
+                var enemy = other.GetComponent<BaseEnemyBehavior>();
                 if (enemy != null)
                 {
                     if (!detectedEnemies.Contains(enemy))
@@ -142,11 +142,11 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        void OnTriggerExit(Collider other)
         {
             if (other.gameObject.CompareTag(PhysicsHelper.TAG_ENEMY))
             {
-                BaseEnemyBehavior enemy = other.GetComponent<BaseEnemyBehavior>();
+                var enemy = other.GetComponent<BaseEnemyBehavior>();
                 if (enemy != null)
                 {
                     RemoveEnemy(enemy);
@@ -161,7 +161,7 @@ namespace Watermelon.SquadShooter
             UpdateClosestEnemy();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             BaseEnemyBehavior.OnDiedEvent -= OnEnemyDied;
         }

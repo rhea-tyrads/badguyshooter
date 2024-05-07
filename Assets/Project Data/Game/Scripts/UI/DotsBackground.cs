@@ -5,10 +5,10 @@ namespace Watermelon.SquadShooter
     [System.Serializable]
     public class DotsBackground
     {
-        private static readonly int BASE_COLOR_HASH = Shader.PropertyToID("_BaseColor");
-        private static readonly int DOTS_COLOR_HASH = Shader.PropertyToID("_DotsColor");
+        static readonly int BASE_COLOR_HASH = Shader.PropertyToID("_BaseColor");
+        static readonly int DOTS_COLOR_HASH = Shader.PropertyToID("_DotsColor");
 
-        private static readonly int MOVING_SPEED_HASH = Shader.PropertyToID("_MovingSpeed");
+        static readonly int MOVING_SPEED_HASH = Shader.PropertyToID("_MovingSpeed");
 
         [SerializeField] BackgroundUI backgroundImage;
         public BackgroundUI BackgroundImage => backgroundImage;
@@ -24,7 +24,7 @@ namespace Watermelon.SquadShooter
 
         public void ApplyParams()
         {
-            Material material = backgroundImage.material;
+            var material = backgroundImage.material;
 
             material.SetColor(BASE_COLOR_HASH, baseColor);
             material.SetColor(DOTS_COLOR_HASH, dotsColor);

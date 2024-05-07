@@ -4,18 +4,18 @@ namespace Watermelon
 {
     public class LineNavigationArrowCase : BaseNavigationArrowCase
     {
-        private static readonly int MATERIAL_ALPHA_HASH = Shader.PropertyToID("_Alpha");
+        static readonly int MATERIAL_ALPHA_HASH = Shader.PropertyToID("_Alpha");
 
-        private const float DEFAULT_ALPHA = 0.5f;
-        private const float DEFAULT_LINE_Y = 1.0f;
+        const float DEFAULT_ALPHA = 0.5f;
+        const float DEFAULT_LINE_Y = 1.0f;
 
-        private LineRenderer arrowLineRenderer;
+        LineRenderer arrowLineRenderer;
 
-        private MaterialPropertyBlock arrowPropertyBlock;
+        MaterialPropertyBlock arrowPropertyBlock;
 
-        private TweenCase fadeTweenCase;
+        TweenCase fadeTweenCase;
 
-        private Vector3[] linePositions;
+        Vector3[] linePositions;
 
         public LineNavigationArrowCase(Transform parentTransform, GameObject arrowObject, Vector3 targetPosition) : base(parentTransform, arrowObject, targetPosition)
         {
@@ -34,7 +34,7 @@ namespace Watermelon
             fadeTweenCase = arrowLineRenderer.DOPropertyBlockFloat(MATERIAL_ALPHA_HASH, arrowPropertyBlock, DEFAULT_ALPHA, 0.4f);
         }
 
-        private void RecalculateLinePositions()
+        void RecalculateLinePositions()
         {
             linePositions[0].x = 0;
             linePositions[0].y = DEFAULT_LINE_Y;
