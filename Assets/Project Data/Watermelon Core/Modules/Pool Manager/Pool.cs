@@ -226,9 +226,9 @@ namespace Watermelon
         /// </summary>
         /// <param name="activateObject">If true object will be set as active.</param>
         /// <returns>Pooled object or null if there is no available objects and new one can not be created.</returns>
-        public GameObject GetPooledObject(bool activateObject = true)
+        public GameObject Get(bool activateObject = true)
         {
-            return GetPooledObject(true, activateObject, false, Vector3.zero);
+            return Get(true, activateObject, false, Vector3.zero);
         }
 
         /// <summary>
@@ -237,9 +237,9 @@ namespace Watermelon
         /// <param name="position">Sets object to specified position.</param>
         /// <param name="activateObject">If true object will be set as active.</param>
         /// <returns>Pooled object or null if there is no available objects and new one can not be created.</returns>
-        public GameObject GetPooledObject(Vector3 position, bool activateObject = true)
+        public GameObject Get(Vector3 position, bool activateObject = true)
         {
-            return GetPooledObject(true, activateObject, true, position);
+            return Get(true, activateObject, true, position);
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace Watermelon
         /// <returns>Pooled object or null if there is no available objects and new one can not be created.</returns>
         public GameObject GetHierarchyPooledObject(bool activateObject = true)
         {
-            return GetPooledObject(false, activateObject, false, Vector3.zero);
+            return Get(false, activateObject, false, Vector3.zero);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Watermelon
         /// <returns>Pooled object or null if there is no available objects and new one can not be created.</returns>
         public GameObject GetHierarchyPooledObject(Vector3 position, bool activateObject = true)
         {
-            return GetPooledObject(false, activateObject, true, position);
+            return Get(false, activateObject, true, position);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Watermelon
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public GameObject GetPooledObject(PooledObjectSettings settings)
+        public GameObject Get(PooledObjectSettings settings)
         {
             if (type == PoolType.Single)
             {
@@ -287,7 +287,7 @@ namespace Watermelon
         /// <param name="activateObject">If true object will be set as active.</param>
         /// <param name="position">Sets object to specified position.</param>
         /// <returns></returns>
-        GameObject GetPooledObject(bool checkTypeActiveSelf, bool activateObject, bool setPosition, Vector3 position)
+        GameObject Get(bool checkTypeActiveSelf, bool activateObject, bool setPosition, Vector3 position)
         {
             var settings = new PooledObjectSettings(activateObject, !checkTypeActiveSelf);
 

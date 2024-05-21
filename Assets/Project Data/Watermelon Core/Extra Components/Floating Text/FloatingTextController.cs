@@ -34,7 +34,7 @@ namespace Watermelon
             {
                 var floatingTextCase = floatingTextController.floatingTextLink[floatingTextNameHash];
 
-                var floatingTextObject = floatingTextCase.FloatingTextPool.GetPooledObject();
+                var floatingTextObject = floatingTextCase.FloatingTextPool.Get();
                 floatingTextObject.transform.position = position;
                 floatingTextObject.transform.rotation = rotation;
                 floatingTextObject.SetActive(true);

@@ -16,7 +16,7 @@ namespace Watermelon
             {
                 if(availableCurrencies[i].CurrencyType == currencyType)
                 {
-                    return availableCurrencies[i].Pool.GetPooledObject();
+                    return availableCurrencies[i].Pool.Get();
                 }
             }
 

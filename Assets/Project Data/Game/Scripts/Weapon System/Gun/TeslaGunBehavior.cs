@@ -33,7 +33,7 @@ namespace Watermelon.SquadShooter
             base.Initialise(characterBehaviour, data);
 
             upgrade = UpgradesController.GetUpgrade<TeslaGunUpgrade>(data.UpgradeType);
-            var bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
+            var bulletObj = upgrade.BulletPrefab;
 
             bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
@@ -66,12 +66,16 @@ namespace Watermelon.SquadShooter
                 return;
             }
 
+            var atkSpdMult = characterBehaviour.isAtkSpdBooster ? characterBehaviour.atkSpdBoosterMult : 1;
+
             // if not charging - start
             if (!isCharging && !isCharged)
             {
                 isCharging = true;
                 isChargeParticleActivated = false;
-                fullChargeTime = Time.timeSinceLevelLoad + chargeDuration;
+
+
+                fullChargeTime = Time.timeSinceLevelLoad + (chargeDuration / atkSpdMult);
             }
 
             // wait for full charge
@@ -84,19 +88,14 @@ namespace Watermelon.SquadShooter
                     shootParticleSystem.Play();
                 }
 
-                if (IsEnemyVisible())
-                {
-                    characterBehaviour.SetTargetActive();
-                }
-                else
-                {
-                    characterBehaviour.SetTargetUnreachable();
-                }
+                if (IsEnemyVisible()) characterBehaviour.SetTargetActive();
+                else characterBehaviour.SetTargetUnreachable();
 
                 return;
             }
+
             // activate loop particle once charged
-            else if (!isCharged)
+            if (!isCharged)
             {
                 isCharged = true;
                 lightningLoopParticle.SetActive(true);
@@ -108,17 +107,21 @@ namespace Watermelon.SquadShooter
 
                 shootTweenCase.KillActive();
 
-                shootTweenCase = transform.DOLocalMoveZ(-0.15f, chargeDuration * 0.3f).OnComplete(delegate
+                shootTweenCase = transform.DOLocalMoveZ(-0.15f, chargeDuration/ atkSpdMult * 0.3f).OnComplete(delegate
                 {
-                    shootTweenCase = transform.DOLocalMoveZ(0, chargeDuration * 0.6f);
+                    shootTweenCase = transform.DOLocalMoveZ(0, chargeDuration / atkSpdMult* 0.6f);
                 });
 
                 var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
 
                 for (var k = 0; k < bulletsNumber; k++)
                 {
-                    var bullet = bulletPool.GetPooledObject(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<TeslaBulletBehavior>();
-                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, 5f, false, stunDuration);
+                    var bullet = bulletPool
+                        .Get(new PooledObjectSettings().SetPosition(shootPoint.position)
+                            .SetEulerRotation(characterBehaviour.transform.eulerAngles))
+                        .GetComponent<TeslaBulletBehavior>();
+                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                        bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, 5f, false, stunDuration);
                     bullet.SetTargetsHitGoal(targetsHitGoal.Random());
                 }
 
@@ -140,12 +143,14 @@ namespace Watermelon.SquadShooter
             if (!characterBehaviour.IsCloseEnemyFound)
                 return false;
 
-            shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) -
+                             shootPoint.position;
 
             RaycastHit hitInfo;
-            if (Physics.Raycast(shootPoint.position - shootDirection.normalized * 1.5f, shootDirection, out hitInfo, 300f, targetLayers) ||
+            if (Physics.Raycast(shootPoint.position - shootDirection.normalized * 1.5f, shootDirection, out hitInfo,
+                    300f, targetLayers) ||
                 Physics.Raycast(shootPoint.position, shootDirection, out hitInfo, 300f, targetLayers)
-            )
+               )
             {
                 if (hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
                 {
@@ -189,9 +194,12 @@ namespace Watermelon.SquadShooter
             var defCol = Gizmos.color;
             Gizmos.color = Color.red;
 
-            var shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            var shootDirection =
+                characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) -
+                shootPoint.position;
 
-            Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 1.5f, characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
+            Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 1.5f,
+                characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
 
             Gizmos.color = defCol;
         }

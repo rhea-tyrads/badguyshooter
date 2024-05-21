@@ -30,7 +30,7 @@ namespace Watermelon
 
         public static LineNavigationArrowCase RegisterLineArrow(Transform parent, Vector3 target)
         {
-            var arrowCase = new LineNavigationArrowCase(parent, lineArrowPool.GetPooledObject(), target);
+            var arrowCase = new LineNavigationArrowCase(parent, lineArrowPool.Get(), target);
 
             activeArrows.Add(arrowCase);
             activeArrowsCount++;

@@ -27,7 +27,7 @@ namespace Watermelon.SquadShooter
 
         public GameObject GetDropObject(DropData dropData)
         {
-            return pool.GetPooledObject();
+            return pool.Get();
         }
 
         public void Unload()

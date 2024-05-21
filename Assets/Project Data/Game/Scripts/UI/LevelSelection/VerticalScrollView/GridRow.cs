@@ -40,7 +40,7 @@ namespace Watermelon
             {
                 if (id * itemsAmount + i >= lastItemId) break; 
 
-                var item = itemsPool.GetPooledObject().GetComponent<GridItem>();
+                var item = itemsPool.Get().GetComponent<GridItem>();
 
                 var itemRect = item.GetRectTransform();
 

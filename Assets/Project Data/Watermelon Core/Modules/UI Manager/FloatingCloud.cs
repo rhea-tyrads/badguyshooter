@@ -233,7 +233,7 @@ namespace Watermelon
                 var currencyHittedTarget = false;
                 for (var i = 0; i < elementsAmount; i++)
                 {
-                    var elementObject = floatingCloudData.Pool.GetPooledObject();
+                    var elementObject = floatingCloudData.Pool.Get();
                     elementObject.transform.SetParent(targetRectTransform);
 
                     elementObject.transform.position = centerPoint;

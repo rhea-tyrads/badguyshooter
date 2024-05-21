@@ -20,7 +20,12 @@ namespace Watermelon
         /// <summary>
         /// Returns persistent data path used to accses files.
         /// </summary>
-        public static readonly string persistentDataPath = Application.persistentDataPath + "/";
+        public static string persistentDataPath;
+
+        public static void Initialise()
+        {
+            persistentDataPath = Application.persistentDataPath + "/";
+        }
 
         public enum SerializeType
         {
@@ -138,12 +143,12 @@ namespace Watermelon
         {
             if (FileExistsAtPath(absolutePath))
             {
-                var bf = new BinaryFormatter();
-                var file = File.Open(absolutePath, FileMode.Open);
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream file = File.Open(absolutePath, FileMode.Open);
 
                 try
                 {
-                    var deserializedObject = (T)bf.Deserialize(file);
+                    T deserializedObject = (T)bf.Deserialize(file);
 
                     return deserializedObject;
                 }
@@ -174,16 +179,16 @@ namespace Watermelon
         /// <returns>Deserialized object if file exists or new instance if doesn't.</returns>
         public static T BinaryDeserializeFromResourses<T>(string fileName, bool logIfFileNotExists = true) where T : new()
         {
-            var text = Resources.Load(fileName) as TextAsset;
+            TextAsset text = Resources.Load(fileName) as TextAsset;
 
             if (text != null)
             {
                 Stream stream = new MemoryStream(text.bytes);
-                var bf = new BinaryFormatter();
+                BinaryFormatter bf = new BinaryFormatter();
 
                 try
                 {
-                    var deserializedObject = (T)bf.Deserialize(stream);
+                    T deserializedObject = (T)bf.Deserialize(stream);
                     return deserializedObject;
                 }
                 catch (Exception ex)
@@ -215,9 +220,9 @@ namespace Watermelon
         {
             if (FileExistsAtPath(absolutePath))
             {
-                var serializer = new XmlSerializer(typeof(T));
-                var file = File.Open(absolutePath, FileMode.Open);
-                var deserializedObject = (T)serializer.Deserialize(file);
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                FileStream file = File.Open(absolutePath, FileMode.Open);
+                T deserializedObject = (T)serializer.Deserialize(file);
 
                 file.Close();
 
@@ -240,12 +245,12 @@ namespace Watermelon
         /// <returns>Deserialized object if file exists or new instance if doesn't.</returns>
         public static T XmlDeserializeFromResourses<T>(string fileName, bool logIfFileNotExists = true) where T : new()
         {
-            var text = Resources.Load(fileName) as TextAsset;
+            TextAsset text = Resources.Load(fileName) as TextAsset;
 
             if (text != null)
             {
                 Stream stream = new MemoryStream(text.bytes);
-                var serializer = new XmlSerializer(typeof(T));
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
 
                 return (T)serializer.Deserialize(stream);
             }
@@ -271,18 +276,18 @@ namespace Watermelon
         {
             if (FileExistsAtPath(absolutePath))
             {
-                var file = File.Open(absolutePath, FileMode.Open);
+                FileStream file = File.Open(absolutePath, FileMode.Open);
 
-                using (var sr = new StreamReader(file))
+                using (StreamReader sr = new StreamReader(file))
                 {
-                    var jsonObject = sr.ReadToEnd();
+                    string jsonObject = sr.ReadToEnd();
 
                     if (!string.IsNullOrEmpty(secureKey))
                         jsonObject = Decrypt(jsonObject, secureKey);
 
                     try
                     {
-                        var deserializedObject = JsonUtility.FromJson<T>(jsonObject);
+                        T deserializedObject = JsonUtility.FromJson<T>(jsonObject);
                         return deserializedObject;
                     }
                     catch (Exception ex)
@@ -313,19 +318,19 @@ namespace Watermelon
         /// <returns>Deserialized object if file exists or new instance if doesn't.</returns>
         public static T JsonDeserializeFromResourses<T>(string fileName, bool logIfFileNotExists = true) where T : new()
         {
-            var text = Resources.Load(fileName) as TextAsset;
+            TextAsset text = Resources.Load(fileName) as TextAsset;
 
             if (text != null)
             {
                 Stream stream = new MemoryStream(text.bytes);
-                var sr = new StreamReader(stream);
+                StreamReader sr = new StreamReader(stream);
 
-                var jsonObject = sr.ReadToEnd();
+                string jsonObject = sr.ReadToEnd();
                 sr.Close();
 
                 try
                 {
-                    var deserializedObject = JsonUtility.FromJson<T>(jsonObject);
+                    T deserializedObject = JsonUtility.FromJson<T>(jsonObject);
                     return deserializedObject;
                 }
                 catch (Exception ex)
@@ -466,8 +471,8 @@ namespace Watermelon
         /// <param name="absolutePath">Absolute path to file(including file name and extention.</param>
         public static void BinarySerializeToPath<T>(T objectToSerialize, string absolutePath)
         {
-            var bf = new BinaryFormatter();
-            using (var file = File.Open(absolutePath, FileMode.Create))
+            BinaryFormatter bf = new BinaryFormatter();
+            using (FileStream file = File.Open(absolutePath, FileMode.Create))
             {
                 bf.Serialize(file, objectToSerialize);
             }
@@ -482,8 +487,8 @@ namespace Watermelon
         {
             fileName += ".bytes";
 
-            var bf = new BinaryFormatter();
-            var file = File.Open(Application.dataPath + "/Resources/" + fileName, FileMode.Create);
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.dataPath + "/Resources/" + fileName, FileMode.Create);
 
             bf.Serialize(file, objectToSerialize);
             file.Close();
@@ -504,8 +509,8 @@ namespace Watermelon
         /// <param name="absolutePath">Absolute path to file(including file name and extention.</param>
         public static void XmlSerializeToPath<T>(T objectToSerialize, string absolutePath)
         {
-            var serializer = new XmlSerializer(typeof(T));
-            var stream = new FileStream(absolutePath, FileMode.Create);
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            FileStream stream = new FileStream(absolutePath, FileMode.Create);
             serializer.Serialize(stream, objectToSerialize);
             stream.Close();
         }
@@ -519,8 +524,8 @@ namespace Watermelon
         {
             fileName += ".xml";
 
-            var serializer = new XmlSerializer(typeof(T));
-            var file = File.Open(Application.dataPath + "/Resources/" + fileName, FileMode.Create);
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            FileStream file = File.Open(Application.dataPath + "/Resources/" + fileName, FileMode.Create);
 
             serializer.Serialize(file, objectToSerialize);
             file.Close();
@@ -540,14 +545,14 @@ namespace Watermelon
         /// <param name="absolutePath">Absolute path to file(including file name and extention.</param>
         public static void JsonSerializeToPath<T>(T objectToSerialize, string absolutePath, string secureKey = "")
         {
-            var jsonObject = JsonUtility.ToJson(objectToSerialize);
+            string jsonObject = JsonUtility.ToJson(objectToSerialize);
             //string jsonObject = JsonConvert.SerializeObject(objectToSerialize);
 
             if (!string.IsNullOrEmpty(secureKey))
                 jsonObject = Encrypt(jsonObject, secureKey);
 
-            var stream = File.Open(absolutePath, FileMode.Create);
-            var sw = new StreamWriter(stream);
+            FileStream stream = File.Open(absolutePath, FileMode.Create);
+            StreamWriter sw = new StreamWriter(stream);
             sw.Write(jsonObject);
             sw.Flush();
 
@@ -564,11 +569,11 @@ namespace Watermelon
         {
             fileName += ".json";
 
-            var jsonObject = JsonUtility.ToJson(objectToSerialize);
+            string jsonObject = JsonUtility.ToJson(objectToSerialize);
             //string jsonObject = JsonConvert.SerializeObject(objectToSerialize);
 
-            var file = File.Open(Application.dataPath + "/Resources/" + fileName, FileMode.Create);
-            var sw = new StreamWriter(file);
+            FileStream file = File.Open(Application.dataPath + "/Resources/" + fileName, FileMode.Create);
+            StreamWriter sw = new StreamWriter(file);
             sw.Write(jsonObject);
 
             sw.Close();
@@ -621,7 +626,7 @@ namespace Watermelon
         /// <returns>True if file exists ans false otherwise.</returns>
         public static bool FileExistsAtResources(string fileName)
         {
-            var text = Resources.Load(fileName) as TextAsset;
+            TextAsset text = Resources.Load(fileName) as TextAsset;
 
             if (text != null)
             {
@@ -707,15 +712,15 @@ namespace Watermelon
         #region Encrypt 
         public static string Encrypt(string clearText, string EncryptionKey)
         {
-            var clearBytes = Encoding.Unicode.GetBytes(clearText);
-            using (var encryptor = Aes.Create())
+            byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
+            using (Aes encryptor = Aes.Create())
             {
-                var pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
-                using (var ms = new MemoryStream())
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    using (var cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         cs.Write(clearBytes, 0, clearBytes.Length);
                         cs.Close();
@@ -729,15 +734,15 @@ namespace Watermelon
         public static string Decrypt(string cipherText, string EncryptionKey)
         {
             cipherText = cipherText.Replace(" ", "+");
-            var cipherBytes = Convert.FromBase64String(cipherText);
-            using (var encryptor = Aes.Create())
+            byte[] cipherBytes = Convert.FromBase64String(cipherText);
+            using (Aes encryptor = Aes.Create())
             {
-                var pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
-                using (var ms = new MemoryStream())
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    using (var cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
                     {
                         cs.Write(cipherBytes, 0, cipherBytes.Length);
                         cs.Close();

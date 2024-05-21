@@ -51,7 +51,7 @@ namespace Watermelon
                     var parentSpark = tempSparkObjects.GetRandomItem();
                     parentSpark.gameObject.SetActive(true);
 
-                    var sparkObject = sparkPool.GetPooledObject();
+                    var sparkObject = sparkPool.Get();
                     sparkObject.gameObject.SetActive(true);
                     sparkObject.transform.SetParent(parentSpark);
                     sparkObject.transform.localPosition = Vector3.zero;

@@ -95,15 +95,14 @@ namespace Watermelon.SquadShooter
 
         public void CheckWeaponUpdateState()
         {
-            for (var i = 0; i < weapons.Length; i++)
+            foreach (var data in weapons)
             {
-                var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(weapons[i].UpgradeType);
+                var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
 
-                if (upgrade.UpgradeLevel == 0 && weapons[i].CardsAmount >= upgrade.NextStage.Price)
+                if (upgrade.UpgradeLevel == 0 && data.CardsAmount >= upgrade.NextStage.Price)
                 {
                     upgrade.UpgradeStage();
-
-                    OnWeaponUnlocked?.Invoke(weapons[i]);
+                    OnWeaponUnlocked?.Invoke(data);
                 }
             }
         }

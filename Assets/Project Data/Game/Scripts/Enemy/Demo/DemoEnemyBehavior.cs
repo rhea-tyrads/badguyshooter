@@ -46,59 +46,47 @@ namespace Watermelon.SquadShooter
 
         public override void OnAnimatorCallback(EnemyCallbackType enemyCallbackType)
         {
-            if (enemyCallbackType == EnemyCallbackType.HitFinish)
+            if (enemyCallbackType != EnemyCallbackType.HitFinish) return;
+            var particleCase = ParticlesController.PlayParticle(explosionParticleHash);
+
+            particleCase.SetPosition(bombBone.position.SetY(0.1f));
+            particleCase.SetDuration(1f);
+
+            var decalCase = ParticlesController.PlayParticle(explosionDecalParticleHash).SetRotation(Quaternion.Euler(-90, 0, 0)).SetScale((10.0f).ToVector3());
+
+            decalCase.SetPosition(transform.position);
+            decalCase.SetDuration(5f);
+
+            bombObj.gameObject.SetActive(false);
+
+            if (Vector3.Distance(transform.position, Target.position) <= explosionRadius)
             {
-                var particleCase = ParticlesController.PlayParticle(explosionParticleHash);
-
-                particleCase.SetPosition(bombBone.position.SetY(0.1f));
-                particleCase.SetDuration(1f);
-
-                var decalCase = ParticlesController.PlayParticle(explosionDecalParticleHash).SetRotation(Quaternion.Euler(-90, 0, 0)).SetScale((10.0f).ToVector3());
-
-                decalCase.SetPosition(transform.position);
-                decalCase.SetDuration(5f);
-
-                bombObj.gameObject.SetActive(false);
-
-                if (Vector3.Distance(transform.position, Target.position) <= explosionRadius)
-                {
-                    characterBehaviour.TakeDamage(GetCurrentDamage());
-                }
-
-                var aliveEnemies = ActiveRoom.GetAliveEnemies();
-
-                for (var i = 0; i < aliveEnemies.Count; i++)
-                {
-                    var enemy = aliveEnemies[i];
-
-                    if (enemy == this)
-                        continue;
-
-                    if (Vector3.Distance(transform.position, enemy.transform.position) <= explosionRadius)
-                    {
-                        var bombPos = bombObj.transform.position;
-                        var direction = (enemy.transform.position.SetY(0) - bombPos.SetY(0)).normalized;
-
-                        enemy.TakeDamage(GetCurrentDamage(), bombPos, direction);
-                    }
-                }
-
-                explosionCircle.gameObject.SetActive(false);
-
-                exploded = true;
-
-                AudioController.PlaySound(AudioController.Sounds.explode);
-
-                OnDeath();
-
-                gameObject.SetActive(false);
+                characterBehaviour.TakeDamage(Damage);
             }
+
+            var aliveEnemies = ActiveRoom.GetAliveEnemies();
+
+            foreach (var enemy in aliveEnemies)
+            {
+                if (enemy == this) continue;
+
+                if (!(Vector3.Distance(transform.position, enemy.transform.position) <= explosionRadius)) continue;
+                var bombPos = bombObj.transform.position;
+                var direction = (enemy.transform.position.SetY(0) - bombPos.SetY(0)).normalized;
+
+                enemy.TakeDamage(Damage, bombPos, direction);
+            }
+
+            explosionCircle.gameObject.SetActive(false);
+            exploded = true;
+            AudioController.PlaySound(AudioController.Sounds.explode);
+            OnDeath();
+            gameObject.SetActive(false);
         }
 
         void Update()
         {
-            if (!LevelController.IsGameplayActive)
-                return;
+            if (!LevelController.IsGameplayActive) return;
 
             healthbarBehaviour.FollowUpdate();
         }

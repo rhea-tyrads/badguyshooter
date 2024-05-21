@@ -15,7 +15,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Transform rightHandHolder;
 
         [Space]
-        [SerializeField] 
+        [SerializeField]
         protected Transform shootPoint;
 
         [Header("Upgrade")]
@@ -23,6 +23,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] float upgradeParticleSize = 1.0f;
 
         protected CharacterBehaviour characterBehaviour;
+        public CharacterBehaviour Owner => characterBehaviour;
         protected WeaponData data;
 
         protected DuoInt damage;
@@ -58,7 +59,6 @@ namespace Watermelon.SquadShooter
 
         public virtual void GunUpdate()
         {
-
         }
 
         public void UpdateHandRig()
@@ -67,7 +67,7 @@ namespace Watermelon.SquadShooter
             rightHandRigController.position = rightHandHolder.position;
 
 #if UNITY_EDITOR
-            if(characterBehaviour != null && characterBehaviour.Graphics != null)
+            if (characterBehaviour && characterBehaviour.Graphics)
             {
                 leftHandExtraRotation = characterBehaviour.Graphics.LeftHandExtraRotation;
                 rightHandExtraRotation = characterBehaviour.Graphics.RightHandExtraRotation;
@@ -107,7 +107,8 @@ namespace Watermelon.SquadShooter
 
         public void PlayUpgradeParticle()
         {
-            var particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE).SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
+            var particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE)
+                .SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
             particleCase.ParticleSystem.transform.rotation = CameraController.MainCamera.transform.rotation;
             particleCase.ParticleSystem.transform.Rotate(Vector3.up, 180);
         }
@@ -121,7 +122,7 @@ namespace Watermelon.SquadShooter
         [Button("Prepare Weapon")]
         void PrepareWeapon()
         {
-            if(leftHandHolder == null)
+            if (leftHandHolder == null)
             {
                 var leftHandHolderObject = new GameObject("Left Hand Holder");
                 leftHandHolderObject.transform.SetParent(transform);
@@ -129,7 +130,7 @@ namespace Watermelon.SquadShooter
                 leftHandHolderObject.transform.localPosition = new Vector3(-0.4f, 0, 0);
 
                 var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_3");
-                UnityEditor.EditorGUIUtility.SetIconForObject(leftHandHolderObject, (Texture2D)iconContent.image);
+                UnityEditor.EditorGUIUtility.SetIconForObject(leftHandHolderObject, (Texture2D) iconContent.image);
 
                 leftHandHolder = leftHandHolderObject.transform;
             }
@@ -142,12 +143,12 @@ namespace Watermelon.SquadShooter
                 rightHandHolderObject.transform.localPosition = new Vector3(0.4f, 0, 0);
 
                 var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_4");
-                UnityEditor.EditorGUIUtility.SetIconForObject(rightHandHolderObject, (Texture2D)iconContent.image);
+                UnityEditor.EditorGUIUtility.SetIconForObject(rightHandHolderObject, (Texture2D) iconContent.image);
 
                 rightHandHolder = rightHandHolderObject.transform;
             }
 
-            if(shootPoint == null)
+            if (shootPoint == null)
             {
                 var shootingPointObject = new GameObject("Shooting Point");
                 shootingPointObject.transform.SetParent(transform);
@@ -155,12 +156,12 @@ namespace Watermelon.SquadShooter
                 shootingPointObject.transform.localPosition = new Vector3(0, 0, 1);
 
                 var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_1");
-                UnityEditor.EditorGUIUtility.SetIconForObject(shootingPointObject, (Texture2D)iconContent.image);
+                UnityEditor.EditorGUIUtility.SetIconForObject(shootingPointObject, (Texture2D) iconContent.image);
 
                 shootPoint = shootingPointObject.transform;
             }
 
-            if(characterShootAnimation == null)
+            if (characterShootAnimation == null)
             {
                 characterShootAnimation = RuntimeEditorUtils.GetAssetByName<AnimationClip>("Shot");
             }

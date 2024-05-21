@@ -19,7 +19,7 @@ namespace Watermelon
             this.particle = particle;
 
             // Create object
-            var particleObject = particle.ParticlePool.GetPooledObject();
+            var particleObject = particle.ParticlePool.Get();
             particleObject.SetActive(true);
 
             // Get particle component

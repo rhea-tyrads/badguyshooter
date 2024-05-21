@@ -91,7 +91,7 @@ namespace Watermelon
 
                 for (var i = 0; i < uniqueCards.Count; i++)
                 {
-                    var cardUIObject = cardsUIPool.GetPooledObject();
+                    var cardUIObject = cardsUIPool.Get();
                     cardUIObject.SetActive(true);
 
                     var droppedCardPanel = cardUIObject.GetComponent<DroppedCardPanel>();

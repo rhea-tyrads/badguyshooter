@@ -29,7 +29,7 @@ namespace Watermelon.LevelSystem
         [SerializeField, Range(0.0f, 1.0f)] float healSpawnPercent = 0.5f;
         public float HealSpawnPercent => healSpawnPercent;
 
-        [SerializeField] List<DropData> dropData = new List<DropData>();
+        [SerializeField] List<DropData> dropData = new();
         public List<DropData> DropData => dropData;
 
         [SerializeField] LevelSpecialBehaviour[] specialBehaviours;

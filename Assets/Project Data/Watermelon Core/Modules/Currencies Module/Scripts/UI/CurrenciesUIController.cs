@@ -37,7 +37,7 @@ namespace Watermelon
             {
                 if (!activePanelsUI.ContainsKey(currencies[i].CurrencyType) && (currencies[i].DisplayAlways || currencies[i].Amount > 0))
                 {
-                    var currencyObject = panelPool.GetPooledObject();
+                    var currencyObject = panelPool.Get();
                     currencyObject.transform.SetParent(parentTrasnform);
                     currencyObject.transform.ResetLocal();
                     currencyObject.transform.SetAsLastSibling();
@@ -113,7 +113,7 @@ namespace Watermelon
             if (!activePanelsUI.ContainsKey(type))
             {
                 // Get object from pool
-                var currencyObject = panelPool.GetPooledObject();
+                var currencyObject = panelPool.Get();
                 currencyObject.transform.SetParent(parentTrasnform);
                 currencyObject.transform.ResetLocal();
                 currencyObject.transform.SetAsLastSibling();

@@ -30,7 +30,7 @@ namespace Watermelon.SquadShooter
             base.Initialise(characterBehaviour, data);
 
             upgrade = UpgradesController.GetUpgrade<LavaLauncherUpgrade>(data.UpgradeType);
-            var bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
+            var bulletObj = upgrade.BulletPrefab;
 
             bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
@@ -49,17 +49,15 @@ namespace Watermelon.SquadShooter
             var stage = upgrade.GetCurrentStage();
 
             damage = stage.Damage;
-            attackDelay = 1f / stage.FireRate;
+            var atkSpdMult = characterBehaviour.isAtkSpdBooster ? characterBehaviour.atkSpdBoosterMult : 1;
+            attackDelay = 1f / (stage.FireRate * atkSpdMult);
             bulletSpeed = stage.BulletSpeed;
         }
 
         public override void GunUpdate()
         {
-            if (!characterBehaviour.IsCloseEnemyFound)
-                return;
-
-            if (nextShootTime >= Time.timeSinceLevelLoad)
-                return;
+            if (!characterBehaviour.IsCloseEnemyFound) return;
+            if (nextShootTime >= Time.timeSinceLevelLoad) return;
 
             var shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
             var origin = shootPoint.position - shootDirection.normalized * 1.5f;
@@ -78,13 +76,13 @@ namespace Watermelon.SquadShooter
                     });
 
                     shootParticleSystem.Play();
-                    nextShootTime = Time.timeSinceLevelLoad + attackDelay;
+                    nextShootTime = Time.timeSinceLevelLoad + attackDelay / characterBehaviour.AtkSpdMult;
 
                     var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
 
                     for (var i = 0; i < bulletsNumber; i++)
                     {
-                        var bullet = bulletPool.GetPooledObject(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(shootPoint.eulerAngles)).GetComponent<LavaBulletBehavior>();
+                        var bullet = bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(shootPoint.eulerAngles)).GetComponent<LavaBulletBehavior>();
                         bullet.Initialise(damage, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, -1f, false, shootingRadius, characterBehaviour, bulletHeight, explosionRadius);
                     }
 

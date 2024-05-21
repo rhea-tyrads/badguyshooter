@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using Watermelon.Enemy;
@@ -8,14 +11,15 @@ using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
+
+// ReSharper disable InconsistentNaming
 #endif
 
 namespace Watermelon.SquadShooter
 {
-
     public abstract class BaseEnemyBehavior : MonoBehaviour, IHealth, INavMeshAgent
     {
-        static readonly Color HIT_OVERLAY_COLOR = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+        static readonly Color HIT_OVERLAY_COLOR = new(0.6f, 0.6f, 0.6f, 1.0f);
 
         protected readonly int ANIMATOR_RUN_HASH = Animator.StringToHash("Running");
         protected readonly int ANIMATOR_SPEED_HASH = Animator.StringToHash("Movement Speed");
@@ -32,7 +36,13 @@ namespace Watermelon.SquadShooter
         public EnemyType EnemyType => type;
 
         [SerializeField] EnemyTier tier = EnemyTier.Regular;
-        public EnemyTier Tier { get => tier; private set => tier = value; }
+        public GameObject burnVfx;
+
+        public EnemyTier Tier
+        {
+            get => tier;
+            private set => tier = value;
+        }
 
         protected EnemyStats stats;
         public EnemyStats Stats => stats;
@@ -44,6 +54,7 @@ namespace Watermelon.SquadShooter
         [SerializeField]
         protected HealthbarBehaviour healthbarBehaviour;
         [SerializeField] EnemyAnimationCallback enemyAnimationCallback;
+
 
         [Space]
         [SerializeField]
@@ -96,18 +107,26 @@ namespace Watermelon.SquadShooter
         public bool IsWalking { get; set; }
 
         public Vector3 Position => transform.position;
-        public Quaternion Rotation { get => transform.rotation; set => transform.rotation = value; }
+
+        public Quaternion Rotation
+        {
+            get => transform.rotation;
+            set => transform.rotation = value;
+        }
 
         public Vector3 TargetPosition => Target.position;
         public float VisionRange => visionRange;
 
         public bool IsTargetInVisionRange => Vector3.Distance(transform.position, Target.position) <= visionRange;
-        public bool IsTargetInAttackRange => Vector3.Distance(transform.position, Target.position) <= stats.AttackDistance;
+
+        public bool IsTargetInAttackRange =>
+            Vector3.Distance(transform.position, Target.position) <= stats.AttackDistance;
+
         public bool IsTargetInFleeRange => Vector3.Distance(transform.position, Target.position) <= stats.FleeDistance;
 
         public bool HasTakenDamage { get; private set; }
 
-        protected Transform target;
+        public Transform target;
         public Transform Target => target;
 
         protected CharacterBehaviour characterBehaviour;
@@ -146,6 +165,8 @@ namespace Watermelon.SquadShooter
 
         protected virtual void Awake()
         {
+            if (burnVfx) burnVfx.SetActive(false);
+
             isDead = true;
             navMeshAgent = GetComponent<NavMeshAgent>();
             enemyCollider = GetComponent<CapsuleCollider>();
@@ -168,9 +189,9 @@ namespace Watermelon.SquadShooter
 
             StateMachine = GetComponent<IStateMachine>();
 
-            for(var i = 0; i < weapons.Count; i++)
+            foreach (var weapon in weapons)
             {
-                weapons[i].Initialise(this);
+                weapon.Initialise(this);
             }
         }
 
@@ -222,7 +243,8 @@ namespace Watermelon.SquadShooter
             currentHealth = MaxHealth;
 
             // Initialise healthbar
-            healthbarBehaviour.Initialise(transform, this, true, healthbarBehaviour.HealthbarOffset, LevelController.CurrentLevelData.EnemiesLevel, Tier == EnemyTier.Elite);
+            healthbarBehaviour.Initialise(transform, this, true, healthbarBehaviour.HealthbarOffset,
+                LevelController.CurrentLevelData.EnemiesLevel, Tier == EnemyTier.Elite);
 
             isDead = false;
             chaseMode = false;
@@ -238,9 +260,9 @@ namespace Watermelon.SquadShooter
 
             StateMachine.StartMachine();
 
-            for(var i = 0; i < weapons.Count; i++)
+            for (var i = 0; i < weapons.Count; i++)
             {
-                if (weapons[i] != null) weapons[i].enabled = true;  
+                if (weapons[i] != null) weapons[i].enabled = true;
             }
         }
 
@@ -252,6 +274,7 @@ namespace Watermelon.SquadShooter
             ragdollCase.KillActive();
         }
 
+
         public void OnNavMeshUpdated()
         {
             navMeshAgent.enabled = true;
@@ -259,12 +282,10 @@ namespace Watermelon.SquadShooter
             navMeshAgent.speed = stats.MoveSpeed;
             navMeshAgent.angularSpeed = stats.AngularSpeed;
         }
+
         #region Combat
 
-        public int GetCurrentDamage()
-        {
-            return (int)(stats.Damage.Random() * (tier == EnemyTier.Elite ? stats.EliteDamageMult : 1f));
-        }
+        protected int Damage => (int) (stats.Damage.Random() * (tier == EnemyTier.Elite ? stats.EliteDamageMult : 1f));
 
         public void StartChasing()
         {
@@ -280,37 +301,90 @@ namespace Watermelon.SquadShooter
             OnReloadFinished?.Invoke();
         }
 
-        public virtual void TakeDamage(float damage, Vector3 projectilePosition, Vector3 projectileDirection)
+        public void TakeDamage(float damage)
         {
-            if (damage <= 0)
-                return;
+            if (damage <= 0) return;
 
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
-
             healthbarBehaviour.OnHealthChanged();
 
-            lastProjectilePosition = projectilePosition - projectileDirection;
+            if (currentHealth <= 0) OnDeath();
 
-            if (currentHealth <= 0)
-                OnDeath();
-
-            transform.position += (transform.position - target.position).normalized * 0.15f * hitOffsetMult;
+            transform.position += (transform.position - target.position).normalized * (0.15f * hitOffsetMult);
             hitOffsetMult *= 0.8f;
-
             HitEffect();
-
             if (lastFlotingTextTime + 0.18f <= Time.realtimeSinceStartup)
             {
                 lastFlotingTextTime = Time.realtimeSinceStartup;
 
-                FloatingTextController.SpawnFloatingText("Hit", "-" + damage.ToString("F0"), transform.position + transform.forward * stats.HitTextOffsetForward + new Vector3(Random.Range(-0.3f, 0.3f), stats.HitTextOffsetY, Random.Range(-0.1f, 0.1f)), Quaternion.identity, 1f);
+                FloatingTextController.SpawnFloatingText("Hit", "-" + damage.ToString("F0"),
+                    transform.position + transform.forward * stats.HitTextOffsetForward +
+                    new Vector3(Random.Range(-0.3f, 0.3f), stats.HitTextOffsetY, Random.Range(-0.1f, 0.1f)),
+                    Quaternion.identity, 1f);
             }
 
             lastDamagedTime = Time.realtimeSinceStartup;
-
             OnTakenDamage?.Invoke();
-
             HasTakenDamage = true;
+        }
+
+        public virtual void TakeDamage(float damage, Vector3 projectilePosition, Vector3 projectileDirection)
+        {
+            if (damage <= 0) return;
+
+            currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
+            healthbarBehaviour.OnHealthChanged();
+            lastProjectilePosition = projectilePosition - projectileDirection;
+            if (currentHealth <= 0) OnDeath();
+
+            transform.position += (transform.position - target.position).normalized * (0.15f * hitOffsetMult);
+            hitOffsetMult *= 0.8f;
+            HitEffect();
+            if (lastFlotingTextTime + 0.18f <= Time.realtimeSinceStartup)
+            {
+                lastFlotingTextTime = Time.realtimeSinceStartup;
+
+                FloatingTextController.SpawnFloatingText("Hit", "-" + damage.ToString("F0"),
+                    transform.position + transform.forward * stats.HitTextOffsetForward +
+                    new Vector3(Random.Range(-0.3f, 0.3f), stats.HitTextOffsetY, Random.Range(-0.1f, 0.1f)),
+                    Quaternion.identity, 1f);
+            }
+
+            lastDamagedTime = Time.realtimeSinceStartup;
+            OnTakenDamage?.Invoke();
+            HasTakenDamage = true;
+        }
+
+        void Update()
+        {
+            if (moveSlowed)
+            {
+                if (moveSlowTimer <= 0)
+                {
+                    moveSlowed = false;
+                    navMeshAgent.speed = stats.MoveSpeed;
+                    navMeshAgent.angularSpeed = stats.AngularSpeed;
+                    return;
+                }
+
+                moveSlowTimer -= Time.deltaTime;
+            }
+
+            if (knockBacked)
+            {
+                if (knockBackTimer <= 0)
+                {
+                    knockBacked = false;
+                    enemyRigidbody.isKinematic = true;
+                    return;
+                }
+
+                knockBackTimer -= Time.deltaTime;
+                enemyRigidbody.isKinematic = false;
+                enemyRigidbody.AddForce(knockBackForce, ForceMode.VelocityChange);
+            }
+
+            //  Debug.LogError("KNOCKED BACK");
         }
 
         protected virtual void FixedUpdate()
@@ -351,20 +425,25 @@ namespace Watermelon.SquadShooter
             HasTakenDamage = false;
 
             StateMachine.StopMachine();
+
+            if (hideBodyOnDeath && model)
+            {
+                model.SetActive(false);
+            }
         }
+
+        public GameObject model;
+        public bool hideBodyOnDeath;
 
         protected void ActivateRagdollOnDeath()
         {
-            for (var i = 0; i < weapons.Count; i++)
+            foreach (var rig in weapons.Where(rig => rig))
             {
-                if (weapons[i] != null) weapons[i].enabled = false;
+                rig.enabled = false;
             }
 
             EnableRagdoll(deathExplosionForce, lastProjectilePosition);
-            ragdollCase = Tween.DelayedCall(2.0f, () =>
-            {
-                ragdoll?.Disable();
-            });
+            ragdollCase = Tween.DelayedCall(2.0f, () => { ragdoll?.Disable(); });
         }
 
         void EnableRagdoll(float force, Vector3 point)
@@ -378,24 +457,26 @@ namespace Watermelon.SquadShooter
             enemyRigidbody.isKinematic = true;
             enemyRigidbody.useGravity = false;
 
-            enemyRigidbody.AddExplosionForce(deathExplosionForce, transform.position + (transform.forward * 0.5f).SetY(15f) + transform.right * Random.Range(-0.5f, 0.5f), deathExplosionRadius);
+            enemyRigidbody.AddExplosionForce(deathExplosionForce,
+                transform.position + (transform.forward * 0.5f).SetY(15f) + transform.right * Random.Range(-0.5f, 0.5f),
+                deathExplosionRadius);
         }
 
+        public bool isInStealth;
 
         protected void HitEffect()
         {
-            if (lastHitShineTime + 0.11f > Time.realtimeSinceStartup)
-                return;
+            if (isInStealth) return;
+
+            if (lastHitShineTime + 0.11f > Time.realtimeSinceStartup) return;
 
             lastHitShineTime = Time.realtimeSinceStartup;
-
             hitShineTweenCase.KillActive();
-
             meshRenderer.GetPropertyBlock(hitShinePropertyBlock);
             hitShinePropertyBlock.SetColor(SHADER_HIT_SHINE_COLOR_HASH, HIT_OVERLAY_COLOR);
             meshRenderer.SetPropertyBlock(hitShinePropertyBlock);
-
-            hitShineTweenCase = meshRenderer.DOPropertyBlockColor(SHADER_HIT_SHINE_COLOR_HASH, hitShinePropertyBlock, Color.black, 0.32f);
+            hitShineTweenCase = meshRenderer.DOPropertyBlockColor(SHADER_HIT_SHINE_COLOR_HASH, hitShinePropertyBlock,
+                Color.black, 0.32f);
         }
 
         protected void SetMaskPercent(float percent)
@@ -412,13 +493,16 @@ namespace Watermelon.SquadShooter
 
             hitAnimationTime = Time.time + ANIMATOR_HIT_COOLDOWN;
         }
+
         #endregion
 
         #region Target
+
         public void SetTarget(Transform newTarget)
         {
             target = newTarget;
         }
+
         #endregion
 
         public void OnDestroy()
@@ -448,6 +532,56 @@ namespace Watermelon.SquadShooter
             });
         }
 
+        const float knockBackDuration = 0.2f;
+        const float moveSlowDuration = 1f;
+        const float dpsDuration = 3f;
+        public float knockBackTimer;
+        public float moveSlowTimer;
+        public Vector3 knockBackForce;
+        bool knockBacked;
+        bool moveSlowed;
+
+
+        float moveSlowFactor;
+
+        public void KnockBack(Vector3 dir, float force)
+        {
+            knockBacked = true;
+            knockBackTimer = knockBackDuration;
+            knockBackForce = dir * force;
+        }
+
+        public void ApplyMovementSlow(float factor)
+        {
+            moveSlowFactor = factor;
+            moveSlowed = true;
+            moveSlowTimer = moveSlowDuration;
+            navMeshAgent.speed = stats.MoveSpeed * moveSlowFactor;
+            navMeshAgent.angularSpeed = stats.AngularSpeed;
+        }
+
+        public void ApplyDPS(float damagePerSecond)
+        {
+            StartCoroutine(DPS(damagePerSecond));
+        }
+
+        IEnumerator DPS(float damagePerSecond)
+        {
+            if (burnVfx) burnVfx.SetActive(true);
+
+            var duration = dpsDuration;
+            var dmgFrequency = 0.05f;
+            while (duration > 0 && !IsDead)
+            {
+                duration -= dmgFrequency;
+                var dmg = damagePerSecond * dmgFrequency;
+                TakeDamage(dmg);
+                yield return new WaitForSeconds(dmgFrequency);
+            }
+
+            if (burnVfx) burnVfx.SetActive(false);
+        }
+
         public abstract void Attack();
         public event SimpleCallback OnAttackFinished;
 
@@ -468,44 +602,68 @@ namespace Watermelon.SquadShooter
 
         protected void DropResources()
         {
-            if (!LevelController.IsGameplayActive)
-                return;
+            if (!LevelController.IsGameplayActive) return;
 
             if (!dropData.IsNullOrEmpty())
             {
                 for (var i = 0; i < dropData.Count; i++)
                 {
-                    if (dropData[i].dropType == DropableItemType.Currency)
+                    switch (dropData[i].dropType)
                     {
-                        var itemsAmount = Mathf.Clamp(Tier == EnemyTier.Elite ? Random.Range(7, 11) : Random.Range(3, 6), 1, dropData[i].amount);
-
-                        var itemValues = LevelController.SplitIntEqually(dropData[i].amount, itemsAmount);
-
-                        for (var j = 0; j < itemValues.Count; j++)
+                        case DropableItemType.Currency:
                         {
-                            var itemDropData = new DropData() { dropType = dropData[i].dropType, currencyType = dropData[i].currencyType, amount = itemValues[j] };
+                            var itemsAmount =
+                                Mathf.Clamp(Tier == EnemyTier.Elite ? Random.Range(7, 11) : Random.Range(3, 6), 1,
+                                    dropData[i].amount);
 
-                            Tween.DelayedCall(i * 0.05f, () =>
+                            var itemValues = LevelController.SplitIntEqually(dropData[i].amount, itemsAmount);
+
+                            foreach (var value in itemValues)
                             {
-                                Drop.DropItem(itemDropData, transform.position, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, 0.5f);
-                            });
-                        }
+                                var itemDropData = new DropData
+                                {
+                                    dropType = dropData[i].dropType, currencyType = dropData[i].currencyType,
+                                    amount = value
+                                };
 
-                        AudioController.PlaySound(AudioController.Sounds.coinAppear, 0.6f);
-                    }
-                    else if (dropData[i].dropType == DropableItemType.WeaponCard)
-                    {
-                        for (var j = 0; j < dropData[i].amount; j++)
-                        {
-                            var card = Drop.DropItem(new DropData() { dropType = dropData[i].dropType, cardType = dropData[i].cardType, amount = 1 }, transform.position, Vector3.zero, DropFallingStyle.Default, 0.6f).GetComponent<WeaponCardDropBehaviour>();
-                            card.SetCardData(dropData[i].cardType);
+                                Tween.DelayedCall(i * 0.05f, () =>
+                                {
+                                    Drop.Spawn(itemDropData, transform.position,
+                                        Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, 0.5f);
+                                });
+                            }
+
+                            AudioController.PlaySound(AudioController.Sounds.coinAppear, 0.6f);
+                            break;
                         }
-                    }
-                    else
-                    {
-                        for (var j = 0; j < dropData[i].amount; j++)
+                        case DropableItemType.WeaponCard:
                         {
-                            Drop.DropItem(new DropData() { dropType = dropData[i].dropType, amount = 1 }, transform.position, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Default, 0.6f);
+                            for (var j = 0; j < dropData[i].amount; j++)
+                            {
+                                var card = Drop.Spawn(
+                                        new DropData
+                                        {
+                                            dropType = dropData[i].dropType, cardType = dropData[i].cardType, amount = 1
+                                        },
+                                        transform.position, Vector3.zero, DropFallingStyle.Default, 0.6f)
+                                    .GetComponent<WeaponCardDropBehaviour>();
+                                card.SetCardData(dropData[i].cardType);
+                            }
+
+                            break;
+                        }
+                        default:
+                        {
+                            Debug.LogError(dropData.Count);
+                            for (var j = 0; j < dropData[i].amount; j++)
+                            {
+                                Drop.Spawn(new DropData() {dropType = dropData[i].dropType, amount = 1},
+                                    transform.position, Vector3.zero.SetY(Random.Range(0f, 360f)),
+                                    DropFallingStyle.Default,
+                                    0.6f);
+                            }
+
+                            break;
                         }
                     }
                 }
@@ -514,14 +672,19 @@ namespace Watermelon.SquadShooter
             if (Random.Range(0.0f, 1.0f) <= ActiveRoom.LevelData.HealSpawnPercent)
             {
                 var health = Mathf.RoundToInt(Stats.HpForPlayer.Random());
-
-                Drop.DropItem(new DropData() { dropType = DropableItemType.Heal, amount = health }, transform.position, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, 0.3f, -1);
+                Drop.Spawn(new DropData
+                    {
+                        dropType = DropableItemType.MultishotBooster,
+                        amount = health
+                    },
+                    transform.position,
+                    Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, 0.3f, -1);
             }
         }
 
         public void MoveToPoint(Vector3 pos)
         {
-            if (navMeshAgent != null)
+            if (navMeshAgent)
             {
                 navMeshAgent.isStopped = false;
                 navMeshAgent.SetDestination(pos);
@@ -556,24 +719,16 @@ namespace Watermelon.SquadShooter
         {
             var origin = transform.position.SetY(1);
             var ray = new Ray(origin, (Target.position.SetY(1) - origin).normalized);
-            if (Physics.Raycast(ray, out var hit, Stats.AttackDistance, 328))
-            {
-                if (hit.collider.gameObject == Target.gameObject)
-                    return true;
-            }
-
-            return false;
+            if (!Physics.Raycast(ray, out var hit, Stats.AttackDistance, 328)) return false;
+            return hit.collider.gameObject == Target.gameObject;
         }
 
         void OnValidate()
         {
             if (weapons == null) return;
 
-            for (var i = 0; i < weapons.Count; i++)
+            foreach (var weapon in weapons.Where(weapon => weapon != null))
             {
-                var weapon = weapons[i];
-                if(weapon == null) continue;
-
                 weapon.Initialise(this);
             }
         }
@@ -592,7 +747,7 @@ namespace Watermelon.SquadShooter
             {
                 AnimationMode.StartAnimationMode();
                 PrefabStage.prefabStageClosing += OnPrefabClosing;
-            } 
+            }
         }
 
         void OnPrefabClosing(PrefabStage obj)
@@ -611,7 +766,8 @@ namespace Watermelon.SquadShooter
                 AnimationMode.BeginSampling();
                 AnimationMode.SampleAnimationClip(animatorRef.gameObject, randomClip, Random.value);
                 AnimationMode.EndSampling();
-            } else
+            }
+            else
             {
                 Debug.LogError("Animation Mode is turned off");
             }

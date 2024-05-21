@@ -22,18 +22,18 @@ namespace Watermelon.Enemy.Boss
 
             var distanceBasedTransitionOnFinish = new List<StateTransition<State>>()
             {
-                new StateTransition<State>(TransitionToIdle, StateTransitionType.OnFinish),
-                new StateTransition<State>(TransitionToKicking, StateTransitionType.OnFinish),
-                new StateTransition<State>(TransitionToShooting, StateTransitionType.OnFinish),
-                new StateTransition<State>(InstantTransitionToChasing, StateTransitionType.OnFinish)
+                new(TransitionToIdle, StateTransitionType.OnFinish),
+                new(TransitionToKicking, StateTransitionType.OnFinish),
+                new(TransitionToShooting, StateTransitionType.OnFinish),
+                new(InstantTransitionToChasing, StateTransitionType.OnFinish)
             };
 
             var distanceBasedTransitionIndependent = new List<StateTransition<State>>()
             {
-                new StateTransition<State>(TransitionToIdle, StateTransitionType.Independent),
-                new StateTransition<State>(TransitionToKicking, StateTransitionType.Independent),
-                new StateTransition<State>(TransitionToShooting, StateTransitionType.Independent),
-                new StateTransition<State>(InstantTransitionToChasing, StateTransitionType.Independent)
+                new(TransitionToIdle, StateTransitionType.Independent),
+                new(TransitionToKicking, StateTransitionType.Independent),
+                new(TransitionToShooting, StateTransitionType.Independent),
+                new(InstantTransitionToChasing, StateTransitionType.Independent)
             };
 
             var hidingCase = new StateCase();
@@ -41,7 +41,7 @@ namespace Watermelon.Enemy.Boss
             hidingCase.state = hidingState;
             hidingCase.transitions = new List<StateTransition<State>>()
             {
-                new StateTransition<State>(HidingTransition, StateTransitionType.Independent)
+                new(HidingTransition, StateTransitionType.Independent)
             };
 
             var enteringCase = new StateCase();

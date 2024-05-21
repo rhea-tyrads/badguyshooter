@@ -12,6 +12,10 @@
         Grenader = 11,
         Shotguner = 12,
 
+        Juggernaut = 13,
+        Ninja = 14,
+        Gluebaby = 15,
+        
 
         BossBomber = 100,
         BossSniper = 101,

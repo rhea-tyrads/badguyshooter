@@ -93,7 +93,7 @@ namespace Watermelon
 
         public static TutorialLabelBehaviour CreateTutorialLabel(string text, Transform parentTransform, Vector3 offset)
         {
-            var labelObject = labelPool.GetPooledObject();
+            var labelObject = labelPool.Get();
             labelObject.transform.position = parentTransform.position + offset;
 
             var tutorialLabelBehaviour = labelObject.GetComponent<TutorialLabelBehaviour>();

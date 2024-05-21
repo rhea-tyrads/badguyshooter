@@ -44,15 +44,16 @@ namespace Watermelon.SquadShooter
             if (!(Application.isPlaying || enableRigWeaponInEditor)) return;
 
             if (primaryHandBone == null || primaryHandAnchor == null) return;
-            if (rigType == WeaponRigType.TwoHanded && (offHandBone == null || offHandAnchor == null)) return;
-
-            if (rigType == WeaponRigType.OneHanded)
+            switch (rigType)
             {
-                OneHandedUpdate();
-            }
-            else
-            {
-                TwoHandedUpdate();
+                case WeaponRigType.TwoHanded when (offHandBone == null || offHandAnchor == null):
+                    return;
+                case WeaponRigType.OneHanded:
+                    OneHandedUpdate();
+                    break;
+                default:
+                    TwoHandedUpdate();
+                    break;
             }
         }
 
@@ -66,7 +67,7 @@ namespace Watermelon.SquadShooter
 
             var positionCorrection = primaryHandBone.position - primaryHandAnchor.position;
 
-            transform.position = transform.position + positionCorrection;
+            transform.position += positionCorrection;
         }
 
         void TwoHandedUpdate()

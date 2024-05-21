@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Watermelon.SquadShooter;
 
@@ -6,7 +7,7 @@ namespace Watermelon.LevelSystem
 {
     public static class Drop
     {
-        static List<IDropItem> dropItems = new List<IDropItem>();
+        static List<IDropItem> dropItems = new();
         static DropAnimation[] dropAnimations;
 
         public static void Initialise(DropableItemSettings dropSettings)
@@ -14,9 +15,9 @@ namespace Watermelon.LevelSystem
             dropAnimations = dropSettings.DropAnimations;
 
             var customDropItems = dropSettings.CustomDropItems;
-            for(var i = 0; i < customDropItems.Length; i++)
+            foreach (var item in customDropItems)
             {
-                RegisterDropItem(customDropItems[i]);
+                RegisterDropItem(item);
             }
 
             // Register currencies drop
@@ -29,14 +30,10 @@ namespace Watermelon.LevelSystem
         public static void RegisterDropItem(IDropItem dropItem)
         {
 #if UNITY_EDITOR
-            for(var i = 0; i < dropItems.Count; i++)
+            if (dropItems.Any(item => item.DropItemType == dropItem.DropItemType))
             {
-                if(dropItems[i].DropItemType == dropItem.DropItemType)
-                {
-                    Debug.LogError(string.Format("Drop item with type {0} is already registered!", dropItem.DropItemType));
-
-                    return;
-                }
+                Debug.LogError($"Drop item with type {dropItem.DropItemType} is already registered!");
+                return;
             }
 #endif
 
@@ -46,32 +43,12 @@ namespace Watermelon.LevelSystem
         }
 
         public static IDropItem GetDropItem(DropableItemType dropableItemType)
-        {
-            for (var i = 0; i < dropItems.Count; i++)
-            {
-                if (dropItems[i].DropItemType == dropableItemType)
-                {
-                    return dropItems[i];
-                }
-            }
+            => dropItems.FirstOrDefault(item => item.DropItemType == dropableItemType);
 
-            return null;
-        }
+        public static DropAnimation GetAnimation(DropFallingStyle dropFallingStyle) 
+            => dropAnimations.FirstOrDefault(anim => anim.FallStyle == dropFallingStyle);
 
-        public static DropAnimation GetAnimation(DropFallingStyle dropFallingStyle)
-        {
-            for (var i = 0; i < dropAnimations.Length; i++)
-            {
-                if (dropAnimations[i].FallStyle == dropFallingStyle)
-                {
-                    return dropAnimations[i];
-                }
-            }
-
-            return null;
-        }
-
-        public static GameObject DropItem(DropData dropData, Vector3 spawnPosition, Vector3 rotation, DropFallingStyle fallingStyle, float availableToPickDelay = -1f, float autoPickDelay = -1f, bool rewarded = false)
+        public static GameObject Spawn(DropData dropData, Vector3 spawnPosition, Vector3 rotation, DropFallingStyle fallingStyle, float availableToPickDelay = -1f, float autoPickDelay = -1f, bool rewarded = false)
         {
             var dropItem = GetDropItem(dropData.dropType);
             var itemGameObject = dropItem.GetDropObject(dropData);

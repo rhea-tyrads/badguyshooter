@@ -10,26 +10,26 @@ namespace Watermelon.SquadShooter
 
         public void InitialiseStatsRealation(int baseCharacterHealth)
         {
-            for (var i = 0; i < enemies.Length; i++)
+            foreach (var enemy in enemies)
             {
-                enemies[i].Stats.InitialiseStatsRelation(baseCharacterHealth);
+                enemy.Stats.InitialiseStatsRelation(baseCharacterHealth);
             }
         }
 
         public void SetCurrentCharacterStats(int characterHealth, int weaponDmg)
         {
-            for (var i = 0; i < enemies.Length; i++)
+            foreach (var enemy in enemies)
             {
-                enemies[i].Stats.SetCurrentCreatureStats(characterHealth, weaponDmg, BalanceController.GetActiveDifficultySettings());
+                enemy.Stats.SetCurrentCreatureStats(characterHealth, weaponDmg, BalanceController.GetActiveDifficultySettings());
             }
         }
 
         public EnemyData GetEnemyData(EnemyType type)
         {
-            for (var i = 0; i < enemies.Length; i++)
+            foreach (var enemy in enemies)
             {
-                if (enemies[i].EnemyType.Equals(type))
-                    return enemies[i];
+                if (enemy.EnemyType.Equals(type))
+                    return enemy;
             }
 
             Debug.LogError("[Enemies Database] Enemy of type " + type + " + is not found!");

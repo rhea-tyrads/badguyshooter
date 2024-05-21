@@ -88,9 +88,9 @@ namespace Watermelon.SquadShooter
         {
             if (enemyCallbackType == EnemyCallbackType.Hit)
             {
-                var bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(shootPointTransform.position).SetEulerRotation(shootPointTransform.eulerAngles)).GetComponent<EnemyBulletBehavior>();
+                var bullet = bulletPool.Get(new PooledObjectSettings(false).SetPosition(shootPointTransform.position).SetEulerRotation(shootPointTransform.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                 bullet.transform.forward = transform.forward.SetY(0).normalized;
-                bullet.Initialise(GetCurrentDamage(), bulletSpeed, 200);
+                bullet.Initialise(Damage, bulletSpeed, 200);
 
                 gunFireParticle.Play();
 

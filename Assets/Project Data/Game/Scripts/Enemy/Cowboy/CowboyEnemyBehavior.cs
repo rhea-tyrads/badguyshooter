@@ -43,18 +43,18 @@ namespace Watermelon.SquadShooter
             switch (enemyCallbackType)
             {
                 case EnemyCallbackType.LeftHit:
-                    bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(leftShootPoint.position).SetEulerRotation(leftShootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
+                    bullet = bulletPool.Get(new PooledObjectSettings(false).SetPosition(leftShootPoint.position).SetEulerRotation(leftShootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                     bullet.transform.LookAt(target.position.SetY(leftShootPoint.position.y));
-                    bullet.Initialise(GetCurrentDamage(), bulletSpeed, 200);
+                    bullet.Initialise(Damage, bulletSpeed, 200);
 
                     leftGunFireParticle.Play();
                     AudioController.PlaySound(AudioController.Sounds.enemyShot);
 
                     break;
                 case EnemyCallbackType.RightHit:
-                    bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(rightShootPoint.position).SetEulerRotation(rightShootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
+                    bullet = bulletPool.Get(new PooledObjectSettings(false).SetPosition(rightShootPoint.position).SetEulerRotation(rightShootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                     bullet.transform.LookAt(target.position.SetY(rightShootPoint.position.y));
-                    bullet.Initialise(GetCurrentDamage(), bulletSpeed, 200);
+                    bullet.Initialise(Damage, bulletSpeed, 200);
 
                     rightGunFireParticle.Play();
                     AudioController.PlaySound(AudioController.Sounds.enemyShot);

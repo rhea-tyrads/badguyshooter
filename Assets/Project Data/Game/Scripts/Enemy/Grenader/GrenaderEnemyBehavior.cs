@@ -16,6 +16,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] GameObject grenadeObject;
 
         static PoolGeneric<GrenadeBehavior> grenadePool;
+        
         protected override void Awake()
         {
             base.Awake();
@@ -33,12 +34,12 @@ namespace Watermelon.SquadShooter
                     name = "Enemy Grenades Pool",
                     multiPoolPrefabsList = new List<Pool.MultiPoolPrefab>
                 {
-                    new Pool.MultiPoolPrefab
+                    new()
                     {
                         prefab = grenadePrefab,
                         weight = 50,
                     },
-                    new Pool.MultiPoolPrefab
+                    new()
                     {
                         prefab = eliteGrenadePrefab,
                         weight = 50,
@@ -56,8 +57,7 @@ namespace Watermelon.SquadShooter
         {
             base.FixedUpdate();
 
-            if (!LevelController.IsGameplayActive)
-                return;
+            if (!LevelController.IsGameplayActive) return;
 
             healthbarBehaviour.FollowUpdate();
         }
@@ -74,10 +74,8 @@ namespace Watermelon.SquadShooter
                 case EnemyCallbackType.Hit:
                     var grenade = grenadePool.GetMultiPooledObjectByIndex(Tier == EnemyTier.Elite ? 1 : 0, new PooledObjectSettings()).GetComponent<GrenadeBehavior>();
 
-                    grenade.Throw(grenadeStartPosition.position, TargetPosition, GetCurrentDamage());
-
+                    grenade.Throw(grenadeStartPosition.position, TargetPosition, Damage);
                     grenadeObject.SetActive(false);
-
                     break;
 
                 case EnemyCallbackType.HitFinish:

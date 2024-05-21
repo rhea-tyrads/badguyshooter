@@ -22,7 +22,7 @@ namespace Watermelon.Enemy.BossSniper
             changePosCase.state = changePosState;
             changePosCase.transitions = new List<StateTransition<BossSniperStates>>()
             {
-                new StateTransition<BossSniperStates>(ChangePosTransition, StateTransitionType.OnFinish)
+                new(ChangePosTransition, StateTransitionType.OnFinish)
             };
 
             var aimCase = new StateCase();
@@ -30,7 +30,7 @@ namespace Watermelon.Enemy.BossSniper
             aimCase.state = aimState;
             aimCase.transitions = new List<StateTransition<BossSniperStates>>()
             {
-                new StateTransition<BossSniperStates>(AimTransition, StateTransitionType.OnFinish)
+                new(AimTransition, StateTransitionType.OnFinish)
             };
 
             var shootCase = new StateCase();
@@ -38,7 +38,7 @@ namespace Watermelon.Enemy.BossSniper
             shootCase.state = attackState;
             shootCase.transitions = new List<StateTransition<BossSniperStates>>()
             {
-                new StateTransition<BossSniperStates>(ShootTransition, StateTransitionType.OnFinish)
+                new(ShootTransition, StateTransitionType.OnFinish)
             };
 
             states.Add(BossSniperStates.ChangingPosition, changePosCase);

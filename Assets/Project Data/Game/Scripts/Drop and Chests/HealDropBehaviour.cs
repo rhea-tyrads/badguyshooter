@@ -4,6 +4,7 @@ namespace Watermelon.SquadShooter
     {
         public override bool IsPickable(CharacterBehaviour characterBehaviour)
         {
+            return true;
             return !characterBehaviour.FullHealth;
         }
     }

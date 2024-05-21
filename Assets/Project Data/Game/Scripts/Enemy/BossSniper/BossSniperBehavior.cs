@@ -90,9 +90,9 @@ namespace Watermelon.SquadShooter
             switch (enemyCallbackType)
             {
                 case EnemyCallbackType.Hit:
-                    var bullet = bulletPool.GetPooledObject(new PooledObjectSettings(false).SetPosition(shootingPoint.position).SetEulerRotation(shootingPoint.eulerAngles)).GetComponent<BossSniperBulletBehavior>();
+                    var bullet = bulletPool.Get(new PooledObjectSettings(false).SetPosition(shootingPoint.position).SetEulerRotation(shootingPoint.eulerAngles)).GetComponent<BossSniperBulletBehavior>();
                     bullet.transform.forward = transform.forward;
-                    bullet.InitialiseBullet(GetCurrentDamage(), bulletSpeed, 1000, lasetHitPoints);
+                    bullet.InitialiseBullet(Damage, bulletSpeed, 1000, lasetHitPoints);
 
                     gunFireParticle.Play();
                     AudioController.PlaySound(AudioController.Sounds.enemySniperShoot);

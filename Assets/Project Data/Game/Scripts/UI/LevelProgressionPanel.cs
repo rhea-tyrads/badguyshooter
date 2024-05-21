@@ -79,7 +79,7 @@ namespace Watermelon.SquadShooter
                 {
                     var levelTypeSettings = levelSettings.GetLevelSettings(currentWorld.Levels[i].Type);
 
-                    var previewObject = levelTypeSettings.PreviewPool.GetPooledObject();
+                    var previewObject = levelTypeSettings.PreviewPool.Get();
                     previewObject.transform.SetParent(levelPreviewContainer);
                     previewObject.transform.ResetLocal();
                     previewObject.transform.localScale = Vector3.one;

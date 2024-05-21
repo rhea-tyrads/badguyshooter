@@ -167,12 +167,11 @@ namespace Watermelon.LevelSystem
         {
             var roomsAmount = currentLevelData.Rooms.Length;
             var chestsAmount = currentLevelData.GetChestsAmount();
-
             var moneyPerRoomOrChest = new List<int>();
-            DropData coinsReward;
-
+            
             // find coins reward amount
-            coinsReward = currentLevelData.DropData.Find(d => d.dropType == DropableItemType.Currency && d.currencyType == CurrencyType.Coins);
+            var coinsReward = currentLevelData.DropData
+                .Find(d => d.dropType == DropableItemType.Currency && d.currencyType == CurrencyType.Coins);
 
             if (coinsReward != null)
             {
@@ -189,34 +188,22 @@ namespace Watermelon.LevelSystem
                 roomRewards.Add(new List<DropData>());
 
                 // if threre is money reward - assign this room's part
-                if (moneyPerRoomOrChest.Count > 0)
+                if (moneyPerRoomOrChest.Count > 0 && moneyPerRoomOrChest[i] > 0)
                 {
-                    if (moneyPerRoomOrChest[i] > 0)
-                    {
-                        roomRewards[i].Add(new DropData() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = moneyPerRoomOrChest[i] });
-                    }
+                    roomRewards[i].Add(new DropData() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = moneyPerRoomOrChest[i] });
                 }
 
                 // if room is last - give special reward
-                if (i == roomsAmount - 1)
+                if (i != roomsAmount - 1) continue;
+                
+                foreach (var data in currentLevelData.DropData)
                 {
-                    for (var j = 0; j < currentLevelData.DropData.Count; j++)
-                    {
-                        // if it's not coins - then it's a special reward
-                        if (!(currentLevelData.DropData[j].dropType == DropableItemType.Currency && currentLevelData.DropData[j].currencyType == CurrencyType.Coins))
-                        {
-                            var skipThisReward = false;
-
-                            // skip weapon card if weapon is already unlocked
-                            if (currentLevelData.DropData[j].dropType == DropableItemType.WeaponCard && WeaponsController.IsWeaponUnlocked(currentLevelData.DropData[j].cardType))
-                            {
-                                skipThisReward = true;
-                            }
-
-                            if (!skipThisReward)
-                                roomRewards[i].Add(currentLevelData.DropData[j]);
-                        }
-                    }
+                    // if it's not coins - then it's a special reward
+                    if (data.dropType == DropableItemType.Currency && data.currencyType == CurrencyType.Coins) continue;
+                    var skipThisReward = data.dropType == DropableItemType.WeaponCard && WeaponsController.IsWeaponUnlocked(data.cardType);
+                    // skip weapon card if weapon is already unlocked
+                    if (!skipThisReward)
+                        roomRewards[i].Add(data);
                 }
             }
 
@@ -228,17 +215,15 @@ namespace Watermelon.LevelSystem
 
                 if (room.ChestEntities != null && room.ChestEntities.Length > 0)
                 {
-                    for (var j = 0; j < room.ChestEntities.Length; j++)
+                    foreach (var chest in room.ChestEntities)
                     {
-                        var chest = room.ChestEntities[j];
-
                         if (chest.IsInited)
                         {
                             if (chest.ChestType == LevelChestType.Standart)
                             {
                                 roomChestRewards.Add(new List<DropData>()
                                 {
-                                    new DropData() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = moneyPerRoomOrChest[roomsAmount + chestsSpawned] }
+                                    new() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = moneyPerRoomOrChest[roomsAmount + chestsSpawned] }
                                 });
 
                                 chestsSpawned++;
@@ -247,7 +232,7 @@ namespace Watermelon.LevelSystem
                             {
                                 roomChestRewards.Add(new List<DropData>()
                                 {
-                                    new DropData() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = coinsReward.amount }
+                                    new() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = coinsReward.amount }
                                 });
                             }
                         }
@@ -264,15 +249,8 @@ namespace Watermelon.LevelSystem
             }
         }
 
-        static bool DoesNextRoomExist()
-        {
-            if (isLevelLoaded)
-            {
-                return currentLevelData.Rooms.IsInRange(currentRoomIndex + 1);
-            }
-
-            return false;
-        }
+        static bool DoesNextRoomExist() 
+            => isLevelLoaded && currentLevelData.Rooms.IsInRange(currentRoomIndex + 1);
 
         static void LoadRoom(int index)
         {
@@ -290,51 +268,47 @@ namespace Watermelon.LevelSystem
             NavMeshController.InvokeOrSubscribe(characterBehaviour);
 
             var items = roomData.ItemEntities;
-            for (var i = 0; i < items.Length; i++)
+            foreach (var data in items)
             {
-                var itemData = activeWorldData.GetLevelItem(items[i].Hash);
+                var itemData = activeWorldData.GetLevelItem(data.Hash);
 
                 if (itemData == null)
                 {
-                    Debug.Log("[Level Controller] Not found item with hash: " + items[i].Hash + " for the world: " + activeWorldData.name);
+                    Debug.Log("[Level Controller] Not found item with hash: " + data.Hash + " for the world: " + activeWorldData.name);
                     continue;
                 }
 
-                ActiveRoom.SpawnItem(itemData, items[i]);
+                ActiveRoom.SpawnItem(itemData, data);
             }
 
 
             var enemies = roomData.EnemyEntities;
-            for (var i = 0; i < enemies.Length; i++)
+            foreach (var enemy in enemies)
             {
-                ActiveRoom.SpawnEnemy(EnemyController.Database.GetEnemyData(enemies[i].EnemyType), enemies[i], false);
+                ActiveRoom.SpawnEnemy(EnemyController.Database.GetEnemyData(enemy.EnemyType), enemy, false);
             }
 
             ActiveRoom.SpawnExitPoint(levelSettings.ExitPointPrefab, roomData.ExitPoint);
 
             if (roomData.ChestEntities != null)
             {
-                for (var i = 0; i < roomData.ChestEntities.Length; i++)
+                foreach (var chest in roomData.ChestEntities)
                 {
-                    var chest = roomData.ChestEntities[i];
-
-                    if (chest.IsInited)
-                    {
-                        ActiveRoom.SpawnChest(chest, LevelSettings.GetChestData(chest.ChestType));
-                    }
+                    if (!chest.IsInited) continue;
+                    ActiveRoom.SpawnChest(chest, LevelSettings.GetChestData(chest.ChestType));
                 }
             }
 
             var roomCustomObjects = roomData.RoomCustomObjects;
-            for (var i = 0; i < roomCustomObjects.Length; i++)
+            foreach (var custom in roomCustomObjects)
             {
-                ActiveRoom.SpawnCustomObject(roomCustomObjects[i]);
+                ActiveRoom.SpawnCustomObject(custom);
             }
 
             var worldCustomObjects = levelsDatabase.GetWorld(levelSave.WorldIndex).WorldCustomObjects;
-            for (var i = 0; i < worldCustomObjects.Length; i++)
+            foreach (var custom in worldCustomObjects)
             {
-                ActiveRoom.SpawnCustomObject(worldCustomObjects[i]);
+                ActiveRoom.SpawnCustomObject(custom);
             }
 
             ActiveRoom.InitialiseDrop(roomRewards[index], roomChestRewards[index]);

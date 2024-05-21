@@ -19,7 +19,7 @@ namespace Watermelon.SquadShooter
 
         public GameObject GetStageStarObject()
         {
-            return stageStarPool.GetPooledObject();
+            return stageStarPool.Get();
         }
 
         public bool IsAnyActionAvailable()

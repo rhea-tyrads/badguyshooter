@@ -9,7 +9,9 @@ namespace Watermelon.SquadShooter
     {
         public float angle = 45f;
         public float gravity = 150f;
-
+        public bool movementSlow;
+        public float movementSlowFactor = 0.2f;
+        
         public DuoVector3 angularVelocityDuo;
         Vector3 angularVelocity;
 
@@ -101,17 +103,13 @@ namespace Watermelon.SquadShooter
             if (Vector3.Distance(transform.position, characterBehaviour.transform.position) <= explosionRadius)
             {
                 characterBehaviour.TakeDamage(damage);
+                if(movementSlow) characterBehaviour.ApplyMovementSlow(movementSlowFactor);
             }
 
             var aliveEnemies = ActiveRoom.GetAliveEnemies();
 
-            for (var i = 0; i < aliveEnemies.Count; i++)
+            foreach (var enemy in aliveEnemies)
             {
-                var enemy = aliveEnemies[i];
-
-                if (enemy == this)
-                    continue;
-
                 if (Vector3.Distance(transform.position, enemy.transform.position) <= explosionRadius)
                 {
                     var directionToEnemy = (enemy.transform.position.SetY(0) - transform.position.SetY(0)).normalized;

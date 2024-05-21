@@ -5,6 +5,13 @@ namespace Watermelon.Upgrades
     [System.Serializable]
     public class BaseWeaponUpgrade : Upgrade<BaseWeaponUpgradeStage>
     {
+        [Header("Prefabs")]
+        [SerializeField] GameObject weaponPrefab;
+        public GameObject WeaponPrefab => weaponPrefab;
+
+        [SerializeField] GameObject bulletPrefab;
+        public GameObject BulletPrefab => bulletPrefab;
+        
         public override void Initialise()
         {
 
@@ -14,12 +21,7 @@ namespace Watermelon.Upgrades
     [System.Serializable]
     public class BaseWeaponUpgradeStage : BaseUpgradeStage
     {
-        [Header("Prefabs")]
-        [SerializeField] GameObject weaponPrefab;
-        public GameObject WeaponPrefab => weaponPrefab;
-
-        [SerializeField] GameObject bulletPrefab;
-        public GameObject BulletPrefab => bulletPrefab;
+ 
 
         [Header("Data")]
         [SerializeField] DuoInt damage;

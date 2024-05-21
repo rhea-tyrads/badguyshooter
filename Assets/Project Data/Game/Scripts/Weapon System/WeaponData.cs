@@ -7,7 +7,9 @@ namespace Watermelon.SquadShooter
     public class WeaponData
     {
         [SerializeField] string name;
+        [SerializeField] [TextArea] string description;
         public string Name => name;
+        public string Description => description;
 
         [SerializeField] WeaponType type;
         public WeaponType Type => type;
@@ -30,7 +32,7 @@ namespace Watermelon.SquadShooter
 
         public void Initialise()
         {
-            save = SaveController.GetSaveObject<WeaponSave>(string.Format("Weapon_{0}", type));
+            save = SaveController.GetSaveObject<WeaponSave>($"Weapon_{type}");
         }
     }
 }

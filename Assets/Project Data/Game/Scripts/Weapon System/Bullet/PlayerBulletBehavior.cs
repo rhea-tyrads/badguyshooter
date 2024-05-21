@@ -35,7 +35,7 @@ namespace Watermelon.SquadShooter
         protected virtual void FixedUpdate()
         {
             if (speed != 0)
-                transform.position += transform.forward * speed * Time.fixedDeltaTime;
+                transform.position += transform.forward * (speed * Time.fixedDeltaTime);
         }
 
         void OnTriggerEnter(Collider other)

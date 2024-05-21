@@ -19,7 +19,8 @@ namespace Watermelon.SquadShooter
         int hitsPerformed;
         float stunDuration;
 
-        public void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime, bool autoDisableOnHit, float stunDuration)
+        public void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime,
+            bool autoDisableOnHit, float stunDuration)
         {
             base.Initialise(damage, speed, currentTarget, autoDisableTime, autoDisableOnHit);
 
@@ -30,7 +31,8 @@ namespace Watermelon.SquadShooter
             transform.DOScale(1.0f, 0.25f).SetEasing(Ease.Type.CubicIn);
 
             hitsPerformed = 0;
-            targets = ActiveRoom.GetAliveEnemies().OrderBy(e => Vector3.SqrMagnitude(e.transform.position - CharacterBehaviour.Transform.position)).ToList();
+            targets = ActiveRoom.GetAliveEnemies().OrderBy(e =>
+                Vector3.SqrMagnitude(e.transform.position - CharacterBehaviour.Transform.position)).ToList();
         }
 
         public void SetTargetsHitGoal(int goal)

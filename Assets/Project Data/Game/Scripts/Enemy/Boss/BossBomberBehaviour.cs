@@ -282,7 +282,7 @@ namespace Watermelon.SquadShooter
         {
             shootParticleSystem.Play();
 
-            var bombObject = bulletPool.GetPooledObject();
+            var bombObject = bulletPool.Get();
             bombObject.transform.position = shootPointTransform.position;
             bombObject.transform.LookAt(bombPoint);
 

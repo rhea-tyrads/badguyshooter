@@ -1,6 +1,6 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Watermelon;
 using Watermelon.LevelSystem;
 using Watermelon.Upgrades;
 
@@ -8,6 +8,10 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterBehaviour : MonoBehaviour, IEnemyDetector, IHealth, INavMeshAgent
     {
+        public GameObject moveSpeedBoostVfx;
+        public GameObject atkSpeedBoostVfx;
+        public GameObject multishotBoostVfx;
+
         static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
 
         static CharacterBehaviour characterBehaviour;
@@ -29,8 +33,24 @@ namespace Watermelon.SquadShooter
 
         [Space(5)]
         [SerializeField] AimRingBehavior aimRingBehavior;
+        [SerializeField] ParticleSystem stunVfx;
+       
+        public bool isMoveSpeedBooster;
+        public bool isMultishotBooster;
+        public float multishotBoosterDuration = 10;
+        public float moveSpeedBoostDuration = 10;
+        public int MultishotBoosterAmount => isMultishotBooster?4:0;
+        float multiShotTimer;
+        float moveSpeedBoostTimer;
 
+        public bool isAtkSpdBooster;
+        public float atkSpdBoosterDuration = 10;
+        public float atkSpdBoosterMult = 2;
+      
+        float atkSpdTimer;
+        
         // Character Graphics
+        
         BaseCharacterGraphics graphics;
         public BaseCharacterGraphics Graphics => graphics;
 
@@ -100,11 +120,16 @@ namespace Watermelon.SquadShooter
 
         void Awake()
         {
+            moveSlowFactor = 1;
             agent.enabled = false;
         }
 
         public void Initialise()
         {
+            if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
+            if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive((false));
+            if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
+
             characterBehaviour = this;
 
             hitShinePropertyBlock = new MaterialPropertyBlock();
@@ -129,7 +154,8 @@ namespace Watermelon.SquadShooter
             currentHealth = MaxHealth;
 
             // Initialise healthbar
-            healthbarBehaviour.Initialise(transform, this, true, CharactersController.SelectedCharacter.GetCurrentStage().HealthBarOffset);
+            healthbarBehaviour.Initialise(transform, this, true,
+                CharactersController.SelectedCharacter.GetCurrentStage().HealthBarOffset);
 
             aimRingBehavior.Init(transform);
 
@@ -139,6 +165,8 @@ namespace Watermelon.SquadShooter
             aimRingBehavior.Hide();
 
             IsDead = false;
+
+            stunVfx.gameObject.SetActive(false);
         }
 
         public void Reload(bool resetHealth = true)
@@ -170,7 +198,8 @@ namespace Watermelon.SquadShooter
         {
             var radius = enemyDetector.DetectorRadius;
             enemyDetector.SetRadius(0);
-            Tween.NextFrame(() => enemyDetector.SetRadius(radius), framesOffset: 2, updateMethod: UpdateMethod.FixedUpdate);
+            Tween.NextFrame(() => enemyDetector.SetRadius(radius), framesOffset: 2,
+                updateMethod: UpdateMethod.FixedUpdate);
         }
 
         public void Unload()
@@ -214,15 +243,25 @@ namespace Watermelon.SquadShooter
             characterBehaviour.agent.enabled = false;
         }
 
+        public float moveSlowFactor;
+        public float moveBoostFactor = 1;
+        bool moveSlowed;
+        const float moveSlowDuration = 3f;
+        public float moveSlowTimer;
+
+        public void ApplyMovementSlow(float factor)
+        {
+            moveSlowFactor = factor;
+            moveSlowed = true;
+            moveSlowTimer = moveSlowDuration;
+        }
+
         public virtual void TakeDamage(float damage)
         {
-            if (currentHealth <= 0)
-                return;
+            if (currentHealth <= 0) return;
 
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
-
             healthbarBehaviour.OnHealthChanged();
-
             mainCameraCase.Shake(0.04f, 0.04f, 0.3f, 1.4f);
 
             if (currentHealth <= 0)
@@ -232,16 +271,13 @@ namespace Watermelon.SquadShooter
 
                 isActive = false;
                 enabled = false;
-
                 enemyDetector.gameObject.SetActive(false);
                 aimRingBehavior.Hide();
 
                 OnDeath();
 
                 graphics.EnableRagdoll();
-
                 OnDied?.Invoke();
-
                 Vibration.Vibrate(VibrationIntensity.Medium);
             }
 
@@ -251,16 +287,16 @@ namespace Watermelon.SquadShooter
 
             Vibration.Vibrate(VibrationIntensity.Light);
 
-            FloatingTextController.SpawnFloatingText("PlayerHit", "-" + damage.ToString("F0"), transform.position + new Vector3(Random.Range(-0.3f, 0.3f), 3.75f, Random.Range(-0.1f, 0.1f)), Quaternion.identity, 1f);
+            FloatingTextController.SpawnFloatingText("PlayerHit", "-" + damage.ToString("F0"),
+                transform.position + new Vector3(Random.Range(-0.3f, 0.3f), 3.75f, Random.Range(-0.1f, 0.1f)),
+                Quaternion.identity, 1f);
         }
 
         [Button]
         public void OnDeath()
         {
             graphics.OnDeath();
-
             IsDead = true;
-
             Tween.DelayedCall(0.5f, LevelController.OnPlayerDied);
         }
 
@@ -284,38 +320,41 @@ namespace Watermelon.SquadShooter
             hitShinePropertyBlock.SetColor(SHADER_HIT_SHINE_COLOR_HASH, Color.white);
             characterMeshRenderer.SetPropertyBlock(hitShinePropertyBlock);
 
-            hitShineTweenCase = characterMeshRenderer.DOPropertyBlockColor(SHADER_HIT_SHINE_COLOR_HASH, hitShinePropertyBlock, Color.black, 0.32f);
+            hitShineTweenCase = characterMeshRenderer.DOPropertyBlockColor(SHADER_HIT_SHINE_COLOR_HASH,
+                hitShinePropertyBlock, Color.black, 0.32f);
 
             graphics.PlayHitAnimation();
         }
 
         #region Gun
-        public void SetGun(WeaponData weaponData, bool playBounceAnimation = false, bool playAnimation = false, bool playParticle = false)
+
+        public void SetGun(WeaponData weaponData, bool playBounceAnimation = false, bool playAnimation = false,
+            bool playParticle = false)
         {
             var gunUpgrade = UpgradesController.GetUpgrade<BaseWeaponUpgrade>(weaponData.UpgradeType);
             var currentStage = gunUpgrade.GetCurrentStage();
 
             // Check if graphics isn't exist already
-            if (gunPrefabGraphics != currentStage.WeaponPrefab)
+            if (gunPrefabGraphics != gunUpgrade.WeaponPrefab)
             {
                 // Store prefab link
-                gunPrefabGraphics = currentStage.WeaponPrefab;
+                gunPrefabGraphics = gunUpgrade.WeaponPrefab;
 
-                if (gunBehaviour != null)
+                if (gunBehaviour)
                 {
                     gunBehaviour.OnGunUnloaded();
 
                     Destroy(gunBehaviour.gameObject);
                 }
 
-                if (gunPrefabGraphics != null)
+                if (gunPrefabGraphics)
                 {
                     var gunObject = Instantiate(gunPrefabGraphics);
                     gunObject.SetActive(true);
 
                     gunBehaviour = gunObject.GetComponent<BaseGunBehavior>();
 
-                    if (graphics != null)
+                    if (graphics)
                     {
                         gunBehaviour.InitialiseCharacter(graphics);
                         gunBehaviour.PlaceGun(graphics);
@@ -327,7 +366,7 @@ namespace Watermelon.SquadShooter
                 }
             }
 
-            if (gunBehaviour != null)
+            if (gunBehaviour)
             {
                 gunBehaviour.Initialise(this, weaponData);
 
@@ -354,9 +393,11 @@ namespace Watermelon.SquadShooter
         {
             graphics.OnShoot();
         }
+
         #endregion
 
         #region Graphics
+
         public void SetStats(CharacterStats stats)
         {
             this.stats = stats;
@@ -423,6 +464,7 @@ namespace Watermelon.SquadShooter
                     graphics.PlayBounceAnimation();
             }
         }
+
         #endregion
 
         public void Activate(bool check = true)
@@ -472,11 +514,8 @@ namespace Watermelon.SquadShooter
         public void MoveForwardAndDisable(float duration)
         {
             agent.enabled = false;
-
-            transform.DOMove(transform.position + Vector3.forward * activeMovementSettings.MoveSpeed * duration, duration).OnComplete(() =>
-            {
-                Disable();
-            });
+            transform.DOMove(transform.position + Vector3.forward * (activeMovementSettings.MoveSpeed * duration),
+                duration).OnComplete(() => { Disable(); });
         }
 
         public void DisableAgent()
@@ -487,17 +526,50 @@ namespace Watermelon.SquadShooter
         public void ActivateMovement()
         {
             isMovementActive = true;
-
             aimRingBehavior.Show();
         }
 
         void Update()
         {
-            if (gunBehaviour != null)
+            if (moveSlowed)
+            {
+                if (moveSlowTimer <= 0)
+                {
+                    moveSlowFactor = 1f;
+                    moveSlowed = false;
+                }
+
+                moveSlowTimer -= Time.deltaTime;
+            }
+
+            if (isMoveSpeedBooster)
+            {
+                if (moveSpeedBoostTimer <= 0)
+                {
+                    moveBoostFactor = 1f;
+                    isMoveSpeedBooster = false;
+                    if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
+                }
+
+                moveSpeedBoostTimer -= Time.deltaTime;
+            }
+
+            if (isStunned)
+            {
+                stunTimer -= Time.deltaTime;
+                if (stunTimer <= 0)
+                {
+                    isStunned = false;
+                    stunVfx.gameObject.SetActive(false);
+                }
+
+                return;
+            }
+
+            if (gunBehaviour)
                 gunBehaviour.UpdateHandRig();
 
-            if (!isActive)
-                return;
+            if (!isActive) return;
 
             var joystick = Control.CurrentControl;
 
@@ -506,40 +578,38 @@ namespace Watermelon.SquadShooter
                 if (!isMoving)
                 {
                     isMoving = true;
-
                     speed = 0;
-
                     graphics.OnMovingStarted();
                 }
 
-                var maxAlowedSpeed = Mathf.Clamp01(joystick.MovementInput.magnitude) * activeMovementSettings.MoveSpeed;
+                var maxAlowedSpeed = Mathf.Clamp01(joystick.MovementInput.magnitude) *
+                                     activeMovementSettings.MoveSpeed * moveSlowFactor * moveBoostFactor;
 
                 if (speed > maxAlowedSpeed)
                 {
                     speed -= activeMovementSettings.Acceleration * Time.deltaTime;
                     if (speed < maxAlowedSpeed)
-                    {
                         speed = maxAlowedSpeed;
-                    }
                 }
                 else
                 {
                     speed += activeMovementSettings.Acceleration * Time.deltaTime;
                     if (speed > maxAlowedSpeed)
-                    {
                         speed = maxAlowedSpeed;
-                    }
                 }
 
                 movementVelocity = transform.forward * speed;
 
-                transform.position += joystick.MovementInput * Time.deltaTime * speed;
+                transform.position += joystick.MovementInput * (Time.deltaTime * speed);
 
-                graphics.OnMoving(Mathf.InverseLerp(0, activeMovementSettings.MoveSpeed, speed), joystick.MovementInput, IsCloseEnemyFound);
+                graphics.OnMoving(Mathf.InverseLerp(0, activeMovementSettings.MoveSpeed, speed), joystick.MovementInput,
+                    IsCloseEnemyFound);
 
                 if (!IsCloseEnemyFound)
                 {
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(joystick.MovementInput.normalized), Time.deltaTime * activeMovementSettings.RotationSpeed);
+                    transform.rotation = Quaternion.Lerp(transform.rotation,
+                        Quaternion.LookRotation(joystick.MovementInput.normalized),
+                        Time.deltaTime * activeMovementSettings.RotationSpeed);
                 }
             }
             else
@@ -547,25 +617,25 @@ namespace Watermelon.SquadShooter
                 if (isMoving)
                 {
                     isMoving = false;
-
                     movementVelocity = Vector3.zero;
-
                     graphics.OnMovingStoped();
-
                     speed = 0;
                 }
             }
 
             if (IsCloseEnemyFound)
             {
-                playerTarget.position = Vector3.Lerp(playerTarget.position, new Vector3(closestEnemyBehaviour.transform.position.x, transform.position.y, closestEnemyBehaviour.transform.position.z), Time.deltaTime * activeMovementSettings.RotationSpeed);
+                playerTarget.position = Vector3.Lerp(playerTarget.position,
+                    new Vector3(closestEnemyBehaviour.transform.position.x, transform.position.y,
+                        closestEnemyBehaviour.transform.position.z),
+                    Time.deltaTime * activeMovementSettings.RotationSpeed);
 
                 transform.LookAt(new Vector3(playerTarget.position.x, transform.position.y, playerTarget.position.z));
             }
 
             targetRing.transform.rotation = Quaternion.identity;
 
-            if (healthbarBehaviour != null)
+            if (healthbarBehaviour)
                 healthbarBehaviour.FollowUpdate();
 
             aimRingBehavior.UpdatePosition();
@@ -573,19 +643,43 @@ namespace Watermelon.SquadShooter
 
         void FixedUpdate()
         {
+            if (isStunned) return;
             graphics.CustomFixedUpdate();
 
-            if (gunBehaviour != null)
+            if (gunBehaviour)
                 gunBehaviour.GunUpdate();
+
+            if (isMultishotBooster)
+            {
+                multiShotTimer -= Time.fixedDeltaTime;
+                if (multiShotTimer <= 0)
+                {
+                    isMultishotBooster = false;
+                    if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
+                }
+            }
+
+            if (isAtkSpdBooster)
+            {
+                atkSpdTimer -= Time.fixedDeltaTime;
+                if (atkSpdTimer <= 0)
+                {
+                    isAtkSpdBooster = false;
+                    if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive(false);
+                }
+            }
         }
+
+        public float AtkSpdMult => isAtkSpdBooster ? atkSpdBoosterMult : 1f;
 
         public void OnCloseEnemyChanged(BaseEnemyBehavior enemyBehavior)
         {
             if (!isActive) return;
+//if(enemyBehavior is MeleeEnemyBehaviour {isInStealth: true})return;
 
-            if (enemyBehavior != null)
+            if (enemyBehavior)
             {
-                if (closestEnemyBehaviour == null)
+                if (!closestEnemyBehaviour)
                 {
                     playerTarget.position = transform.position + transform.forward * 5;
                 }
@@ -600,10 +694,11 @@ namespace Watermelon.SquadShooter
                 ringTweenCase.KillActive();
 
                 targetRing.transform.SetParent(enemyBehavior.transform);
-                targetRing.transform.localScale = Vector3.one * enemyBehavior.Stats.TargetRingSize * 1.4f;
+                targetRing.transform.localScale = Vector3.one * (enemyBehavior.Stats.TargetRingSize * 1.4f);
                 targetRing.transform.localPosition = Vector3.zero;
 
-                ringTweenCase = targetRing.transform.DOScale(Vector3.one * enemyBehavior.Stats.TargetRingSize, 0.2f).SetEasing(Ease.Type.BackIn);
+                ringTweenCase = targetRing.transform.DOScale(Vector3.one * enemyBehavior.Stats.TargetRingSize, 0.2f)
+                    .SetEasing(Ease.Type.BackIn);
 
                 CameraController.SetEnemyTarget(enemyBehavior);
 
@@ -662,12 +757,32 @@ namespace Watermelon.SquadShooter
                 {
                     OnItemPicked(item);
                     item.Pick();
-
                 }
             }
             else if (other.CompareTag(PhysicsHelper.TAG_CHEST))
             {
                 other.GetComponent<AbstractChestBehavior>().ChestApproached();
+            }
+        }
+
+        float stunTimer;
+        public bool isStunned;
+
+        public void ApplyStun(float duration)
+        {
+            Debug.LogError("Stunned");
+            isStunned = true;
+            stunTimer = duration;
+            stunVfx.gameObject.SetActive(true);
+            StartCoroutine(PlayHit());
+        }
+
+        IEnumerator PlayHit()
+        {
+            while (stunTimer > 0)
+            {
+                graphics.PlayHitAnimation();
+                yield return new WaitForSeconds(0.3f);
             }
         }
 
@@ -705,7 +820,29 @@ namespace Watermelon.SquadShooter
                 healthbarBehaviour.OnHealthChanged();
                 healingParticle.Play();
             }
+            else if (item.DropType == DropableItemType.AtkSpeedBooster)
+            {
+                isAtkSpdBooster = true;
+                atkSpdTimer = atkSpdBoosterDuration;
+                if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive(true);
+            }
+            else if (item.DropType == DropableItemType.MultishotBooster)
+            {
+                isMultishotBooster = true;
+                multiShotTimer = multishotBoosterDuration;
+                if (multishotBoostVfx) multishotBoostVfx.SetActive((true));
+            }
+            else if (item.DropType == DropableItemType.MoveSpeedBooster)
+            {
+                isMoveSpeedBooster = true;
+                moveSpeedBoostTimer = moveSpeedBoostDuration;
+                moveBoostFactor = 1.7f;
+                if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((true));
+            }
         }
+
+
+
 
         [Button]
         public void Jump()

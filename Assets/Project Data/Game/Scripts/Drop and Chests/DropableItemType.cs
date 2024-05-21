@@ -11,5 +11,8 @@
         WeaponCard = 1,
 
         Heal = 2,
+        AtkSpeedBooster=3,
+        MultishotBooster = 4,
+        MoveSpeedBooster = 5
     }
 }

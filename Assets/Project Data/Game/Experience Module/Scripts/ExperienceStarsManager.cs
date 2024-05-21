@@ -97,7 +97,7 @@ namespace Watermelon
 
             for (var i = 0; i < starsAmount; i++)
             {
-                var starRect = starsPool.GetPooledObject().GetComponent<RectTransform>();
+                var starRect = starsPool.Get().GetComponent<RectTransform>();
 
                 starRect.SetParent(transform.parent);
                 starRect.anchoredPosition = Camera.main.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-25f, 25f), Random.Range(-25f, 25f), 0f);

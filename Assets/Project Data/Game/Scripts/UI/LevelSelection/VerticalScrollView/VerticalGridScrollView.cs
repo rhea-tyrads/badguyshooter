@@ -173,7 +173,7 @@ namespace Watermelon
 
             for(var i = 0; i < visibleRowsAmount; i++)
             {
-                var row = gridRowPool.GetPooledObject().GetComponent<GridRow>();
+                var row = gridRowPool.Get().GetComponent<GridRow>();
 
                 row.transform.SetParent(rectTransform);
                 row.transform.localScale = Vector3.one;

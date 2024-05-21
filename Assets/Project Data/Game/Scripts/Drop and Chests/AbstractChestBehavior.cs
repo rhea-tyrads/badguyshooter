@@ -61,7 +61,7 @@ namespace Watermelon.SquadShooter
                                 var data = dropData[i].Clone();
                                 data.amount = itemValues[j];
 
-                                Drop.DropItem(data, dropCenter, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, itemValues[j], 0.5f, rewarded: isRewarded);
+                                Drop.Spawn(data, dropCenter, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Coin, itemValues[j], 0.5f, rewarded: isRewarded);
                             });
                         }
 
@@ -71,7 +71,7 @@ namespace Watermelon.SquadShooter
                     {
                         for (var j = 0; j < dropData[i].amount; j++)
                         {
-                            var card = Drop.DropItem(dropData[i], dropCenter, Vector3.zero, DropFallingStyle.Default, 1, 0.6f).GetComponent<WeaponCardDropBehaviour>();
+                            var card = Drop.Spawn(dropData[i], dropCenter, Vector3.zero, DropFallingStyle.Default, 1, 0.6f).GetComponent<WeaponCardDropBehaviour>();
                             card.SetCardData(dropData[i].cardType);
                         }
                     }
@@ -79,7 +79,7 @@ namespace Watermelon.SquadShooter
                     {
                         for (var j = 0; j < dropData[i].amount; j++)
                         {
-                            Drop.DropItem(dropData[i], dropCenter, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Default, 1, 0.6f);
+                            Drop.Spawn(dropData[i], dropCenter, Vector3.zero.SetY(Random.Range(0f, 360f)), DropFallingStyle.Default, 1, 0.6f);
                         }
                     }
                 }

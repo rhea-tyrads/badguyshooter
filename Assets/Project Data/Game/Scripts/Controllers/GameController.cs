@@ -35,7 +35,7 @@ namespace Watermelon
         {
             instance = this;
 
-            SaveController.Initialise(false, true);
+            SaveController.Initialise(false);
 
             // Cache components
             CacheComponent(out currenciesController);

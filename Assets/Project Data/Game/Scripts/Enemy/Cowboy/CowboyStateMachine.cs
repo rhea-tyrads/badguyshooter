@@ -16,28 +16,28 @@ namespace Watermelon.Enemy.Cowboy
             var patrollingStateCase = new StateCase();
             patrollingStateCase.state = new PatrollingState(enemy);
             patrollingStateCase.transitions = new List<StateTransition<State>> {
-                new StateTransition<State>(PatrollingStateTransition)
+                new(PatrollingStateTransition)
             };
 
             var followingStateCase = new StateCase();
             followingStateCase.state = new FollowingState(enemy);
             followingStateCase.transitions = new List<StateTransition<State>>
             {
-                new StateTransition<State>(FollowingStateTransition)
+                new(FollowingStateTransition)
             };
 
             var fleeingStateCase = new StateCase();
             fleeingStateCase.state = new FleeingState(enemy);
             fleeingStateCase.transitions = new List<StateTransition<State>>
             {
-                new StateTransition<State>(FleeingStateTransition)
+                new(FleeingStateTransition)
             };
 
             var attackingStateCase = new StateCase();
             attackingStateCase.state = new AimAndAttackState(enemy);
             attackingStateCase.transitions = new List<StateTransition<State>>()
             {
-                new StateTransition<State>(AttackingStateTransition)
+                new(AttackingStateTransition)
             };
 
             states.Add(State.Patrolling, patrollingStateCase);

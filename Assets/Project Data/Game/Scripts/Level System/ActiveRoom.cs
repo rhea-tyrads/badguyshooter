@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Watermelon.SquadShooter;
 
@@ -95,9 +96,10 @@ namespace Watermelon.LevelSystem
         }
 
         #region Environment/Obstacles
+
         public static void SpawnItem(LevelItem item, ItemEntityData itemEntityData)
         {
-            var itemObject = item.Pool.GetPooledObject(false);
+            var itemObject = item.Pool.Get(false);
             itemObject.transform.SetParent(levelObject.transform);
             itemObject.transform.SetPositionAndRotation(itemEntityData.Position, itemEntityData.Rotation);
             itemObject.transform.localScale = itemEntityData.Scale;
@@ -108,13 +110,15 @@ namespace Watermelon.LevelSystem
 
         public static void SpawnExitPoint(GameObject exitPointPrefab, Vector3 position)
         {
-            exitPointBehaviour = Object.Instantiate(exitPointPrefab, position, Quaternion.identity, levelObject.transform).GetComponent<ExitPointBehaviour>();
+            exitPointBehaviour = Object
+                .Instantiate(exitPointPrefab, position, Quaternion.identity, levelObject.transform)
+                .GetComponent<ExitPointBehaviour>();
             exitPointBehaviour.Initialise();
         }
 
         public static void SpawnChest(ChestEntityData chestEntityData, ChestData chestData)
         {
-            var chestObject = chestData.Pool.GetPooledObject(false);
+            var chestObject = chestData.Pool.Get(false);
             chestObject.transform.SetParent(levelObject.transform);
             chestObject.transform.SetPositionAndRotation(chestEntityData.Position, chestEntityData.Rotation);
             chestObject.transform.localScale = chestEntityData.Scale;
@@ -128,6 +132,7 @@ namespace Watermelon.LevelSystem
         #endregion
 
         #region Enemies
+
         public static BaseEnemyBehavior SpawnEnemy(EnemyData enemyData, EnemyEntityData enemyEntityData, bool isActive)
         {
             var enemy = Object.Instantiate(enemyData.Prefab, enemyEntityData.Position, enemyEntityData.Rotation, levelObject.transform).GetComponent<BaseEnemyBehavior>();
@@ -137,7 +142,8 @@ namespace Watermelon.LevelSystem
 
             // Place enemy on the middle of the path if there are two or more waypoints
             if (enemyEntityData.PathPoints.Length > 1)
-                enemy.transform.position = enemyEntityData.PathPoints[0] + (enemyEntityData.PathPoints[1] - enemyEntityData.PathPoints[0]) * 0.5f;
+                enemy.transform.position = enemyEntityData.PathPoints[0] +
+                                           (enemyEntityData.PathPoints[1] - enemyEntityData.PathPoints[0]) * 0.5f;
 
             if (isActive)
                 enemy.Initialise();
@@ -157,11 +163,11 @@ namespace Watermelon.LevelSystem
 
         public static void ClearEnemies()
         {
-            for (var i = 0; i < enemies.Count; i++)
+            foreach (var enemy in enemies)
             {
-                enemies[i].Unload();
+                enemy.Unload();
 
-                Object.Destroy(enemies[i].gameObject);
+                Object.Destroy(enemy.gameObject);
             }
 
             enemies.Clear();
@@ -170,23 +176,17 @@ namespace Watermelon.LevelSystem
         public static BaseEnemyBehavior GetEnemyForSpecialReward()
         {
             var result = enemies.Find(e => e.Tier == EnemyTier.Boss);
-
-            if (result != null)
-                return result;
+            if (result) return result;
 
             result = enemies.Find(e => e.Tier == EnemyTier.Elite);
-
-            if (result != null)
-                return result;
+            if (result) return result;
 
             result = enemies[0];
 
             for (var i = 1; i < enemies.Count; i++)
             {
                 if (enemies[i].transform.position.z > result.transform.position.z)
-                {
                     result = enemies[i];
-                }
             }
 
             return result;
@@ -194,61 +194,42 @@ namespace Watermelon.LevelSystem
 
         public static void InitialiseDrop(List<DropData> enemyDrop, List<DropData> chestDrop)
         {
-            for (var i = 0; i < enemies.Count; i++)
+            foreach (var enemy in enemies)
             {
-                enemies[i].ResetDrop();
+                enemy.ResetDrop();
             }
 
-            for (var i = 0; i < enemyDrop.Count; i++)
+            foreach (var drop in enemyDrop)
             {
-                if (enemyDrop[i].dropType == DropableItemType.Currency && enemyDrop[i].currencyType == CurrencyType.Coins)
+                if (drop.dropType == DropableItemType.Currency && drop.currencyType == CurrencyType.Coins)
                 {
-                    var coins = LevelController.SplitIntEqually(enemyDrop[i].amount, enemies.Count);
+                    var coins = LevelController.SplitIntEqually(drop.amount, enemies.Count);
 
                     for (var j = 0; j < enemies.Count; j++)
                     {
-                        enemies[j].AddDrop(new DropData() { dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = coins[j] });
+                        enemies[j].AddDrop(new DropData()
+                        {
+                            dropType = DropableItemType.Currency, currencyType = CurrencyType.Coins, amount = coins[j]
+                        });
                     }
                 }
                 else
                 {
-                    GetEnemyForSpecialReward().AddDrop(enemyDrop[i]);
+                    GetEnemyForSpecialReward().AddDrop(drop);
                 }
             }
 
-            for (var i = 0; i < chests.Count; i++)
+            foreach (var chest in chests)
             {
-                chests[i].Init(chestDrop);
+                chest.Init(chestDrop);
             }
         }
 
-        public static List<BaseEnemyBehavior> GetAliveEnemies()
-        {
-            var result = new List<BaseEnemyBehavior>();
-
-            for (var i = 0; i < enemies.Count; i++)
-            {
-                if (!enemies[i].IsDead)
-                {
-                    result.Add(enemies[i]);
-                }
-            }
-
-            return result;
-        }
+        public static List<BaseEnemyBehavior> GetAliveEnemies() => enemies.Where(enemy => !enemy.IsDead).ToList();
 
         public static bool AreAllEnemiesDead()
-        {
-            for (var i = 0; i < enemies.Count; i++)
-            {
-                if (!enemies[i].IsDead)
-                {
-                    return false;
-                }
-            }
+            => enemies.All(t => t.IsDead);
 
-            return true;
-        }
         #endregion
 
         #region Custom Objects

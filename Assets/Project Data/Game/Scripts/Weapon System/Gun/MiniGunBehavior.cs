@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
 
             upgrade = UpgradesController.GetUpgrade<MinigunUpgrade>(data.UpgradeType);
 
-            var bulletObj = (upgrade.CurrentStage as BaseWeaponUpgradeStage).BulletPrefab;
+            var bulletObj = upgrade.BulletPrefab;
             bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
             RecalculateDamage();
@@ -55,15 +55,16 @@ namespace Watermelon.SquadShooter
             var stage = upgrade.GetCurrentStage();
 
             damage = stage.Damage;
-            attackDelay = 1f / stage.FireRate;
+            var atkSpdMult = characterBehaviour.isAtkSpdBooster ? characterBehaviour.atkSpdBoosterMult : 1;
+            attackDelay = 1f / (stage.FireRate * atkSpdMult);
             spread = stage.Spread;
             bulletSpeed = stage.BulletSpeed;
         }
 
         public override void GunUpdate()
         {
-            if (!characterBehaviour.IsCloseEnemyFound)
-                return;
+            if (!characterBehaviour.IsCloseEnemyFound) return;
+            if (characterBehaviour.ClosestEnemyBehaviour.isInStealth) return;
 
             barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
 
@@ -72,7 +73,8 @@ namespace Watermelon.SquadShooter
 
             shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
 
-            if (Physics.Raycast(transform.position, shootDirection, out var hitInfo, 300f, targetLayers) && hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
+            if (Physics.Raycast(transform.position, shootDirection, out var hitInfo, 300f, targetLayers) &&
+                hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
             {
                 if (Vector3.Angle(shootDirection, transform.forward.SetY(0f)) < 40f)
                 {
@@ -87,27 +89,28 @@ namespace Watermelon.SquadShooter
 
                     shootParticleSystem.Play();
 
-                    nextShootTime = Time.timeSinceLevelLoad + attackDelay;
+                    nextShootTime = Time.timeSinceLevelLoad + attackDelay /characterBehaviour.AtkSpdMult;
 
                     if (bulletStreamAngles.IsNullOrEmpty())
                     {
-                        bulletStreamAngles = new List<float> { 0 };
+                        bulletStreamAngles = new List<float> {0};
                     }
 
                     var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
 
                     for (var k = 0; k < bulletsNumber; k++)
                     {
-                        for (var i = 0; i < bulletStreamAngles.Count; i++)
+                        foreach (var streamAngle in bulletStreamAngles)
                         {
-                            var streamAngle = bulletStreamAngles[i];
-
                             var bullet = bulletPool
-                                .GetPooledObject(new PooledObjectSettings()
-                                .SetPosition(shootPoint.position)
-                                .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up * (Random.Range((float)-spread, spread) + streamAngle)))
+                                .Get(new PooledObjectSettings()
+                                    .SetPosition(shootPoint.position)
+                                    .SetEulerRotation(characterBehaviour.transform.eulerAngles +
+                                                      Vector3.up * (Random.Range((float) -spread, spread) +
+                                                                    streamAngle)))
                                 .GetComponent<PlayerBulletBehavior>();
-                            bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
+                            bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                                bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                         }
                     }
 

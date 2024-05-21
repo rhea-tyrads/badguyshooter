@@ -21,22 +21,16 @@ namespace Watermelon
             activeUpgrades = upgradesDatabase.Upgrades;
 
             activeUpgradesLink = new Dictionary<UpgradeType, BaseUpgrade>();
-            for (var i = 0; i < activeUpgrades.Length; i++)
+            foreach (var upgrade in activeUpgrades)
             {
-                var upgrade = activeUpgrades[i];
-
                 var hash = string.Format(SAVE_IDENTIFIER, upgrade.UpgradeType.ToString()).GetHashCode();
-
                 var save = SaveController.GetSaveObject<UpgradeSavableObject>(hash); ;
-
                 upgrade.SetSave(save);
 
-                if (!activeUpgradesLink.ContainsKey(upgrade.UpgradeType))
-                {
-                    upgrade.Initialise();
-
-                    activeUpgradesLink.Add(upgrade.UpgradeType, activeUpgrades[i]);
-                }
+                if (activeUpgradesLink.ContainsKey(upgrade.UpgradeType)) continue;
+                
+                upgrade.Initialise();
+                activeUpgradesLink.Add(upgrade.UpgradeType, upgrade);
             }
         }
 

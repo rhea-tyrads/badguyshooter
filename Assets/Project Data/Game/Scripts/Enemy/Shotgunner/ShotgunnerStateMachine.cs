@@ -16,14 +16,14 @@ namespace Watermelon.Enemy.Shotgunner
             var patrollingStateCase = new StateCase();
             patrollingStateCase.state = new PatrollingState(enemy);
             patrollingStateCase.transitions = new List<StateTransition<State>> {
-                new StateTransition<State>(PatrollingStateTransition)
+                new(PatrollingStateTransition)
             };
 
             var followingStateCase = new StateCase();
             followingStateCase.state = new FollowingState(enemy);
             followingStateCase.transitions = new List<StateTransition<State>>
             {
-                new StateTransition<State>(FollowingStateTransition)
+                new(FollowingStateTransition)
             };
 
 
@@ -31,7 +31,7 @@ namespace Watermelon.Enemy.Shotgunner
             attackingStateCase.state = new AimAndAttackState(enemy);
             attackingStateCase.transitions = new List<StateTransition<State>>()
             {
-                new StateTransition<State>(AttackingStateTransition)
+                new(AttackingStateTransition)
             };
 
             states.Add(State.Patrolling, patrollingStateCase);

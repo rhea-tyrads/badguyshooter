@@ -16,14 +16,14 @@ namespace Watermelon.Enemy.Melee
             var patrollingStateCase = new StateCase();
             patrollingStateCase.state = new PatrollingState(enemy);
             patrollingStateCase.transitions = new List<StateTransition<State>> {
-                new StateTransition<State>(PatrollingStateTransition)
+                new(PatrollingStateTransition)
             };
 
             var followingAttackingStateCase = new StateCase();
             followingAttackingStateCase.state = new MeleeFollowAttackState(enemy);
             followingAttackingStateCase.transitions = new List<StateTransition<State>>
             {
-                new StateTransition<State>((out State nextState) =>{
+                new((out State nextState) =>{
                     nextState = State.Attacking;
                     return false;
                 })

@@ -1,0 +1,208 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63ad1685df4f7342ae3080b569e957b, type: 3}
+  m_Name: Revolver Upgrade
+  m_EditorClassIdentifier: 
+  upgradeType: 4
+  title: Revolver
+  upgrades:
+  - price: 0
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 0
+      secondValue: 0
+    rangeRadius: 0
+    fireRate: 0
+    spread: 0
+    power: 0
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 0
+      secondValue: 0
+    keyUpgradeNumber: -1
+  - price: 0
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 15
+      secondValue: 20
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 70
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 17
+      secondValue: 22
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: 7
+  - price: 90
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 20
+      secondValue: 24
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 130
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 22
+      secondValue: 26
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 170
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 24
+      secondValue: 28
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 220
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 26
+      secondValue: 30
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 260
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 30
+      secondValue: 35
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 280
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 32
+      secondValue: 38
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 300
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 34
+      secondValue: 40
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  - price: 400
+    currencyType: 0
+    previewSprite: {fileID: 0}
+    damage:
+      firstValue: 40
+      secondValue: 50
+    rangeRadius: 6.5
+    fireRate: 1.5
+    spread: 0
+    power: 10
+    bulletsPerShot:
+      firstValue: 1
+      secondValue: 1
+    bulletSpeed:
+      firstValue: 25
+      secondValue: 25
+    keyUpgradeNumber: -1
+  weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
+    type: 3}
+  bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
+    type: 3}

@@ -26,7 +26,7 @@ namespace Watermelon
 
         public static RingEffectCase SpawnEffect(Vector3 position, Gradient gradient, float targetSize, float time, Ease.Type easing)
         {
-            var ringObject = ringEffectController.ringEffectPool.GetPooledObject();
+            var ringObject = ringEffectController.ringEffectPool.Get();
             ringObject.transform.position = position;
             ringObject.transform.localScale = Vector3.zero;
             ringObject.SetActive(true);
