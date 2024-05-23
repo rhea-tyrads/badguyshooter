@@ -108,7 +108,6 @@ namespace Watermelon.SquadShooter
             }
             else
             {
-                Debug.LogError("no move to player");
                 ItemDisable();
             }
         }

@@ -11,6 +11,11 @@ namespace Watermelon.SquadShooter
         public GameObject moveSpeedBoostVfx;
         public GameObject atkSpeedBoostVfx;
         public GameObject multishotBoostVfx;
+        public float critMultiplier = 2f;
+        public float critChance = 0.15f;
+        public bool IsCritical;
+        public int respawnCount;
+        public float CritMult => IsCritical && Random.value <= critChance ? critMultiplier : 1f;
 
         static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
 
@@ -34,23 +39,23 @@ namespace Watermelon.SquadShooter
         [Space(5)]
         [SerializeField] AimRingBehavior aimRingBehavior;
         [SerializeField] ParticleSystem stunVfx;
-       
+
         public bool isMoveSpeedBooster;
         public bool isMultishotBooster;
         public float multishotBoosterDuration = 10;
         public float moveSpeedBoostDuration = 10;
-        public int MultishotBoosterAmount => isMultishotBooster?4:0;
+        public int MultishotBoosterAmount => isMultishotBooster ? 4 : 0;
         float multiShotTimer;
         float moveSpeedBoostTimer;
 
         public bool isAtkSpdBooster;
         public float atkSpdBoosterDuration = 10;
         public float atkSpdBoosterMult = 2;
-      
+
         float atkSpdTimer;
-        
+
         // Character Graphics
-        
+
         BaseCharacterGraphics graphics;
         public BaseCharacterGraphics Graphics => graphics;
 
@@ -71,9 +76,11 @@ namespace Watermelon.SquadShooter
 
         // Health
         float currentHealth;
-
+        public float hpBonusMultiplier = 0.3f;
+        public bool isHpBonus;
         public float CurrentHealth => currentHealth;
-        public float MaxHealth => stats.Health;
+        public float MaxHealth => stats.Health * HpBonus;
+        float HpBonus => isHpBonus ? hpBonusMultiplier : 1f;
         public bool FullHealth => currentHealth == stats.Health;
 
         public bool IsActive => isActive;
@@ -122,6 +129,27 @@ namespace Watermelon.SquadShooter
         {
             moveSlowFactor = 1;
             agent.enabled = false;
+        }
+
+        public void ApplyCriticalBonus()
+        {
+            IsCritical = true;
+        }
+
+        public void ApplyHitpointsBonus()
+        {
+            isHpBonus = true;
+            currentHealth = MaxHealth;
+        }
+
+        public void ApplyRespawnBonus()
+        {
+            respawnCount = 1;
+        }
+
+        public void UseRespawn()
+        {
+            respawnCount--;
         }
 
         public void Initialise()
@@ -840,8 +868,6 @@ namespace Watermelon.SquadShooter
                 if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((true));
             }
         }
-
-
 
 
         [Button]

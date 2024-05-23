@@ -32,7 +32,7 @@ namespace Watermelon.LevelSystem
         static int currentRoomIndex;
 
         // Player
-        static CharacterBehaviour characterBehaviour;
+       public static CharacterBehaviour characterBehaviour;
         static GameObject playerObject;
 
         // World Data
@@ -41,7 +41,7 @@ namespace Watermelon.LevelSystem
         // UI
         static UIComplete uiComplete;
         static UIMainMenu uiMainMenu;
-        static UIGame uiGame;
+        public  static UIGame uiGame;
         static UICharacterSuggestion uiCharacterSuggestion;
 
         // Gameplay
@@ -315,11 +315,9 @@ namespace Watermelon.LevelSystem
 
             currentLevelData.OnLevelLoaded();
             currentLevelData.OnRoomEntered();
-
             loadedLevel = currentLevelData;
 
             NavMeshController.RecalculateNavMesh(null);
-
             GameLoading.MarkAsReadyToHide();
         }
 
@@ -422,8 +420,10 @@ namespace Watermelon.LevelSystem
 
         public static void StartGameplay()
         {
+            BonusController.Show();
+            LevelController.uiGame.DisableCanvas();
             GameController.OnGameStarted();
-
+return;
             EnemyController.OnLevelWillBeStarted();
 
             if (NavMeshController.IsNavMeshCalculated)
@@ -434,13 +434,26 @@ namespace Watermelon.LevelSystem
             }
             else
             {
-                NavMeshController.RecalculateNavMesh(delegate
-                {
-                    StartGameplayOnceNavmeshIsReady();
-                });
+                NavMeshController.RecalculateNavMesh(StartGameplayOnceNavmeshIsReady);
             }
         }
+        public static void StartGame()
+        {
+            uiGame.EnableCanvas();
+ 
+            EnemyController.OnLevelWillBeStarted();
 
+            if (NavMeshController.IsNavMeshCalculated)
+            {
+                NavMeshController.ForceActivation();
+
+                StartGameplayOnceNavmeshIsReady();
+            }
+            else
+            {
+                NavMeshController.RecalculateNavMesh(StartGameplayOnceNavmeshIsReady);
+            }
+        }
         static void StartGameplayOnceNavmeshIsReady()
         {
             GameController.OnGameStarted();
@@ -553,21 +566,10 @@ namespace Watermelon.LevelSystem
                 characterBehaviour.ActivateAgent();
             });
 
-            if (PedestalBehavior != null)
+            if (PedestalBehavior)
                 Object.Destroy(PedestalBehavior.gameObject);
 
-            if (!immediately)
-            {
-                UIController.HidePage<UIMainMenu>(() =>
-                {
-                    UIController.ShowPage<UIGame>();
-
-                    Control.EnableMovementControl();
-
-                    StartGameplay();
-                });
-            }
-            else
+            if (immediately)
             {
                 uiMainMenu.DisableCanvas();
 
@@ -579,6 +581,17 @@ namespace Watermelon.LevelSystem
 
                 UIGamepadButton.DisableAllTags();
                 UIGamepadButton.EnableTag(UIGamepadButtonTag.Game);
+            }
+            else
+            {
+                UIController.HidePage<UIMainMenu>(() =>
+                {
+                    UIController.ShowPage<UIGame>();
+
+                    Control.EnableMovementControl();
+
+                    StartGameplay();
+                });
             }
         }
 

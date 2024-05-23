@@ -37,19 +37,20 @@ namespace Watermelon
         public Joystick Joystick => joystick;
         public RectTransform FloatingTextHolder => floatingTextHolder;
 
-        List<UIRoomIndicator> roomIndicators = new List<UIRoomIndicator>();
+        List<UIRoomIndicator> roomIndicators = new();
         PoolGeneric<UIRoomIndicator> roomIndicatorsPool;
 
         void Awake()
         {
-            roomIndicatorsPool = new PoolGeneric<UIRoomIndicator>(new PoolSettings(roomIndicatorUIPrefab.name, roomIndicatorUIPrefab, 3, true, roomsHolder));
-
+            roomIndicatorsPool = new PoolGeneric<UIRoomIndicator>(new PoolSettings(roomIndicatorUIPrefab.name,
+                roomIndicatorUIPrefab, 3, true, roomsHolder));
             pauseButton.onClick.AddListener(OnPauseButtonClicked);
             pauseExitButton.onClick.AddListener(OnPauseExitButtonClicked);
             pauseResumeButton.onClick.AddListener(OnPauseResumeButtonClicked);
         }
 
-        public void FadeAnimation(float time, float startAlpha, float targetAlpha, Ease.Type easing, SimpleCallback callback, bool disableOnComplete = false)
+        public void FadeAnimation(float time, float startAlpha, float targetAlpha, Ease.Type easing,
+            SimpleCallback callback, bool disableOnComplete = false)
         {
             fadeImage.gameObject.SetActive(true);
             fadeImage.color = fadeImage.color.SetAlpha(startAlpha);
@@ -70,18 +71,14 @@ namespace Watermelon
         public override void PlayHideAnimation()
         {
             OverlayUI.HideOverlay();
-
             UIController.OnPageClosed(this);
         }
 
         public override void PlayShowAnimation()
         {
             OverlayUI.HideOverlay();
-
             pauseButton.gameObject.SetActive(true);
-
             UIController.OnPageOpened(this);
-
             UIMainMenu.DotsBackground.gameObject.SetActive(false);
         }
 
@@ -134,10 +131,11 @@ namespace Watermelon
 
             UIController.HidePage<UIGame>();
 
-            var dropItems = FindObjectsByType<ItemDropBehaviour>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            for (var i = 0; i < dropItems.Length; i++)
+            var dropItems =
+                FindObjectsByType<ItemDropBehaviour>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+            foreach (var t in dropItems)
             {
-                dropItems[i].ItemDisable();
+                t.ItemDisable();
             }
 
             Overlay.Show(0.3f, () =>
@@ -168,8 +166,8 @@ namespace Watermelon
             pausePanelObject.SetActive(true);
             pausePanelCanvasGroup.alpha = 0.0f;
             pausePanelCanvasGroup.DOFade(1.0f, 0.3f, unscaledTime: true);
-
         }
+
         #endregion
     }
 }

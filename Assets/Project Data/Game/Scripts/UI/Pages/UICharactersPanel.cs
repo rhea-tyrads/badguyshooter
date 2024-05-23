@@ -44,7 +44,7 @@ namespace Watermelon.SquadShooter
         static bool isControlBlocked = false;
         public static bool IsControlBlocked => isControlBlocked;
 
-        static List<CharacterDynamicAnimation> characterDynamicAnimations = new List<CharacterDynamicAnimation>();
+        static List<CharacterDynamicAnimation> characterDynamicAnimations = new();
 
         void ResetAnimations()
         {

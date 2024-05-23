@@ -221,7 +221,9 @@ namespace Watermelon
         {
             levelProgressionPanel.Hide();
 
-            bottomPanelRectTransform.DOAnchoredPosition(new Vector2(0, -500), 0.3f).SetEasing(Ease.Type.CubicOut).OnComplete(delegate
+            bottomPanelRectTransform.DOAnchoredPosition(
+                new Vector2(0, -500), 0.3f).SetEasing(Ease.Type.CubicOut)
+                .OnComplete(delegate
             {
                 characterTab.OnWindowClosed();
                 weaponTab.OnWindowClosed();

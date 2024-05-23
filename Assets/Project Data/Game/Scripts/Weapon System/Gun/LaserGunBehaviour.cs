@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TopDownEngine.Common.Scripts.BoogieScripts;
 using UnityEngine;
@@ -95,7 +94,7 @@ public class LaserGunBehaviour : BaseGunBehavior
                                     (Random.Range(-spread, spread) + streamAngle)))
                         .GetComponent<LaserBulletBehaviour>();
 
-                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier,
                         bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                     bullet.owner = Owner;
                 }

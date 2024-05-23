@@ -54,7 +54,7 @@ namespace MobileTools.IAPshop
                 item.OnTryPurchase += TryPurchaseConsumable;
         }
 
-        void TryPurchaseConsumable(ConsumableItem item) => _controller.InitiatePurchase(item.Id);
+        void TryPurchaseConsumable(ShopItem item) => _controller.InitiatePurchase(item.Id);
 
         void TryPurchaseRemoveAds()
         {

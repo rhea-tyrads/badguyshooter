@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Watermelon;
@@ -100,7 +99,8 @@ public class PoisonGunBehaviour : BaseGunBehavior
                                         (Random.Range(-spread, spread) +
                                          streamAngle)))
                             .GetComponent<PoisonBulletBehaviour>();
-                        bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                        bullet.Initialise(
+                            damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier * characterBehaviour.critMultiplier,
                             bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                         bullet.owner = Owner;
                     }

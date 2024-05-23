@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Watermelon;
 using Watermelon.SquadShooter;
-using Watermelon.Upgrades;
 
 public class CrossBowBehaviour : BaseGunBehavior
 {
@@ -40,6 +38,7 @@ public class CrossBowBehaviour : BaseGunBehavior
         RecalculateDamage();
     }
 
+   
     public override void OnLevelLoaded()
     {
         RecalculateDamage();
@@ -103,7 +102,7 @@ public class CrossBowBehaviour : BaseGunBehavior
                                         (Random.Range(-spread, spread) +
                                          streamAngle)))
                             .GetComponent<CrossBowBulletBehaviour>();
-                        bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                        bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier,
                             bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                         bullet.owner = Owner;
                     }

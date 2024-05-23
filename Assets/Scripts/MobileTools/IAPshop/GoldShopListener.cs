@@ -7,8 +7,8 @@ namespace MobileTools.IAPshop
     public class GoldShopListener : MonoBehaviour
     {
         public GoldShop shop;
-        public List<ConsumableItem> consumables = new();
-        ConsumableItem Find(string product) => consumables.Find(c => c.Id == product);
+        public List<ShopItem> consumables = new();
+        ShopItem Find(string product) => consumables.Find(c => c.Id == product);
 
         void Start()
         {

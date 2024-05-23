@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd96672f8cbd27a46b31817bb19de697, type: 3}
   m_Name: _GAME
   m_EditorClassIdentifier: 
-  levelsDatabase: {fileID: 11400000, guid: ebf0575738af97241b29945840a565db, type: 2}
+  levelsDatabase: {fileID: 11400000, guid: dab43c9c69d94324b90166f51024f4d6, type: 2}
   playerPrefab: {fileID: 4402184686770468089, guid: 0a2969074fd41754aa55fcad338c7e27,
     type: 3}
   navMeshData: {fileID: 23800000, guid: 6da5cd43ce95718498e92ebcd8685fea, type: 2}

@@ -77,19 +77,18 @@ namespace Watermelon
             enemyController.Initialise();
 
             LevelController.SpawnPlayer();
-
             uiController.InitialisePages();
-
             UIController.ShowPage<UIMainMenu>();
-
             CameraController.SetCameraShiftState(false);
-
             LevelController.LoadCurrentLevel();
         }
 
+        public BonusController bonuses;
+        
         public static void OnGameStarted()
         {
             isGameActive = true;
+
         }
 
         public static void LevelComplete()
@@ -149,17 +148,12 @@ namespace Watermelon
         static void ShowMainMenuAfterLevelComplete()
         {
             AdsManager.ShowInterstitial(null);
-
             CustomMusicController.ToggleMusic(AudioController.Music.menuMusic, 0.3f, 0.3f);
-
             CameraController.SetCameraShiftState(false);
             CameraController.EnableCamera(CameraType.Menu);
-
             UIController.ShowPage<UIMainMenu>();
             ExperienceController.GainXPPoints(LevelController.CurrentLevelData.XPAmount);
-
             SaveController.Save(true);
-
             LevelController.LoadCurrentLevel();
         }
 

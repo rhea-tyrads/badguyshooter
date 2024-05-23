@@ -193,6 +193,10 @@ MonoBehaviour:
   moveSpeedBoostVfx: {fileID: 4914020178339048980}
   atkSpeedBoostVfx: {fileID: 3881917165822881087}
   multishotBoostVfx: {fileID: 5218771888369305612}
+  critMultiplier: 2
+  critChance: 0.15
+  IsCritical: 0
+  respawnCount: 0
   agent: {fileID: 1312987152319716975}
   enemyDetector: {fileID: 311441359535524130}
   healthbarBehaviour: {fileID: 3580024664111707460}
@@ -204,10 +208,6 @@ MonoBehaviour:
   targetRingSpecialColor: {r: 1, g: 0.7019608, b: 0, a: 1}
   aimRingBehavior: {fileID: 1362285431092453012}
   stunVfx: {fileID: 635023315053644925}
-  moveSlowFactor: 0
-  moveBoostFactor: 1
-  moveSlowTimer: 0
-  isStunned: 0
   isMoveSpeedBooster: 0
   isMultishotBooster: 0
   multishotBoosterDuration: 10
@@ -215,6 +215,12 @@ MonoBehaviour:
   isAtkSpdBooster: 0
   atkSpdBoosterDuration: 10
   atkSpdBoosterMult: 2
+  hpBonusMultiplier: 0.3
+  isHpBonus: 0
+  moveSlowFactor: 0
+  moveBoostFactor: 1
+  moveSlowTimer: 0
+  isStunned: 0
 --- !u!136 &5566037180506283788
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -756,7 +762,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 5
+  m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7554127631946495230
 GameObject:

@@ -13,7 +13,7 @@ namespace Watermelon
 
         public void Init()
         {
-            for (var i = 0; i < experienceData.Count; i++)
+            for (int i = 0; i < experienceData.Count; i++)
             {
                 experienceData[i].SetLevel(i + 1);
             }

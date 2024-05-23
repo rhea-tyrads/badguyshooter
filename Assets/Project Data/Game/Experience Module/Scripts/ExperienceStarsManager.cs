@@ -8,8 +8,8 @@ namespace Watermelon
 
     public class ExperienceStarsManager : MonoBehaviour
     {
-        readonly string TRAIL_POOL_NAME = "Custom UI Trail";
-        readonly string PARTICLE_POOL_NAME = "Custom UI Particle";
+        private readonly string TRAIL_POOL_NAME = "Custom UI Trail";
+        private readonly string PARTICLE_POOL_NAME = "Custom UI Particle";
 
         [Header("Data")]
         [SerializeField] ExperienceStarsFlightData starsData;
@@ -32,16 +32,16 @@ namespace Watermelon
         [SerializeField] GameObject particlePrefab;
 
 
-        PoolGeneric<UIParticleTrail> trailPool;
-        PoolGeneric<UIParticle> particlePool;
+        private PoolGeneric<UIParticleTrail> trailPool;
+        private PoolGeneric<UIParticle> particlePool;
 
-        Pool starsPool;
+        private Pool starsPool;
 
 
-        List<ExpStarData> starsInfo = new List<ExpStarData>();
-        System.Action OnComplete;
+        private List<ExpStarData> starsInfo = new List<ExpStarData>();
+        private System.Action OnComplete;
 
-        ExperienceUIController experienceUIController;
+        private ExperienceUIController experienceUIController;
 
         public void Awake()
         {
@@ -55,7 +55,7 @@ namespace Watermelon
             starIconBounce.Initialise(starIconTransform);
         }
 
-        void AssignPools()
+        private void AssignPools()
         {
             if (PoolManager.PoolExists(TRAIL_POOL_NAME))
                 trailPool = PoolManager.GetPoolByName<UIParticleTrail>(TRAIL_POOL_NAME);
@@ -95,16 +95,16 @@ namespace Watermelon
 
             starsAmount = Mathf.Clamp(starsAmount, 1, 10);
 
-            for (var i = 0; i < starsAmount; i++)
+            for (int i = 0; i < starsAmount; i++)
             {
-                var starRect = starsPool.Get().GetComponent<RectTransform>();
+                RectTransform starRect = starsPool.Get().GetComponent<RectTransform>();
 
                 starRect.SetParent(transform.parent);
                 starRect.anchoredPosition = Camera.main.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-25f, 25f), Random.Range(-25f, 25f), 0f);
                 starRect.SetParent(starsHolder);
 
                 Vector2 startDirection = Random.onUnitSphere;
-                var endPoint = Vector2.zero;
+                Vector2 endPoint = Vector2.zero;
 
                 var data = new ExpStarData()
                 {
@@ -138,12 +138,12 @@ namespace Watermelon
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (starsInfo.IsNullOrEmpty())
                 return;
 
-            for (var i = 0; i < starsInfo.Count; i++)
+            for (int i = 0; i < starsInfo.Count; i++)
             {
                 var data = starsInfo[i];
 
@@ -178,7 +178,7 @@ namespace Watermelon
             ExperienceController.GainXPPoints(10);
         }
 
-        class ExpStarData
+        private class ExpStarData
         {
             public RectTransform star;
 
@@ -194,9 +194,9 @@ namespace Watermelon
             public float duration1;
             public float duration2;
 
-            ExperienceStarsFlightData data;
+            private ExperienceStarsFlightData data;
 
-            UIParticleTrail trail;
+            private UIParticleTrail trail;
 
             public void SetCurves(ExperienceStarsFlightData data)
             {

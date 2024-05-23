@@ -1,3 +1,7 @@
+v1.2.4
+Advertisement bug fixed
+Item pick-up bug fixed
+
 v1.2.3
 Core updated
 Level Editor improvement: added easy way to add custom objects to the level

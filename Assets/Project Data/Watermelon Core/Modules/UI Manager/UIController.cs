@@ -51,14 +51,12 @@ namespace Watermelon
             for (var i = 0; i < transform.childCount; i++)
             {
                 var uiPage = transform.GetChild(i).GetComponent<UIPage>();
-                if(uiPage != null)
-                {
-                    uiPage.CacheComponents();
+                if (uiPage == null) continue;
+                uiPage.CacheComponents();
 
-                    pagesLink.Add(uiPage.GetType(), uiPage);
+                pagesLink.Add(uiPage.GetType(), uiPage);
 
-                    pages.Add(uiPage);
-                }
+                pages.Add(uiPage);
             }
 
             // Cache game page

@@ -1,5 +1,4 @@
 using UnityEngine;
-using Watermelon.Upgrades;
 
 namespace Watermelon.SquadShooter
 {
@@ -84,7 +83,7 @@ namespace Watermelon.SquadShooter
                         for (var i = 0; i < bulletsNumber; i++)
                         {
                             var bullet = bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<PlayerBulletBehavior>();
-                            bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
+                            bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                             bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(bulletSpreadAngle * -0.5f, bulletSpreadAngle * 0.5f), 0f));
                         }
 

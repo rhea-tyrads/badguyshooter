@@ -167,7 +167,6 @@ namespace Watermelon.SquadShooter
                         characterBehaviour.TakeDamage(Damage);
                         ParticlesController.PlayParticle(HIT_PARTICLE_HASH).SetPosition(hitParticlePosition.position);
                         OnAttackPlayer();
-                        Debug.LogError("Attacked");
                         Stun();
                     }
 

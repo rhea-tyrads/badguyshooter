@@ -1,5 +1,4 @@
 using UnityEngine;
-using Watermelon;
 
 namespace Watermelon.SquadShooter
 {

@@ -37,7 +37,6 @@ Transform:
   - {fileID: 6710565323437084748}
   - {fileID: 4649855020561532545}
   - {fileID: 1967935073639409686}
-  - {fileID: 6802499864210005364}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5264728708684395003
@@ -54,8 +53,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   tier: 0
-  burnVfx: {fileID: 6802499864210291152}
   animatorRef: {fileID: 1614459471128354043}
+  hipsTransform: {fileID: 8176522435810568078}
   healthbarBehaviour: {fileID: 6658223778522967136}
   enemyAnimationCallback: {fileID: 1741793263263163633}
   meshRenderer: {fileID: 7975769480006413645}
@@ -84,12 +83,6 @@ MonoBehaviour:
   leftHandBone: {fileID: 5807400322363809899}
   deathExplosionForce: 1093.75
   deathExplosionRadius: 15.625
-  target: {fileID: 0}
-  model: {fileID: 0}
-  hideBodyOnDeath: 0
-  knockBackTimer: 0
-  moveSlowTimer: 0
-  knockBackForce: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 1865428060180637695, guid: 237fecf1150515c4aa65b1ac03f527fb,
     type: 3}
   bulletSpeed: 12.5
@@ -2248,7 +2241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb28a987ca7c5874d9df5c77e1cc4b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ragdollSizeMultiplier: 1
+  multiplier: 1.1
 --- !u!4 &5807400322363809899 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1699304219387199745, guid: 0f7bcd7d7eede414185338bce2caf203,
@@ -2258,6 +2251,12 @@ Transform:
 --- !u!137 &7975769480006413645 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3000105340700281895, guid: 0f7bcd7d7eede414185338bce2caf203,
+    type: 3}
+  m_PrefabInstance: {fileID: 5119787917352264042}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8176522435810568078 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5299060926385862940, guid: 0f7bcd7d7eede414185338bce2caf203,
     type: 3}
   m_PrefabInstance: {fileID: 5119787917352264042}
   m_PrefabAsset: {fileID: 0}
@@ -2534,161 +2533,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5758856371020669508}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &6802499864210432460
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 4796623966293115899}
-    m_Modifications:
-    - target: {fileID: 100974, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 145018, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 146902, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 153628, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_Name
-      value: BurnVfx
-      objectReference: {fileID: 0}
-    - target: {fileID: 153628, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 199762, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 19829676, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 19849076, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 19890716, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 19890716, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: InitialModule.startSizeY.minMaxState
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 19890716, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
-      propertyPath: InitialModule.startSizeZ.minMaxState
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 146902, guid: 58ed8557dea39c14f94fc6fbc306e4d7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1217870370795639672}
-  m_SourcePrefab: {fileID: 100100000, guid: 58ed8557dea39c14f94fc6fbc306e4d7, type: 3}
---- !u!4 &6802499864210005364 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 441528, guid: 58ed8557dea39c14f94fc6fbc306e4d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 6802499864210432460}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6802499864210291152 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 153628, guid: 58ed8557dea39c14f94fc6fbc306e4d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 6802499864210432460}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6802499864210299930 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 146902, guid: 58ed8557dea39c14f94fc6fbc306e4d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 6802499864210432460}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1217870370795639672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6802499864210299930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0

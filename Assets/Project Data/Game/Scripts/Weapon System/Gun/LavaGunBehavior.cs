@@ -1,5 +1,4 @@
 using UnityEngine;
-using Watermelon.Upgrades;
 
 namespace Watermelon.SquadShooter
 {

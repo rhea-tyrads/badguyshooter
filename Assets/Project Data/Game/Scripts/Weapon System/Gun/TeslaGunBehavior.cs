@@ -1,6 +1,4 @@
 using UnityEngine;
-using Watermelon;
-using Watermelon.Upgrades;
 
 namespace Watermelon.SquadShooter
 {
@@ -120,7 +118,7 @@ namespace Watermelon.SquadShooter
                         .Get(new PooledObjectSettings().SetPosition(shootPoint.position)
                             .SetEulerRotation(characterBehaviour.transform.eulerAngles))
                         .GetComponent<TeslaBulletBehavior>();
-                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier,
                         bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, 5f, false, stunDuration);
                     bullet.SetTargetsHitGoal(targetsHitGoal.Random());
                 }

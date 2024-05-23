@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Watermelon;
 using Watermelon.SquadShooter;
-using Watermelon.Upgrades;
 
 public class RevolverBehaviour : BaseGunBehavior
 {

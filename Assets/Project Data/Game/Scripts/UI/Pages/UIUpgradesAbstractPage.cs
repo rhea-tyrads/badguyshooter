@@ -32,7 +32,7 @@ namespace Watermelon
         protected UIGamepadButton gamepadCloseButton;
         public UIGamepadButton GamepadCloseButton => gamepadCloseButton;
 
-        protected List<T> itemPanels = new List<T>();
+        protected List<T> itemPanels = new();
 
         public override void Initialise()
         {

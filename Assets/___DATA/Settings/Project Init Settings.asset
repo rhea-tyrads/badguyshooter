@@ -147,5 +147,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moduleName: Control Manager
   selectAutomatically: 1
-  inputType: 1
+  inputType: 0
   gamepadData: {fileID: 11400000, guid: b8459fda821a1d245945e18295b4093d, type: 2}
