@@ -6,6 +6,8 @@ namespace Watermelon.SquadShooter
     [System.Serializable]
     public class Character
     {
+        #region Inspector
+
         [SerializeField] CharacterType type;
         public CharacterType Type => type;
 
@@ -27,9 +29,11 @@ namespace Watermelon.SquadShooter
         CharacterSave save;
         public CharacterSave Save => save;
 
+        #endregion
+
         public void Initialise()
         {
-            save = SaveController.GetSaveObject<CharacterSave>("Character" + type.ToString());
+            save = SaveController.GetSaveObject<CharacterSave>("Character" + type);
 
 #if UNITY_EDITOR
             if (stages.IsNullOrEmpty())
@@ -41,10 +45,9 @@ namespace Watermelon.SquadShooter
         {
             for (var i = save.UpgradeLevel; i >= 0; i--)
             {
-                if (upgrades[i].ChangeStage)
-                    return stages[upgrades[i].StageIndex];
+                if (!upgrades[i].ChangeStage) continue;
+                return stages[upgrades[i].StageIndex];
             }
-
             return stages[0];
         }
 
@@ -52,56 +55,31 @@ namespace Watermelon.SquadShooter
         {
             for (var i = save.UpgradeLevel; i >= 0; i--)
             {
-                if (upgrades[i].ChangeStage)
-                    return i;
+                if (!upgrades[i].ChangeStage) continue;
+                return i;
             }
-
             return 0;
         }
 
-        public CharacterUpgrade GetCurrentUpgrade()
-        {
-            return upgrades[save.UpgradeLevel];
-        }
+        public CharacterUpgrade GetCurrentUpgrade() 
+            => upgrades[save.UpgradeLevel];
 
         public CharacterUpgrade GetNextUpgrade()
-        {
-            if(upgrades.IsInRange(save.UpgradeLevel + 1))
-            {
-                return upgrades[save.UpgradeLevel + 1];
-            }
+            => upgrades.IsInRange(save.UpgradeLevel + 1) ? upgrades[save.UpgradeLevel + 1] : null;
 
-            return null;
-        }
+        public int GetCurrentUpgradeIndex() => save.UpgradeLevel;
 
-        public int GetCurrentUpgradeIndex()
-        {
-            return save.UpgradeLevel;
-        }
-
-        public bool IsMaxUpgrade()
-        {
-            return !upgrades.IsInRange(save.UpgradeLevel + 1);
-        }
+        public bool IsMaxUpgrade() => !upgrades.IsInRange(save.UpgradeLevel + 1);
 
         public void UpgradeCharacter()
         {
-            if (upgrades.IsInRange(save.UpgradeLevel + 1))
-            {
-                save.UpgradeLevel += 1;
-
-                CharactersController.OnCharacterUpgraded(this);
-            }
+            if (!upgrades.IsInRange(save.UpgradeLevel + 1)) return;
+            save.UpgradeLevel += 1;
+            CharactersController.OnCharacterUpgraded(this);
         }
 
-        public bool IsSelected()
-        {
-            return CharactersController.SelectedCharacter.type == type;
-        }
+        public bool IsSelected() => CharactersController.SelectedCharacter.type == type;
 
-        public bool IsUnlocked()
-        {
-            return ExperienceController.CurrentLevel >= requiredLevel;
-        }
+        public bool IsUnlocked() => ExperienceController.CurrentLevel >= requiredLevel;
     }
 }

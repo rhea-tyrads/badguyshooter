@@ -15,7 +15,7 @@ namespace Watermelon
         [SerializeField] float scaleDelay = 0.3f;
         [SerializeField] Ease.Type scaleEasing = Ease.Type.QuadOut;
 
-        List<FractureData> fractures = new List<FractureData>();
+        List<FractureData> fractures = new();
 
         TweenCase explodeTweenCase;
         bool isExploded;

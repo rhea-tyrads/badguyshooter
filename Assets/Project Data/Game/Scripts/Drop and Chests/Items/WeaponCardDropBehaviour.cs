@@ -13,7 +13,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Image backImage;
         [SerializeField] TextMeshProUGUI titleText;
         [SerializeField] GameObject particleObject;
-        [SerializeField] List<ParticleSystem> rarityParticles = new List<ParticleSystem>();
+        [SerializeField] List<ParticleSystem> rarityParticles = new();
 
         public WeaponData Data { get; private set; }
         public WeaponType WeaponType { get; private set; }

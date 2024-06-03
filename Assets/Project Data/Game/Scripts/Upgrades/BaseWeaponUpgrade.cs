@@ -39,7 +39,7 @@ namespace Watermelon.Upgrades
         [SerializeField] int power;
         public int Power => power;
 
-        [SerializeField] DuoInt bulletsPerShot = new DuoInt(1,1);
+        [SerializeField] DuoInt bulletsPerShot = new(1,1);
         public DuoInt BulletsPerShot => bulletsPerShot;
 
         [SerializeField] DuoFloat bulletSpeed;

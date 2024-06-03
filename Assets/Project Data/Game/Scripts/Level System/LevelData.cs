@@ -135,10 +135,10 @@ namespace Watermelon.LevelSystem
 
         public int GetCoinsReward()
         {
-            for (var i = 0; i < dropData.Count; i++)
+            foreach (var data in dropData)
             {
-                if (dropData[i].dropType == DropableItemType.Currency && dropData[i].currencyType == CurrencyType.Coins)
-                    return dropData[i].amount;
+                if (data.dropType == DropableItemType.Currency && data.currencyType == CurrencyType.Coins)
+                    return data.amount;
             }
 
             return 0;

@@ -10,8 +10,8 @@ namespace Watermelon
     [HelpURL("https://docs.google.com/document/d/1GlS55aF4z4Ddn4a1QCu5h0152PoOb29Iy4y9RKZ9Y9Y")]
     public static class IAPManager
     {
-        static Dictionary<ProductKeyType, IAPItem> productsTypeToProductLink = new Dictionary<ProductKeyType, IAPItem>();
-        static Dictionary<string, IAPItem> productsKeyToProductLink = new Dictionary<string, IAPItem>();
+        static Dictionary<ProductKeyType, IAPItem> productsTypeToProductLink = new();
+        static Dictionary<string, IAPItem> productsKeyToProductLink = new();
 
         static bool isInitialised = false;
         public static bool IsInitialised => isInitialised;

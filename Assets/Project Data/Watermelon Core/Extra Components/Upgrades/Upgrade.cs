@@ -12,38 +12,24 @@ namespace Watermelon.Upgrades
         {
             if (upgrades.IsInRange(UpgradeLevel))
                 return upgrades[UpgradeLevel];
-
             UpgradeLevel = upgrades.Length - 1;
             Debug.Log("[Perks]: Perk level is out of range!");
-
             return upgrades[UpgradeLevel];
         }
 
-        public T GetNextStage()
-        {
-            if (upgrades.IsInRange(UpgradeLevel + 1))
-                return upgrades[UpgradeLevel + 1];
-
-            return null;
-        }
+        public T GetNextStage() 
+            => upgrades.IsInRange(UpgradeLevel + 1) ? upgrades[UpgradeLevel + 1] : null;
 
         [Button("Upgrade")]
         public override void UpgradeStage()
         {
-            if (upgrades.IsInRange(UpgradeLevel + 1))
-            {
-                UpgradeLevel += 1;
-
-                InvokeOnUpgraded();
-            }
+            if (!upgrades.IsInRange(UpgradeLevel + 1)) return;
+            UpgradeLevel ++;
+            InvokeOnUpgraded();
         }
 
-        public T GetStage(int i)
-        {
-            if (upgrades.IsInRange(i))
-                return upgrades[i];
-            return null;
-        }
+        public T GetStage(int i) 
+            => upgrades.IsInRange(i) ? upgrades[i] : null;
 
         public void TestUpgrade()
         {

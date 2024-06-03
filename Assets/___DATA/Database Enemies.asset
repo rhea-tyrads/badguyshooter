@@ -330,7 +330,7 @@ MonoBehaviour:
       targetRingSize: 1.1
       hitTextOffsetY: 2.65
       hitTextOffsetForward: 0.15625
-    icon: {fileID: 2800000, guid: fb36ef73e6c5a54408367cd41508539c, type: 3}
+    icon: {fileID: 2800000, guid: 0e7bd246c74d77944b9ff9cb3dfa9bb5, type: 3}
     iconTint: {r: 1, g: 1, b: 1, a: 1}
   - enemyType: 15
     prefab: {fileID: 2816206852611366199, guid: 11cf12ddd4d0b3643b3606928191f5b4,
@@ -359,7 +359,7 @@ MonoBehaviour:
       targetRingSize: 1.1
       hitTextOffsetY: 3.4375
       hitTextOffsetForward: 0.17089844
-    icon: {fileID: 2800000, guid: 4417c25102706fb4f84297143769cc63, type: 3}
+    icon: {fileID: 2800000, guid: 5bc62df50af685a45ac7fa29d065d85c, type: 3}
     iconTint: {r: 1, g: 1, b: 1, a: 1}
   - enemyType: 14
     prefab: {fileID: 2816206852611366199, guid: 9aa22a95a24e50c4da7b2d70cc81de8b,
@@ -388,5 +388,5 @@ MonoBehaviour:
       targetRingSize: 1.1
       hitTextOffsetY: 3.4375
       hitTextOffsetForward: 0.17089844
-    icon: {fileID: 2800000, guid: 4417c25102706fb4f84297143769cc63, type: 3}
+    icon: {fileID: 2800000, guid: ba13e41755ce9cb4195e65837987501f, type: 3}
     iconTint: {r: 1, g: 1, b: 1, a: 1}

@@ -19,7 +19,6 @@ namespace Watermelon
         public void Initialise()
         {
             activeUpgrades = upgradesDatabase.Upgrades;
-
             activeUpgradesLink = new Dictionary<UpgradeType, BaseUpgrade>();
             foreach (var upgrade in activeUpgrades)
             {

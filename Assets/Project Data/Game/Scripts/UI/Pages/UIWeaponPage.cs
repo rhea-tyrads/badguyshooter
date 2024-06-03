@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Watermelon.Upgrades;
 
@@ -7,36 +8,20 @@ namespace Watermelon.SquadShooter
     {
         WeaponsController weaponController;
 
-        protected override int SelectedIndex => Mathf.Clamp(WeaponsController.SelectedWeaponIndex, 0, int.MaxValue);
+        protected override int SelectedIndex
+            => Mathf.Clamp(WeaponsController.SelectedWeaponIndex, 0, int.MaxValue);
 
-        public void SetWeaponsController(WeaponsController weaponController)
-        {
-            this.weaponController = weaponController;
-        }
+        public void SetWeaponsController(WeaponsController weaponController) 
+            => this.weaponController = weaponController;
 
-        public void UpdateUI() => itemPanels.ForEach(panel => panel.UpdateUI());
+        public void UpdateUI()
+            => itemPanels.ForEach(panel => panel.UpdateUI());
 
-        public override WeaponPanelUI GetPanel(WeaponType weaponType)
-        {
-            for (var i = 0; i < itemPanels.Count; i++)
-            {
-                if (itemPanels[i].Data.Type == weaponType)
-                    return itemPanels[i];
-            }
+        public override WeaponPanelUI GetPanel(WeaponType weaponType) 
+            => itemPanels.FirstOrDefault(panel => panel.Data.Type == weaponType);
 
-            return null;
-        }
-
-        public bool IsAnyActionAvailable()
-        {
-            for (var i = 0; i < itemPanels.Count; i++)
-            {
-                if (itemPanels[i].IsNextUpgradeCanBePurchased())
-                    return true;
-            }
-
-            return false;
-        }
+        public bool IsAnyActionAvailable() 
+            => itemPanels.Any(panel => panel.IsNextUpgradeCanBePurchased());
 
         #region UI Page
 
@@ -48,12 +33,11 @@ namespace Watermelon.SquadShooter
             {
                 var weapon = WeaponsController.Database.Weapons[i];
                 var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(weapon.UpgradeType);
-
                 var newPanel = AddNewPanel();
                 newPanel.Init(weaponController, upgrade as BaseWeaponUpgrade, weapon, i);
             }
 
-            WeaponsController.OnWeaponUnlocked += (weapon) => UpdateUI();
+            WeaponsController.OnWeaponUnlocked += (_) => UpdateUI();
             WeaponsController.OnWeaponUpgraded += UpdateUI;
         }
 
@@ -68,15 +52,13 @@ namespace Watermelon.SquadShooter
         public override void PlayHideAnimation()
         {
             base.PlayHideAnimation();
-
             UIController.OnPageClosed(this);
         }
 
-        protected override void HidePage(SimpleCallback onFinish)
-        {
-            UIController.HidePage<UIWeaponPage>(onFinish);
-        }
+        protected override void HidePage(SimpleCallback onFinish) 
+            => UIController.HidePage<UIWeaponPage>(onFinish);
 
         #endregion
+        
     }
 }

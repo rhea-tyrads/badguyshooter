@@ -55,7 +55,7 @@ namespace Watermelon.SquadShooter
 
         WeaponsController weaponController;
 
-        public void Init(WeaponsController weaponController, BaseWeaponUpgrade upgrade, WeaponData data, int weaponIndex)
+        public void Init(WeaponsController controller, BaseWeaponUpgrade upgrade, WeaponData data, int weaponIndex)
         {
             Data = data;
             Upgrade = upgrade;
@@ -63,7 +63,7 @@ namespace Watermelon.SquadShooter
             gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
 
             this.weaponIndex = weaponIndex;
-            this.weaponController = weaponController;
+            this.weaponController = controller;
 
             weaponName.text = data.Name;
             weaponImage.sprite = data.Icon;
@@ -77,30 +77,14 @@ namespace Watermelon.SquadShooter
             WeaponsController.OnNewWeaponSelected += UpdateSelectionState;
         }
 
-        public bool IsNextUpgradeCanBePurchased()
-        {
-            if (IsUnlocked)
-            {
-                if (!Upgrade.IsMaxedOut)
-                {
-                    if (CurrenciesController.HasAmount(CurrencyType.Coins, Upgrade.NextStage.Price))
-                        return true;
-                }
-            }
-
-            return false;
-        }
+        public bool IsNextUpgradeCanBePurchased() =>
+            IsUnlocked && !Upgrade.IsMaxedOut &&
+            CurrenciesController.HasAmount(CurrencyType.Coins, Upgrade.NextStage.Price);
 
         public void UpdateUI()
         {
-            if (IsUnlocked)
-            {
-                UpdateUpgradeState();
-            }
-            else
-            {
-                UpdateLockedState();
-            }
+            if (IsUnlocked) Unlock();
+            else Lock();
         }
 
         void UpdateSelectionState()
@@ -119,7 +103,7 @@ namespace Watermelon.SquadShooter
             UpdateUI();
         }
 
-        void UpdateLockedState()
+        void Lock()
         {
             lockedStateObject.SetActive(true);
             upgradeStateObject.SetActive(false);
@@ -134,7 +118,7 @@ namespace Watermelon.SquadShooter
             powerText.gameObject.SetActive(false);
         }
 
-        void UpdateUpgradeState()
+        void Unlock()
         {
             lockedStateObject.SetActive(false);
             upgradeStateObject.SetActive(true);
@@ -161,80 +145,68 @@ namespace Watermelon.SquadShooter
         {
             levelText.text = "LEVEL " + Upgrade.UpgradeLevel;
 
-            if (!Upgrade.IsMaxedOut)
+            if (Upgrade.IsMaxedOut)
+            {
+                upgradesMaxObject.SetActive(true);
+                upgradesBuyButton.gameObject.SetActive(false);
+
+                if (gamepadButton)
+                    gamepadButton.SetFocus(false);
+            }
+            else
             {
                 upgradesMaxObject.SetActive(false);
                 upgradesBuyButton.gameObject.SetActive(true);
 
                 RedrawUpgradeButton();
             }
-            else
-            {
-                upgradesMaxObject.SetActive(true);
-                upgradesBuyButton.gameObject.SetActive(false);
-
-                if (gamepadButton != null)
-                    gamepadButton.SetFocus(false);
-            }
         }
 
         protected override void RedrawUpgradeButton()
         {
-            if (!Upgrade.IsMaxedOut)
+            if (Upgrade.IsMaxedOut) return;
+            var price = Upgrade.NextStage.Price;
+            var currencyType = Upgrade.NextStage.CurrencyType;
+
+            if (CurrenciesController.HasAmount(currencyType, price))
             {
-                var price = Upgrade.NextStage.Price;
-                var currencyType = Upgrade.NextStage.CurrencyType;
-
-                if (CurrenciesController.HasAmount(currencyType, price))
-                {
-                    upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
-
-                    if (gamepadButton != null)
-                        gamepadButton.SetFocus(weaponIndex == WeaponsController.SelectedWeaponIndex);
-                }
-                else
-                {
-                    upgradesBuyButtonImage.sprite = upgradesBuyButtonDisableSprite;
-
-                    if (gamepadButton != null)
-                        gamepadButton.SetFocus(false);
-                }
-
-                upgradesBuyButtonText.text = CurrenciesHelper.Format(price);
-
+                upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
+                if (gamepadButton )
+                    gamepadButton.SetFocus(weaponIndex == WeaponsController.SelectedWeaponIndex);
             }
+            else
+            {
+                upgradesBuyButtonImage.sprite = upgradesBuyButtonDisableSprite;
+                if (gamepadButton )
+                    gamepadButton.SetFocus(false);
+            }
+
+            upgradesBuyButtonText.text = CurrenciesHelper.Format(price);
         }
 
         public override void Select()
         {
-            if (IsUnlocked)
+            Debug.LogError("SELECTED");
+            if (!IsUnlocked) return;
+            if (weaponIndex != WeaponsController.SelectedWeaponIndex)
             {
-                if (weaponIndex != WeaponsController.SelectedWeaponIndex)
-                {
-                    AudioController.PlaySound(AudioController.Sounds.buttonSound);
-
-                    weaponController.OnWeaponSelected(weaponIndex);
-                }
-
-                UIGeneralPowerIndicator.UpdateText();
+                AudioController.PlaySound(AudioController.Sounds.buttonSound);
+                weaponController.OnWeaponSelected(weaponIndex);
             }
+            UIGeneralPowerIndicator.UpdateText();
         }
 
         public void UpgradeButton()
         {
-            if (Upgrade.NextStage.Price <= CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Amount)
-            {
-                Select();
-
-                CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);
-                Upgrade.UpgradeStage();
-
-                weaponController.WeaponUpgraded(Data);
-
-                AudioController.PlaySound(AudioController.Sounds.buttonSound);
-
-                UIGeneralPowerIndicator.UpdateText(true);
-            }
+            if (Upgrade.NextStage.Price >
+                CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Amount) return;
+            
+            Select();
+            CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);
+            Upgrade.UpgradeStage();
+            weaponController.WeaponUpgraded(Data);
+            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            UIGeneralPowerIndicator.UpdateText(true);
         }
 
         void OnDisable()

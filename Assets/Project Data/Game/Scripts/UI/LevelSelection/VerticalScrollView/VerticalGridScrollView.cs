@@ -13,8 +13,8 @@ namespace Watermelon
         static readonly string GRID_ROW_POOL_NAME = "grid_row";
         static Pool gridRowPool;
 
-        [SerializeField] Vector2 childSize = new Vector2(200, 200);
-        [SerializeField] Vector2 spacings = new Vector2(20, 20);
+        [SerializeField] Vector2 childSize = new(200, 200);
+        [SerializeField] Vector2 spacings = new(20, 20);
 
         [Space]
         [SerializeField] int columnsAmount = 4;

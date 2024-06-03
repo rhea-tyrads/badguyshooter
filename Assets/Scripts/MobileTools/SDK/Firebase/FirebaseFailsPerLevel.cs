@@ -25,8 +25,8 @@ namespace MobileTools.SDK.Firebase
 
             Parameter[] parameters =
             {
-                new Parameter(Params.NUMBER, lvl),
-                new Parameter(Params.FAILS, fails)
+                new(Params.NUMBER, lvl),
+                new(Params.FAILS, fails)
             };
 
             FirebaseAnalytics.LogEvent(Events.FAILS_PER_LEVEL, parameters);

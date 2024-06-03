@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Watermelon;
 using Watermelon.LevelSystem;
 using Watermelon.Upgrades;
@@ -9,26 +11,27 @@ namespace Watermelon.SquadShooter
 {
     public class WeaponsController : MonoBehaviour
     {
+        #region Inspector
+
         [SerializeField] WeaponDatabase database;
-        public static WeaponDatabase Database => instance.database;
 
         [Header("Drop")]
         [SerializeField] GameObject cardPrefab;
 
         static WeaponsController instance;
-        UIWeaponPage weaponPageUI;
-
         static GlobalWeaponsSave save;
-        static List<BaseWeaponUpgradeStage> keyUpgradeStages = new List<BaseWeaponUpgradeStage>();
-
+        static List<BaseWeaponUpgradeStage> keyUpgradeStages = new();
         static WeaponData[] weapons;
         static Dictionary<WeaponType, int> weaponsLink;
+        UIWeaponPage weaponPageUI;
 
+        public static WeaponDatabase Database => instance.database;
         public static int BasePower { get; private set; }
+
         public static int SelectedWeaponIndex
         {
-            get { return save.selectedWeaponIndex; }
-            private set { save.selectedWeaponIndex = value; }
+            get => save.selectedWeaponIndex;
+            private set => save.selectedWeaponIndex = value;
         }
 
         public static event SimpleCallback OnNewWeaponSelected;
@@ -36,48 +39,38 @@ namespace Watermelon.SquadShooter
         public static event SimpleCallback OnWeaponCardsAmountChanged;
         public static event WeaponDelagate OnWeaponUnlocked;
 
+        #endregion
+
         public void Initialise()
         {
             instance = this;
-
             save = SaveController.GetSaveObject<GlobalWeaponsSave>("weapon_save");
-
             Drop.RegisterDropItem(new CustomDropItem(DropableItemType.WeaponCard, cardPrefab));
-
             weaponsLink = new Dictionary<WeaponType, int>();
             weapons = database.Weapons;
-
             for (var i = 0; i < weapons.Length; i++)
             {
                 weapons[i].Initialise();
                 weaponsLink.Add(weapons[i].Type, i);
 
                 var baseUpgrade = UpgradesController.GetUpgrade<BaseWeaponUpgrade>(weapons[i].UpgradeType);
-
-                BaseWeaponUpgradeStage currentStage;
-
                 for (var j = 0; j < baseUpgrade.UpgradesCount; j++)
                 {
-                    currentStage = baseUpgrade.Upgrades[j] as BaseWeaponUpgradeStage;
-
+                    var currentStage = baseUpgrade.Upgrades[j] as BaseWeaponUpgradeStage;
                     if (currentStage.KeyUpgradeNumber != -1)
-                    {
                         keyUpgradeStages.Add(currentStage);
-                    }
-
                     if (currentStage.KeyUpgradeNumber == 0)
-                    {
                         BasePower = currentStage.Power;
-                    }
                 }
             }
 
             weaponPageUI = UIController.GetPage<UIWeaponPage>();
             weaponPageUI.SetWeaponsController(this);
-
             keyUpgradeStages.OrderBy(s => s.KeyUpgradeNumber);
-
             CheckWeaponUpdateState();
+            description.OnSelect += SelectWeaponYA;
+            description.OnUpgrade += UpgradeWep;
+            description.Hide();
         }
 
         public static int GetCeilingKeyPower(int currentKeyUpgrade)
@@ -98,12 +91,9 @@ namespace Watermelon.SquadShooter
             foreach (var data in weapons)
             {
                 var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
-
-                if (upgrade.UpgradeLevel == 0 && data.CardsAmount >= upgrade.NextStage.Price)
-                {
-                    upgrade.UpgradeStage();
-                    OnWeaponUnlocked?.Invoke(data);
-                }
+                if (upgrade.UpgradeLevel != 0 || data.CardsAmount < upgrade.NextStage.Price) continue;
+                upgrade.UpgradeStage();
+                OnWeaponUnlocked?.Invoke(data);
             }
         }
 
@@ -112,12 +102,9 @@ namespace Watermelon.SquadShooter
             var weaponIndex = 0;
             for (var i = 0; i < instance.database.Weapons.Length; i++)
             {
-                if (instance.database.Weapons[i].Type == weaponType)
-                {
-                    weaponIndex = i;
-
-                    break;
-                }
+                if (instance.database.Weapons[i].Type != weaponType) continue;
+                weaponIndex = i;
+                break;
             }
 
             instance.OnWeaponSelected(weaponIndex);
@@ -126,30 +113,72 @@ namespace Watermelon.SquadShooter
         public static bool IsTutorialWeaponUpgraded()
         {
             var upg = UpgradesController.GetUpgrade<BaseUpgrade>(UpgradeType.Minigun);
-
             return upg.UpgradeLevel >= 2;
         }
 
+        public WeaponDescriptionUI description;
+
         public void OnWeaponSelected(int weaponIndex)
         {
-            SelectedWeaponIndex = weaponIndex;
+            var weapon = instance.database.GetWeaponByIndex(weaponIndex);
+            var page = UIController.GetPage<UIWeaponPage>();
+            var panel = page.GetPanel(weapon.Type);
+            var data = panel.Data;
+            var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
+            //   var stats = upgrade.GetCurrentStage();
 
+            var price = upgrade.NextStage.Price;
+            var currencyType = upgrade.NextStage.CurrencyType;
+            var canUpgrade = CurrenciesController.HasAmount(currencyType, price);
+            description.SetUpgradePossible(canUpgrade);
+
+            description.weaponName.text = data.Name;
+            description.weaponImage.sprite = data.Icon;
+            description.weaponBackImage.color = data.RarityData.MainColor;
+            description.rarityText.text = data.RarityData.Name;
+            description.rarityText.color = data.RarityData.TextColor;
+            description.descriptionText.text = data.Description;
+            description.damage.text = "DAMAGE " + Damage(weapon.Type);
+            description.firerate.text = "FIRERATE " + FireRate(weapon.Type);
+            description.radius.text = "RANGE " + Radius(weapon.Type);
+            description.SetIndex(weaponIndex);
+            description.Show();
+
+            Debug.LogError("WEAPON: " + weapon.Type);
+            //Debug.LogError("STATS: " + Damage(weapon.Type).firstValue);
+
+            return;
+
+            SelectedWeaponIndex = weaponIndex;
             CharacterBehaviour.GetBehaviour().SetGun(GetCurrentWeapon(), true);
             CharacterBehaviour.GetBehaviour().Graphics.Grunt();
-
             OnNewWeaponSelected?.Invoke();
+        }
+
+        void SelectWeaponYA()
+        {
+            SelectedWeaponIndex = description.Index;
+            CharacterBehaviour.GetBehaviour().SetGun(GetCurrentWeapon(), true);
+            CharacterBehaviour.GetBehaviour().Graphics.Grunt();
+            OnNewWeaponSelected?.Invoke();
+        }
+
+        void UpgradeWep()
+        {
+            var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
+            var page = UIController.GetPage<UIWeaponPage>();
+            var panel = page.GetPanel(weapon.Type);
+            panel.UpgradeButton();
         }
 
         public static void AddCard(WeaponType weaponType, int amount)
         {
-            for (var i = 0; i < weapons.Length; i++)
+            foreach (var data in weapons)
             {
-                if (weapons[i].Type == weaponType)
-                {
-                    weapons[i].Save.CardsAmount += amount;
+                if (data.Type != weaponType) continue;
+                data.Save.CardsAmount += amount;
 
-                    break;
-                }
+                break;
             }
 
             OnWeaponCardsAmountChanged?.Invoke();
@@ -157,80 +186,102 @@ namespace Watermelon.SquadShooter
 
         public static void AddCards(List<WeaponType> cards)
         {
-            if (cards.IsNullOrEmpty())
-                return;
+            if (cards.IsNullOrEmpty()) return;
 
-            for (var i = 0; i < cards.Count; i++)
-            {
-                var weapon = weapons[weaponsLink[cards[i]]];
-                weapon.Save.CardsAmount += 1;
-            }
+            foreach (var weapon in cards.Select(type => weapons[weaponsLink[type]]))
+                weapon.Save.CardsAmount++;
 
             OnWeaponCardsAmountChanged?.Invoke();
         }
 
-        public static WeaponData GetCurrentWeapon()
-        {
-            return instance.database.GetWeaponByIndex(save.selectedWeaponIndex);
-        }
+        public static WeaponData GetCurrentWeapon() => instance.database.GetWeaponByIndex(save.selectedWeaponIndex);
 
-        public static WeaponData GetWeaponData(WeaponType weaponType)
-        {
-            return instance.database.GetWeapon(weaponType);
-        }
+        public static WeaponData GetWeaponData(WeaponType weaponType) => instance.database.GetWeapon(weaponType);
 
-        public static RarityData GetRarityData(Rarity rarity)
-        {
-            return instance.database.GetRarityData(rarity);
-        }
+        public static RarityData GetRarityData(Rarity rarity) => instance.database.GetRarityData(rarity);
 
         public void WeaponUpgraded(WeaponData weaponData)
         {
             AudioController.PlaySound(AudioController.Sounds.upgrade);
-
             var characterBehaviour = CharacterBehaviour.GetBehaviour();
             characterBehaviour.SetGun(GetCurrentWeapon(), true, true, true);
-
             OnWeaponUpgraded?.Invoke();
         }
 
         public static void UnlockAllWeaponsDev()
         {
-            for (var i = 0; i < instance.database.Weapons.Length; i++)
+            foreach (var data in instance.database.Weapons)
             {
-                var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(instance.database.Weapons[i].UpgradeType);
-
+                var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
                 if (upgrade.UpgradeLevel == 0)
-                {
                     upgrade.UpgradeStage();
-                }
             }
         }
 
-        public static BaseWeaponUpgrade GetCurrentWeaponUpgrade()
+        public void UnlockWeapon(WeaponType weaponType)
         {
-            return UpgradesController.GetUpgrade<BaseWeaponUpgrade>(GetCurrentWeapon().UpgradeType);
+            if (weaponType == WeaponType.Dummy) return;
+            if (IsWeaponUnlocked(weaponType)) return;
+
+            var data = instance.database.Weapons.Find(w => w.Type == weaponType);
+            var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
+            if (upgrade.UpgradeLevel == 0)
+                upgrade.UpgradeStage();
+
+            UIController.GetPage<UIWeaponPage>().UpdateUI();
         }
 
-        public static BaseWeaponUpgrade GetWeaponUpgrade(WeaponType type)
-        {
-            return UpgradesController.GetUpgrade<BaseWeaponUpgrade>(GetWeaponData(type).UpgradeType);
-        }
+        public static BaseWeaponUpgrade GetCurrentWeaponUpgrade() =>
+            UpgradesController.GetUpgrade<BaseWeaponUpgrade>(GetCurrentWeapon().UpgradeType);
+
+        public static BaseWeaponUpgrade GetWeaponUpgrade(WeaponType type) =>
+            UpgradesController.GetUpgrade<BaseWeaponUpgrade>(GetWeaponData(type).UpgradeType);
+
+        #region Access
+
+        int Damage(WeaponType type) => GetBase(type).Damage.firstValue;
+        int FireRate(WeaponType type) => (int) GetBase(type).FireRate;
+        int Radius(WeaponType type) => (int) GetBase(type).RangeRadius;
+
+        BaseWeaponUpgradeStage GetUpgrade(UpgradeType type) =>
+            type switch
+            {
+                UpgradeType.Minigun => UpgradesController.GetUpgrade<MinigunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Shotgun => UpgradesController.GetUpgrade<ShotgunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Tesla => UpgradesController.GetUpgrade<TeslaGunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.LavaLauncher => UpgradesController.GetUpgrade<LavaLauncherUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Revolver => UpgradesController.GetUpgrade<RevolverUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Laser => UpgradesController.GetUpgrade<LaserUpgrade>(type).GetCurrentStage(),
+                UpgradeType.CrossBow => UpgradesController.GetUpgrade<CrossbowUpgrade>(type).GetCurrentStage(),
+                UpgradeType.PoisonGun => UpgradesController.GetUpgrade<PoisonGunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Flamethrower => UpgradesController.GetUpgrade<FlameThrowerUpgrade>(type).GetCurrentStage(),
+                _ => UpgradesController.GetUpgrade<MinigunUpgrade>(type).GetCurrentStage()
+            };
+
+        BaseWeaponUpgradeStage GetBase(WeaponType type) =>
+            type switch
+            {
+                WeaponType.Minigun => GetUpgrade(UpgradeType.Minigun),
+                WeaponType.LavaLauncher => GetUpgrade(UpgradeType.LavaLauncher),
+                WeaponType.TeslaGun => GetUpgrade(UpgradeType.Tesla),
+                WeaponType.Shotgun => GetUpgrade(UpgradeType.Shotgun),
+                WeaponType.Revolver => GetUpgrade(UpgradeType.Revolver),
+                WeaponType.Laser => GetUpgrade(UpgradeType.Laser),
+                WeaponType.CrossBow => GetUpgrade(UpgradeType.CrossBow),
+                WeaponType.PoisonGun => GetUpgrade(UpgradeType.PoisonGun),
+                WeaponType.Flamethrower => GetUpgrade(UpgradeType.Flamethrower),
+                _ => GetUpgrade(UpgradeType.Minigun)
+            };
 
         public static bool IsWeaponUnlocked(WeaponType type)
-        {
-            for (var i = 0; i < instance.database.Weapons.Length; i++)
-            {
-                if (instance.database.Weapons[i].Type == type)
-                {
-                    var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(instance.database.Weapons[i].UpgradeType);
+            => (from data in instance.database.Weapons
+                where data.Type == type
+                select UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType)
+                into upgrade
+                select upgrade.UpgradeLevel > 0).FirstOrDefault();
 
-                    return upgrade.UpgradeLevel > 0;
-                }
-            }
+        #endregion
 
-            return false;
-        }
 
         [System.Serializable]
         public class GlobalWeaponsSave : ISaveObject
@@ -244,7 +295,6 @@ namespace Watermelon.SquadShooter
 
             public void Flush()
             {
-
             }
         }
 

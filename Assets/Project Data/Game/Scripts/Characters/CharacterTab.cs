@@ -102,10 +102,7 @@ namespace Watermelon.SquadShooter
 
         public void OnButtonClicked()
         {
-            UIController.HidePage<UIMainMenu>(() =>
-            {
-                UIController.ShowPage<UICharactersPanel>();
-            });
+            UIController.HidePage<UIMainMenu>(UIController.ShowPage<UICharactersPanel>);
 
             AudioController.PlaySound(AudioController.Sounds.buttonSound);
         }

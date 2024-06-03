@@ -15,7 +15,7 @@ namespace Watermelon
         [SerializeField] Image panelImage;
 
         [Space]
-        [SerializeField] Vector2 panelPadding = new Vector2(30, 25);
+        [SerializeField] Vector2 panelPadding = new(30, 25);
 
         TweenCase animationTweenCase;
 

@@ -23,7 +23,7 @@ namespace Watermelon
         float spawnRate;
 
         float lastSpawnTime;
-        List<BurstData> burstsData = new List<BurstData>();
+        List<BurstData> burstsData = new();
 
         bool isInited = false;
 

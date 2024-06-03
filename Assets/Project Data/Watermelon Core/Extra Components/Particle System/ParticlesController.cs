@@ -8,12 +8,12 @@ namespace Watermelon
     {
         [SerializeField] Particle[] particles;
 
-        static Dictionary<int, Particle> registerParticles = new Dictionary<int, Particle>();
+        static Dictionary<int, Particle> registerParticles = new();
 
-        static List<ParticleCase> activeParticles = new List<ParticleCase>();
+        static List<ParticleCase> activeParticles = new();
         static int activeParticlesCount = 0;
 
-        static List<TweenCase> delayedParticles = new List<TweenCase>();
+        static List<TweenCase> delayedParticles = new();
 
         public void Initialise()
         {

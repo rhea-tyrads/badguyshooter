@@ -13,7 +13,7 @@ namespace Watermelon
         [SerializeField] NotchSaveArea notchSaveArea;
 
         static List<UIPage> pages;
-        static Dictionary<Type, UIPage> pagesLink = new Dictionary<Type, UIPage>();
+        static Dictionary<Type, UIPage> pagesLink = new();
 
         static bool isTablet;
         public static bool IsTablet => isTablet;

@@ -8,6 +8,8 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterBehaviour : MonoBehaviour, IEnemyDetector, IHealth, INavMeshAgent
     {
+        #region Inspector
+
         public GameObject moveSpeedBoostVfx;
         public GameObject atkSpeedBoostVfx;
         public GameObject multishotBoostVfx;
@@ -15,10 +17,9 @@ namespace Watermelon.SquadShooter
         public float critChance = 0.15f;
         public bool IsCritical;
         public int respawnCount;
+
         public float CritMult => IsCritical && Random.value <= critChance ? critMultiplier : 1f;
-
         static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
-
         static CharacterBehaviour characterBehaviour;
 
         [SerializeField] NavMeshAgent agent;
@@ -76,7 +77,7 @@ namespace Watermelon.SquadShooter
 
         // Health
         float currentHealth;
-        public float hpBonusMultiplier = 0.3f;
+        float hpBonusMultiplier = 1.3f;
         public bool isHpBonus;
         public float CurrentHealth => currentHealth;
         public float MaxHealth => stats.Health * HpBonus;
@@ -125,10 +126,41 @@ namespace Watermelon.SquadShooter
 
         public static SimpleCallback OnDied;
 
+        #endregion
+        float stunTimer;
+        public bool isStunned;
+
         void Awake()
         {
             moveSlowFactor = 1;
             agent.enabled = false;
+        }
+        public void Initialise()
+        {
+            if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
+            if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive((false));
+            if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
+            characterBehaviour = this;
+            hitShinePropertyBlock = new MaterialPropertyBlock();
+            isActive = false;
+            enabled = false;
+
+            var tempTarget = new GameObject("[TARGET]");
+            tempTarget.transform.position = transform.position;
+            tempTarget.SetActive(true);
+            playerTarget = tempTarget.transform;
+
+            mainCameraCase = CameraController.GetCamera(CameraType.Main);
+            enemyDetector.Initialise(this);
+            currentHealth = MaxHealth;
+            healthbarBehaviour.Initialise(transform, this, true,
+                CharactersController.SelectedCharacter.GetCurrentStage().HealthBarOffset);
+            aimRingBehavior.Init(transform);
+            targetRing = Instantiate(targetRingPrefab, new Vector3(0f, 0f, -999f), Quaternion.identity);
+            targetRingRenderer = targetRing.GetComponent<Renderer>();
+            aimRingBehavior.Hide();
+            IsDead = false;
+            stunVfx.gameObject.SetActive(false);
         }
 
         public void ApplyCriticalBonus()
@@ -150,75 +182,24 @@ namespace Watermelon.SquadShooter
         public void UseRespawn()
         {
             respawnCount--;
+            Reload();
         }
 
-        public void Initialise()
-        {
-            if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
-            if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive((false));
-            if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
-
-            characterBehaviour = this;
-
-            hitShinePropertyBlock = new MaterialPropertyBlock();
-
-            isActive = false;
-            enabled = false;
-
-            // Create target
-            var tempTarget = new GameObject("[TARGET]");
-            tempTarget.transform.position = transform.position;
-            tempTarget.SetActive(true);
-
-            playerTarget = tempTarget.transform;
-
-            // Get camera case
-            mainCameraCase = CameraController.GetCamera(CameraType.Main);
-
-            // Initialise enemy detector
-            enemyDetector.Initialise(this);
-
-            // Set health
-            currentHealth = MaxHealth;
-
-            // Initialise healthbar
-            healthbarBehaviour.Initialise(transform, this, true,
-                CharactersController.SelectedCharacter.GetCurrentStage().HealthBarOffset);
-
-            aimRingBehavior.Init(transform);
-
-            targetRing = Instantiate(targetRingPrefab, new Vector3(0f, 0f, -999f), Quaternion.identity);
-            targetRingRenderer = targetRing.GetComponent<Renderer>();
-
-            aimRingBehavior.Hide();
-
-            IsDead = false;
-
-            stunVfx.gameObject.SetActive(false);
-        }
-
+    
         public void Reload(bool resetHealth = true)
         {
-            // Set health
             if (resetHealth)
-            {
                 currentHealth = MaxHealth;
-            }
-
+            isHpBonus = false;
+            IsCritical = false;
             IsDead = false;
-
             healthbarBehaviour.EnableBar();
             healthbarBehaviour.RedrawHealth();
-
             enemyDetector.Reload();
-
             enemyDetector.gameObject.SetActive(false);
-
             graphics.DisableRagdoll();
             graphics.Reload();
-
             gunBehaviour.Reload();
-
             gameObject.SetActive(true);
         }
 
@@ -325,6 +306,12 @@ namespace Watermelon.SquadShooter
         {
             graphics.OnDeath();
             IsDead = true;
+            if (respawnCount > 0)
+            {
+                UseRespawn();
+                return;
+            }
+
             Tween.DelayedCall(0.5f, LevelController.OnPlayerDied);
         }
 
@@ -793,8 +780,6 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        float stunTimer;
-        public bool isStunned;
 
         public void ApplyStun(float duration)
         {

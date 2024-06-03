@@ -17,13 +17,9 @@ namespace Watermelon.LevelSystem
         public override void OnExitActivated()
         {
             isExitActivated = true;
-
             gatesAnimator.Play(OPEN_HASH);
-
             RingEffectController.SpawnEffect(transform.position.SetY(0.1f), 4.5f, 2, Ease.Type.Linear);
-
             AudioController.PlaySound(AudioController.Sounds.complete);
-
             Tween.DelayedCall(0.15f, () =>
             {
                 AudioController.PlaySound(AudioController.Sounds.door);

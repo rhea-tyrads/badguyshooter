@@ -28,8 +28,8 @@ namespace MobileTools.SDK.Firebase
 
             Parameter[] parameters =
             {
-                new Parameter( Params.NUMBER, lvl),
-                new Parameter(Params.NUMBER, (int)timer)
+                new( Params.NUMBER, lvl),
+                new(Params.NUMBER, (int)timer)
             };
 
             FirebaseAnalytics.LogEvent(Events.LEVEL_COMPLETE_DURATION, parameters);

@@ -50,7 +50,7 @@ namespace MobileTools.MonoCache.System
         /// <summary>
         /// Object for thread safety
         /// </summary>
-        static readonly object SecurityLock = new object();
+        static readonly object SecurityLock = new();
 
         /// <summary>
         /// Main method to get target instance

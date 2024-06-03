@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using Watermelon;
+ 
 using Watermelon.LevelSystem;
 
 namespace Watermelon.SquadShooter
 {
-    // basic drop item without any special behaviour
-    // override this class to add extra data fields
     public class ItemDropBehaviour : BaseDropBehaviour
     {
         [SerializeField] Animator animator;
@@ -20,11 +18,8 @@ namespace Watermelon.SquadShooter
             this.dropData = dropData;
             this.availableToPickDelay = availableToPickDelay;
             this.autoPickDelay = autoPickDelay;
-
             isPicked = false;
-
             animator.enabled = false;
-
             CharacterBehaviour.OnDied += ItemDisable;
         }
 
@@ -38,11 +33,8 @@ namespace Watermelon.SquadShooter
             AnimationCurve movementVerticalCurve, float time)
         {
             LevelController.OnPlayerExitLevelEvent += AutoPick;
-
             throwTweenCases = new TweenCase[2];
-
             triggerRef.enabled = false;
-
             throwTweenCases[0] =
                 transform.DOMoveXZ(position.x, position.z, time).SetCurveEasing(movemenHorizontalCurve);
             throwTweenCases[1] = transform.DOMoveY(position.y, time).SetCurveEasing(movementVerticalCurve).OnComplete(
@@ -68,7 +60,6 @@ namespace Watermelon.SquadShooter
             if (useAutoPickup)
             {
                 CharacterBehaviour.GetBehaviour().OnItemPicked(this);
-
                 Pick(false);
             }
             else
@@ -86,7 +77,6 @@ namespace Watermelon.SquadShooter
             if (isPicked) return;
             isPicked = true;
 
-            // Kill movement tweens
             if (!throwTweenCases.IsNullOrEmpty())
             {
                 foreach (var tween in throwTweenCases)

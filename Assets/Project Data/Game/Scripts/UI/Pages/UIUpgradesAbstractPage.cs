@@ -57,9 +57,7 @@ namespace Watermelon
             newPanelObject.transform.ResetLocal();
 
             var newPanel = newPanelObject.GetComponent<T>();
-
             itemPanels.Add(newPanel);
-
             return newPanel;
         }
 
@@ -73,24 +71,22 @@ namespace Watermelon
             {
                 for (var i = 0; i < itemPanels.Count; i++)
                 {
-                    if (SelectedIndex == i && i > 0 && itemPanels[i - 1].IsUnlocked)
-                    {
-                        itemPanels[i - 1].Select();
-                        newSelectedPanel = itemPanels[i - 1];
-                        break;
-                    }
+                    if (SelectedIndex != i || i <= 0 || !itemPanels[i - 1].IsUnlocked) continue;
+                    Debug.LogError("LEFT");
+                    itemPanels[i - 1].Select();
+                    newSelectedPanel = itemPanels[i - 1];
+                    break;
                 }
             }
             else if (GamepadControl.WasButtonPressedThisFrame(GamepadButtonType.DRight))
             {
                 for (var i = 0; i < itemPanels.Count; i++)
                 {
-                    if (SelectedIndex == i && i < itemPanels.Count - 1 && itemPanels[i + 1].IsUnlocked)
-                    {
-                        itemPanels[i + 1].Select();
-                        newSelectedPanel = itemPanels[i + 1];
-                        break;
-                    }
+                    if (SelectedIndex != i || i >= itemPanels.Count - 1 || !itemPanels[i + 1].IsUnlocked) continue;
+                    Debug.LogError("RIGHT");
+                    itemPanels[i + 1].Select();
+                    newSelectedPanel = itemPanels[i + 1];
+                    break;
                 }
             }
 
@@ -157,9 +153,9 @@ namespace Watermelon
 
         void OnCurrencyAmountChanged(Currency currency, int difference)
         {
-            for (var i = 0; i < itemPanels.Count; i++)
+            foreach (var panel in itemPanels)
             {
-                itemPanels[i].OnMoneyAmountChanged();
+                panel.OnMoneyAmountChanged();
             }
         }
 

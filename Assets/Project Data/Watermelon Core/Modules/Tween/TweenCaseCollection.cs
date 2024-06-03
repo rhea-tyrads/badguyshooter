@@ -4,7 +4,7 @@ namespace Watermelon
 {
     public class TweenCaseCollection
     {
-        List<TweenCase> tweenCases = new List<TweenCase>();
+        List<TweenCase> tweenCases = new();
         public List<TweenCase> TweenCases => tweenCases;
 
         SimpleCallback tweensCompleted;

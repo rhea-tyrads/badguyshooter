@@ -47,7 +47,7 @@ namespace Watermelon
         static AdProviderHandler.RewardedVideoCallback rewardedVideoCallback;
         static AdProviderHandler.InterstitialCallback interstitalCallback;
 
-        static List<SimpleCallback> mainThreadEvents = new List<SimpleCallback>();
+        static List<SimpleCallback> mainThreadEvents = new();
         static int mainThreadEventsCount;
 
         static bool isFirstAdLoaded = false;
@@ -59,7 +59,7 @@ namespace Watermelon
 
         static bool isForcedAdEnabled;
 
-        static Dictionary<AdProvider, AdProviderHandler> advertisingActiveModules = new Dictionary<AdProvider, AdProviderHandler>();
+        static Dictionary<AdProvider, AdProviderHandler> advertisingActiveModules = new();
 
         static AdsManagerInitModule initModule;
         public static AdsManagerInitModule InitModule => initModule;

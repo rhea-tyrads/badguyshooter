@@ -28,7 +28,7 @@ namespace Watermelon
         static int updateReorganizeFromID = -1;
         static int updateMaxActiveLookupID = -1;
 
-        static List<TweenCase> updateKillingTweens = new List<TweenCase>();
+        static List<TweenCase> updateKillingTweens = new();
 
 #if UNITY_EDITOR
         static int maxUpdateTweensAmount = 0;
@@ -54,7 +54,7 @@ namespace Watermelon
         static int fixedReorganizeFromID = -1;
         static int fixedMaxActiveLookupID = -1;
 
-        static List<TweenCase> fixedKillingTweens = new List<TweenCase>();
+        static List<TweenCase> fixedKillingTweens = new();
 
 #if UNITY_EDITOR
         static int maxFixedUpdateTweensAmount = 0;
@@ -80,7 +80,7 @@ namespace Watermelon
         static int lateReorganizeFromID = -1;
         static int lateMaxActiveLookupID = -1;
 
-        static List<TweenCase> lateKillingTweens = new List<TweenCase>();
+        static List<TweenCase> lateKillingTweens = new();
 
 #if UNITY_EDITOR
         static int maxLateUpdateTweensAmount = 0;

@@ -6,7 +6,7 @@ namespace Watermelon.SquadShooter
 {
     public class ObjectEnabler : MonoBehaviour
     {
-        public List<GameObject> objects = new List<GameObject>();
+        public List<GameObject> objects = new();
         public float delay;
 
         public void Awake()

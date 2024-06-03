@@ -25,7 +25,7 @@ namespace Watermelon
 
         public Vector3 NormalizedVelocity { get; set; }
 
-        List<UIParticle> particles = new List<UIParticle>();
+        List<UIParticle> particles = new();
 
         void Awake()
         {

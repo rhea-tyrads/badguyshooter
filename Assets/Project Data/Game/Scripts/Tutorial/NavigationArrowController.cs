@@ -8,7 +8,7 @@ namespace Watermelon
     {
         [SerializeField] GameObject lineArrowPrefab;
 
-        static List<BaseNavigationArrowCase> activeArrows = new List<BaseNavigationArrowCase>();
+        static List<BaseNavigationArrowCase> activeArrows = new();
         static int activeArrowsCount;
 
         static Pool lineArrowPool;

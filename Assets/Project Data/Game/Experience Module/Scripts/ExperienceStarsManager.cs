@@ -38,7 +38,7 @@ namespace Watermelon
         private Pool starsPool;
 
 
-        private List<ExpStarData> starsInfo = new List<ExpStarData>();
+        private List<ExpStarData> starsInfo = new();
         private System.Action OnComplete;
 
         private ExperienceUIController experienceUIController;

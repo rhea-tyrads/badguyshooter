@@ -8,6 +8,7 @@ namespace MobileTools.SDK
     
         public event Action<int,int> OnLevelComplete = delegate { };
         public void LevelComplete(int world, int room) => OnLevelComplete(world,room);
- 
+        public event Action<string> OnProductPurchase = delegate { };
+        public void ProductPurchase(string id) => OnProductPurchase(id);
     }
 }

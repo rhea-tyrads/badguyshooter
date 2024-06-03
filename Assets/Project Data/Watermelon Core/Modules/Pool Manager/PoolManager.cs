@@ -16,7 +16,7 @@ namespace Watermelon
         /// <summary>
         /// List of all existing pools.
         /// </summary>
-        [SerializeField] List<Pool> poolsList = new List<Pool>();
+        [SerializeField] List<Pool> poolsList = new();
 
         /// <summary>
         /// Dictionary which allows to acces Pool by name.

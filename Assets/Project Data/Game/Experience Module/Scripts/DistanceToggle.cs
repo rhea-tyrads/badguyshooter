@@ -6,7 +6,7 @@ namespace Watermelon
 {
     public static class DistanceToggle
     {
-        private static List<IDistanceToggle> distanceToggles = new List<IDistanceToggle>();
+        private static List<IDistanceToggle> distanceToggles = new();
         private static int distanceTogglesCount;
 
         private static bool isActive;

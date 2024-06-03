@@ -18,8 +18,8 @@ namespace Watermelon.SquadShooter
         MeshRenderer meshRenderer;
         Mesh mesh;
 
-        List<Vector3> vertices = new List<Vector3>();
-        List<int> triangles = new List<int>();
+        List<Vector3> vertices = new();
+        List<int> triangles = new();
 
         Transform followTransform;
 

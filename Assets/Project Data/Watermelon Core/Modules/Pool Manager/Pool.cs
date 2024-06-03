@@ -46,7 +46,7 @@ namespace Watermelon
         /// List to multiple pool prefabs list.
         /// </summary>
         [SerializeField]
-        protected List<MultiPoolPrefab> multiPoolPrefabsList = new List<MultiPoolPrefab>();
+        protected List<MultiPoolPrefab> multiPoolPrefabsList = new();
 
         /// <summary>
         /// Amount of prefabs at multi type pool.
@@ -101,11 +101,11 @@ namespace Watermelon
         /// <summary>
         /// List of pooled objects for single pull.
         /// </summary>
-        protected List<GameObject> pooledObjects = new List<GameObject>();
+        protected List<GameObject> pooledObjects = new();
         /// <summary>
         /// List of pooled objects for multiple pull.
         /// </summary>
-        protected List<List<GameObject>> multiPooledObjects = new List<List<GameObject>>();
+        protected List<List<GameObject>> multiPooledObjects = new();
 
 #if UNITY_EDITOR
         /// <summary>

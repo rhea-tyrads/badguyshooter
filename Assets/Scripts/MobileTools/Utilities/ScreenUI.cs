@@ -9,6 +9,7 @@ namespace MobileTools.Utilities
 
         public event Action OnHide = delegate { };
         public event Action OnShow = delegate { };
+        
 
         protected virtual void Showing() { }
         protected virtual void Hiding() { }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Watermelon.SquadShooter;
 
@@ -7,7 +8,7 @@ namespace Watermelon
     public class TutorialController : MonoBehaviour
     {
         static TutorialController tutorialController;
-        static List<ITutorial> registeredTutorials = new List<ITutorial>();
+        static List<ITutorial> registeredTutorials = new();
 
         [SerializeField] TutorialCanvasController tutorialCanvasController;
         [SerializeField] NavigationArrowController navigationArrowController;
@@ -29,12 +30,8 @@ namespace Watermelon
         public void Initialise()
         {
             tutorialController = this;
-
             isTutorialSkipped = TutorialHelper.IsTutorialSkipped();
-
-            // Create pools
             labelPool = new Pool(new PoolSettings(labelPrefab.name, labelPrefab, 0, true));
-
             navigationArrowController.Initialise();
             tutorialCanvasController.Initialise();
         }
@@ -46,18 +43,12 @@ namespace Watermelon
 
         public static ITutorial GetTutorial(TutorialID tutorialID)
         {
-            for(var i = 0; i < registeredTutorials.Count; i++)
+            foreach (var tutorial in registeredTutorials.Where(tutorial => tutorial.TutorialID == tutorialID))
             {
-                if (registeredTutorials[i].TutorialID == tutorialID)
-                {
-                    if (!registeredTutorials[i].IsInitialised)
-                        registeredTutorials[i].Initialise();
+                if (!tutorial.IsInitialised) tutorial.Initialise();
+                if (isTutorialSkipped) tutorial.FinishTutorial();
 
-                    if (isTutorialSkipped)
-                        registeredTutorials[i].FinishTutorial();
-
-                    return registeredTutorials[i];
-                }
+                return tutorial;
             }
 
             return null;
@@ -65,11 +56,8 @@ namespace Watermelon
 
         public static void ActivateTutorial(ITutorial tutorial)
         {
-            if (!tutorial.IsInitialised)
-                tutorial.Initialise();
-
-            if (isTutorialSkipped)
-                tutorial.FinishTutorial();
+            if (!tutorial.IsInitialised) tutorial.Initialise();
+            if (isTutorialSkipped) tutorial.FinishTutorial();
         }
 
         public static void RegisterTutorial(ITutorial tutorial)
@@ -77,7 +65,6 @@ namespace Watermelon
             if (registeredTutorials.FindIndex(x => x == tutorial) != -1)
                 return;
 
-            // Add tutorial to list
             registeredTutorials.Add(tutorial);
         }
 
@@ -85,10 +72,7 @@ namespace Watermelon
         {
             var tutorialIndex = registeredTutorials.FindIndex(x => x == tutorial);
             if (tutorialIndex != -1)
-            {
-                // Remove tutorial from list
                 registeredTutorials.RemoveAt(tutorialIndex);
-            }
         }
 
         public static TutorialLabelBehaviour CreateTutorialLabel(string text, Transform parentTransform, Vector3 offset)
@@ -105,7 +89,6 @@ namespace Watermelon
         public static void Unload()
         {
             labelPool.ReturnToPoolEverything(true);
-
             tutorialController.navigationArrowController.Unload();
         }
     }

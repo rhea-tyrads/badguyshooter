@@ -215,7 +215,6 @@ MonoBehaviour:
   isAtkSpdBooster: 0
   atkSpdBoosterDuration: 10
   atkSpdBoosterMult: 2
-  hpBonusMultiplier: 0.3
   isHpBonus: 0
   moveSlowFactor: 0
   moveBoostFactor: 1
@@ -453,7 +452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4177874071028649343
 Transform:
   m_ObjectHideFlags: 0
@@ -1187,6 +1186,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PowerOrbPurple
       objectReference: {fileID: 0}
+    - target: {fileID: 175542, guid: 4be5e42ebaca58b47ae39e94209c5f32, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 455206, guid: 4be5e42ebaca58b47ae39e94209c5f32, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5
@@ -1271,6 +1274,10 @@ PrefabInstance:
     - target: {fileID: 178014, guid: 9902f48ac1851694fb6332b1472ec09a, type: 3}
       propertyPath: m_Name
       value: PowerOrbRed
+      objectReference: {fileID: 0}
+    - target: {fileID: 178014, guid: 9902f48ac1851694fb6332b1472ec09a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 495512, guid: 9902f48ac1851694fb6332b1472ec09a, type: 3}
       propertyPath: m_LocalScale.x

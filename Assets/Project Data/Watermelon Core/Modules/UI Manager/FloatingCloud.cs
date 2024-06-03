@@ -15,8 +15,8 @@ namespace Watermelon
         [Space]
         [SerializeField] TextMeshProUGUI floatingText;
 
-        static Dictionary<int, Data> floatingCloudLink = new Dictionary<int, Data>();
-        static List<Animation> activeClouds = new List<Animation>();
+        static Dictionary<int, Data> floatingCloudLink = new();
+        static List<Animation> activeClouds = new();
 
         public void Initialise()
         {

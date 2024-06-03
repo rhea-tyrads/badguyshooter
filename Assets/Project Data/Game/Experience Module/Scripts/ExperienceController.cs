@@ -76,7 +76,7 @@ namespace Watermelon
             OnExperienceGained?.Invoke();
         }
 
-        public static int GetXpPointsRequiredForLevel(int level)
+        public static int XpRequiredForLevel(int level)
         {
             return instance.database.GetDataForLevel(level).ExperienceRequired;
         }

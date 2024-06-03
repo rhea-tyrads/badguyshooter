@@ -141,13 +141,10 @@ namespace Watermelon
 
         #endregion
 
-        #region Buttons
         public void ContinueButton()
         {
             AudioController.PlaySound(AudioController.Sounds.buttonSound);
-
             GameController.OnLevelCompleteClosed();
         }
-        #endregion
     }
 }

@@ -1005,11 +1005,11 @@ namespace Watermelon
             return vector;
         }
 
-        public static Vector2 xz(this Vector3 value) => new Vector2(value.x, value.z);
-        public static Vector2 xy(this Vector3 value) => new Vector2(value.x, value.y);
+        public static Vector2 xz(this Vector3 value) => new(value.x, value.z);
+        public static Vector2 xy(this Vector3 value) => new(value.x, value.y);
 
-        public static Vector3 xyz(this Vector4 value) => new Vector3(value.x, value.y, value.z);
-        public static Vector2 xy(this Vector4 value) => new Vector2(value.x, value.y);
+        public static Vector3 xyz(this Vector4 value) => new(value.x, value.y, value.z);
+        public static Vector2 xy(this Vector4 value) => new(value.x, value.y);
         #endregion
 
         #region Vector2

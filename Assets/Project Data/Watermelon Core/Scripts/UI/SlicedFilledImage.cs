@@ -692,7 +692,7 @@ namespace Watermelon
 		bool m_Tracked = false;
 
 #if UNITY_2017_4 || UNITY_2018_2_OR_NEWER
-		static List<SlicedFilledImage> m_TrackedTexturelessImages = new List<SlicedFilledImage>();
+		static List<SlicedFilledImage> m_TrackedTexturelessImages = new();
 		static bool s_Initialized;
 #endif
 

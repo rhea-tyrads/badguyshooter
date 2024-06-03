@@ -150,7 +150,7 @@ namespace Watermelon
                 public float radiusScale;
                 public Type colliderType;
 
-                public ArrayList children = new ArrayList();
+                public ArrayList children = new();
                 public float density;
                 public float summedMass;// The mass of this and all children bodies
             }

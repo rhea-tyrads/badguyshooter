@@ -23,7 +23,7 @@ namespace Watermelon
         /// A StateCase object contains a state variable of type EnemyStateBehavior (an interface for defining enemy states) and a list of transitions, 
         /// each of which is a StateTransition<T> object. The StateTransition class defines the criteria for transitioning between states.
         /// </summary>
-        protected Dictionary<T, StateCase> states = new Dictionary<T, StateCase>();
+        protected Dictionary<T, StateCase> states = new();
 
         /// <summary>
         /// The CurrentState property is a getter/setter that tracks the current state of the state machine.

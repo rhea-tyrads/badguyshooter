@@ -11,8 +11,8 @@ namespace Watermelon
     [System.Serializable]
     public class PoolGeneric<T> : Pool where T : Component
     {
-        public List<T> pooledComponents = new List<T>();
-        public List<List<T>> multiPooledComponents = new List<List<T>>();
+        public List<T> pooledComponents = new();
+        public List<List<T>> multiPooledComponents = new();
 
         public delegate void TCallback(T value);
 

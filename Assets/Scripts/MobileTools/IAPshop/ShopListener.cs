@@ -1,0 +1,66 @@
+using System.Collections.Generic;
+using MobileTools.SDK;
+using MobileTools.Utilities;
+using UnityEngine;
+using Watermelon;
+using Watermelon.SquadShooter;
+
+namespace MobileTools.IAPshop
+{
+    public class ShopListener : MonoBehaviour
+    {
+        public Shop shop;
+        public List<ShopItem> items = new();
+        public WeaponsController weapons;
+        public ShopSave save;
+        
+        ShopItem Find(string product)
+            => items.Find(c => c.Id == product);
+
+        void Start()
+        {
+            SDKEvents.Instance.OnProductPurchase += Purchase;
+            RefreshItems();
+        }
+
+        void RefreshItems()
+        {
+            foreach (var item in items)
+                item.SetLock(save.IsPurchased(item.Id));
+        }
+        void OnDisable()
+        {
+            if (!SDKEvents.Instance) return;
+            SDKEvents.Instance.OnProductPurchase -= Purchase;
+        }
+
+        public void RemoveAds()
+            => Keys.PurchaseNoAds();
+
+        void Purchase(string id)
+        {
+            if (id == shop.noAdsID)
+                RemoveAds();
+            else
+                GiveItem(id);
+        }
+
+
+        void GiveItem(string id)
+        {
+       
+            
+            var item = Find(id);
+            BonusController.Instance.AddHp(item.hpBoostAmount);
+            BonusController.Instance.AddHp(item.critBoostAmount);
+            BonusController.Instance.AddHp(item.respawnBoostAmount);
+            CurrenciesController.Add(CurrencyType.Coins, item.goldAmount);
+            weapons.UnlockWeapon(item.weapon);
+            
+            save.Add(id);
+            RefreshItems();
+            // Bank.Instance.Add(ResourceEnum.Gold, gold);
+            // if (item.expAmount > 0) EventManager.Instance.AddHeroExperience(Vector3.zero,item.expAmount);
+        }
+    }
+}

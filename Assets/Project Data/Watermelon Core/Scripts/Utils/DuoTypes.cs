@@ -22,8 +22,8 @@ namespace Watermelon
             this.secondValue = value;
         }
 
-        public static DuoInt One => new DuoInt(1);
-        public static DuoInt Zero => new DuoInt(0);
+        public static DuoInt One => new(1);
+        public static DuoInt Zero => new(0);
 
         public int Random()
         {
@@ -40,13 +40,13 @@ namespace Watermelon
             return Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(firstValue, secondValue, t)), firstValue, secondValue);
         }
 
-        public static implicit operator Vector2Int(DuoInt value) => new Vector2Int(value.firstValue, value.secondValue);
-        public static explicit operator DuoInt(Vector2Int vec) => new DuoInt(vec.x, vec.y);
+        public static implicit operator Vector2Int(DuoInt value) => new(value.firstValue, value.secondValue);
+        public static explicit operator DuoInt(Vector2Int vec) => new(vec.x, vec.y);
 
-        public static implicit operator int2(DuoInt value) => new int2(value.firstValue, value.secondValue);
-        public static explicit operator DuoInt(int2 value) => new DuoInt(value.x, value.y);
+        public static implicit operator int2(DuoInt value) => new(value.firstValue, value.secondValue);
+        public static explicit operator DuoInt(int2 value) => new(value.x, value.y);
 
-        public static DuoInt operator *(DuoInt a, DuoInt b) => new DuoInt(a.firstValue * b.firstValue, a.secondValue * b.secondValue);
+        public static DuoInt operator *(DuoInt a, DuoInt b) => new(a.firstValue * b.firstValue, a.secondValue * b.secondValue);
         public static DuoInt operator /(DuoInt a, DuoInt b)
         {
             if ((b.firstValue == 0) || (b.secondValue == 0))
@@ -57,7 +57,7 @@ namespace Watermelon
             return new DuoInt(a.firstValue / b.firstValue, a.secondValue / b.secondValue);
         }
 
-        public static DuoInt operator *(DuoInt a, float b) => new DuoInt((int)(a.firstValue * b), (int)(a.secondValue * b));
+        public static DuoInt operator *(DuoInt a, float b) => new((int)(a.firstValue * b), (int)(a.secondValue * b));
         public static DuoInt operator /(DuoInt a, float b)
         {
             if (b == 0)
@@ -98,13 +98,13 @@ namespace Watermelon
             this.secondValue = value;
         }
 
-        public static DuoFloat One => new DuoFloat(1);
-        public static DuoFloat Zero => new DuoFloat(0);
-        public static DuoFloat ZeroOne => new DuoFloat(0, 1);
-        public static DuoFloat OneZero => new DuoFloat(1, 0);
-        public static DuoFloat MinusOneOne => new DuoFloat(-1, 1);
+        public static DuoFloat One => new(1);
+        public static DuoFloat Zero => new(0);
+        public static DuoFloat ZeroOne => new(0, 1);
+        public static DuoFloat OneZero => new(1, 0);
+        public static DuoFloat MinusOneOne => new(-1, 1);
 
-        public static DuoFloat operator -(DuoFloat value) => new DuoFloat(-value.x, -value.y);
+        public static DuoFloat operator -(DuoFloat value) => new(-value.x, -value.y);
 
         public float Random()
         {
@@ -138,11 +138,11 @@ namespace Watermelon
 
         public static implicit operator Vector2(DuoFloat value) => value.xy;
 
-        public static implicit operator DuoFloat(Vector2 vec) => new DuoFloat(vec.x, vec.y);
-        public static implicit operator DuoFloat(float value) => new DuoFloat(value);
-        public static implicit operator DuoFloat(int value) => new DuoFloat(value);
+        public static implicit operator DuoFloat(Vector2 vec) => new(vec.x, vec.y);
+        public static implicit operator DuoFloat(float value) => new(value);
+        public static implicit operator DuoFloat(int value) => new(value);
 
-        public static DuoFloat operator *(DuoFloat a, DuoFloat b) => new DuoFloat(a.firstValue * b.firstValue, a.secondValue * b.secondValue);
+        public static DuoFloat operator *(DuoFloat a, DuoFloat b) => new(a.firstValue * b.firstValue, a.secondValue * b.secondValue);
         public static DuoFloat operator /(DuoFloat a, DuoFloat b)
         {
             if ((b.firstValue == 0) || (b.secondValue == 0))
@@ -153,7 +153,7 @@ namespace Watermelon
             return new DuoFloat(a.firstValue / b.firstValue, a.secondValue / b.secondValue);
         }
 
-        public static DuoFloat operator *(DuoFloat a, float b) => new DuoFloat(a.firstValue * b, a.secondValue * b);
+        public static DuoFloat operator *(DuoFloat a, float b) => new(a.firstValue * b, a.secondValue * b);
         public static DuoFloat operator /(DuoFloat a, float b)
         {
             if (b == 0)
@@ -180,17 +180,17 @@ namespace Watermelon
         public float x => firstValue;
         public float y => secondValue;
 
-        public Vector2 xy => new Vector2(firstValue, secondValue);
-        public Vector2 yx => new Vector2(secondValue, firstValue);
-        public Vector3 x0y => new Vector3(firstValue, 0, secondValue);
-        public Vector3 y0x => new Vector3(secondValue, 0, firstValue);
+        public Vector2 xy => new(firstValue, secondValue);
+        public Vector2 yx => new(secondValue, firstValue);
+        public Vector3 x0y => new(firstValue, 0, secondValue);
+        public Vector3 y0x => new(secondValue, 0, firstValue);
 
         public float r => UnityEngine.Random.Range(firstValue, secondValue);
-        public Vector2 rr => new Vector2(r, r);
-        public Vector3 rrr => new Vector3(r, r, r);
-        public Vector3 r0r => new Vector3(r, 0, r);
+        public Vector2 rr => new(r, r);
+        public Vector3 rrr => new(r, r, r);
+        public Vector3 r0r => new(r, 0, r);
 
-        public static DuoFloat XZ(Vector3 value) => new DuoFloat(value.x, value.z);
+        public static DuoFloat XZ(Vector3 value) => new(value.x, value.z);
     }
 
     [System.Serializable]
@@ -212,8 +212,8 @@ namespace Watermelon
             this.secondValue = value;
         }
 
-        public static DuoDouble One => new DuoDouble(1);
-        public static DuoDouble Zero => new DuoDouble(0);
+        public static DuoDouble One => new(1);
+        public static DuoDouble Zero => new(0);
 
         public double Random()
         {
@@ -241,7 +241,7 @@ namespace Watermelon
             }
         }
 
-        public static DuoDouble operator *(DuoDouble a, DuoDouble b) => new DuoDouble(a.firstValue * b.firstValue, a.secondValue * b.secondValue);
+        public static DuoDouble operator *(DuoDouble a, DuoDouble b) => new(a.firstValue * b.firstValue, a.secondValue * b.secondValue);
         public static DuoDouble operator /(DuoDouble a, DuoDouble b)
         {
             if ((b.firstValue == 0) || (b.secondValue == 0))
@@ -281,10 +281,10 @@ namespace Watermelon
             this.secondValue = value;
         }
 
-        public static DuoVector3 One => new DuoVector3(Vector3.one);
-        public static DuoVector3 Zero => new DuoVector3(Vector3.zero);
+        public static DuoVector3 One => new(Vector3.one);
+        public static DuoVector3 Zero => new(Vector3.zero);
 
-        public static DuoVector3 operator *(DuoVector3 a, DuoVector3 b) => new DuoVector3(new Vector3(a.firstValue.x * b.firstValue.x, a.firstValue.y * b.firstValue.y, a.firstValue.z * b.firstValue.z), new Vector3(a.secondValue.x * b.secondValue.x, a.secondValue.y * b.secondValue.y, a.secondValue.z * b.secondValue.z));
+        public static DuoVector3 operator *(DuoVector3 a, DuoVector3 b) => new(new Vector3(a.firstValue.x * b.firstValue.x, a.firstValue.y * b.firstValue.y, a.firstValue.z * b.firstValue.z), new Vector3(a.secondValue.x * b.secondValue.x, a.secondValue.y * b.secondValue.y, a.secondValue.z * b.secondValue.z));
         public static DuoVector3 operator /(DuoVector3 a, DuoVector3 b)
         {
             if ((b.firstValue.x == 0) || (b.firstValue.y == 0) || (b.firstValue.z == 0) || (b.secondValue.x == 0) || (b.secondValue.y == 0) || (b.secondValue.z == 0))

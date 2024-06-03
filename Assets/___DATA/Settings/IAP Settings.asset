@@ -17,3 +17,4 @@ MonoBehaviour:
     iOSID: com.test.game.noads
     productKeyType: 0
     productType: 1
+  useTestMode: 0

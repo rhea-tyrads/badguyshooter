@@ -17,13 +17,13 @@ namespace Watermelon
 
         GameObject targetGameObject;
 
-        List<AudioSource> audioSources = new List<AudioSource>();
+        List<AudioSource> audioSources = new();
 
-        List<AudioSource> activeSoundSources = new List<AudioSource>();
-        List<AudioSource> activeMusicSources = new List<AudioSource>();
+        List<AudioSource> activeSoundSources = new();
+        List<AudioSource> activeMusicSources = new();
 
-        List<AudioSource> customSources = new List<AudioSource>();
-        List<AudioCaseCustom> activeCustomSourcesCases = new List<AudioCaseCustom>();
+        List<AudioSource> customSources = new();
+        List<AudioCaseCustom> activeCustomSourcesCases = new();
 
         static bool vibrationState;
         static float volume;
@@ -43,7 +43,7 @@ namespace Watermelon
         static AudioListener audioListener;
         public static AudioListener AudioListener => audioListener;
 
-        static List<AudioMinDelayData> minDelayQueue = new List<AudioMinDelayData>();
+        static List<AudioMinDelayData> minDelayQueue = new();
 
         public void Initialise(AudioSettings settings, GameObject targetGameObject)
         {

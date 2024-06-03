@@ -15,7 +15,7 @@ namespace Watermelon
         static bool manualControlMode;
 
         static string loadingMessage;
-        static List<LoadingTask> loadingTasks = new List<LoadingTask>();
+        static List<LoadingTask> loadingTasks = new();
 
         public static event LoadingCallback OnLoading;
         public static event SimpleCallback OnLoadingFinished;

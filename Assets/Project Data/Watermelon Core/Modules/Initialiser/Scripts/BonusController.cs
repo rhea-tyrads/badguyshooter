@@ -1,27 +1,44 @@
 using System;
+using MobileTools.MonoCache.System;
 using UnityEngine;
 using Watermelon.LevelSystem;
 using Watermelon.SquadShooter;
 
-public class BonusController : MonoBehaviour
+public class BonusController : Singleton<BonusController>
 {
     public BonusFile file;
     public BonusUI ui;
-    const string KEY = "BONUSES_KEY";
+    const string KEY = "BONUSES_SAVE";
+
+    bool IsFirstLaunch
+    {
+        get
+        {
+            var key = "FirstLaunchBonus";
+            if (PlayerPrefs.HasKey(key)) return false;
+            PlayerPrefs.SetInt(key, 1);
+            return true;
+        }
+    }
 
     void Start()
     {
         Load();
 
-        file.critBonus = 3;
-        file.hpBonus = 3;
-        file.respawnBonus = 3;
+        if (IsFirstLaunch)
+        {
+            file.critBonus = 3;
+            file.hpBonus = 3;
+            file.respawnBonus = 3;
+            Save();
+        }
+
 
         ui.SetCritBonus(file.critBonus);
         ui.SetHpBonus(file.hpBonus);
         ui.SetRespawnBonus(file.respawnBonus);
 
-        ui.OnPlay += SetBonuses;
+        ui.OnPlay += UseBonuses;
     }
 
     public static event Action OnShow = delegate { };
@@ -31,44 +48,54 @@ public class BonusController : MonoBehaviour
         OnShow();
     }
 
-    void SetBonuses()
+    void UseBonuses()
     {
         if (ui.IsHpActive)
         {
             LevelController.characterBehaviour.ApplyHitpointsBonus();
+            file.hpBonus--;
         }
 
         if (ui.IsCritActive)
         {
             LevelController.characterBehaviour.ApplyCriticalBonus();
+            file.critBonus--;
         }
 
         if (ui.IsRespawnActive)
         {
             LevelController.characterBehaviour.ApplyRespawnBonus();
+            file.respawnBonus--;
         }
-        
-   
+
+        Save();
+
         LevelController.StartGame();
     }
 
-    public    void Hide() => ui.Hide();
+    public void Hide() => ui.Hide();
 
-    public void AddHp()
+    public void AddHp(int amount = 1)
     {
-        file.hpBonus++;
+        if (amount == 0) return;
+        for (var i = 0; i < amount; i++)
+            file.hpBonus++;
         Save();
     }
 
-    public void AddRespawn()
+    public void AddRespawn(int amount = 1)
     {
-        file.respawnBonus++;
+        if (amount == 0) return;
+        for (var i = 0; i < amount; i++)
+            file.respawnBonus++;
         Save();
     }
 
-    public void AddCrit()
+    public void AddCrit(int amount = 1)
     {
-        file.critBonus++;
+        if (amount == 0) return;
+        for (var i = 0; i < amount; i++)
+            file.critBonus++;
         Save();
     }
 

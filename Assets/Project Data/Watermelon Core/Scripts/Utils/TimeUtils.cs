@@ -4,7 +4,7 @@ namespace Watermelon
 {
     public static class TimeUtils
     {
-        static readonly DateTime DEFAULT_DATE_UNIX = new DateTime(1970, 1, 1, 0, 0, 0);
+        static readonly DateTime DEFAULT_DATE_UNIX = new(1970, 1, 1, 0, 0, 0);
 
         public const string FORMAT_FULL = "d/M/yyyy HH:mm:ss";
         public const string FORMAT_SHORT = "t";

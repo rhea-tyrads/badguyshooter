@@ -14,10 +14,10 @@ namespace Watermelon
         [SerializeField] bool conformX = true;
         [SerializeField] bool conformY = true;
 
-        static List<RectTransform> registeredTransforms = new List<RectTransform>();
+        static List<RectTransform> registeredTransforms = new();
 
-        static Rect lastSafeArea = new Rect(0, 0, 0, 0);
-        static Vector2Int lastScreenSize = new Vector2Int(0, 0);
+        static Rect lastSafeArea = new(0, 0, 0, 0);
+        static Vector2Int lastScreenSize = new(0, 0);
 
         static ScreenOrientation lastOrientation = ScreenOrientation.AutoRotation;
 

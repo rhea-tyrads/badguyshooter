@@ -43,7 +43,7 @@ namespace Watermelon
         protected Vector2 input = Vector2.zero;
 
         public Vector3 Input => input;
-        public Vector3 MovementInput => new Vector3(input.x, 0, input.y);
+        public Vector3 MovementInput => new(input.x, 0, input.y);
 
         Vector2 defaultAnchoredPosition;
 
