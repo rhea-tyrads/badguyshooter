@@ -190,9 +190,20 @@ namespace Watermelon.SquadShooter
         {
             if (resetHealth)
                 currentHealth = MaxHealth;
+            
             isHpBonus = false;
             IsCritical = false;
             IsDead = false;
+            
+            stunTimer = 0;
+            atkSpdTimer = 0;
+            moveSlowTimer = 0;
+            multiShotTimer = 0f;
+            
+            if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
+            if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive((false));
+            if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
+            
             healthbarBehaviour.EnableBar();
             healthbarBehaviour.RedrawHealth();
             enemyDetector.Reload();

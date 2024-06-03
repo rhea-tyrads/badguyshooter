@@ -120,6 +120,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6724448621218878071, guid: b311c15523e7a794193103aba7964ad4,
         type: 3}
+      propertyPath: bonuses
+      value: 
+      objectReference: {fileID: 6176080802186736889}
+    - target: {fileID: 6724448621218878071, guid: b311c15523e7a794193103aba7964ad4,
+        type: 3}
       propertyPath: itemType
       value: 2
       objectReference: {fileID: 0}
@@ -272,3 +277,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 8033403332701490324}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6176080802186736889 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4236120337415125101, guid: b576de81de8cc05408443dcae24a7660,
+    type: 3}
+  m_PrefabInstance: {fileID: 8033403332701490324}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e211e6d13ce72a41872f598245a4001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

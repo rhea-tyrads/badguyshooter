@@ -38,6 +38,8 @@ public class AdjustController : MonoBehaviour
         Adjust.trackEvent(startEvent);
     }
 
+    [SerializeField] GameSettings config;
+
     void EndSession()
     {
         var sessionEndTime = DateTime.Now;
@@ -49,8 +51,33 @@ public class AdjustController : MonoBehaviour
 
     public void LevelComplete(int world, int level)
     {
-        var lvlNumber = 0;
-        var token = levelCompleteEvents[lvlNumber];
+        world = ActiveRoom.CurrentWorldIndex;
+        level = ActiveRoom.CurrentLevelIndex + 1;
+ 
+        var worlds = config.LevelsDatabase.Worlds;
+        var number = 0;
+        var shouldBreak = false;
+ 
+
+        for (var w = 0; w < world+1; w++)
+        {
+            if (shouldBreak) break;
+
+            for (var l = 0; l < worlds[w].Levels.Length; l++)
+            {
+                Debug.LogError("total: " + worlds[w].Levels.Length);
+                if (w == world && l == level)
+                {
+                    shouldBreak = true;
+                    break;
+                }
+
+                number++;
+            }
+        }
+
+        Debug.LogError("LEVEL COMPLETE: " + number);
+        var token = levelCompleteEvents[number];
         var send = new AdjustEvent(token);
         Adjust.trackEvent(send);
     }

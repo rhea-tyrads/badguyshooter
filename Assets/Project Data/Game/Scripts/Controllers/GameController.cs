@@ -106,9 +106,7 @@ namespace Watermelon
             //Debug.LogError("COMPLETE: lvl" + ActiveRoom.CurrentLevelIndex
             //+ ", world: " + ActiveRoom.CurrentWorldIndex + ", " + currentLevel.Rooms
             //+ ", total levels here: " + currentLevel.Rooms.Length);
-
-   
-            
+ 
             UIController.OnPageOpenedEvent += OnCompletePageOpened;
             instance.weaponsController.CheckWeaponUpdateState();
             UIController.HidePage<UIGame>();

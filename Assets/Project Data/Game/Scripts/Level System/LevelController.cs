@@ -21,7 +21,7 @@ namespace Watermelon.LevelSystem
         static LevelSave levelSave;
         static LevelData currentLevelData;
         public static LevelData CurrentLevelData => currentLevelData;
-        static int currentRoomIndex;
+       public static int currentRoomIndex;
         public static CharacterBehaviour characterBehaviour; // Player
         static GameObject playerObject;
         static WorldData activeWorldData;
@@ -427,6 +427,7 @@ namespace Watermelon.LevelSystem
 
             if (currentLevelData.Rooms.IsInRange(currentRoomIndex))
             {
+              
                 Overlay.Show(0.3f, () =>
                 {
                     Debug.LogWarning(("ROOM CLEARED: " + currentRoomIndex));
@@ -448,11 +449,13 @@ namespace Watermelon.LevelSystem
             }
             else
             {
+        
+                SDKEvents.Instance.LevelComplete(ActiveRoom.CurrentWorldIndex + 1, ActiveRoom.CurrentLevelIndex);
                 uiGame.UpdateReachedRoomUI(currentRoomIndex);
                 OnLevelCompleted();
             }
 
-            SDKEvents.Instance.LevelComplete(ActiveRoom.CurrentWorldIndex + 1, ActiveRoom.CurrentLevelIndex);
+      
         }
 
         public static void OnEnemyKilled(BaseEnemyBehavior enemyBehavior)

@@ -34,7 +34,7 @@ namespace Watermelon.SquadShooter
                 var weapon = WeaponsController.Database.Weapons[i];
                 var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(weapon.UpgradeType);
                 var newPanel = AddNewPanel();
-                newPanel.Init(weaponController, upgrade as BaseWeaponUpgrade, weapon, i);
+                newPanel.Init(weaponController, upgrade as BaseWeaponUpgrade, weapon, i, weapon.availableOnlyInShop);
             }
 
             WeaponsController.OnWeaponUnlocked += (_) => UpdateUI();

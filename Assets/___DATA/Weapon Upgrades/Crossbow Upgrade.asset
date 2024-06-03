@@ -18,8 +18,6 @@ MonoBehaviour:
   - price: 0
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 0}
-    bulletPrefab: {fileID: 0}
     damage:
       firstValue: 0
       secondValue: 0
@@ -34,13 +32,9 @@ MonoBehaviour:
       firstValue: 0
       secondValue: 0
     keyUpgradeNumber: -1
-  - price: 0
+  - price: 10
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: 06dbd0b1434df2a4b8d9e4f4324adc6b,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 120
       secondValue: 120
@@ -58,10 +52,6 @@ MonoBehaviour:
   - price: 70
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 140
       secondValue: 140
@@ -79,10 +69,6 @@ MonoBehaviour:
   - price: 90
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 160
       secondValue: 160
@@ -100,10 +86,6 @@ MonoBehaviour:
   - price: 130
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 180
       secondValue: 180
@@ -121,10 +103,6 @@ MonoBehaviour:
   - price: 170
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 200
       secondValue: 200
@@ -142,10 +120,6 @@ MonoBehaviour:
   - price: 220
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 220
       secondValue: 220
@@ -163,10 +137,6 @@ MonoBehaviour:
   - price: 260
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 240
       secondValue: 240
@@ -184,10 +154,6 @@ MonoBehaviour:
   - price: 280
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 280
       secondValue: 280
@@ -205,10 +171,6 @@ MonoBehaviour:
   - price: 300
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 320
       secondValue: 320
@@ -226,10 +188,6 @@ MonoBehaviour:
   - price: 400
     currencyType: 0
     previewSprite: {fileID: 0}
-    weaponPrefab: {fileID: 6347890837037930244, guid: ba9390b7ff0bc1d4ebdab4e0fe10a6dd,
-      type: 3}
-    bulletPrefab: {fileID: 7995167561492624291, guid: 172e28cdec29f3f45a71d4a49ddf3dd1,
-      type: 3}
     damage:
       firstValue: 400
       secondValue: 400

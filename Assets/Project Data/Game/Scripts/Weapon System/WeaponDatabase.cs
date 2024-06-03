@@ -13,10 +13,10 @@ namespace Watermelon.SquadShooter
 
         public WeaponData GetWeapon(WeaponType type)
         {
-            for (var i = 0; i < weapons.Length; i++)
+            foreach (var data in weapons)
             {
-                if (weapons[i].Type.Equals(type))
-                    return weapons[i];
+                if (data.Type.Equals(type))
+                    return data;
             }
 
             Debug.LogError("Weapon data of type: " + type + " is not found");

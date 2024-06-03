@@ -32,7 +32,7 @@ MonoBehaviour:
       firstValue: 0
       secondValue: 0
     keyUpgradeNumber: -1
-  - price: 0
+  - price: 10
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:

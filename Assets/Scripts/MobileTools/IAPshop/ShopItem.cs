@@ -13,6 +13,8 @@ namespace MobileTools.IAPshop
         public string Id;
         public ShopPurchaseType purchaseType;
         public ShopItemType itemType;
+        
+        [HideIf(nameof(IsWeapon))]
         public BonusPackUI bonuses;
 
         [ShowIf(nameof(ShowWeapon))] public WeaponType weapon;
@@ -27,7 +29,7 @@ namespace MobileTools.IAPshop
         bool ShowWeapon => IsWeapon || IsBundle;
         bool IsWeapon => itemType == ShopItemType.Weapon;
         bool IsBundle => itemType == ShopItemType.Bundle;
-        bool IsBooster => itemType == ShopItemType.BoosterPack;
+        bool IsBooster => itemType == ShopItemType.BoosterPack || IsBundle;
         public event Action<ShopItem> OnTryPurchase = delegate { };
 
         #endregion
@@ -41,6 +43,7 @@ namespace MobileTools.IAPshop
         {
             purchasedContainer.SetActive(isPurchased);
         }
+        
         public void Set(PackData data)
         {
             if (!bonuses) return;

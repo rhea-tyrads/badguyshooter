@@ -223,6 +223,16 @@ PrefabInstance:
       propertyPath: skin
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6724448621218878071, guid: b311c15523e7a794193103aba7964ad4,
+        type: 3}
+      propertyPath: bonuses
+      value: 
+      objectReference: {fileID: 7001287424030607729}
+    - target: {fileID: 6724448621218878071, guid: b311c15523e7a794193103aba7964ad4,
+        type: 3}
+      propertyPath: itemType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7145292673598338439, guid: b311c15523e7a794193103aba7964ad4,
         type: 3}
       propertyPath: m_Name
@@ -380,6 +390,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b576de81de8cc05408443dcae24a7660, type: 3}
+--- !u!114 &7001287424030607729 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4236120337415125101, guid: b576de81de8cc05408443dcae24a7660,
+    type: 3}
+  m_PrefabInstance: {fileID: 6620336332875936028}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e211e6d13ce72a41872f598245a4001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8951476424258699922 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2871643653050725262, guid: b576de81de8cc05408443dcae24a7660,

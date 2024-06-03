@@ -1219,11 +1219,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonType: 0
-  gamepadButtonIcon: {fileID: 104973435056936779}
+  buttonTag: 8
   buttonsToDisable: 0
   buttonsToEnable: 0
-  buttonTag: 8
   isInFocus: 0
+  gamepadButtonIcon: {fileID: 104973435056936779}
 --- !u!1 &2006995661020478917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,13 +1349,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c08aadb31451946bef9c004cf99de0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerObject: {fileID: 937021871720837133}
+  powerText: {fileID: 3735052404123178825}
+  selectionImage: {fileID: 4298500406183852603}
+  backgroundTransform: {fileID: 2266260806463367722}
   previewImage: {fileID: 1562194187639869402}
   titleText: {fileID: 1562194188215939274}
   mainButton: {fileID: 3546649249933364480}
-  selectionImage: {fileID: 4298500406183852603}
-  backgroundTransform: {fileID: 2266260806463367722}
-  powerObject: {fileID: 937021871720837133}
-  powerText: {fileID: 3735052404123178825}
   upgradesStateObject: {fileID: 6787909530892985587}
   upgradeStateActiveColor: {r: 1, g: 0.76862746, b: 0.20784314, a: 1}
   upgradesStatesImages:
@@ -1377,7 +1377,6 @@ MonoBehaviour:
   lockedStateObject: {fileID: 1562194187879137002}
   lockedStateText: {fileID: 1562194187855662613}
   lockedPreviewColor: {r: 0, g: 0, b: 0, a: 0.43137255}
-  buttons: []
 --- !u!1 &2222119674482940865
 GameObject:
   m_ObjectHideFlags: 0
@@ -2175,7 +2174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24705884, g: 0.52156866, b: 0.7568628, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.65882355}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2338,7 +2337,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3f9fb3ba2f38dfa4ca829bff8dbdd7ed, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 064530bb1bcc3d34aaaf8073e327cad5, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

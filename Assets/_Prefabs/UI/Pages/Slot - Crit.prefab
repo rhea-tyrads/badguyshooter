@@ -268,8 +268,8 @@ MonoBehaviour:
   clickButton: {fileID: 317462194098453413}
   frame: {fileID: 5027494816597917783}
   outline: {fileID: 3691066549687258301}
-  framePassiveColor: {r: 0.70980394, g: 0.7294118, b: 0.75686276, a: 1}
-  frameActiveColor: {r: 0.36078432, g: 0.9411765, b: 0.26666668, a: 1}
+  framePassiveColor: {r: 0.7372549, g: 0.105882354, b: 0.22745098, a: 1}
+  frameActiveColor: {r: 0.5529412, g: 0.09019608, b: 0.18039216, a: 1}
 --- !u!1 &1044260088204705418
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,7 +582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.36053485, g: 0.93962264, b: 0.26770383, a: 1}
+  m_Color: {r: 0.5529412, g: 0.09019608, b: 0.18039216, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
