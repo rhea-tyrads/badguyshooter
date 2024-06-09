@@ -21,22 +21,22 @@ public class BonusController : Singleton<BonusController>
         }
     }
 
-    void Start()
+    void Awake()
     {
         Load();
 
         if (IsFirstLaunch)
         {
-            file.critBonus = 3;
-            file.hpBonus = 3;
-            file.respawnBonus = 3;
+            file.critBonus = 999;
+            file.hpBonus =  999;
+            file.respawnBonus =  999;
             Save();
         }
-
 
         ui.SetCritBonus(file.critBonus);
         ui.SetHpBonus(file.hpBonus);
         ui.SetRespawnBonus(file.respawnBonus);
+        ui.SetOtherBonuses();
 
         ui.OnPlay += UseBonuses;
     }
@@ -48,6 +48,7 @@ public class BonusController : Singleton<BonusController>
         OnShow();
     }
 
+    public UIPowerupPanel powerups;
     void UseBonuses()
     {
         if (ui.IsHpActive)
@@ -68,8 +69,27 @@ public class BonusController : Singleton<BonusController>
             file.respawnBonus--;
         }
 
+        if (ui.IsMovementActive)
+        {
+            LevelController.characterBehaviour.MovementBonus(true);
+            file.movementBonus--;
+        }
+        
+        if (ui.IsFirerateActive)
+        {
+            LevelController.characterBehaviour.FireRateBonus(true);
+            file.fireRate--;
+        }
+        
+        if (ui.IsMultishotActive)
+        {
+            LevelController.characterBehaviour.MultishotBonus(true);
+            file.multishot--;
+        }
+        
         Save();
 
+        powerups.SetBonuses(ui);
         LevelController.StartGame();
     }
 

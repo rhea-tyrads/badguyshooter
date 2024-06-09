@@ -1,4 +1,5 @@
 using System;
+using com.adjust.sdk;
 using MobileTools.SDK;
 using MobileTools.Utilities;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace MobileTools.IAPshop
 {
     public class Shop : ScreenUI, IDetailedStoreListener
     {
+        public bool testMode;
         public Sprite goldIcon;
         public Sprite critIcon;
         public Sprite respawnIcon;
@@ -16,8 +18,8 @@ namespace MobileTools.IAPshop
         public ScreenUI successUI;
         public ShopListener listener;
         public string noAdsID = "no_ads";
-        
-        
+
+
         [Header("Last purchase")]
         //public Data data;
         //public Payload payload;
@@ -58,7 +60,7 @@ namespace MobileTools.IAPshop
         void InitItems()
         {
             if (!listener) Debug.LogError("No shop listener");
-            
+
             foreach (var item in listener.items)
             {
                 PackData data = new()
@@ -76,7 +78,11 @@ namespace MobileTools.IAPshop
 
         void TryPurchase(ShopItem item)
         {
-            _controller.InitiatePurchase(item.Id);
+            if (testMode)
+                Purchase(item.Id);
+            else
+                _controller.InitiatePurchase(item.Id); 
+    
         }
 
         void TryPurchaseRemoveAds()
@@ -94,12 +100,18 @@ namespace MobileTools.IAPshop
 
         void Purchase(string id)
         {
+            //Debug.LogError("AAYAAA");
             SDKEvents.Instance.ProductPurchase(id);
             // AudioPlayer.Instance.PlaySound(Game.Instance.gameplay.so.sounds.purchaseSuccess);
-            Debug.Log( "Purchase complete: " + id);
+            Debug.Log("Purchase complete: " + id);
             if (successUI) successUI.Show();
- 
+
+            var item = listener.Find(id);
+            var token = item.adjustToken;
+            var send = new AdjustEvent(token);
+            Adjust.trackEvent(send);
         }
+
         void CheckNoAds(string id)
         {
             var product = _controller?.products.WithID(id);

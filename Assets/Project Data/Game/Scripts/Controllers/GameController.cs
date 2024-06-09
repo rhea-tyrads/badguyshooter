@@ -34,7 +34,6 @@ namespace Watermelon
         void Awake()
         {
             instance = this;
-
             SaveController.Initialise(false);
 
             // Cache components
@@ -82,7 +81,6 @@ namespace Watermelon
             CameraController.SetCameraShiftState(false);
             LevelController.LoadCurrentLevel();
         }
-
 
         public static void OnGameStarted()
         {

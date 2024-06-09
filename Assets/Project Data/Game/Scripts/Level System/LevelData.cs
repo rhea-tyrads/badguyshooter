@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Watermelon.SquadShooter;
 
@@ -46,122 +47,72 @@ namespace Watermelon.LevelSystem
         #region Special Behaviours callbacks
         public void OnLevelInitialised()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnLevelInitialised();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnLevelInitialised();
         }
 
         public void OnLevelLoaded()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnLevelLoaded();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnLevelLoaded();
         }
 
         public void OnLevelUnloaded()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnLevelUnloaded();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnLevelUnloaded();
         }
 
         public void OnLevelStarted()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnLevelStarted();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnLevelStarted();
         }
 
         public void OnLevelFailed()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnLevelFailed();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnLevelFailed();
         }
 
         public void OnLevelCompleted()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnLevelCompleted();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnLevelCompleted();
         }
 
         public void OnRoomEntered()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnRoomEntered();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnRoomEntered();
         }
 
         public void OnRoomLeaved()
         {
-            for (var i = 0; i < specialBehaviours.Length; i++)
-            {
-                specialBehaviours[i].OnRoomLeaved();
-            }
+            foreach (var t in specialBehaviours)
+                t.OnRoomLeaved();
         }
         #endregion
 
         public int GetChestsAmount(bool includeRewarded = false)
-        {
-            var finalAmount = 0;
+            => rooms.Where(room => room.ChestEntities != null)
+                .Sum(room => room.ChestEntities.Count(
+                    chest => chest.IsInited && (includeRewarded || chest.ChestType != LevelChestType.Rewarded)));
 
-            for (var i = 0; i < rooms.Length; i++)
-            {
-                var room = rooms[i];
-                if (room.ChestEntities != null)
-                {
-                    for (var j = 0; j < room.ChestEntities.Length; j++)
-                    {
-                        var chest = room.ChestEntities[j];
-
-                        if (chest.IsInited && (includeRewarded || chest.ChestType != LevelChestType.Rewarded))
-                        {
-                            finalAmount++;
-                        }
-                    }
-                }
-            }
-
-            return finalAmount;
-        }
-
-        public int GetCoinsReward()
-        {
-            foreach (var data in dropData)
-            {
-                if (data.dropType == DropableItemType.Currency && data.currencyType == CurrencyType.Coins)
-                    return data.amount;
-            }
-
-            return 0;
-        }
+        public int GetCoinsReward() 
+            => (from data in dropData where data.dropType == DropableItemType.Currency && data.currencyType == CurrencyType.Coins select data.amount).FirstOrDefault();
 
         public List<WeaponType> GetCardsReward()
         {
             var result = new List<WeaponType>();
 
-            for (var i = 0; i < dropData.Count; i++)
+            foreach (var t in dropData)
             {
-                if (dropData[i].dropType == DropableItemType.WeaponCard)
-                {
-                    var isWeaponUnlocked = WeaponsController.IsWeaponUnlocked(dropData[i].cardType);
-
-                    if (!isWeaponUnlocked)
-                    {
-                        for (var j = 0; j < dropData[i].amount; j++)
-                        {
-                            result.Add(dropData[i].cardType);
-                        }
-                    }
-                }
+                if (t.dropType != DropableItemType.WeaponCard) continue;
+                var isWeaponUnlocked = WeaponsController.IsWeaponUnlocked(t.cardType);
+                if (isWeaponUnlocked) continue;
+                for (var j = 0; j < t.amount; j++)
+                    result.Add(t.cardType);
             }
 
             return result;

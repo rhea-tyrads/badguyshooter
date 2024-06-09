@@ -30,24 +30,22 @@ namespace Watermelon
 
             Serializer.Initialise();
 
-            if (!IsInititalized)
-            {
-                IsInititalized = true;
+            if (IsInititalized) return;
+            IsInititalized = true;
 
-                InitSettings = initSettings;
-                SystemCanvas = systemCanvas;
-                InitialiserGameObject = gameObject;
+            InitSettings = initSettings;
+            SystemCanvas = systemCanvas;
+            InitialiserGameObject = gameObject;
 
 #if MODULE_INPUT_SYSTEM
-                eventSystem.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+            eventSystem.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
 #else
                 eventSystem.gameObject.AddComponent<StandaloneInputModule>();
 #endif
 
-                DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
 
-                initSettings.Initialise(this);
-            }
+            initSettings.Initialise(this);
         }
 
         public void Start()
@@ -57,19 +55,13 @@ namespace Watermelon
 
         public void Initialise(bool loadingScene)
         {
-            if (!IsStartInitialized)
-            {
-                IsStartInitialized = true;
+            if (IsStartInitialized) return;
+            IsStartInitialized = true;
 
-                if (loadingScene)
-                {
-                    GameLoading.LoadGameScene();
-                }
-                else
-                {
-                    GameLoading.SimpleLoad();
-                }
-            }
+            if (loadingScene)
+                GameLoading.LoadGameScene();
+            else
+                GameLoading.SimpleLoad();
         }
 
         public static bool IsModuleInitialised(Type moduleType)

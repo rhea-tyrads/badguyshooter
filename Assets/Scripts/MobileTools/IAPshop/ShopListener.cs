@@ -13,8 +13,8 @@ namespace MobileTools.IAPshop
         public List<ShopItem> items = new();
         public WeaponsController weapons;
         public ShopSave save;
-        
-        ShopItem Find(string product)
+
+        public   ShopItem Find(string product)
             => items.Find(c => c.Id == product);
 
         void Start()
@@ -28,6 +28,7 @@ namespace MobileTools.IAPshop
             foreach (var item in items)
                 item.SetLock(save.IsPurchased(item.Id));
         }
+
         void OnDisable()
         {
             if (!SDKEvents.Instance) return;
@@ -48,15 +49,13 @@ namespace MobileTools.IAPshop
 
         void GiveItem(string id)
         {
-       
-            
             var item = Find(id);
             BonusController.Instance.AddHp(item.hpBoostAmount);
             BonusController.Instance.AddHp(item.critBoostAmount);
             BonusController.Instance.AddHp(item.respawnBoostAmount);
             CurrenciesController.Add(CurrencyType.Coins, item.goldAmount);
             weapons.UnlockWeapon(item.weapon);
-            
+
             save.Add(id);
             RefreshItems();
             // Bank.Instance.Add(ResourceEnum.Gold, gold);

@@ -120,11 +120,11 @@ namespace com.adjust.sdk
                 return null;
             }
 
-            List<String> processedList = new List<String>();
-            for (int i = 0; i < list.Count; i += 2)
+            var processedList = new List<String>();
+            for (var i = 0; i < list.Count; i += 2)
             {
-                String key = list[i];
-                String value = list[i + 1];
+                var key = list[i];
+                var value = list[i + 1];
 
                 if (key == null || value == null)
                 {
@@ -147,7 +147,7 @@ namespace com.adjust.sdk
 
         public static string GetJsonResponseCompact(Dictionary<string, object> dictionary)
         {
-            string logJsonResponse = "";
+            var logJsonResponse = "";
 
             if (dictionary == null)
             {
@@ -155,12 +155,12 @@ namespace com.adjust.sdk
             }
             else
             {
-                int preLoopCounter = 0;
+                var preLoopCounter = 0;
                 logJsonResponse += "{";
 
-                foreach (KeyValuePair<string, object> pair in dictionary)
+                foreach (var pair in dictionary)
                 {
-                    String valueString = pair.Value as string;
+                    var valueString = pair.Value as string;
 
                     if (valueString != null)
                     {
@@ -182,7 +182,7 @@ namespace com.adjust.sdk
                         continue;
                     }
 
-                    Dictionary<string, object> valueDictionary = pair.Value as Dictionary<string, object>;
+                    var valueDictionary = pair.Value as Dictionary<string, object>;
 
                     if (++preLoopCounter > 1)
                     {
@@ -273,8 +273,8 @@ namespace com.adjust.sdk
                 return -1;
             }
 
-            string strConversionValue = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadConversionValue);
-            int conversionValue = 0;
+            var strConversionValue = GetJsonString(jsonNode, KeySkadConversionValue);
+            var conversionValue = 0;
             if (Int32.TryParse(strConversionValue, out conversionValue))
             {
                 return conversionValue;
@@ -292,7 +292,7 @@ namespace com.adjust.sdk
             {
                 return null;
             }
-            string coarseValue = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadCoarseValue);
+            var coarseValue = GetJsonString(jsonNode, KeySkadCoarseValue);
             return coarseValue;
         }
 
@@ -303,14 +303,14 @@ namespace com.adjust.sdk
             {
                 return false;
             }
-            bool lockWindow = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadLockWindow));
+            var lockWindow = Convert.ToBoolean(GetJsonString(jsonNode, KeySkadLockWindow));
             return lockWindow;
         }
 
 #if UNITY_ANDROID
         public static AndroidJavaObject TestOptionsMap2AndroidJavaObject(Dictionary<string, string> testOptionsMap, AndroidJavaObject ajoCurrentActivity)
         {
-            AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
+            var ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
             ajoTestOptions.Set<String>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
             ajoTestOptions.Set<String>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
             ajoTestOptions.Set<String>("subscriptionUrl", testOptionsMap[KeyTestOptionsSubscriptionUrl]);
@@ -329,44 +329,44 @@ namespace com.adjust.sdk
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsUseTestConnectionOptions)) 
             {
-                bool useTestConnectionOptions = testOptionsMap[KeyTestOptionsUseTestConnectionOptions].ToLower() == "true";
-                AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject("java.lang.Boolean", useTestConnectionOptions);
+                var useTestConnectionOptions = testOptionsMap[KeyTestOptionsUseTestConnectionOptions].ToLower() == "true";
+                var ajoUseTestConnectionOptions = new AndroidJavaObject("java.lang.Boolean", useTestConnectionOptions);
                 ajoTestOptions.Set<AndroidJavaObject>("useTestConnectionOptions", ajoUseTestConnectionOptions);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsTimerIntervalInMilliseconds)) 
             {
                 var timerIntervalInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsTimerIntervalInMilliseconds]);
-                AndroidJavaObject ajoTimerIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", timerIntervalInMilliseconds);
+                var ajoTimerIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", timerIntervalInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("timerIntervalInMilliseconds", ajoTimerIntervalInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsTimerStartInMilliseconds)) 
             {
                 var timerStartInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsTimerStartInMilliseconds]);
-                AndroidJavaObject ajoTimerStartInMilliseconds = new AndroidJavaObject("java.lang.Long", timerStartInMilliseconds);
+                var ajoTimerStartInMilliseconds = new AndroidJavaObject("java.lang.Long", timerStartInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("timerStartInMilliseconds", ajoTimerStartInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsSessionIntervalInMilliseconds)) 
             {   
                 var sessionIntervalInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsSessionIntervalInMilliseconds]);
-                AndroidJavaObject ajoSessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", sessionIntervalInMilliseconds);
+                var ajoSessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", sessionIntervalInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("sessionIntervalInMilliseconds", ajoSessionIntervalInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsSubsessionIntervalInMilliseconds)) 
             {
                 var subsessionIntervalInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsSubsessionIntervalInMilliseconds]);
-                AndroidJavaObject ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", subsessionIntervalInMilliseconds);
+                var ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", subsessionIntervalInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("subsessionIntervalInMilliseconds", ajoSubsessionIntervalInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsTeardown))
             {
-                bool teardown = testOptionsMap[KeyTestOptionsTeardown].ToLower() == "true";
-                AndroidJavaObject ajoTeardown = new AndroidJavaObject("java.lang.Boolean", teardown);
+                var teardown = testOptionsMap[KeyTestOptionsTeardown].ToLower() == "true";
+                var ajoTeardown = new AndroidJavaObject("java.lang.Boolean", teardown);
                 ajoTestOptions.Set<AndroidJavaObject>("teardown", ajoTeardown);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsNoBackoffWait))
             {
-                bool noBackoffWait = testOptionsMap[KeyTestOptionsNoBackoffWait].ToLower() == "true";
-                AndroidJavaObject ajoNoBackoffWait = new AndroidJavaObject("java.lang.Boolean", noBackoffWait);
+                var noBackoffWait = testOptionsMap[KeyTestOptionsNoBackoffWait].ToLower() == "true";
+                var ajoNoBackoffWait = new AndroidJavaObject("java.lang.Boolean", noBackoffWait);
                 ajoTestOptions.Set<AndroidJavaObject>("noBackoffWait", ajoNoBackoffWait);
             }
 

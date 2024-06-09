@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using com.adjust.sdk;
+using MobileTools.SDK;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +11,8 @@ namespace Watermelon.SquadShooter
 {
     public class WeaponPanelUI : UIUpgradeAbstractPanel
     {
+        #region Inspector
+
         [SerializeField] GameObject shopState;
         [SerializeField] TextMeshProUGUI weaponName;
         [SerializeField] Image weaponImage;
@@ -57,17 +61,18 @@ namespace Watermelon.SquadShooter
         WeaponsController weaponController;
         bool _AvailableOnlyInShop;
 
+        #endregion
+
         public void Init(WeaponsController controller, BaseWeaponUpgrade upgrade, WeaponData data, int index, bool availableOnlyInShop)
         {
-            _AvailableOnlyInShop = availableOnlyInShop;
+            _AvailableOnlyInShop = PlayerPrefs.HasKey("WEAPON_CHEAT") || availableOnlyInShop;
+            
             Data = data;
             Upgrade = upgrade;
-            panelRectTransform = (RectTransform)transform;
+            panelRectTransform = (RectTransform) transform;
             gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
-
             weaponIndex = index;
             weaponController = controller;
-
             weaponName.text = data.Name;
             weaponImage.sprite = data.Icon;
             weaponBackImage.color = data.RarityData.MainColor;
@@ -76,7 +81,6 @@ namespace Watermelon.SquadShooter
 
             UpdateUI();
             UpdateSelectionState();
-
             WeaponsController.OnNewWeaponSelected += UpdateSelectionState;
         }
 
@@ -113,7 +117,6 @@ namespace Watermelon.SquadShooter
                 lockedStateObject.SetActive(false);
                 upgradeStateObject.SetActive(false);
                 shopState.SetActive(true);
- 
             }
             else
             {
@@ -124,13 +127,14 @@ namespace Watermelon.SquadShooter
                 var currentAmount = Data.CardsAmount;
                 var target = Upgrade.NextStage.Price;
 
-                cardsFillImage.fillAmount = (float)currentAmount / target;
+                cardsFillImage.fillAmount = (float) currentAmount / target;
                 cardsAmountText.text = currentAmount + "/" + target;
-
-      
             }
+
             powerObject.SetActive(false);
-            powerText.gameObject.SetActive(false); 
+            powerText.gameObject.SetActive(false);
+            if (SDKEvents.Instance)
+                SDKEvents.Instance.WeaponUpgradeNotPossibile();
         }
 
         void Unlock()
@@ -138,14 +142,21 @@ namespace Watermelon.SquadShooter
             lockedStateObject.SetActive(false);
             upgradeStateObject.SetActive(true);
             shopState.SetActive(false);
-            
+
             if (Upgrade.NextStage != null)
             {
+                if (SDKEvents.Instance)
+                    SDKEvents.Instance.WeaponUpgradePossibile(Upgrade.NextStage.Price);
+                
                 upgradePriceText.text = Upgrade.NextStage.Price.ToString();
                 upgradeCurrencyImage.sprite = CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Icon;
+   
             }
             else
             {
+                if (SDKEvents.Instance)
+                    SDKEvents.Instance.WeaponUpgradeMaxed();
+                
                 upgradePriceText.text = "MAXED OUT";
                 upgradeCurrencyImage.gameObject.SetActive(false);
             }
@@ -187,13 +198,13 @@ namespace Watermelon.SquadShooter
             if (CurrenciesController.HasAmount(currencyType, price))
             {
                 upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
-                if (gamepadButton )
+                if (gamepadButton)
                     gamepadButton.SetFocus(weaponIndex == WeaponsController.SelectedWeaponIndex);
             }
             else
             {
                 upgradesBuyButtonImage.sprite = upgradesBuyButtonDisableSprite;
-                if (gamepadButton )
+                if (gamepadButton)
                     gamepadButton.SetFocus(false);
             }
 
@@ -202,13 +213,15 @@ namespace Watermelon.SquadShooter
 
         public override void Select()
         {
-//            Debug.LogError("SELECTED");
+            // Debug.LogError("SELECTED");
             if (!IsUnlocked) return;
+            
             if (weaponIndex != WeaponsController.SelectedWeaponIndex)
             {
                 AudioController.PlaySound(AudioController.Sounds.buttonSound);
                 weaponController.OnWeaponSelected(weaponIndex);
             }
+
             UIGeneralPowerIndicator.UpdateText();
         }
 
@@ -216,13 +229,36 @@ namespace Watermelon.SquadShooter
         {
             if (Upgrade.NextStage.Price >
                 CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Amount) return;
-            
+
             Select();
+
             CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);
             Upgrade.UpgradeStage();
             weaponController.WeaponUpgraded(Data);
             AudioController.PlaySound(AudioController.Sounds.buttonSound);
             UIGeneralPowerIndicator.UpdateText(true);
+
+            SendAdjustEvent();
+        }
+
+        void SendAdjustEvent()
+        {
+            var token = Data.Type switch
+            {
+                WeaponType.CrossBow => "cqttkc",
+                WeaponType.Flamethrower => "38achz",
+                WeaponType.Laser => "sfh9j8",
+                WeaponType.LavaLauncher => "8464n9",
+                WeaponType.Minigun => "mja0ls",
+                WeaponType.PoisonGun => "ht3riw",
+                WeaponType.Revolver => "qqksvy",
+                WeaponType.Shotgun => "8dozub",
+                WeaponType.TeslaGun => "wlg785",
+                _ => string.Empty
+            };
+
+            var send = new AdjustEvent(token);
+            Adjust.trackEvent(send);
         }
 
         void OnDisable()

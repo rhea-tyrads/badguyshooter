@@ -24,12 +24,12 @@ namespace Watermelon.SquadShooter
 
         public bool IsAnyActionAvailable()
         {
-            for (var i = 0; i < itemPanels.Count; i++)
+            foreach (var panel in itemPanels)
             {
-                if (itemPanels[i].IsNewCharacterOpened())
+                if (panel.IsNewCharacterOpened())
                     return true;
 
-                if (itemPanels[i].IsNextUpgradeCanBePurchased())
+                if (panel.IsNextUpgradeCanBePurchased())
                     return true;
             }
 

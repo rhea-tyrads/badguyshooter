@@ -16,8 +16,8 @@ namespace Watermelon
 
         [SerializeField] ExperienceStarsManager starsManager;
 
-        private ExperienceController expController;
-        private int displayedExpPoints;
+        ExperienceController expController;
+        int displayedExpPoints;
 
 
         public void Init(ExperienceController expController)
@@ -31,12 +31,13 @@ namespace Watermelon
 
 
         #region In Game UI
-        private int hittedStarsAmount = 0;
-        private int fixedStarsAmount;
-        private float currentFillAmount;
-        private float targetFillAmount;
 
-        private TweenCase whiteFillbarCase;
+        int hittedStarsAmount = 0;
+        int fixedStarsAmount;
+        float currentFillAmount;
+        float targetFillAmount;
+
+        TweenCase whiteFillbarCase;
 
         public void PlayXpGainedAnimation(int starsAmount, Vector3 worldPos, System.Action OnComplete = null)
         {
@@ -104,7 +105,7 @@ namespace Watermelon
             //}
         }
 
-        private void RunFillAnimation(float newFillAmount, float requiredExp, int displayedExpPoints, int currentExpPoints, System.Action OnComplete = null)
+        void RunFillAnimation(float newFillAmount, float requiredExp, int displayedExpPoints, int currentExpPoints, System.Action OnComplete = null)
         {
             Tween.DelayedCall(0.5f, () =>
             {

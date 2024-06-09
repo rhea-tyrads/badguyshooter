@@ -68,7 +68,7 @@ namespace Watermelon
             if(useNoAdsButton)
             {
                 noAdsRectTransform = (RectTransform)noAdsButton.transform;
-                noAdsButton.onClick.AddListener(() => OnNoAdsButtonClicked());
+                noAdsButton.onClick.AddListener(OnNoAdsButtonClicked);
                 noAdsButton.gameObject.SetActive(true);
 
                 noAdsGamepadButton = noAdsButton.GetComponent<UIGamepadButton>();
@@ -213,7 +213,6 @@ namespace Watermelon
         public void OnNoAdsButtonClicked()
         {
             AudioController.PlaySound(AudioController.Sounds.buttonSound);
-
             IAPManager.BuyProduct(ProductKeyType.NoAds);
         }
 

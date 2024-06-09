@@ -75,16 +75,16 @@ namespace com.adjust.sdk
 
         public AdjustConfig(string appToken, AdjustEnvironment environment)
         {
-            this.sceneName = "";
-            this.processName = "";
+            sceneName = "";
+            processName = "";
             this.appToken = appToken;
             this.environment = environment;
         }
 
         public AdjustConfig(string appToken, AdjustEnvironment environment, bool allowSuppressLogLevel)
         {
-            this.sceneName = "";
-            this.processName = "";
+            sceneName = "";
+            processName = "";
             this.appToken = appToken;
             this.environment = environment;
             this.allowSuppressLogLevel = allowSuppressLogLevel;
@@ -167,7 +167,7 @@ namespace com.adjust.sdk
 
         public Action<string> getDeferredDeeplinkDelegate()
         {
-            return this.deferredDeeplinkDelegate;
+            return deferredDeeplinkDelegate;
         }
 
         public void setAttributionChangedDelegate(Action<AdjustAttribution> attributionChangedDelegate, string sceneName = "Adjust")
@@ -178,7 +178,7 @@ namespace com.adjust.sdk
 
         public Action<AdjustAttribution> getAttributionChangedDelegate()
         {
-            return this.attributionChangedDelegate;
+            return attributionChangedDelegate;
         }
 
         public void setEventSuccessDelegate(Action<AdjustEventSuccess> eventSuccessDelegate, string sceneName = "Adjust")
@@ -189,7 +189,7 @@ namespace com.adjust.sdk
 
         public Action<AdjustEventSuccess> getEventSuccessDelegate()
         {
-            return this.eventSuccessDelegate;
+            return eventSuccessDelegate;
         }
 
         public void setEventFailureDelegate(Action<AdjustEventFailure> eventFailureDelegate, string sceneName = "Adjust")
@@ -200,7 +200,7 @@ namespace com.adjust.sdk
 
         public Action<AdjustEventFailure> getEventFailureDelegate()
         {
-            return this.eventFailureDelegate;
+            return eventFailureDelegate;
         }
 
         public void setSessionSuccessDelegate(Action<AdjustSessionSuccess> sessionSuccessDelegate, string sceneName = "Adjust")
@@ -211,7 +211,7 @@ namespace com.adjust.sdk
 
         public Action<AdjustSessionSuccess> getSessionSuccessDelegate()
         {
-            return this.sessionSuccessDelegate;
+            return sessionSuccessDelegate;
         }
 
         public void setSessionFailureDelegate(Action<AdjustSessionFailure> sessionFailureDelegate, string sceneName = "Adjust")
@@ -222,7 +222,7 @@ namespace com.adjust.sdk
 
         public Action<AdjustSessionFailure> getSessionFailureDelegate()
         {
-            return this.sessionFailureDelegate;
+            return sessionFailureDelegate;
         }
 
         // iOS specific methods.
@@ -243,7 +243,7 @@ namespace com.adjust.sdk
 
         public void deactivateSKAdNetworkHandling()
         {
-            this.skAdNetworkHandling = true;
+            skAdNetworkHandling = true;
         }
 
         public void setLinkMeEnabled(bool linkMeEnabled)
@@ -259,7 +259,7 @@ namespace com.adjust.sdk
 
         public Action<int> getConversionValueUpdatedDelegate()
         {
-            return this.conversionValueUpdatedDelegate;
+            return conversionValueUpdatedDelegate;
         }
 
         public void setSkad4ConversionValueUpdatedDelegate(Action<int, string, bool> skad4ConversionValueUpdatedDelegate, string sceneName = "Adjust")
@@ -270,12 +270,12 @@ namespace com.adjust.sdk
 
         public Action<int, string, bool> getSkad4ConversionValueUpdatedDelegate()
         {
-            return this.skad4ConversionValueUpdatedDelegate;
+            return skad4ConversionValueUpdatedDelegate;
         }
 
         public void setAttConsentWaitingInterval(int numberOfSeconds)
         {
-            this.attConsentWaitingInterval = numberOfSeconds;
+            attConsentWaitingInterval = numberOfSeconds;
         }
 
         // Android specific methods.

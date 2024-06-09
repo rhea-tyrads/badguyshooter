@@ -12,7 +12,6 @@ namespace MobileTools.Android
         void Start()
         {
             Init();
-
         }
 
 
@@ -40,13 +39,13 @@ namespace MobileTools.Android
         void EnableDebug()
         {
             Debug.unityLogger.logEnabled = true;
-            debugConsole.SetActive(true);
+            if (debugConsole) debugConsole.SetActive(true);
         }
 
         void DisableDebug()
         {
             Debug.unityLogger.logEnabled = false;
-            debugConsole.SetActive(false);
+            if (debugConsole) debugConsole.SetActive(false);
         }
 
         void Update()

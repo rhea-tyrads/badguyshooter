@@ -10,5 +10,14 @@ namespace MobileTools.SDK
         public void LevelComplete(int world, int room) => OnLevelComplete(world,room);
         public event Action<string> OnProductPurchase = delegate { };
         public void ProductPurchase(string id) => OnProductPurchase(id);
+        
+        public event Action<int> OnWeaponUpgradePossibile = delegate { };
+        public void WeaponUpgradePossibile(int price) => OnWeaponUpgradePossibile(price);
+        
+        public event Action  OnWeaponUpgradeNotPossibile = delegate { };
+        public void WeaponUpgradeNotPossibile(   ) => OnWeaponUpgradeNotPossibile( );
+        
+        public event Action  OnWeaponUpgradeMaxed = delegate { };
+        public void WeaponUpgradeMaxed(   ) => OnWeaponUpgradeMaxed( );
     }
 }

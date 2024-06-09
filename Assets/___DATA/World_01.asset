@@ -20,8 +20,8 @@ MonoBehaviour:
     - spawnPoint: {x: 0, y: 0, z: -4.6875}
       exitPoint: {x: 0, y: 0, z: 15.625}
       enemyEntities:
-      - EnemyType: 0
-        Position: {x: 0, y: 0, z: -4.6875}
+      - EnemyType: 2
+        Position: {x: 0, y: 0, z: 4.6}
         Rotation: {x: 0, y: 1, z: 0, w: 0}
         Scale: {x: 1, y: 1, z: 1}
         IsElite: 0

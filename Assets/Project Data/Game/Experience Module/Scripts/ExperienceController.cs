@@ -1,3 +1,4 @@
+using com.adjust.sdk;
 using UnityEngine;
 using Watermelon.SquadShooter;
 
@@ -5,15 +6,15 @@ namespace Watermelon
 {
     public class ExperienceController : MonoBehaviour
     {
-        private static readonly int FLOATING_TEXT_HASH = FloatingTextController.GetHash("Stars");
-        private static readonly int SAVE_HASH = "Experience".GetHashCode();
+        static readonly int FLOATING_TEXT_HASH = FloatingTextController.GetHash("Stars");
+        static readonly int SAVE_HASH = "Experience".GetHashCode();
 
         [SerializeField] ExperienceDatabase database;
 
-        private static ExperienceController instance;
+        static ExperienceController instance;
 
-        private ExperienceSave save;
-        private ExperienceUIController expUI;
+        ExperienceSave save;
+        ExperienceUIController expUI;
 
         public static int CurrentLevel
         {
@@ -33,7 +34,7 @@ namespace Watermelon
         public static event SimpleCallback OnExperienceGained;
         public static event SimpleCallback OnLevelIncreased;
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
         }
@@ -41,9 +42,7 @@ namespace Watermelon
         public void Initialise()
         {
             save = SaveController.GetSaveObject<ExperienceSave>(SAVE_HASH);
-
             database.Init();
-
             expUI = UIController.GetPage<UIMainMenu>().ExperienceUIController;
             expUI.Init(this);
         }
@@ -55,10 +54,8 @@ namespace Watermelon
 
         public void GainExperience(int amount)
         {
-            ExperiencePoints = ExperiencePoints + amount;
-
+            ExperiencePoints += amount;
             FloatingTextController.SpawnFloatingText(FLOATING_TEXT_HASH, string.Format("+{0}", amount), CharacterBehaviour.Transform.position + new Vector3(3, 6, 0), Quaternion.identity, 1f);
-
             expUI.PlayXpGainedAnimation(amount, CharacterBehaviour.Transform.position, () =>
             {
                 expUI.UpdateUI(false);
@@ -67,19 +64,32 @@ namespace Watermelon
             // new level reached
             if (ExperiencePoints >= NextLevelData.ExperienceRequired)
             {
-                // new level reached
                 CurrentLevel++;
-
+                SendAdjustEvent();
                 OnLevelIncreased?.Invoke();
-            };
+            }
 
             OnExperienceGained?.Invoke();
         }
 
-        public static int XpRequiredForLevel(int level)
+        void SendAdjustEvent()
         {
-            return instance.database.GetDataForLevel(level).ExperienceRequired;
+            var token = CurrentLevel switch
+            {
+                2 => "cqttkc",
+                3 => "lw3yhu",
+                4 => "sekqc8",
+                5 => "4krrs0",
+                6 => "5qn3hh",
+                7 => "3hhvlg",
+                _ => string.Empty
+            };
+
+            var send = new AdjustEvent(token);
+            Adjust.trackEvent(send);
         }
+        public static int XpRequiredForLevel(int level) 
+            => instance.database.GetDataForLevel(level).ExperienceRequired;
 
         #region Development
 

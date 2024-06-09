@@ -27,8 +27,7 @@ namespace Watermelon.SquadShooter
 
         public override void ChestApproached()
         {
-            if (opened)
-                return;
+            if (opened) return;
 
             if (openCoroutine != null)
             {
@@ -43,7 +42,7 @@ namespace Watermelon.SquadShooter
         {
             animatorRef.SetTrigger(SHAKE_HASH);
 
-            float timer = 0;
+            var timer = 0f;
 
             circleTween.KillActive();
 

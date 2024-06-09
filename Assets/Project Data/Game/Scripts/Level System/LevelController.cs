@@ -21,7 +21,7 @@ namespace Watermelon.LevelSystem
         static LevelSave levelSave;
         static LevelData currentLevelData;
         public static LevelData CurrentLevelData => currentLevelData;
-       public static int currentRoomIndex;
+        public static int currentRoomIndex;
         public static CharacterBehaviour characterBehaviour; // Player
         static GameObject playerObject;
         static WorldData activeWorldData;
@@ -76,6 +76,7 @@ namespace Watermelon.LevelSystem
             // Spawn player
             playerObject = Object.Instantiate(levelSettings.PlayerPrefab);
             playerObject.name = "[CHARACTER]";
+            
             CameraController.SetMainTarget(playerObject.transform);
             characterBehaviour = playerObject.GetComponent<CharacterBehaviour>();
             characterBehaviour.SetStats(characterUpgrade.Stats);
@@ -86,6 +87,7 @@ namespace Watermelon.LevelSystem
 
         public static void LoadCurrentLevel()
         {
+            Debug.LogWarning(levelSave.WorldIndex);
             LoadLevel(levelSave.WorldIndex, levelSave.LevelIndex);
         }
 
@@ -241,7 +243,6 @@ namespace Watermelon.LevelSystem
             foreach (var data in items)
             {
                 var itemData = activeWorldData.GetLevelItem(data.Hash);
-
                 if (itemData == null)
                 {
                     Debug.Log("[Level Controller] Not found item with hash: " + data.Hash + " for the world: " +
@@ -280,6 +281,7 @@ namespace Watermelon.LevelSystem
             currentLevelData.OnLevelLoaded();
             currentLevelData.OnRoomEntered();
             loadedLevel = currentLevelData;
+
             NavMeshController.RecalculateNavMesh(null);
             GameLoading.MarkAsReadyToHide();
         }
@@ -417,6 +419,15 @@ namespace Watermelon.LevelSystem
             Vibration.Vibrate(VibrationIntensity.Medium);
         }
 
+        public static void Unload()
+        {
+            characterBehaviour.MoveForwardAndDisable(0.3f);
+            Control.DisableMovementControl();
+            currentLevelData.OnRoomLeaved();
+            ActiveRoom.Unload();
+            NavMeshController.Reset();
+        }
+        
         public static void OnPlayerExitLevel()
         {
             OnPlayerExitLevelEvent?.Invoke();
@@ -427,7 +438,6 @@ namespace Watermelon.LevelSystem
 
             if (currentLevelData.Rooms.IsInRange(currentRoomIndex))
             {
-              
                 Overlay.Show(0.3f, () =>
                 {
                     Debug.LogWarning(("ROOM CLEARED: " + currentRoomIndex));
@@ -449,13 +459,10 @@ namespace Watermelon.LevelSystem
             }
             else
             {
-        
                 SDKEvents.Instance.LevelComplete(ActiveRoom.CurrentWorldIndex + 1, ActiveRoom.CurrentLevelIndex);
                 uiGame.UpdateReachedRoomUI(currentRoomIndex);
                 OnLevelCompleted();
             }
-
-      
         }
 
         public static void OnEnemyKilled(BaseEnemyBehavior enemyBehavior)
@@ -547,10 +554,10 @@ namespace Watermelon.LevelSystem
                 return;
             }
 
-            var lastXp = ExperienceController.XpRequiredForLevel(lastUnlockedCharacter.RequiredLevel); 
+            var lastXp = ExperienceController.XpRequiredForLevel(lastUnlockedCharacter.RequiredLevel);
             var nextXp = ExperienceController.XpRequiredForLevel(nextCharacterToUnlock.RequiredLevel);
             var lastProgress = (float) (ExperienceController.ExperiencePoints - lastXp) /
-                                  (nextXp - lastXp);
+                               (nextXp - lastXp);
             var currentProgress =
                 (float) (ExperienceController.ExperiencePoints + currentLevelData.XPAmount - lastXp) /
                 (nextXp - lastXp);
@@ -562,9 +569,7 @@ namespace Watermelon.LevelSystem
         static void IncreaseLevelInSave()
         {
             if (levelsDatabase.DoesNextLevelExist(levelSave.WorldIndex, levelSave.LevelIndex))
-            {
                 levelSave.LevelIndex++;
-            }
             else
             {
                 levelSave.WorldIndex++;
@@ -582,7 +587,7 @@ namespace Watermelon.LevelSystem
             GameController.OnLevelFail();
         }
 
-        public static string GetCurrentAreaText() 
+        public static string GetCurrentAreaText()
             => $"AREA {ActiveRoom.CurrentWorldIndex + 1}-{ActiveRoom.CurrentLevelIndex + 1}";
 
         public static List<int> SplitIntEqually(int value, int partsAmount)

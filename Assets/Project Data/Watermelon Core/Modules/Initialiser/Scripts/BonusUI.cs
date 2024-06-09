@@ -8,14 +8,21 @@ public class BonusUI : MonoBehaviour
     public BonusSlot hpBonus;
     public BonusSlot critBonus;
     public BonusSlot respawnBonus;
+    public BonusSlot firerateBonus;
+    public BonusSlot multishotBonus;
+    public BonusSlot movementBonus;
     public Canvas canvas;
     public GraphicRaycaster canvasCast;
-
     
     public bool IsHpActive;
     public bool IsCritActive;
     public bool IsRespawnActive;
+    public bool IsMovementActive;
+    public bool IsFirerateActive;
+    public bool IsMultishotActive;
+    
     BonusController c;
+    
     public   event Action OnPlay = delegate { };
 
 
@@ -24,14 +31,19 @@ public class BonusUI : MonoBehaviour
         BonusController.OnShow += Show;
 
         playButton.onClick.AddListener(Play);
-
         hpBonus.OnClick += SwitchHP;
         critBonus.OnClick += SwitchCrit;
         respawnBonus.OnClick += SwitchRespawn;
+        movementBonus.OnClick += SwitchMovement;
+        multishotBonus.OnClick += SwitchMultishot;
+        firerateBonus.OnClick += SwitchFireraet;
         
         hpBonus.Disable();
         critBonus.Disable();
         respawnBonus.Disable();
+        movementBonus.Disable();
+        multishotBonus.Disable();
+        firerateBonus.Disable();
     }
 
     void Show()
@@ -72,8 +84,29 @@ public class BonusUI : MonoBehaviour
         if (IsRespawnActive) respawnBonus.Activate();
         else respawnBonus.Disable();
     }
-
-
+    
+    void SwitchMovement()
+    {
+        IsMovementActive = !IsMovementActive;
+        if (IsMovementActive) movementBonus.Activate();
+        else movementBonus.Disable();
+    }
+    
+    void SwitchFireraet()
+    {
+        IsFirerateActive = !IsFirerateActive;
+        if (IsFirerateActive) firerateBonus.Activate();
+        else firerateBonus.Disable();
+    }
+    
+    void SwitchMultishot()
+    {
+        IsMultishotActive = !IsMultishotActive;
+        if (IsMultishotActive) multishotBonus.Activate();
+        else multishotBonus.Disable();
+    }
+    
+    
     public void SetHpBonus(int amount)
     {
         hpBonus.SetAmount(amount);
@@ -87,5 +120,12 @@ public class BonusUI : MonoBehaviour
     public void SetRespawnBonus(int amount)
     {
         respawnBonus.SetAmount(amount);
+    }
+
+    public void SetOtherBonuses()
+    {
+        firerateBonus.SetAmount(999);
+        multishotBonus.SetAmount(999);
+        movementBonus.SetAmount(999);
     }
 }

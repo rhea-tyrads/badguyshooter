@@ -25,7 +25,7 @@ namespace com.adjust.sdk
                 return;
             }
 
-            string stringCode = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCode);
+            var stringCode = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCode);
             code = Int32.Parse(stringCode);
             message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
             verificationStatus = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyVerificationStatus);

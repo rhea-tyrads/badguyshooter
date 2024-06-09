@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "975357681677",
+    "project_id": "soloshooter-40805",
+    "storage_bucket": "soloshooter-40805.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975357681677:android:97bf7f3846c4d6ad9e3544",
+        "android_client_info": {
+          "package_name": "com.Belandagames.BadGuys"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-KXSJ63I1EwJTB9foUCGUI6-RQxJlatk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

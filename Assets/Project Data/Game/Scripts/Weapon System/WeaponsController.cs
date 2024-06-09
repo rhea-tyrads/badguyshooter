@@ -120,6 +120,7 @@ namespace Watermelon.SquadShooter
 
         public void OnWeaponSelected(int weaponIndex)
         {
+            SelectedWeaponIndex = weaponIndex;
             var weapon = instance.database.GetWeaponByIndex(weaponIndex);
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
@@ -166,6 +167,8 @@ namespace Watermelon.SquadShooter
         void UpgradeWep()
         {
             var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
+            Debug.LogError(SelectedWeaponIndex);
+            
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
             panel.UpgradeButton();

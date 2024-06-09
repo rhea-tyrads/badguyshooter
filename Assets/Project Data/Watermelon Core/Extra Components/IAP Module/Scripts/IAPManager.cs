@@ -31,10 +31,10 @@ namespace Watermelon
             }
 
             var items = settings.StoreItems;
-            for (var i = 0; i < items.Length; i++)
+            foreach (var item in items)
             {
-                productsTypeToProductLink.Add(items[i].ProductKeyType, items[i]);
-                productsKeyToProductLink.Add(items[i].ID, items[i]);
+                productsTypeToProductLink.Add(item.ProductKeyType, item);
+                productsKeyToProductLink.Add(item.ID, item);
             }
 
 #if MODULE_IAP
@@ -93,24 +93,14 @@ namespace Watermelon
             wrapper.BuyProduct(productKeyType);
         }
 
-        public static ProductData GetProductData(ProductKeyType productKeyType)
-        {
-            return wrapper.GetProductData(productKeyType);
-        }
+        public static ProductData GetProductData(ProductKeyType productKeyType) => wrapper.GetProductData(productKeyType);
 
-        public static bool IsSubscribed(ProductKeyType productKeyType)
-        {
-            return wrapper.IsSubscribed(productKeyType);
-        }
+        public static bool IsSubscribed(ProductKeyType productKeyType) => wrapper.IsSubscribed(productKeyType);
 
         public static string GetProductLocalPriceString(ProductKeyType productKeyType)
         {
             var product = GetProductData(productKeyType);
-
-            if (product == null)
-                return string.Empty;
-
-            return string.Format("{0} {1}", product.ISOCurrencyCode, product.Price);
+            return product == null ? string.Empty : string.Format("{0} {1}", product.ISOCurrencyCode, product.Price);
         }
 
         public static void OnModuleInitialised()

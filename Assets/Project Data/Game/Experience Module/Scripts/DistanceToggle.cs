@@ -6,19 +6,19 @@ namespace Watermelon
 {
     public static class DistanceToggle
     {
-        private static List<IDistanceToggle> distanceToggles = new();
-        private static int distanceTogglesCount;
+        static List<IDistanceToggle> distanceToggles = new();
+        static int distanceTogglesCount;
 
-        private static bool isActive;
+        static bool isActive;
         public static bool IsActive => isActive;
 
-        private static Vector3 tempDistance;
-        private static float tempDistanceMagnitude;
-        private static bool tempIsVisible;
+        static Vector3 tempDistance;
+        static float tempDistanceMagnitude;
+        static bool tempIsVisible;
 
-        private static Transform playerTransform;
+        static Transform playerTransform;
 
-        private static Coroutine updateCoroutine;
+        static Coroutine updateCoroutine;
 
         public static void Initialise(Transform transform)
         {
@@ -33,7 +33,7 @@ namespace Watermelon
             updateCoroutine = Tween.InvokeCoroutine(UpdateCoroutine());
         }
 
-        private static IEnumerator UpdateCoroutine()
+        static IEnumerator UpdateCoroutine()
         {
             while(true)
             {

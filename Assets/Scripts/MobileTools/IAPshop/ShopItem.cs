@@ -13,6 +13,7 @@ namespace MobileTools.IAPshop
         public string Id;
         public ShopPurchaseType purchaseType;
         public ShopItemType itemType;
+        public string adjustToken;
         
         [HideIf(nameof(IsWeapon))]
         public BonusPackUI bonuses;

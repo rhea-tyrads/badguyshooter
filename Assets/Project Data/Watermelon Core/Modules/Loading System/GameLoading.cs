@@ -74,9 +74,7 @@ namespace Watermelon
                 OnLoading?.Invoke(1.0f, loadingMessage);
 
                 if (loadingOperation.progress >= 0.9f)
-                {
                     loadingOperation.allowSceneActivation = true;
-                }
             }
 
             if(manualControlMode)
@@ -98,8 +96,7 @@ namespace Watermelon
 
             yield return null;
 
-            if (onSceneLoaded != null)
-                onSceneLoaded.Invoke();
+            onSceneLoaded?.Invoke();
 
             OnLoadingFinished?.Invoke();
         }
@@ -140,8 +137,7 @@ namespace Watermelon
 
         public static void LoadGameScene(SimpleCallback onSceneLoaded = null)
         {
-            SetLoadingMessage("Loading..");
-
+            SetLoadingMessage("Loading Data..");
             Tween.InvokeCoroutine(LoadSceneCoroutine(onSceneLoaded));
         }
 

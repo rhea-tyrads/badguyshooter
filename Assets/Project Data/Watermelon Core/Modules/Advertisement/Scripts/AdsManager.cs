@@ -4,6 +4,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Applovin;
 
 namespace Watermelon
 {
@@ -172,20 +173,20 @@ namespace Watermelon
                 if(!advertisingActiveModules[advertisingModule].IsInitialised())
                 {
                     if (settings.SystemLogs)
-                        Debug.Log("[AdsManager]: Module " + advertisingModule.ToString() + " trying to initialise!");
+                        Debug.Log("[AdsManager]: Module " + advertisingModule + " trying to initialise!");
 
                     advertisingActiveModules[advertisingModule].Initialise(settings);
                 }
                 else
                 {
                     if (settings.SystemLogs)
-                        Debug.Log("[AdsManager]: Module " + advertisingModule.ToString() + " is already initialised!");
+                        Debug.Log("[AdsManager]: Module " + advertisingModule + " is already initialised!");
                 }
             }
             else
             {
                 if (settings.SystemLogs)
-                    Debug.LogWarning("[AdsManager]: Module " + advertisingModule.ToString() + " is disabled!");
+                    Debug.LogWarning("[AdsManager]: Module " + advertisingModule + " is disabled!");
             }
         }
 #endregion
@@ -319,11 +320,13 @@ static void Update()
 #region Interstitial
         public static bool IsInterstitialLoaded()
         {
+            return ApplovinController.Instance.IsInterstitialReady;
             return IsInterstitialLoaded(settings.InterstitialType);
         }
 
         public static bool IsInterstitialLoaded(AdProvider advertisingModules)
         {
+            return ApplovinController.Instance.IsInterstitialReady;
             if (!isForcedAdEnabled || !IsModuleActive(advertisingModules))
                 return false;
 
@@ -332,6 +335,7 @@ static void Update()
 
         public static void RequestInterstitial()
         {
+            return;
             var advertisingModules = settings.InterstitialType;
 
             if (!isForcedAdEnabled || !IsModuleActive(advertisingModules) || !advertisingActiveModules[advertisingModules].IsInitialised() || advertisingActiveModules[advertisingModules].IsInterstitialLoaded())
@@ -342,6 +346,8 @@ static void Update()
 
         public static void ShowInterstitial(AdProviderHandler.InterstitialCallback callback, bool ignoreConditions = false)
         {
+            ApplovinController.Instance.interstitial.Show("inter");
+            return;
             var advertisingModules = settings.InterstitialType;
 
             interstitalCallback = callback;
@@ -358,6 +364,7 @@ static void Update()
 
         public static void ExecuteInterstitialCallback(bool result)
         {
+            return;
             if (interstitalCallback != null)
             {
                 CallEventInMainThread(() => interstitalCallback.Invoke(result));
@@ -412,6 +419,7 @@ static void Update()
 #region Rewarded Video
         public static bool IsRewardBasedVideoLoaded()
         {
+           return ApplovinController.Instance.IsRewardedLoaded;
             var advertisingModule = settings.RewardedVideoType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
@@ -422,6 +430,7 @@ static void Update()
 
         public static void RequestRewardBasedVideo()
         {
+            return;
             var advertisingModule = settings.RewardedVideoType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised() || advertisingActiveModules[advertisingModule].IsRewardedVideoLoaded())
@@ -432,6 +441,8 @@ static void Update()
 
         public static void ShowRewardBasedVideo(AdProviderHandler.RewardedVideoCallback callback, bool showErrorMessage = true)
         {
+            ApplovinController.Instance.ShowRewarded("rewarded");
+            return;
             var advertisingModule = settings.RewardedVideoType;
 
             rewardedVideoCallback = callback;
@@ -452,6 +463,7 @@ static void Update()
 
         public static void ExecuteRewardVideoCallback(bool result)
         {
+            return;
             if (rewardedVideoCallback != null && waitingForRewardVideoCallback)
             {
                 CallEventInMainThread(() => rewardedVideoCallback.Invoke(result));

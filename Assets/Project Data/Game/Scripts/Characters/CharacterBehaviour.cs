@@ -127,6 +127,7 @@ namespace Watermelon.SquadShooter
         public static SimpleCallback OnDied;
 
         #endregion
+
         float stunTimer;
         public bool isStunned;
 
@@ -135,6 +136,7 @@ namespace Watermelon.SquadShooter
             moveSlowFactor = 1;
             agent.enabled = false;
         }
+
         public void Initialise()
         {
             if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
@@ -185,25 +187,25 @@ namespace Watermelon.SquadShooter
             Reload();
         }
 
-    
+
         public void Reload(bool resetHealth = true)
         {
             if (resetHealth)
                 currentHealth = MaxHealth;
-            
+
             isHpBonus = false;
             IsCritical = false;
             IsDead = false;
-            
+
             stunTimer = 0;
             atkSpdTimer = 0;
             moveSlowTimer = 0;
             multiShotTimer = 0f;
-            
+
             if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
             if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive((false));
             if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((false));
-            
+
             healthbarBehaviour.EnableBar();
             healthbarBehaviour.RedrawHealth();
             enemyDetector.Reload();
@@ -680,8 +682,7 @@ namespace Watermelon.SquadShooter
                 multiShotTimer -= Time.fixedDeltaTime;
                 if (multiShotTimer <= 0)
                 {
-                    isMultishotBooster = false;
-                    if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
+                    MultishotOff();
                 }
             }
 
@@ -694,6 +695,12 @@ namespace Watermelon.SquadShooter
                     if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive(false);
                 }
             }
+        }
+
+        public void MultishotOff()
+        {
+            isMultishotBooster = false;
+            if (multishotBoostVfx) multishotBoostVfx.SetActive((false));
         }
 
         public float AtkSpdMult => isAtkSpdBooster ? atkSpdBoosterMult : 1f;
@@ -774,6 +781,8 @@ namespace Watermelon.SquadShooter
             targetRingRenderer.material.color = targetRingDisabledColor;
         }
 
+        public float chestOpenDistance = 3f;
+
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(PhysicsHelper.TAG_ITEM))
@@ -787,7 +796,8 @@ namespace Watermelon.SquadShooter
             }
             else if (other.CompareTag(PhysicsHelper.TAG_CHEST))
             {
-                other.GetComponent<AbstractChestBehavior>().ChestApproached();
+                if (Vector3.Distance(transform.position, other.transform.position) < chestOpenDistance)
+                    other.GetComponent<AbstractChestBehavior>().ChestApproached();
             }
         }
 
@@ -820,49 +830,56 @@ namespace Watermelon.SquadShooter
 
         public void OnItemPicked(IDropableItem item)
         {
-            if (item.DropType == DropableItemType.Currency)
+            switch (item.DropType)
             {
-                if (item.DropData.currencyType == CurrencyType.Coins)
+                case DropableItemType.Currency when item.DropData.currencyType == CurrencyType.Coins:
                 {
                     if (item.IsRewarded)
-                    {
                         LevelController.OnRewardedCoinPicked(item.DropAmount);
-                    }
                     else
-                    {
                         LevelController.OnCoinPicked(item.DropAmount);
-                    }
+                    break;
                 }
-                else
-                {
+                case DropableItemType.Currency:
                     CurrenciesController.Add(item.DropData.currencyType, item.DropAmount);
-                }
+                    break;
+                case DropableItemType.Heal:
+                    currentHealth = Mathf.Clamp(currentHealth + item.DropAmount, 0, MaxHealth);
+                    healthbarBehaviour.OnHealthChanged();
+                    healingParticle.Play();
+                    break;
+                case DropableItemType.AtkSpeedBooster:
+                    FireRateBonus();
+                    break;
+                case DropableItemType.MultishotBooster:
+                    MultishotBonus();
+                    break;
+                case DropableItemType.MoveSpeedBooster:
+                    MovementBonus();
+                    break;
             }
-            else if (item.DropType == DropableItemType.Heal)
-            {
-                currentHealth = Mathf.Clamp(currentHealth + item.DropAmount, 0, MaxHealth);
-                healthbarBehaviour.OnHealthChanged();
-                healingParticle.Play();
-            }
-            else if (item.DropType == DropableItemType.AtkSpeedBooster)
-            {
-                isAtkSpdBooster = true;
-                atkSpdTimer = atkSpdBoosterDuration;
-                if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive(true);
-            }
-            else if (item.DropType == DropableItemType.MultishotBooster)
-            {
-                isMultishotBooster = true;
-                multiShotTimer = multishotBoosterDuration;
-                if (multishotBoostVfx) multishotBoostVfx.SetActive((true));
-            }
-            else if (item.DropType == DropableItemType.MoveSpeedBooster)
-            {
-                isMoveSpeedBooster = true;
-                moveSpeedBoostTimer = moveSpeedBoostDuration;
-                moveBoostFactor = 1.7f;
-                if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((true));
-            }
+        }
+
+        public void FireRateBonus(bool forever = false)
+        {
+            isAtkSpdBooster = true;
+            atkSpdTimer = forever ? 99999999999999f : atkSpdBoosterDuration;
+            if (atkSpeedBoostVfx) atkSpeedBoostVfx.SetActive(true);
+        }
+
+        public void MovementBonus(bool forever = false)
+        {
+            isMoveSpeedBooster = true;
+            moveSpeedBoostTimer = forever ? 9999999999999999f : moveSpeedBoostDuration;
+            moveBoostFactor = 1.7f;
+            if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((true));
+        }
+
+        public void MultishotBonus(bool forever = false)
+        {
+            isMultishotBooster = true;
+            multiShotTimer = forever ? 999999999999f : multishotBoosterDuration;
+            if (multishotBoostVfx) multishotBoostVfx.SetActive((true));
         }
 
 

@@ -11,11 +11,14 @@ public class AdjustController : MonoBehaviour
     public List<string> levelCompleteEvents = new();
     DateTime sessionStartTime;
 
+    [SerializeField] GameSettings config;
+
+
     void Start()
     {
-        var token = "upofu32g0o3k";
-        var adjust = new AdjustConfig(token, AdjustEnvironment.Sandbox);
-        Adjust.start(adjust);
+        //   var token = "upofu32g0o3k";
+        //  var adjust = new AdjustConfig(token, AdjustEnvironment.Sandbox);
+        //      Adjust.start(adjust);
         StartSession();
         SDKEvents.Instance.OnLevelComplete += LevelComplete;
     }
@@ -38,7 +41,6 @@ public class AdjustController : MonoBehaviour
         Adjust.trackEvent(startEvent);
     }
 
-    [SerializeField] GameSettings config;
 
     void EndSession()
     {
@@ -53,19 +55,19 @@ public class AdjustController : MonoBehaviour
     {
         world = ActiveRoom.CurrentWorldIndex;
         level = ActiveRoom.CurrentLevelIndex + 1;
- 
+
         var worlds = config.LevelsDatabase.Worlds;
         var number = 0;
         var shouldBreak = false;
- 
 
-        for (var w = 0; w < world+1; w++)
+
+        for (var w = 0; w < world + 1; w++)
         {
             if (shouldBreak) break;
 
             for (var l = 0; l < worlds[w].Levels.Length; l++)
             {
-                Debug.LogError("total: " + worlds[w].Levels.Length);
+                //Debug.LogError("total: " + worlds[w].Levels.Length);
                 if (w == world && l == level)
                 {
                     shouldBreak = true;
@@ -76,8 +78,10 @@ public class AdjustController : MonoBehaviour
             }
         }
 
-        Debug.LogError("LEVEL COMPLETE: " + number);
-        var token = levelCompleteEvents[number];
+        //Debug.LogError("LEVEL COMPLETE: " + number);
+        
+        if (number < 1) number = 1;
+        var token = levelCompleteEvents[number - 1];
         var send = new AdjustEvent(token);
         Adjust.trackEvent(send);
     }

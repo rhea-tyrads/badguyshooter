@@ -8,8 +8,8 @@ namespace Watermelon
 
     public class ExperienceStarsManager : MonoBehaviour
     {
-        private readonly string TRAIL_POOL_NAME = "Custom UI Trail";
-        private readonly string PARTICLE_POOL_NAME = "Custom UI Particle";
+        readonly string TRAIL_POOL_NAME = "Custom UI Trail";
+        readonly string PARTICLE_POOL_NAME = "Custom UI Particle";
 
         [Header("Data")]
         [SerializeField] ExperienceStarsFlightData starsData;
@@ -32,16 +32,16 @@ namespace Watermelon
         [SerializeField] GameObject particlePrefab;
 
 
-        private PoolGeneric<UIParticleTrail> trailPool;
-        private PoolGeneric<UIParticle> particlePool;
+        PoolGeneric<UIParticleTrail> trailPool;
+        PoolGeneric<UIParticle> particlePool;
 
-        private Pool starsPool;
+        Pool starsPool;
 
 
-        private List<ExpStarData> starsInfo = new();
-        private System.Action OnComplete;
+        List<ExpStarData> starsInfo = new();
+        System.Action OnComplete;
 
-        private ExperienceUIController experienceUIController;
+        ExperienceUIController experienceUIController;
 
         public void Awake()
         {
@@ -55,7 +55,7 @@ namespace Watermelon
             starIconBounce.Initialise(starIconTransform);
         }
 
-        private void AssignPools()
+        void AssignPools()
         {
             if (PoolManager.PoolExists(TRAIL_POOL_NAME))
                 trailPool = PoolManager.GetPoolByName<UIParticleTrail>(TRAIL_POOL_NAME);
@@ -138,7 +138,7 @@ namespace Watermelon
             }
         }
 
-        private void Update()
+        void Update()
         {
             if (starsInfo.IsNullOrEmpty())
                 return;
@@ -178,7 +178,7 @@ namespace Watermelon
             ExperienceController.GainXPPoints(10);
         }
 
-        private class ExpStarData
+        class ExpStarData
         {
             public RectTransform star;
 
@@ -194,9 +194,9 @@ namespace Watermelon
             public float duration1;
             public float duration2;
 
-            private ExperienceStarsFlightData data;
+            ExperienceStarsFlightData data;
 
-            private UIParticleTrail trail;
+            UIParticleTrail trail;
 
             public void SetCurves(ExperienceStarsFlightData data)
             {
