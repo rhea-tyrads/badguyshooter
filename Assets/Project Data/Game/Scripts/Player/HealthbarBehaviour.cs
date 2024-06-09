@@ -88,49 +88,39 @@ namespace Watermelon.SquadShooter
 
         public void OnHealthChanged()
         {
-            if (isDisabled)
-                return;
-
-            if (targetHealth == null)
-                return;
+            if (isDisabled) return;
+            if (targetHealth == null) return;
 
             healthFillImage.fillAmount = targetHealth.CurrentHealth / targetHealth.MaxHealth;
-
             maskTweenCase.KillActive();
-
             maskTweenCase = maskFillImage.DOFillAmount(healthFillImage.fillAmount, 0.3f).SetEasing(Ease.Type.QuintIn);
 
             if (level == -1)
-            {
                 healthText.text = targetHealth.CurrentHealth.ToString("F0");
-            }
 
-            if (!showAlways)
-            {
-                if (healthFillImage.fillAmount < 1.0f && !isPanelActive)
-                {
-                    isPanelActive = true;
+            if (showAlways) return;
+           switch (healthFillImage.fillAmount)
+           {
+               case < 1.0f when !isPanelActive:
+                   isPanelActive = true;
 
-                    panelTweenCase.KillActive();
+                   panelTweenCase.KillActive();
 
-                    panelTweenCase = healthBarCanvasGroup.DOFade(1.0f, 0.5f);
-                }
-                else if (healthFillImage.fillAmount >= 1.0f && isPanelActive)
-                {
-                    isPanelActive = false;
+                   panelTweenCase = healthBarCanvasGroup.DOFade(1.0f, 0.5f);
+                   break;
+               case >= 1.0f when isPanelActive:
+                   isPanelActive = false;
 
-                    panelTweenCase.KillActive();
+                   panelTweenCase.KillActive();
 
-                    panelTweenCase = healthBarCanvasGroup.DOFade(0.0f, 0.5f);
-                }
-            }
+                   panelTweenCase = healthBarCanvasGroup.DOFade(0.0f, 0.5f);
+                   break;
+           }
         }
 
         public void DisableBar()
         {
-            if (isDisabled)
-                return;
-
+            if (isDisabled) return;
             isDisabled = true;
 
             healthBarCanvasGroup.DOFade(0.0f, 0.3f).OnComplete(delegate
