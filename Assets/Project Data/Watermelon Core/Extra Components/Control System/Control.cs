@@ -11,6 +11,7 @@ namespace Watermelon
         public static GamepadData GamepadData { get; private set; }
 
         public delegate void OnInputChangedCallback(InputType input);
+
         public static event OnInputChangedCallback OnInputChanged;
 
         public static void Initialise(InputType inputType, GamepadData gamepadData)
@@ -30,18 +31,14 @@ namespace Watermelon
             switch (inputType)
             {
                 case InputType.Gamepad:
-
                     var gamepadControl = Initialiser.InitialiserGameObject.AddComponent<GamepadControl>();
                     gamepadControl.Initialise();
-
                     CurrentControl = gamepadControl;
-
                     break;
 
                 case InputType.Keyboard:
                     var keyboardControl = Initialiser.InitialiserGameObject.AddComponent<KeyboardControl>();
                     keyboardControl.Initialise();
-
                     CurrentControl = keyboardControl;
                     break;
             }
@@ -57,10 +54,9 @@ namespace Watermelon
         public static void EnableMovementControl()
         {
 #if UNITY_EDITOR
-            if(CurrentControl == null)
+            if (CurrentControl == null)
             {
                 Debug.LogError("[Control]: Control behavior isn't set!");
-
                 return;
             }
 #endif
@@ -74,7 +70,6 @@ namespace Watermelon
             if (CurrentControl == null)
             {
                 Debug.LogError("[Control]: Control behavior isn't set!");
-
                 return;
             }
 #endif

@@ -20,6 +20,7 @@ namespace Watermelon.SquadShooter
 
         void Update()
         {
+            return;
             transform.position = parentTransform.position + offset;
         }
 

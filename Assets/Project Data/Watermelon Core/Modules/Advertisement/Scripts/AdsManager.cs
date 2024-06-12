@@ -1,9 +1,11 @@
 ﻿#pragma warning disable 0649
 #pragma warning disable 0162
 
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 using Applovin;
 
 namespace Watermelon
@@ -23,14 +25,14 @@ namespace Watermelon
 
         static readonly AdProviderHandler[] AD_PROVIDERS = new AdProviderHandler[]
         {
-            new AdDummyHandler(AdProvider.Dummy), 
+            new AdDummyHandler(AdProvider.Dummy),
 
 #if MODULE_ADMOB
-            new AdMobHandler(AdProvider.AdMob), 
+            new AdMobHandler(AdProvider.AdMob),
 #endif
 
 #if MODULE_UNITYADS
-            new UnityAdsLegacyHandler(AdProvider.UnityAdsLegacy), 
+            new UnityAdsLegacyHandler(AdProvider.UnityAdsLegacy),
 #endif
 
 #if MODULE_IRONSOURCE
@@ -76,6 +78,7 @@ namespace Watermelon
         public static AdsBoolCallback InterstitialConditions;
 
         #region Initialise
+
         public static void Initialise(AdsManagerInitModule adsManagerInitModule, bool loadOnStart)
         {
             if (isModuleInitialised)
@@ -124,14 +127,20 @@ namespace Watermelon
 
             if (settings.SystemLogs)
             {
-                if (settings.BannerType != AdProvider.Disable && !advertisingActiveModules.ContainsKey(settings.BannerType))
-                    Debug.LogWarning("[AdsManager]: Banner type (" + settings.BannerType + ") is selected, but isn't active!");
+                if (settings.BannerType != AdProvider.Disable &&
+                    !advertisingActiveModules.ContainsKey(settings.BannerType))
+                    Debug.LogWarning("[AdsManager]: Banner type (" + settings.BannerType +
+                                     ") is selected, but isn't active!");
 
-                if (settings.InterstitialType != AdProvider.Disable && !advertisingActiveModules.ContainsKey(settings.InterstitialType))
-                    Debug.LogWarning("[AdsManager]: Interstitial type (" + settings.InterstitialType + ") is selected, but isn't active!");
+                if (settings.InterstitialType != AdProvider.Disable &&
+                    !advertisingActiveModules.ContainsKey(settings.InterstitialType))
+                    Debug.LogWarning("[AdsManager]: Interstitial type (" + settings.InterstitialType +
+                                     ") is selected, but isn't active!");
 
-                if (settings.RewardedVideoType != AdProvider.Disable && !advertisingActiveModules.ContainsKey(settings.RewardedVideoType))
-                    Debug.LogWarning("[AdsManager]: Rewarded Video type (" + settings.RewardedVideoType + ") is selected, but isn't active!");
+                if (settings.RewardedVideoType != AdProvider.Disable &&
+                    !advertisingActiveModules.ContainsKey(settings.RewardedVideoType))
+                    Debug.LogWarning("[AdsManager]: Rewarded Video type (" + settings.RewardedVideoType +
+                                     ") is selected, but isn't active!");
             }
 
             IAPManager.OnPurchaseComplete += OnPurchaseComplete;
@@ -140,10 +149,7 @@ namespace Watermelon
             if (settings.IsGDPREnabled && !IsGDPRStateExist())
             {
                 var gdprLoadingTask = new GDPRLoadingTask();
-                gdprLoadingTask.OnTaskCompleted += () =>
-                {
-                    InitialiseModules(loadOnStart);
-                };
+                gdprLoadingTask.OnTaskCompleted += () => { InitialiseModules(loadOnStart); };
 
                 GameLoading.AddTask(gdprLoadingTask);
 
@@ -170,7 +176,7 @@ namespace Watermelon
         {
             if (advertisingActiveModules.ContainsKey(advertisingModule))
             {
-                if(!advertisingActiveModules[advertisingModule].IsInitialised())
+                if (!advertisingActiveModules[advertisingModule].IsInitialised())
                 {
                     if (settings.SystemLogs)
                         Debug.Log("[AdsManager]: Module " + advertisingModule + " trying to initialise!");
@@ -189,9 +195,10 @@ namespace Watermelon
                     Debug.LogWarning("[AdsManager]: Module " + advertisingModule + " is disabled!");
             }
         }
-#endregion
 
-static void Update()
+        #endregion
+
+        static void Update()
         {
             if (mainThreadEventsCount > 0)
             {
@@ -204,9 +211,9 @@ static void Update()
                 mainThreadEventsCount = 0;
             }
 
-            if(settings.AutoShowInterstitial)
+            if (settings.AutoShowInterstitial)
             {
-                if(lastInterstitialTime < Time.time)
+                if (lastInterstitialTime < Time.time)
                 {
                     ShowInterstitial(null);
 
@@ -217,7 +224,7 @@ static void Update()
 
         public static void TryToLoadFirstAds()
         {
-            if(loadingCoroutine == null)
+            if (loadingCoroutine == null)
                 loadingCoroutine = Tween.InvokeCoroutine(TryToLoadAdsCoroutine());
         }
 
@@ -252,7 +259,8 @@ static void Update()
             if (settings.IsIDFAEnabled && !AdsManager.IsIDFADetermined())
                 return false;
 
-            var isRewardedVideoModuleInititalized = AdsManager.IsModuleInititalized(AdsManager.Settings.RewardedVideoType);
+            var isRewardedVideoModuleInititalized =
+                AdsManager.IsModuleInititalized(AdsManager.Settings.RewardedVideoType);
             var isInterstitialModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.InterstitialType);
             var isBannerModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.BannerType);
 
@@ -260,7 +268,9 @@ static void Update()
             var isInterstitialActive = AdsManager.Settings.InterstitialType != AdProvider.Disable;
             var isBannerActive = AdsManager.Settings.BannerType != AdProvider.Disable;
 
-            if ((!isRewardedVideoActive || isRewardedVideoModuleInititalized) && (!isInterstitialActive || isInterstitialModuleInitialized) && (!isBannerActive || isBannerModuleInitialized))
+            if ((!isRewardedVideoActive || isRewardedVideoModuleInititalized) &&
+                (!isInterstitialActive || isInterstitialModuleInitialized) &&
+                (!isBannerActive || isBannerModuleInitialized))
             {
                 if (isRewardedVideoActive)
                     AdsManager.RequestRewardBasedVideo();
@@ -299,7 +309,8 @@ static void Update()
             if (advertisingModule == AdProvider.Disable)
                 return false;
 
-            return (Settings.BannerType == advertisingModule || Settings.InterstitialType == advertisingModule || Settings.RewardedVideoType == advertisingModule);
+            return (Settings.BannerType == advertisingModule || Settings.InterstitialType == advertisingModule ||
+                    Settings.RewardedVideoType == advertisingModule);
         }
 
         public static bool IsModuleActive(AdProvider advertisingModule)
@@ -317,7 +328,8 @@ static void Update()
             return false;
         }
 
-#region Interstitial
+        #region Interstitial
+
         public static bool IsInterstitialLoaded()
         {
             return ApplovinController.Instance.IsInterstitialReady;
@@ -338,21 +350,27 @@ static void Update()
             return;
             var advertisingModules = settings.InterstitialType;
 
-            if (!isForcedAdEnabled || !IsModuleActive(advertisingModules) || !advertisingActiveModules[advertisingModules].IsInitialised() || advertisingActiveModules[advertisingModules].IsInterstitialLoaded())
+            if (!isForcedAdEnabled || !IsModuleActive(advertisingModules) ||
+                !advertisingActiveModules[advertisingModules].IsInitialised() ||
+                advertisingActiveModules[advertisingModules].IsInterstitialLoaded())
                 return;
 
             advertisingActiveModules[advertisingModules].RequestInterstitial();
         }
 
-        public static void ShowInterstitial(AdProviderHandler.InterstitialCallback callback, bool ignoreConditions = false)
+        public static void ShowInterstitial(AdProviderHandler.InterstitialCallback callback,
+            bool ignoreConditions = false)
         {
-            ApplovinController.Instance.interstitial.Show("inter");
+            ApplovinController.Instance.ShowInterstitial("inter");
             return;
             var advertisingModules = settings.InterstitialType;
 
             interstitalCallback = callback;
 
-            if (!isForcedAdEnabled || !IsModuleActive(advertisingModules) || (!ignoreConditions && (!CheckInterstitialTime() || !CheckExtraInterstitialCondition())) || !advertisingActiveModules[advertisingModules].IsInitialised() || !advertisingActiveModules[advertisingModules].IsInterstitialLoaded())
+            if (!isForcedAdEnabled || !IsModuleActive(advertisingModules) ||
+                (!ignoreConditions && (!CheckInterstitialTime() || !CheckExtraInterstitialCondition())) ||
+                !advertisingActiveModules[advertisingModules].IsInitialised() ||
+                !advertisingActiveModules[advertisingModules].IsInterstitialLoaded())
             {
                 ExecuteInterstitialCallback(false);
 
@@ -391,35 +409,23 @@ static void Update()
 
         public static bool CheckExtraInterstitialCondition()
         {
-            if (InterstitialConditions != null)
-            {
-                var state = true;
+            if (InterstitialConditions == null) return true;
 
-                var listDelegates = InterstitialConditions.GetInvocationList();
-                for (var i = 0; i < listDelegates.Length; i++)
-                {
-                    if (!(bool)listDelegates[i].DynamicInvoke())
-                    {
-                        state = false;
+            var listDelegates = InterstitialConditions.GetInvocationList();
+            var state = listDelegates.All(d => (bool) d.DynamicInvoke());
+            if (settings.SystemLogs)
+                Debug.Log("[AdsManager]: Extra condition interstitial state: " + state);
 
-                        break;
-                    }
-                }
-
-                if (settings.SystemLogs)
-                    Debug.Log("[AdsManager]: Extra condition interstitial state: " + state);
-
-                return state;
-            }
-
-            return true;
+            return state;
         }
-#endregion
 
-#region Rewarded Video
+        #endregion
+
+        #region Rewarded Video
+
         public static bool IsRewardBasedVideoLoaded()
         {
-           return ApplovinController.Instance.IsRewardedLoaded;
+            return ApplovinController.Instance.IsRewardedLoaded;
             var advertisingModule = settings.RewardedVideoType;
 
             if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
@@ -433,22 +439,28 @@ static void Update()
             return;
             var advertisingModule = settings.RewardedVideoType;
 
-            if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised() || advertisingActiveModules[advertisingModule].IsRewardedVideoLoaded())
+            if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised() ||
+                advertisingActiveModules[advertisingModule].IsRewardedVideoLoaded())
                 return;
 
             advertisingActiveModules[advertisingModule].RequestRewardedVideo();
         }
 
-        public static void ShowRewardBasedVideo(AdProviderHandler.RewardedVideoCallback callback, bool showErrorMessage = true)
+        public static void ShowRewardBasedVideo(AdProviderHandler.RewardedVideoCallback callback,
+            bool showErrorMessage = true)
         {
-            ApplovinController.Instance.ShowRewarded("rewarded");
+            if (ApplovinController.Instance.IsRewardedLoaded)
+                ApplovinController.Instance.ShowRewarded("rewarded");
+            //  rewardedVideoCallback = callback;
+
             return;
             var advertisingModule = settings.RewardedVideoType;
 
             rewardedVideoCallback = callback;
             waitingForRewardVideoCallback = true;
 
-            if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised() || !advertisingActiveModules[advertisingModule].IsRewardedVideoLoaded())
+            if (!IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised() ||
+                !advertisingActiveModules[advertisingModule].IsRewardedVideoLoaded())
             {
                 ExecuteRewardVideoCallback(false);
 
@@ -476,16 +488,19 @@ static void Update()
                 }
             }
         }
-#endregion
 
-#region Banner
+        #endregion
+
+        #region Banner
+
         public static void ShowBanner()
         {
             if (!isBannerActive) return;
 
             var advertisingModule = settings.BannerType;
 
-            if (!isForcedAdEnabled || !IsModuleActive(advertisingModule) || !advertisingActiveModules[advertisingModule].IsInitialised())
+            if (!isForcedAdEnabled || !IsModuleActive(advertisingModule) ||
+                !advertisingActiveModules[advertisingModule].IsInitialised())
                 return;
 
             advertisingActiveModules[advertisingModule].ShowBanner();
@@ -524,6 +539,7 @@ static void Update()
 
             HideBanner();
         }
+
         #endregion
 
         public static void OnProviderInitialised(AdProvider advertisingModule)
@@ -556,9 +572,9 @@ static void Update()
             }
         }
 
-#region IAP
+        #region IAP
 
-static void OnPurchaseComplete(ProductKeyType productKeyType)
+        static void OnPurchaseComplete(ProductKeyType productKeyType)
         {
             if (productKeyType == NO_ADS_PRODUCT_KEY)
             {
@@ -586,9 +602,11 @@ static void OnPurchaseComplete(ProductKeyType productKeyType)
 
             DestroyBanner();
         }
-#endregion
 
-#region GDPR
+        #endregion
+
+        #region GDPR
+
         public static void SetGDPR(bool state)
         {
             PlayerPrefs.SetInt(GDPR_PREF_NAME, state ? 1 : 0);
@@ -615,9 +633,11 @@ static void OnPurchaseComplete(ProductKeyType productKeyType)
         {
             return PlayerPrefs.HasKey(GDPR_PREF_NAME);
         }
-#endregion
 
-#region IDFA
+        #endregion
+
+        #region IDFA
+
         public static bool IsIDFADetermined()
         {
 #if UNITY_IOS
@@ -629,10 +649,13 @@ static void OnPurchaseComplete(ProductKeyType productKeyType)
 
             return true;
         }
-#endregion
+
+        #endregion
 
         public delegate void AdsModuleCallback(AdProvider advertisingModules);
+
         public delegate void AdsEventsCallback(AdProvider advertisingModules, AdType advertisingType);
+
         public delegate bool AdsBoolCallback();
 
         class AdEventExecutor : MonoBehaviour

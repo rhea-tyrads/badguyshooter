@@ -140,7 +140,7 @@ namespace Watermelon.LevelSystem
             arrowCase = NavigationArrowController.RegisterLineArrow(characterBehaviour.transform, enemyBehavior.transform.position);
             arrowCase.FixArrowToTarget(enemyBehavior.transform);
 
-            tutorialLabelBehaviour = TutorialController.CreateTutorialLabel("KILL THE ENEMY", enemyBehavior.transform, new Vector3(0, 3.0f, 0));
+            tutorialLabelBehaviour = TutorialController.CreateTutorialLabel("SWIPE TO MOVE\nKILL THE ENEMY", enemyBehavior.transform, new Vector3(0, 3.0f, 0));
 
             gameUI.PauseButton.gameObject.SetActive(false);
 

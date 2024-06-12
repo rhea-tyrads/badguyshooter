@@ -132,14 +132,7 @@ namespace Watermelon
         {
             AdsManager.ShowRewardBasedVideo( (hasReward) =>
             {
-                if(hasReward)
-                {
-                    Log("[AdsManager]: Reward is received");
-                }
-                else
-                {
-                    Log("[AdsManager]: Reward isn't received");
-                }
+                Log(hasReward ? "[AdsManager]: Reward is received" : "[AdsManager]: Reward isn't received");
             });
         }
         #endregion

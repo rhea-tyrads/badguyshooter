@@ -67,11 +67,11 @@ namespace Watermelon
         {
             if(useNoAdsButton)
             {
-                noAdsRectTransform = (RectTransform)noAdsButton.transform;
-                noAdsButton.onClick.AddListener(OnNoAdsButtonClicked);
-                noAdsButton.gameObject.SetActive(true);
-
-                noAdsGamepadButton = noAdsButton.GetComponent<UIGamepadButton>();
+                // noAdsRectTransform = (RectTransform)noAdsButton.transform;
+                // noAdsButton.onClick.AddListener(OnNoAdsButtonClicked);
+                // noAdsButton.gameObject.SetActive(true);
+                //
+                // noAdsGamepadButton = noAdsButton.GetComponent<UIGamepadButton>();
             }
             else
             {
@@ -164,13 +164,17 @@ namespace Watermelon
             {
                 if (AdsManager.IsForcedAdEnabled())
                 {
-                    noAdsRectTransform.gameObject.SetActive(true);
-                    noAdsRectTransform.anchoredPosition = new Vector2(noAdsRectTransform.sizeDelta.x, noAdsRectTransform.anchoredPosition.y);
-                    noAdsRectTransform.DOAnchoredPosition(new Vector2(-35, noAdsRectTransform.anchoredPosition.y), 0.5f).SetEasing(Ease.Type.CubicOut);
+                    if (noAdsRectTransform)
+                    {
+                        noAdsRectTransform.gameObject.SetActive(true);
+                        noAdsRectTransform.anchoredPosition = new Vector2(noAdsRectTransform.sizeDelta.x, noAdsRectTransform.anchoredPosition.y);
+                        noAdsRectTransform.DOAnchoredPosition(new Vector2(-35, noAdsRectTransform.anchoredPosition.y), 0.5f).SetEasing(Ease.Type.CubicOut);
+                    }
+                   
                 }
                 else
                 {
-                    noAdsRectTransform.gameObject.SetActive(false);
+                  if(noAdsRectTransform)  noAdsRectTransform.gameObject.SetActive(false);
                 }
             }
 
@@ -189,12 +193,12 @@ namespace Watermelon
             {
                 if (AdsManager.IsForcedAdEnabled())
                 {
-                    noAdsRectTransform.gameObject.SetActive(true);
-                    noAdsRectTransform.DOAnchoredPosition(new Vector2(noAdsRectTransform.sizeDelta.x, noAdsRectTransform.anchoredPosition.y), 0.3f).SetEasing(Ease.Type.CubicIn);
+                    if(noAdsRectTransform)  noAdsRectTransform.gameObject.SetActive(true);
+                    if(noAdsRectTransform)  noAdsRectTransform.DOAnchoredPosition(new Vector2(noAdsRectTransform.sizeDelta.x, noAdsRectTransform.anchoredPosition.y), 0.3f).SetEasing(Ease.Type.CubicIn);
                 }
                 else
                 {
-                    noAdsRectTransform.gameObject.SetActive(false);
+                   if(noAdsRectTransform) noAdsRectTransform.gameObject.SetActive(false);
                 }
             }
         }

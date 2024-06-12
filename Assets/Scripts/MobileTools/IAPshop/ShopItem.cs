@@ -14,7 +14,7 @@ namespace MobileTools.IAPshop
         public ShopPurchaseType purchaseType;
         public ShopItemType itemType;
         public string adjustToken;
-        
+
         [HideIf(nameof(IsWeapon))]
         public BonusPackUI bonuses;
 
@@ -36,15 +36,18 @@ namespace MobileTools.IAPshop
         #endregion
 
         public GameObject purchasedContainer;
-        
+
         void Awake()
-            => purchaseButton.onClick.AddListener(TryPurchase);
+        {
+            if (purchaseButton)
+                purchaseButton.onClick.AddListener(TryPurchase);
+        }
 
         public void SetLock(bool isPurchased)
         {
             purchasedContainer.SetActive(isPurchased);
         }
-        
+
         public void Set(PackData data)
         {
             if (!bonuses) return;

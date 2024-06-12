@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class BonusUI : MonoBehaviour
 {
+    public bool stackMode;
+
     public Button playButton;
     public BonusSlot hpBonus;
     public BonusSlot critBonus;
@@ -13,17 +15,17 @@ public class BonusUI : MonoBehaviour
     public BonusSlot movementBonus;
     public Canvas canvas;
     public GraphicRaycaster canvasCast;
-    
+
     public bool IsHpActive;
     public bool IsCritActive;
     public bool IsRespawnActive;
     public bool IsMovementActive;
     public bool IsFirerateActive;
     public bool IsMultishotActive;
-    
+
     BonusController c;
-    
-    public   event Action OnPlay = delegate { };
+
+    public event Action OnPlay = delegate { };
 
 
     void Awake()
@@ -37,7 +39,7 @@ public class BonusUI : MonoBehaviour
         movementBonus.OnClick += SwitchMovement;
         multishotBonus.OnClick += SwitchMultishot;
         firerateBonus.OnClick += SwitchFireraet;
-        
+
         hpBonus.Disable();
         critBonus.Disable();
         respawnBonus.Disable();
@@ -66,47 +68,81 @@ public class BonusUI : MonoBehaviour
 
     void SwitchHP()
     {
-        IsHpActive = !IsHpActive;
-        if (IsHpActive) hpBonus.Activate();
-        else hpBonus.Disable();
+        if (stackMode)
+        {
+            hpBonus.Increment();
+        }
+        else
+        {
+            IsHpActive = !IsHpActive;
+            if (IsHpActive) hpBonus.Activate();
+            else hpBonus.Disable();
+        }
     }
 
     void SwitchCrit()
     {
-        IsCritActive = !IsCritActive;
-        if (IsCritActive) critBonus.Activate();
-        else critBonus.Disable();
+        if (stackMode)
+            critBonus.Increment();
+        else
+        {
+            IsCritActive = !IsCritActive;
+            if (IsCritActive) critBonus.Activate();
+            else critBonus.Disable();
+        }
     }
 
     void SwitchRespawn()
     {
-        IsRespawnActive = !IsRespawnActive;
-        if (IsRespawnActive) respawnBonus.Activate();
-        else respawnBonus.Disable();
+        if (stackMode)
+            respawnBonus.Increment();
+        else
+        {
+            IsRespawnActive = !IsRespawnActive;
+            if (IsRespawnActive) respawnBonus.Activate();
+            else respawnBonus.Disable();
+        }
     }
-    
+
     void SwitchMovement()
     {
-        IsMovementActive = !IsMovementActive;
-        if (IsMovementActive) movementBonus.Activate();
-        else movementBonus.Disable();
+        if (stackMode)
+            movementBonus.Increment();
+        else
+        {
+            IsMovementActive = !IsMovementActive;
+            if (IsMovementActive) movementBonus.Activate();
+            else movementBonus.Disable();
+        }
     }
-    
+
     void SwitchFireraet()
     {
-        IsFirerateActive = !IsFirerateActive;
-        if (IsFirerateActive) firerateBonus.Activate();
-        else firerateBonus.Disable();
+        if (stackMode)
+            firerateBonus.Increment();
+        else
+        {
+            IsFirerateActive = !IsFirerateActive;
+            if (IsFirerateActive) firerateBonus.Activate();
+            else firerateBonus.Disable();  
+        }
+
     }
-    
+
     void SwitchMultishot()
     {
-        IsMultishotActive = !IsMultishotActive;
-        if (IsMultishotActive) multishotBonus.Activate();
-        else multishotBonus.Disable();
+        if (stackMode)
+            multishotBonus.Increment();
+        else
+        {
+            IsMultishotActive = !IsMultishotActive;
+            if (IsMultishotActive) multishotBonus.Activate();
+            else multishotBonus.Disable();
+        }
+
     }
-    
-    
+
+
     public void SetHpBonus(int amount)
     {
         hpBonus.SetAmount(amount);

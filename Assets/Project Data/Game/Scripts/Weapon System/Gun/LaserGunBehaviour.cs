@@ -83,18 +83,23 @@ public class LaserGunBehaviour : BaseGunBehavior
                 bulletStreamAngles = new List<float> {0};
 
             var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
-
+            var dmgBonus = (upgrade.GetCurrentStage().BulletsPerShot.Random() +
+                            characterBehaviour.MultishotBoosterAmount) > 1
+                ? 3
+                : 1f;
             for (var k = 0; k < bulletsNumber; k++)
             {
                 foreach (var streamAngle in bulletStreamAngles)
                 {
                     var bullet = bulletPool.Get(new PooledObjectSettings()
-                                .SetPosition(shootPoint.position)
-                                .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
-                                    (Random.Range(-spread, spread) + streamAngle)))
+                            .SetPosition(shootPoint.position)
+                            .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
+                                (Random.Range(-spread, spread) + streamAngle)))
                         .GetComponent<LaserBulletBehaviour>();
 
-                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier,
+                    bullet.Initialise(
+                        damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier *
+                        characterBehaviour.critMultiplier * dmgBonus,
                         bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                     bullet.owner = Owner;
                 }

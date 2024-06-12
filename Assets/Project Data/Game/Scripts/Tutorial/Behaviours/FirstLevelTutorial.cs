@@ -61,7 +61,7 @@ namespace Watermelon
                 arrowCase = NavigationArrowController.RegisterLineArrow(characterBehaviour.transform, enemyBehavior.transform.position);
                 arrowCase.FixArrowToTarget(enemyBehavior.transform);
 
-                tutorialLabelBehaviour.Activate("KILL THE ENEMY", enemyBehavior.transform, new Vector3(0, 20.0f, 0));
+                tutorialLabelBehaviour.Activate("SWIPE TO MOVE\nKILL THE ENEMY", enemyBehavior.transform, new Vector3(0, 20.0f, 0));
 
                 BaseEnemyBehavior.OnDiedEvent += OnEnemyDied;
             }

@@ -8,6 +8,7 @@ public class BonusController : Singleton<BonusController>
 {
     public BonusFile file;
     public BonusUI ui;
+    public UIPowerupPanel powerups;
     const string KEY = "BONUSES_SAVE";
 
     bool IsFirstLaunch
@@ -27,9 +28,9 @@ public class BonusController : Singleton<BonusController>
 
         if (IsFirstLaunch)
         {
-            file.critBonus = 999;
-            file.hpBonus =  999;
-            file.respawnBonus =  999;
+            file.critBonus = 3;
+            file.hpBonus =  3;
+            file.respawnBonus =  3;
             Save();
         }
 
@@ -48,7 +49,7 @@ public class BonusController : Singleton<BonusController>
         OnShow();
     }
 
-    public UIPowerupPanel powerups;
+
     void UseBonuses()
     {
         if (ui.IsHpActive)

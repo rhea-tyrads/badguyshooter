@@ -40,6 +40,13 @@ public class BonusSlot : MonoBehaviour
         outline.enabled = true;
     }
 
+    public int incrementedBy;
+    public void Increment()
+    {
+        incrementedBy++;
+        total++;
+        Activate();
+    }
     public void Disable()
     {
         amount.text = (total).ToString();

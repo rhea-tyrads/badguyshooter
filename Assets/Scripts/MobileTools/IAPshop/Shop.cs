@@ -31,14 +31,14 @@ namespace MobileTools.IAPshop
             Hide();
             InitItems();
             InitBuilder();
-            //  EventManager.Instance.OnTryPurchaseRemoveAds += TryPurchaseRemoveAds;
+            SDKEvents.Instance.OnTryPurchaseNoAds += TryPurchaseRemoveAds;
             if (successUI) successUI.Hide();
         }
 
         void OnDisable()
         {
-            // if (!EventManager.Instance) return;
-            //  EventManager.Instance.OnTryPurchaseRemoveAds -= TryPurchaseRemoveAds;
+            if (!SDKEvents.Instance) return;
+            SDKEvents.Instance.OnTryPurchaseNoAds -= TryPurchaseRemoveAds;
         }
 
         void InitBuilder()
@@ -81,8 +81,7 @@ namespace MobileTools.IAPshop
             if (testMode)
                 Purchase(item.Id);
             else
-                _controller.InitiatePurchase(item.Id); 
-    
+                _controller.InitiatePurchase(item.Id);
         }
 
         void TryPurchaseRemoveAds()
@@ -100,6 +99,7 @@ namespace MobileTools.IAPshop
 
         void Purchase(string id)
         {
+            if(id == noAdsID)return;
             //Debug.LogError("AAYAAA");
             SDKEvents.Instance.ProductPurchase(id);
             // AudioPlayer.Instance.PlaySound(Game.Instance.gameplay.so.sounds.purchaseSuccess);

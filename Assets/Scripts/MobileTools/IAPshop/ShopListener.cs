@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MobileTools.SDK;
 using MobileTools.Utilities;
 using UnityEngine;
+using UnityEngine.UI;
 using Watermelon;
 using Watermelon.SquadShooter;
 
@@ -10,17 +11,25 @@ namespace MobileTools.IAPshop
     public class ShopListener : MonoBehaviour
     {
         public Shop shop;
+        public Button noAds;
         public List<ShopItem> items = new();
         public WeaponsController weapons;
         public ShopSave save;
 
-        public   ShopItem Find(string product)
+        public ShopItem Find(string product)
             => items.Find(c => c.Id == product);
 
         void Start()
         {
+            noAds.gameObject.SetActive(!Keys.IsNoAdsPurchased);
+            noAds.onClick.AddListener(NoAds);
             SDKEvents.Instance.OnProductPurchase += Purchase;
             RefreshItems();
+        }
+
+        void NoAds()
+        {
+             SDKEvents.Instance.TryPurchaseNoAds();
         }
 
         void RefreshItems()

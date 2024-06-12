@@ -34,6 +34,7 @@ namespace Watermelon.SquadShooter
             itemsAmountRange = new DuoInt(9, 11);
         }
 
+        public bool Appriached;
         public abstract void ChestApproached();
         public abstract void ChestLeft();
 

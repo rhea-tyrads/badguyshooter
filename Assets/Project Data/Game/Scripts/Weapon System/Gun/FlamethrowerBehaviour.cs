@@ -52,12 +52,16 @@ public class FlamethrowerBehaviour : BaseGunBehavior
     }
 
     public GameObject flameParticle;
+    public GameObject flameParticleMultishot_3;
+    public GameObject flameParticleMultishot_5;
     
     public override void GunUpdate()
     {
         if (!characterBehaviour.IsCloseEnemyFound)
         {
             flameParticle.SetActive(false);
+            flameParticleMultishot_3.SetActive(false);
+            flameParticleMultishot_5.SetActive(false);
             return;
         }
         //  barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
@@ -91,7 +95,21 @@ public class FlamethrowerBehaviour : BaseGunBehavior
                     bulletStreamAngles = new List<float> {0};
                 }
 
-                var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
+                var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random()+ characterBehaviour.MultishotBoosterAmount;
+
+                if (bulletsNumber == 1)
+                {
+                    flameParticleMultishot_3.SetActive(false);
+                    flameParticleMultishot_5.SetActive(false);
+                }
+                
+                if (bulletsNumber >  1)
+                    flameParticleMultishot_3.SetActive(true);
+                
+                if (bulletsNumber >  3)
+                    flameParticleMultishot_5.SetActive(true);
+                
+                var finalSpread = characterBehaviour.isMultishotBooster && spread == 0? 30 : spread;
 
                 for (var k = 0; k < bulletsNumber; k++)
                 {
@@ -101,9 +119,8 @@ public class FlamethrowerBehaviour : BaseGunBehavior
                                 new PooledObjectSettings()
                                     .SetPosition(shootPoint.position)
                                     .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
-                                        (Random.Range(-spread, spread) +
-                                         streamAngle)))
-                            .GetComponent<FlamethrowerBulletBehaviour>();
+                                        (Random.Range(-finalSpread, finalSpread) +
+                                         streamAngle))).GetComponent<FlamethrowerBulletBehaviour>();
 
                         bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier,
                             bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
@@ -111,9 +128,7 @@ public class FlamethrowerBehaviour : BaseGunBehavior
                     }
                 }
 
-
                 characterBehaviour.OnGunShooted();
-
                 AudioController.PlaySound(AudioController.Sounds.shotMinigun);
             }
         }

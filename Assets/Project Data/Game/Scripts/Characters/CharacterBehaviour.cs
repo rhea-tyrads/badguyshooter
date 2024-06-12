@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Watermelon.LevelSystem;
 using Watermelon.Upgrades;
+using Random = UnityEngine.Random;
 
 namespace Watermelon.SquadShooter
 {
@@ -13,9 +16,11 @@ namespace Watermelon.SquadShooter
         public GameObject moveSpeedBoostVfx;
         public GameObject atkSpeedBoostVfx;
         public GameObject multishotBoostVfx;
+
         public float critMultiplier = 2f;
         public float critChance = 0.15f;
         public bool IsCritical;
+
         public int respawnCount;
 
         public float CritMult => IsCritical && Random.value <= critChance ? critMultiplier : 1f;
@@ -66,7 +71,7 @@ namespace Watermelon.SquadShooter
         MaterialPropertyBlock hitShinePropertyBlock;
         TweenCase hitShineTweenCase;
 
-        CharacterStats stats;
+        public CharacterStats stats;
         public CharacterStats Stats => stats;
 
         // Gun
@@ -147,8 +152,10 @@ namespace Watermelon.SquadShooter
             isActive = false;
             enabled = false;
 
-            var tempTarget = new GameObject("[TARGET]");
-            tempTarget.transform.position = transform.position;
+            var tempTarget = new GameObject("[TARGET]")
+            {
+                transform = {position = transform.position}
+            };
             tempTarget.SetActive(true);
             playerTarget = tempTarget.transform;
 
@@ -181,12 +188,25 @@ namespace Watermelon.SquadShooter
             respawnCount = 1;
         }
 
+        public bool RespawnInUse;
+
         public void UseRespawn()
         {
+            Debug.LogError("RESPAWNED");
+            RespawnInUse = true;
             respawnCount--;
-            Reload();
+            Invoke(nameof(ReviveMe), 1f);
+            // Control.DisableMovementControl();
+            // LevelController.OnPlayerDiedCall();
+            // GameController.OnRevive();
+
+            //  Reload();
         }
 
+        void ReviveMe()
+        {
+            GameController.OnRevive();
+        }
 
         public void Reload(bool resetHealth = true)
         {
@@ -788,19 +808,34 @@ namespace Watermelon.SquadShooter
             if (other.CompareTag(PhysicsHelper.TAG_ITEM))
             {
                 var item = other.GetComponent<IDropableItem>();
-                if (item.IsPickable(this))
-                {
-                    OnItemPicked(item);
-                    item.Pick();
-                }
+                if (!item.IsPickable(this)) return;
+                OnItemPicked(item);
+                item.Pick();
             }
             else if (other.CompareTag(PhysicsHelper.TAG_CHEST))
             {
-                if (Vector3.Distance(transform.position, other.transform.position) < chestOpenDistance)
-                    other.GetComponent<AbstractChestBehavior>().ChestApproached();
+                chest = other.GetComponent<AbstractChestBehavior>();
+
+                var dist = Vector3.Distance(transform.position, other.transform.position);
+                //   Debug.LogError(other.transform.name + " dist " + dist, other.transform);
+                //   Debug.LogError(other.transform.name,other.transform);
+                if (dist < chestOpenDistance)
+                    chest.ChestApproached();
             }
         }
 
+        AbstractChestBehavior chest;
+        bool isGood;
+
+        void OnTriggerStay(Collider other)
+        {
+            if (!other.CompareTag(PhysicsHelper.TAG_CHEST)) return;
+            if (!chest) return;
+            if (chest.Appriached) return;
+            var dist = Vector3.Distance(transform.position, other.transform.position);
+            if (dist < chestOpenDistance)
+                chest.ChestApproached();
+        }
 
         public void ApplyStun(float duration)
         {
@@ -825,6 +860,7 @@ namespace Watermelon.SquadShooter
             if (other.CompareTag(PhysicsHelper.TAG_CHEST))
             {
                 other.GetComponent<AbstractChestBehavior>().ChestLeft();
+                chest = null;
             }
         }
 

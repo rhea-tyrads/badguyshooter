@@ -157,11 +157,15 @@ namespace Watermelon
         {
             if (!isGameActive) return;
 
-            UIController.HidePage<UIGame>(() =>
+            if (LevelController.characterBehaviour.respawnCount <= 0)
             {
-                UIController.ShowPage<UIGameOver>();
-                UIController.OnPageOpenedEvent += OnFailedPageOpened;
-            });
+                UIController.HidePage<UIGame>(() =>
+                {
+                    UIController.ShowPage<UIGameOver>();
+                    UIController.OnPageOpenedEvent += OnFailedPageOpened;
+                });
+            }
+
             LevelController.OnLevelFailed();
             isGameActive = false;
         }
@@ -169,7 +173,7 @@ namespace Watermelon
         static void OnFailedPageOpened(UIPage page, System.Type pageType)
         {
             if (pageType != typeof(UIGameOver)) return;
-            AdsManager.ShowInterstitial(null);
+         //   AdsManager.ShowInterstitial(null);
             UIController.OnPageOpenedEvent -= OnFailedPageOpened;
         }
 

@@ -139,6 +139,7 @@ namespace Watermelon.SquadShooter
             description.rarityText.text = data.RarityData.Name;
             description.rarityText.color = data.RarityData.TextColor;
             description.descriptionText.text = data.Description;
+            description.levelText.text = "LVL. " + upgrade.UpgradeLevel;
             description.damage.text = "DAMAGE " + Damage(weapon.Type);
             description.firerate.text = "FIRERATE " + FireRate(weapon.Type);
             description.radius.text = "RANGE " + Radius(weapon.Type);

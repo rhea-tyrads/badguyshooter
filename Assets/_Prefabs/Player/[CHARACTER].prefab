@@ -215,8 +215,14 @@ MonoBehaviour:
   isAtkSpdBooster: 0
   atkSpdBoosterDuration: 10
   atkSpdBoosterMult: 2
+  stats:
+    health: 0
+    bulletDamageMultiplier: 1
+    power: 0
+    keyUpgradeNumber: 0
   isHpBonus: 0
   isStunned: 0
+  RespawnInUse: 0
   moveSlowFactor: 0
   moveBoostFactor: 1
   moveSlowTimer: 0

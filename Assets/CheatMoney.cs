@@ -12,7 +12,7 @@ public class CheatMoney : MonoBehaviour
     {
         if (!use) return;
         use = false;
-        CurrenciesController.Add(CurrencyType.Coins, 99999);
+        CurrenciesController.Add(CurrencyType.Coins, 500);
  
     }
 }

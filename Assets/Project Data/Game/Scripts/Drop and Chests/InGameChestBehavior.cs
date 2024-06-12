@@ -27,6 +27,7 @@ namespace Watermelon.SquadShooter
 
         public override void ChestApproached()
         {
+            Appriached = true;
             if (opened) return;
 
             if (openCoroutine != null)
@@ -43,21 +44,17 @@ namespace Watermelon.SquadShooter
             animatorRef.SetTrigger(SHAKE_HASH);
 
             var timer = 0f;
-
             circleTween.KillActive();
-
             circleTween = fillCircleHolder.DOScale(1f, 0.2f).SetEasing(Ease.Type.CubicOut);
 
             while (timer < openDuration)
             {
                 timer += Time.deltaTime;
-
                 fillCircleImage.fillAmount = timer / openDuration;
                 yield return null;
             }
 
             opened = true;
-
             animatorRef.SetTrigger(OPEN_HASH);
             fillCircleHolder.localScale = Vector3.zero;
 
@@ -73,6 +70,7 @@ namespace Watermelon.SquadShooter
 
         public override void ChestLeft()
         {
+            Appriached = false;
             if (opened)
                 return;
 

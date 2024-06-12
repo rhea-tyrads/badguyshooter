@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Applovin;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,7 @@ namespace Watermelon.SquadShooter
 
         public override void ChestApproached()
         {
+            Appriached = true;
             if (opened)
                 return;
 
@@ -47,6 +49,7 @@ namespace Watermelon.SquadShooter
 
         public override void ChestLeft()
         {
+            Appriached = false;
             if (opened)
                 return;
 
@@ -58,25 +61,52 @@ namespace Watermelon.SquadShooter
 
         void OnButtonClick()
         {
-            AdsManager.ShowRewardBasedVideo((success) =>
+            ApplovinController.Instance.ShowRewarded("rewarded chest");
+            ApplovinController.Instance.OnRewardReceived -= Receive;
+            ApplovinController.Instance.OnRewardDisplayFail -= Fail;
+            ApplovinController.Instance.OnRewardReceived += Receive;
+            ApplovinController.Instance.OnRewardDisplayFail += Fail;
+            // AdsManager.ShowRewardBasedVideo((success) =>
+            // {
+            //     if (success)
+            //     {
+            //         opened = true;
+            //
+            //         animatorRef.SetTrigger(OPEN_HASH);
+            //         rvAnimator.SetBool(IS_OPEN_HASH, false);
+            //
+            //         Tween.DelayedCall(0.3f, () =>
+            //         {
+            //             DropResources();
+            //             particle.SetActive(false);
+            //             Vibration.Vibrate(VibrationIntensity.Light);
+            //         });
+            //
+            //         gamepadButton.SetFocus(false);
+            //     } 
+            // });
+        }
+
+        void Fail()
+        {
+             
+        }
+
+        void Receive()
+        {
+            opened = true;
+
+            animatorRef.SetTrigger(OPEN_HASH);
+            rvAnimator.SetBool(IS_OPEN_HASH, false);
+
+            Tween.DelayedCall(0.3f, () =>
             {
-                if (success)
-                {
-                    opened = true;
-
-                    animatorRef.SetTrigger(OPEN_HASH);
-                    rvAnimator.SetBool(IS_OPEN_HASH, false);
-
-                    Tween.DelayedCall(0.3f, () =>
-                    {
-                        DropResources();
-                        particle.SetActive(false);
-                        Vibration.Vibrate(VibrationIntensity.Light);
-                    });
-
-                    gamepadButton.SetFocus(false);
-                } 
+                DropResources();
+                particle.SetActive(false);
+                Vibration.Vibrate(VibrationIntensity.Light);
             });
+
+            gamepadButton.SetFocus(false);
         }
     }
 }

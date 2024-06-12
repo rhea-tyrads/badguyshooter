@@ -1,15 +1,16 @@
- 
 using System;
 using MobileTools.MonoCache.System;
+using MobileTools.Utilities;
 using UnityEngine;
- 
+using Utilities;
+
 // ReSharper disable AccessToStaticMemberViaDerivedType
 
 namespace Applovin
 {
     public class ApplovinController : Singleton<ApplovinController>
     {
-      //  public SetupSO config;
+        //  public SetupSO config;
 
         [Header("ID")]
         public string interstitialID = "8925df940997a3f3";
@@ -18,30 +19,26 @@ namespace Applovin
         [Space(20)]
         public Rewarded rewarded;
         public Interstitial interstitial;
-        
-        
-        
+
+
         public event Action OnRewardReceived = delegate { };
         public event Action OnRewardDisplayFail = delegate { };
         public event Action OnInterstitialHidden = delegate { };
         public event Action OnInterstitialDisplayFail = delegate { };
         public bool IsRewardedLoaded => rewarded.IsLoaded;
         string LastTimeWatch => nameof(LastTimeWatch);
-         public int secondsPassed;
-
+        public int secondsPassed;
+        public bool useInterstitialTimer;
+        public int interstitialRateSec = 60;
 
         public bool IsInterstitialReady
         {
             get
             {
-             //   if (Keys.IsNoAdsPurchased)
-             return true;
-
-             // if (!config.useInterstitialTimer)
-             //     return interstitial.IsLoaded;
-             //
-             // secondsPassed = DateUtils.SecondsPassed(LastTimeWatch);
-             // return secondsPassed > config.interstitialRateSec && interstitial.IsLoaded;
+                if (Keys.IsNoAdsPurchased) return false;
+                if (!useInterstitialTimer) return interstitial.IsLoaded;
+                secondsPassed = DateUtils.SecondsPassed(LastTimeWatch);
+                return secondsPassed > interstitialRateSec && interstitial.IsLoaded;
             }
         }
 
@@ -51,12 +48,14 @@ namespace Applovin
             InitSdk();
             InitModules();
             SubscribeEvents();
+            
             MaxSdk.SetHasUserConsent(false);
             MaxSdk.SetIsAgeRestrictedUser(false);
+            
             if (!PlayerPrefs.HasKey("APPLOVIN_FRIST_LAUNCH"))
             {
                 PlayerPrefs.SetInt("APPLOVIN_FRIST_LAUNCH", 1);
-               // ResetInterstitialTimer();
+                // ResetInterstitialTimer();
             }
         }
 
@@ -75,12 +74,11 @@ namespace Applovin
             if (IsInterstitialReady)
             {
                 var amount = InterstitialWatchedAmount;
-
-                if (amount + 1 < 2)//config.showRemoveAdsAfter)
+                if (amount + 1 < 2) //config.showRemoveAdsAfter)
                 {
                     amount++;
                     PlayerPrefs.SetInt(InterstitialAmountKey, amount);
-                 //   ResetInterstitialTimer();
+                    ResetInterstitialTimer();
                     interstitial.Show(msg);
                 }
                 else
@@ -94,8 +92,8 @@ namespace Applovin
             }
         }
 
-          //  public void ResetInterstitialTimer()
-          //  => DateUtils.Save(LastTimeWatch, DateTime.Now);
+        public void ResetInterstitialTimer()
+            => DateUtils.Save(LastTimeWatch, DateTime.Now);
 
         void ShowRemoveAds()
         {
@@ -118,8 +116,8 @@ namespace Applovin
             // EventManager.Instance.OnProductPurchase -= GoNextLevel;
         }
 
-     //   void GoNextLevel(string msg) => NextLevel();
-      //  void NextLevel() => Game.Instance.NextLevel();
+        //   void GoNextLevel(string msg) => NextLevel();
+        //  void NextLevel() => Game.Instance.NextLevel();
 
         void InitSdk()
         {
@@ -145,11 +143,11 @@ namespace Applovin
             interstitial.OnHiden += () => OnInterstitialHidden();
             interstitial.OnDisplayFailed += () => OnInterstitialDisplayFail();
         }
+
         void RewardReceived()
         {
-         //   ResetInterstitialTimer();
+            ResetInterstitialTimer();
             OnRewardReceived();
         }
-
     }
 }

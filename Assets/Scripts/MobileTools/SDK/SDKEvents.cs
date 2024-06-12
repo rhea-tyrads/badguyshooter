@@ -5,7 +5,8 @@ namespace MobileTools.SDK
 {
     public class SDKEvents : Singleton<SDKEvents>
     {
-    
+        public event Action OnTryPurchaseNoAds = delegate { };
+        public void TryPurchaseNoAds(   ) => OnTryPurchaseNoAds( );
         public event Action<int,int> OnLevelComplete = delegate { };
         public void LevelComplete(int world, int room) => OnLevelComplete(world,room);
         public event Action<string> OnProductPurchase = delegate { };

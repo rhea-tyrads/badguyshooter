@@ -1,6 +1,9 @@
-﻿using TMPro;
+﻿using System;
+using Applovin;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities;
 
 namespace Watermelon
 {
@@ -29,6 +32,7 @@ namespace Watermelon
 
         public void Initialise(SimpleBoolCallback completeCallback, CurrencyPrice currencyPrice)
         {
+            NOT_SHOW_YET = true;
             this.completeCallback = completeCallback;
             this.currencyPrice = currencyPrice;
 
@@ -51,48 +55,54 @@ namespace Watermelon
             Redraw();
         }
 
+        void FixedUpdate()
+        {
+            Redraw();
+        }
+
+        public bool NOT_SHOW_YET;
         public void Redraw()
         {
+//            Debug.LogError("REDRAW");
+
+         //   var span = DateUtils.SecondsPassed("REWARDED_TIMER");
             // Activate currency purchase option if RV is disabled
-            if(AdsManager.Settings.RewardedVideoType == AdProvider.Disable)
+            if (ApplovinController.Instance.IsRewardedLoaded && NOT_SHOW_YET)
             {
-                adsContentObject.SetActive(false);
-
-                currencyContentObject.SetActive(true);
-
-                var currency = currencyPrice.Currency;
-                currencyIconImage.sprite = currency.Icon;
-                currencyText.text = currencyPrice.FormattedPrice;
-
-                if(currencyPrice.EnoughMoneyOnBalance())
-                {
-                    backgroundImage.sprite = activeBackgroundSprite;
-                }
-                else
-                {
-                    backgroundImage.sprite = blockedBackgroundSprite;
-                }
+ 
+                //DateUtils.Save("REWARDED_TIMER", DateTime.Now);
+           //     Debug.LogError("ads!");
+                //Debug.LogError("ADS");
+                currencyContentObject.SetActive(false);
+                adsContentObject.SetActive(true);
+                backgroundImage.sprite = activeBackgroundSprite;
             }
             else
             {
-                currencyContentObject.SetActive(false);
-
-                adsContentObject.SetActive(true);
-
-                backgroundImage.sprite = activeBackgroundSprite;
+             //   Debug.LogError("no ads!");
+                //Debug.LogError("SIMLEEEEEEEEEEe");
+                adsContentObject.SetActive(false);
+                currencyContentObject.SetActive(true);
+                var currency = currencyPrice.Currency;
+                currencyIconImage.sprite = currency.Icon;
+                currencyText.text = currencyPrice.FormattedPrice;
+                backgroundImage.sprite = currencyPrice.EnoughMoneyOnBalance()
+                    ? activeBackgroundSprite
+                    : blockedBackgroundSprite;
             }
         }
 
         void OnButtonClicked()
         {
+            //Debug.LogError("BUTTON CLICK");
             AudioController.PlaySound(AudioController.Sounds.buttonSound);
 
-            if (AdsManager.Settings.RewardedVideoType == AdProvider.Disable)
+            if (currencyContentObject.activeSelf)
             {
+                Debug.LogError("REWIWWW BY COINS");
                 if (currencyPrice.EnoughMoneyOnBalance())
                 {
                     currencyPrice.SubstractFromBalance();
-
                     completeCallback?.Invoke(true);
                 }
                 else
@@ -102,29 +112,39 @@ namespace Watermelon
             }
             else
             {
-                AdsManager.ShowRewardBasedVideo((success) =>
-                {
-                    completeCallback?.Invoke(success);
-                });
+                NOT_SHOW_YET = false;
+                Debug.LogError("REWIWWW BY ADS");
+                AdsManager.ShowRewardBasedVideo(success => { completeCallback?.Invoke(success); });
+                ApplovinController.Instance.OnRewardReceived -= Good;
+                ApplovinController.Instance.OnRewardReceived += Good;
+                ApplovinController.Instance.OnRewardDisplayFail -= NotGood;
+                ApplovinController.Instance.OnRewardDisplayFail += NotGood;
             }
+        }
+
+        void NotGood()
+        {
+            completeCallback?.Invoke(false);
+        }
+
+        void Good()
+        {
+            completeCallback?.Invoke(true);
         }
 
         public void Clear()
         {
             isInitialised = false;
-
             completeCallback = null;
             currencyPrice = null;
 
             if (currency != null)
             {
                 currency.OnCurrencyChanged -= OnCurrencyChanged;
-
                 currency = null;
             }
 
             button.onClick.RemoveAllListeners();
-
             gameObject.SetActive(false);
         }
     }

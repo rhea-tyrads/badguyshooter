@@ -18,8 +18,6 @@ namespace Applovin
         public void Init(string adUnitID)
         {
             _adUnitID = adUnitID;
-
-
             MaxSdkCallbacks.Rewarded.OnAdLoadedEvent += OnLoad;
             MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent += OnLoadFail;
             MaxSdkCallbacks.Rewarded.OnAdDisplayedEvent += OnDisplay;

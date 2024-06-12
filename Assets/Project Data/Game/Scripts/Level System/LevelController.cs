@@ -87,7 +87,7 @@ namespace Watermelon.LevelSystem
 
         public static void LoadCurrentLevel()
         {
-            Debug.LogWarning(levelSave.WorldIndex);
+//            Debug.LogWarning(levelSave.WorldIndex);
             LoadLevel(levelSave.WorldIndex, levelSave.LevelIndex);
         }
 
@@ -123,6 +123,8 @@ namespace Watermelon.LevelSystem
                 characterBehaviour.DisableAgent();
                 LoadPedestal();
             }
+            
+             BonusController.Instance.powerups.Hide();
         }
 
         static void DistributeRewardBetweenRooms()
@@ -485,6 +487,7 @@ namespace Watermelon.LevelSystem
 
         public static void OnGameStarted(bool immediately = false)
         {
+            BonusController.Instance.powerups.Show();
             CustomMusicController.ToggleMusic(AudioController.Music.gameMusic, 0.3f, 0.3f);
             isGameplayActive = true;
             CameraController.SetCameraShiftState(true);
@@ -580,13 +583,17 @@ namespace Watermelon.LevelSystem
         public static void OnPlayerDied()
         {
             if (!IsGameplayActive) return;
-
             isGameplayActive = false;
+            
             OnPlayerDiedEvent?.Invoke();
             Control.DisableMovementControl();
             GameController.OnLevelFail();
         }
 
+        public static void OnPlayerDiedCall()
+        {
+            OnPlayerDiedEvent?.Invoke();
+        }
         public static string GetCurrentAreaText()
             => $"AREA {ActiveRoom.CurrentWorldIndex + 1}-{ActiveRoom.CurrentLevelIndex + 1}";
 

@@ -12,6 +12,7 @@ public class WeaponDescriptionUI : PopupUI
 {
     public TextMeshProUGUI weaponName;
     public TextMeshProUGUI descriptionText;
+    public TextMeshProUGUI levelText;
     public TextMeshProUGUI damage;
     public TextMeshProUGUI radius;
     public TextMeshProUGUI firerate;
