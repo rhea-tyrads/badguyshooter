@@ -2,9 +2,11 @@
   <packages>
     <package>androidx.recyclerview:recyclerview:1.2.1</package>
     <package>com.applovin.mediation:bytedance-adapter:5.9.0.6.0</package>
+    <package>com.applovin.mediation:facebook-adapter:[6.17.0.0]</package>
     <package>com.applovin.mediation:fyber-adapter:8.2.7.1</package>
     <package>com.applovin.mediation:google-adapter:[23.1.0.0]</package>
     <package>com.applovin.mediation:mintegral-adapter:16.7.51.0</package>
+    <package>com.applovin.mediation:unityads-adapter:4.12.0.0</package>
     <package>com.applovin.mediation:vungle-adapter:7.3.2.2</package>
     <package>com.applovin:applovin-sdk:12.4.3</package>
     <package>com.google.android.gms:play-services-base:18.4.0</package>
