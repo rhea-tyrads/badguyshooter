@@ -32,7 +32,7 @@ namespace Watermelon.SquadShooter
         float stealthCooldownTimer;
         float stealthDurationTimer;
   
-        [NaughtyAttributes.Button()]
+       // [NaughtyAttributes.Button()]
         public void EnableStealth()
         {
             Debug.LogError("IS STEALTH");
@@ -46,7 +46,7 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        [NaughtyAttributes.Button()]
+       // [NaughtyAttributes.Button()]
         public void DisableStealth()
         {
             Debug.LogError("NO STEALTH");

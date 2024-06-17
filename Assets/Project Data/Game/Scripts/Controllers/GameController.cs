@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Watermelon.LevelSystem;
 using Watermelon.SquadShooter;
@@ -30,6 +31,11 @@ namespace Watermelon
 
         static bool isGameActive;
         public static bool IsGameActive => isGameActive;
+        public bool isgameACTEAE;
+        void Update()
+        {
+            isgameACTEAE = IsGameActive;
+        }
 
         void Awake()
         {
@@ -138,7 +144,7 @@ namespace Watermelon
 
         static void ShowMainMenuAfterLevelComplete()
         {
-            AdsManager.ShowInterstitial(null);
+           // AdsManager.ShowInterstitial(null);
             CustomMusicController.ToggleMusic(AudioController.Music.menuMusic, 0.3f, 0.3f);
             CameraController.SetCameraShiftState(false);
             CameraController.EnableCamera(CameraType.Menu);

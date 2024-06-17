@@ -1,4 +1,4 @@
-using NaughtyAttributes;
+//using NaughtyAttributes;
 using UnityEngine;
 using Watermelon;
 
@@ -23,7 +23,8 @@ namespace Watermelon.SquadShooter
         [SerializeField] Rarity rarity;
         public Rarity Rarity => rarity;
 
-        [ShowAssetPreview()]    [SerializeField] Sprite icon;
+    //    [ShowAssetPreview()]
+    [SerializeField] Sprite icon;
     public Sprite Icon => icon;
 
         public RarityData RarityData => WeaponsController.GetRarityData(rarity);

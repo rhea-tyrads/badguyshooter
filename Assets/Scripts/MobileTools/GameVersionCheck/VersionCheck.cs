@@ -14,10 +14,7 @@ namespace MobileTools.GameVersionCheck
         public string currentVersion;
         public SpreadsheetData data;
         public InternetConnection internetAccess;
-
         public Button downloadButton;
-
-
 
         void Start()
         {
@@ -42,7 +39,7 @@ namespace MobileTools.GameVersionCheck
             else
             {
                 var rawData = request.downloadHandler.text;
-                // Debug.LogError("Rawdata: "+rawData);
+                //Debug.LogError("Rawdata: "+rawData);
 
                 var rows = rawData.Split('\n');
                 if (rows.Length > 1) // Assuming the first row could be headers

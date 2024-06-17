@@ -458,105 +458,79 @@ namespace Watermelon.SquadShooter
 
         public void SetGraphics(GameObject newGraphicsPrefab, bool playParticle, bool playAnimation)
         {
-            // Check if graphics isn't exist already
-            if (graphicsPrefab != newGraphicsPrefab)
+            if (graphicsPrefab == newGraphicsPrefab) return;
+            graphicsPrefab = newGraphicsPrefab;
+
+            if (graphics != null)
             {
-                // Store prefab link
-                graphicsPrefab = newGraphicsPrefab;
-
-                if (graphics != null)
-                {
-                    if (gunBehaviour != null)
-                        gunBehaviour.transform.SetParent(null);
-
-                    graphics.Unload();
-
-                    Destroy(graphics.gameObject);
-                }
-
-                var graphicObject = Instantiate(newGraphicsPrefab);
-                graphicObject.transform.SetParent(transform);
-                graphicObject.transform.ResetLocal();
-                graphicObject.SetActive(true);
-
-                graphics = graphicObject.GetComponent<BaseCharacterGraphics>();
-                graphics.Initialise(this);
-
-                movementSettings = graphics.MovementSettings;
-                movementAimingSettings = graphics.MovementAimingSettings;
-
-                activeMovementSettings = movementSettings;
-
-                characterMeshRenderer = graphics.MeshRenderer;
-
                 if (gunBehaviour != null)
-                {
-                    gunBehaviour.InitialiseCharacter(graphics);
-                    gunBehaviour.PlaceGun(graphics);
+                    gunBehaviour.transform.SetParent(null);
 
-                    graphics.SetShootingAnimation(gunBehaviour.GetShootAnimationClip());
+                graphics.Unload();
 
-                    gunBehaviour.UpdateHandRig();
-
-                    Jump();
-                }
-                else
-                {
-                    Tween.NextFrame(Jump, 0, false, UpdateMethod.LateUpdate);
-                }
-
-                if (playParticle)
-                    graphics.PlayUpgradeParticle();
-
-                if (playAnimation)
-                    graphics.PlayBounceAnimation();
+                Destroy(graphics.gameObject);
             }
+
+            var graphicObject = Instantiate(newGraphicsPrefab, transform, true);
+            graphicObject.transform.ResetLocal();
+            graphicObject.SetActive(true);
+            graphics = graphicObject.GetComponent<BaseCharacterGraphics>();
+            graphics.Initialise(this);
+            movementSettings = graphics.MovementSettings;
+            movementAimingSettings = graphics.MovementAimingSettings;
+            activeMovementSettings = movementSettings;
+            characterMeshRenderer = graphics.MeshRenderer;
+
+            if (gunBehaviour != null)
+            {
+                gunBehaviour.InitialiseCharacter(graphics);
+                gunBehaviour.PlaceGun(graphics);
+                graphics.SetShootingAnimation(gunBehaviour.GetShootAnimationClip());
+                gunBehaviour.UpdateHandRig();
+                Jump();
+            }
+            else
+            {
+                Tween.NextFrame(Jump, 0, false, UpdateMethod.LateUpdate);
+            }
+
+            if (playParticle)
+                graphics.PlayUpgradeParticle();
+
+            if (playAnimation)
+                graphics.PlayBounceAnimation();
         }
 
         #endregion
 
         public void Activate(bool check = true)
         {
-            if (check && isActive)
-                return;
-
+            if (check && isActive) return;
             isActive = true;
+
             enabled = true;
-
             enemyDetector.gameObject.SetActive(true);
-
             aimRingBehavior.Show();
-
             graphics.Activate();
-
             NavMeshController.InvokeOrSubscribe(this);
         }
 
         public void Disable()
         {
-            if (!isActive)
-                return;
-
+            if (!isActive) return;
             isActive = false;
+
             enabled = false;
-
             agent.enabled = false;
-
             aimRingBehavior.Hide();
-
             targetRing.SetActive(false);
             targetRing.transform.SetParent(null);
-
             graphics.Disable();
-
             closestEnemyBehaviour = null;
 
-            if (isMoving)
-            {
-                isMoving = false;
-
-                speed = 0;
-            }
+            if (!isMoving) return;
+            isMoving = false;
+            speed = 0;
         }
 
         public void MoveForwardAndDisable(float duration)
@@ -605,11 +579,9 @@ namespace Watermelon.SquadShooter
             if (isStunned)
             {
                 stunTimer -= Time.deltaTime;
-                if (stunTimer <= 0)
-                {
-                    isStunned = false;
-                    stunVfx.gameObject.SetActive(false);
-                }
+                if (!(stunTimer <= 0)) return;
+                isStunned = false;
+                stunVfx.gameObject.SetActive(false);
 
                 return;
             }
@@ -733,51 +705,32 @@ namespace Watermelon.SquadShooter
             if (enemyBehavior)
             {
                 if (!closestEnemyBehaviour)
-                {
                     playerTarget.position = transform.position + transform.forward * 5;
-                }
-
                 activeMovementSettings = movementAimingSettings;
-
                 closestEnemyBehaviour = enemyBehavior;
-
                 targetRing.SetActive(true);
                 targetRing.transform.rotation = Quaternion.identity;
-
                 ringTweenCase.KillActive();
-
                 targetRing.transform.SetParent(enemyBehavior.transform);
                 targetRing.transform.localScale = Vector3.one * (enemyBehavior.Stats.TargetRingSize * 1.4f);
                 targetRing.transform.localPosition = Vector3.zero;
-
                 ringTweenCase = targetRing.transform.DOScale(Vector3.one * enemyBehavior.Stats.TargetRingSize, 0.2f)
                     .SetEasing(Ease.Type.BackIn);
-
                 CameraController.SetEnemyTarget(enemyBehavior);
-
                 SetTargetActive();
-
                 return;
             }
 
             activeMovementSettings = movementSettings;
-
             closestEnemyBehaviour = null;
             targetRing.SetActive(false);
             targetRing.transform.SetParent(null);
-
             CameraController.SetEnemyTarget(null);
         }
 
-        public static BaseEnemyBehavior GetClosestEnemy()
-        {
-            return characterBehaviour.enemyDetector.ClosestEnemy;
-        }
+        public static BaseEnemyBehavior GetClosestEnemy() => characterBehaviour.enemyDetector.ClosestEnemy;
 
-        public static CharacterBehaviour GetBehaviour()
-        {
-            return characterBehaviour;
-        }
+        public static CharacterBehaviour GetBehaviour() => characterBehaviour;
 
         public void TryAddClosestEnemy(BaseEnemyBehavior enemy)
         {
@@ -786,14 +739,9 @@ namespace Watermelon.SquadShooter
 
         public void SetTargetActive()
         {
-            if (closestEnemyBehaviour != null && closestEnemyBehaviour.Tier == EnemyTier.Elite)
-            {
-                targetRingRenderer.material.color = targetRingSpecialColor;
-            }
-            else
-            {
-                targetRingRenderer.material.color = targetRingActiveColor;
-            }
+            targetRingRenderer.material.color = closestEnemyBehaviour && closestEnemyBehaviour.Tier == EnemyTier.Elite
+                ? targetRingSpecialColor
+                : targetRingActiveColor;
         }
 
         public void SetTargetUnreachable()

@@ -7,6 +7,7 @@ using Watermelon.LevelSystem;
 
 public class UIPowerupPanel : MonoBehaviour
 {
+    public GameObject container;
     public GameObject hp;
     public GameObject crit;
     public GameObject respawn;
@@ -24,26 +25,25 @@ public class UIPowerupPanel : MonoBehaviour
 
     public void Hide()
     {
+        return;
         gameObject.SetActive(false);
     }
 
     public void Show()
     {
+        return;
         gameObject.SetActive(true);
     }
     
     void FixedUpdate()
     {
-        if (!GameController.IsGameActive)
-        {
-            atkSpd.SetActive(false);
-            moveSpd.SetActive(false);
-            multishotSpd.SetActive(false);
-        }
+        container.SetActive(GameController.IsGameActive);
+ 
         
         var player = LevelController.characterBehaviour;
         if (!player)
         {
+            Debug.LogError("NO PLAYER");
             atkSpd.SetActive(false);
             moveSpd.SetActive(false);
             multishotSpd.SetActive(false);
@@ -55,11 +55,11 @@ public class UIPowerupPanel : MonoBehaviour
         multishotSpd.SetActive(player.isMultishotBooster);
     }
 
-    public void SetBonuses(BonusUI file)
+    public void SetBonuses(BonusUI ui)
     {
-        //Debug.LogError(file.IsHpActive);
-        hp.SetActive(file.IsHpActive);
-        crit.SetActive(file.critBonus);
-        respawn.SetActive(file.respawnBonus);
+//         Debug.LogError(ui,ui.gameObject);
+        hp.SetActive(ui.IsHpActive);
+        crit.SetActive(ui.critBonus);
+        respawn.SetActive(ui.respawnBonus);
     }
 }

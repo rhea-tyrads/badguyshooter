@@ -124,7 +124,7 @@ namespace Watermelon.LevelSystem
                 LoadPedestal();
             }
             
-             BonusController.Instance.powerups.Hide();
+           //  BonusController.Instance.powerups.Hide();
         }
 
         static void DistributeRewardBetweenRooms()
@@ -487,7 +487,7 @@ namespace Watermelon.LevelSystem
 
         public static void OnGameStarted(bool immediately = false)
         {
-            BonusController.Instance.powerups.Show();
+          //  BonusController.Instance.powerups.Show();
             CustomMusicController.ToggleMusic(AudioController.Music.gameMusic, 0.3f, 0.3f);
             isGameplayActive = true;
             CameraController.SetCameraShiftState(true);

@@ -32,6 +32,7 @@ namespace Watermelon
 
         public void Initialise(SimpleBoolCallback completeCallback, CurrencyPrice currencyPrice)
         {
+            if(currencyPrice == null) Debug.LogWarning("!!!!!!!!!!!!!!!!!!!!!");
             NOT_SHOW_YET = true;
             this.completeCallback = completeCallback;
             this.currencyPrice = currencyPrice;

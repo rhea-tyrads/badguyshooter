@@ -15,6 +15,7 @@ namespace Watermelon
 
         public override void CreateComponent(Initialiser Initialiser)
         {
+            return;
             IAPManager.Initialise(Initialiser.gameObject, settings);
 
             var canvasGameObject = Instantiate(canvas);

@@ -15,7 +15,6 @@ namespace Watermelon.SquadShooter
         [SerializeField] TextMeshProUGUI titleText;
         [SerializeField] Button mainButton;
 
-
         [Header("Upgrades")]
         [SerializeField] GameObject upgradesStateObject;
 
@@ -58,22 +57,22 @@ namespace Watermelon.SquadShooter
 
         public bool IsSelected() => selectedCharacterPanelUI == this;
 
-        public void Initialise(Character character, UICharactersPanel charactersPanel)
+        public void Initialise(Character с, UICharactersPanel panel)
         {
-            this.character = character;
-            this.charactersPanel = charactersPanel;
+            character = с;
+            charactersPanel = panel;
 
             panelRectTransform = (RectTransform) transform;
             gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
 
-            previewImage.sprite = character.GetCurrentStage().PreviewSprite;
+            previewImage.sprite = с.GetCurrentStage().PreviewSprite;
 
             for (var i = 0; i < upgradesStatesImages.Length; i++)
             {
-                if (!character.Upgrades.IsInRange(i + 1)) continue;
-                if (!character.Upgrades[i + 1].ChangeStage) continue;
+                if (!с.Upgrades.IsInRange(i + 1)) continue;
+                if (!с.Upgrades[i + 1].ChangeStage) continue;
 
-                var stageStarObject = charactersPanel.GetStageStarObject();
+                var stageStarObject = panel.GetStageStarObject();
                 stageStarObject.transform.SetParent(upgradesStatesImages[i].rectTransform);
                 stageStarObject.transform.ResetLocal();
 
@@ -84,12 +83,12 @@ namespace Watermelon.SquadShooter
                 stageStarObject.SetActive(true);
             }
 
-            if (character.IsUnlocked())
+            if (с.IsUnlocked())
             {
-                titleText.text = character.Name.ToUpper();
+                titleText.text = с.Name.ToUpper();
                 storedIsLocked = false;
 
-                if (CharactersController.SelectedCharacter.Type == character.Type)
+                if (CharactersController.SelectedCharacter.Type == с.Type)
                     Select();
 
                 lockedStateObject.SetActive(false);
@@ -104,9 +103,9 @@ namespace Watermelon.SquadShooter
                 titleText.text = LOCKED_NAME;
                 storedIsLocked = true;
                 powerObject.SetActive(false);
-                previewImage.sprite = character.LockedSprite;
+                previewImage.sprite = с.LockedSprite;
                 previewImage.color = lockedPreviewColor;
-                SetRequiredLevel(character.RequiredLevel);
+                SetRequiredLevel(с.RequiredLevel);
             }
 
             mainButton.onClick.AddListener(OnSelectButtonClicked);

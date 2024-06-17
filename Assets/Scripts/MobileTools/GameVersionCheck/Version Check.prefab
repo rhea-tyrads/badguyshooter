@@ -144,9 +144,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1256224839297384789}
-  - component: {fileID: 8669942549878534978}
   - component: {fileID: 4433004037709627939}
   - component: {fileID: 2107573369415364054}
+  - component: {fileID: 4425190075537150631}
   m_Layer: 5
   m_Name: VersionUpdateUI
   m_TagString: Untagged
@@ -175,19 +175,6 @@ RectTransform:
   m_AnchoredPosition: {x: -2899, y: -12}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8669942549878534978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 365531092780252886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24f1068754ca20e469d3652e4230d346, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 2107573369415364054}
 --- !u!114 &4433004037709627939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,6 +199,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4425190075537150631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365531092780252886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181f10f0155718d48948b28a37bdbc55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 2107573369415364054}
+  background: {fileID: 3992182089827172908}
+  darkOverlay: {fileID: 1754580632237982236}
+  okButtonImage: {fileID: 7502546951772362092}
 --- !u!1 &477166609492933800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,12 +1234,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48eb82e6d2c90ed44abc1a1237dee344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mobileUI: {fileID: 4425190075537150631}
   versionCheckUrl: https://docs.google.com/spreadsheets/d/e/2PACX-1vSUy5DtechFGUO-mjYykpcdkTGUTmbsuneNuoFuP1yWDinK4MwaMCVSmjWyD8nR8vSXjhhDvvG4fHVO/pubhtml
-  googlePlayUrl: 
+  googlePlayUrl: https://play.google.com/store/apps/details?id=com.Belandagames.BadGuys
   currentVersion: 
   data:
     Name: 
     value: 
   internetAccess: {fileID: 0}
-  ui: {fileID: 8669942549878534978}
   downloadButton: {fileID: 3827386973731932362}

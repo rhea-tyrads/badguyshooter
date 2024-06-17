@@ -1,0 +1,39 @@
+How to use ColorSwap Shader.
+
+Shader located in the ColorSwapper folder of the shaders (both in project and shader list)
+
+ColorSwap_Basic:
+
+Uses The base texture to determine the 3 colors that can be changed.
+
+This is a self-lit and better suited for mobile or simple art styles such as low poly or polygonal style.
+
+Base Metal - the overall metalness
+Base Gloss - the overal glossness
+
+Protection mask(R) - this is a greyscale texture or black+white where black areas protect parts from having their color changed during the swap. Great for keeping certain colours intact such as skin tones or hair etc.
+
+ColorSwap_Standard MetalGloss:
+
+Works in a similar way to teh 'Standard' Material, this shader accepts a Normal Map and a Metal-Smooth(Gloss) map.
+
+There are 3 Color Detectors/Swappers. Each ColorDetect-Softness will be used to sample a colour from your character in the scene, please disable the realtime lighting icon in the editor (little sun icon at the top of the scene editor) so that you can sample the correct color.
+
+Use the Alpha of this color Detect to have a softer falloff, and use the range slider to increase the overall tolerance. The New Color will be the color that the detected color gets swapped to.
+
+Color1 - This will allow the change of gloss values as well as color
+Color2 - This will allow the change of gloss values as well as color
+Color3 - This will allow the change of METAL values as well as color
+
+Overall emissive slider is to make the whole effect self-lit, like a more cartoony look.
+Overall Effect slider goes between the original version and the new color swaps.
+Override Gloss - this will allow you to change the gloss effect
+
+Protection mask(R) - this is a greyscale texture or black+white where black areas protect parts from having their color changed during the swap. Great for keeping certain colours intact such as skin tones or hair etc.
+
+
+
+
+
+Note:
+The Ogre. This Ogre is owned by RRFreelance and is Rigged but not animated and is not for any type of resale or use in your games. It is for Demo purposes only and will be sold separately with animations on the RRFreelance stores only.

@@ -146,8 +146,7 @@ namespace Watermelon.SquadShooter
             description.SetIndex(weaponIndex);
             description.Show();
 
-            Debug.LogError("WEAPON: " + weapon.Type);
-            //Debug.LogError("STATS: " + Damage(weapon.Type).firstValue);
+            Debug.Log("WEAPON SELECTED: " + weapon.Type);
 
             return;
 
@@ -169,7 +168,7 @@ namespace Watermelon.SquadShooter
         {
             var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
             Debug.LogError(SelectedWeaponIndex);
-            
+
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
             panel.UpgradeButton();

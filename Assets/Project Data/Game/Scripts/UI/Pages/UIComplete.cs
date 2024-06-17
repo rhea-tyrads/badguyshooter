@@ -1,15 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 using Watermelon.SquadShooter;
 
 namespace Watermelon
 {
     public class UIComplete : UIPage
     {
+        public float claimButtonDelay = 2f;
+        public Button claimButton;
         const string LEVEL_TEXT = "LEVEL {0}-{1}";
         const string PLUS_TEXT = "+{0}";
-
+        [SerializeField] Button doubleRewardButton;
         [SerializeField] DotsBackground dotsBackground;
         [SerializeField] RectTransform panelRectTransform;
 
@@ -49,6 +53,7 @@ namespace Watermelon
         #region Show/Hide
         public override void PlayShowAnimation()
         {
+            claimButton.gameObject.SetActive(false);
             var showTime = 0.7f;
 
             dotsBackground.ApplyParams();
@@ -81,13 +86,8 @@ namespace Watermelon
             if(cardsDropped)
             {
                 var uniqueCards = new List<WeaponType>();
-                for(var i = 0; i < collectedCards.Count; i++)
-                {
-                    if(uniqueCards.FindIndex(x => x == collectedCards[i]) == -1)
-                    {
-                        uniqueCards.Add(collectedCards[i]);
-                    }
-                }
+                foreach (var type in collectedCards.Where(type => uniqueCards.FindIndex(x => x == type) == -1))
+                    uniqueCards.Add(type);
 
                 for (var i = 0; i < uniqueCards.Count; i++)
                 {
@@ -116,8 +116,14 @@ namespace Watermelon
             });
 
             UIGamepadButton.DisableTag(UIGamepadButtonTag.Game);
+            
+            Invoke(nameof(ShowClaim), claimButtonDelay);
         }
 
+        void ShowClaim()
+        {
+            claimButton.gameObject.SetActive(true);
+        }
         public override void PlayHideAnimation()
         {
             if (!isPageDisplayed)

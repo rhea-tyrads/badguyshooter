@@ -61,7 +61,8 @@ namespace Watermelon.SquadShooter
 
         void OnButtonClick()
         {
-            ApplovinController.Instance.ShowRewarded("rewarded chest");
+          //  ApplovinController.Instance.ShowRewarded("rewarded chest");
+            Receive();
             ApplovinController.Instance.OnRewardReceived -= Receive;
             ApplovinController.Instance.OnRewardDisplayFail -= Fail;
             ApplovinController.Instance.OnRewardReceived += Receive;

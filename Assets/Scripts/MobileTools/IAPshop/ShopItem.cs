@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using NaughtyAttributes;
+//using NaughtyAttributes;
 using Watermelon.SquadShooter;
 
 namespace MobileTools.IAPshop
@@ -15,15 +15,21 @@ namespace MobileTools.IAPshop
         public ShopItemType itemType;
         public string adjustToken;
 
-        [HideIf(nameof(IsWeapon))]
+     //   [HideIf(nameof(IsWeapon))]
         public BonusPackUI bonuses;
 
-        [ShowIf(nameof(ShowWeapon))] public WeaponType weapon;
-        [ShowIf(nameof(IsBundle))] public CharacterSkinType skin;
-        [ShowIf(nameof(IsBooster))] public int hpBoostAmount;
-        [ShowIf(nameof(IsBooster))] public int critBoostAmount;
-        [ShowIf(nameof(IsBooster))] public int respawnBoostAmount;
-        [ShowIf(nameof(IsBooster))] public int goldAmount;
+       // [ShowIf(nameof(ShowWeapon))]
+        public WeaponType weapon;
+     //   [ShowIf(nameof(IsBundle))]
+        public CharacterType skin;
+      //  [ShowIf(nameof(IsBooster))]
+        public int hpBoostAmount;
+     //   [ShowIf(nameof(IsBooster))]
+        public int critBoostAmount;
+    //    [ShowIf(nameof(IsBooster))]
+        public int respawnBoostAmount;
+     //   [ShowIf(nameof(IsBooster))]
+        public int goldAmount;
 
 
         public Button purchaseButton;
@@ -66,7 +72,8 @@ namespace MobileTools.IAPshop
     {
         Weapon,
         Bundle,
-        BoosterPack
+        BoosterPack,
+        Skin
     }
 
     public enum ShopPurchaseType

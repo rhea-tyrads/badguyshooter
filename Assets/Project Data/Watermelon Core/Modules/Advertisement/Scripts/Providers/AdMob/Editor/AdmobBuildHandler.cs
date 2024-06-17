@@ -19,6 +19,7 @@ namespace Watermelon
 
         public void OnPreprocessBuild(BuildReport report)
         {
+            return;
 #if MODULE_ADMOB
             AdsSettings adsData = EditorUtils.GetAsset<AdsSettings>();
 

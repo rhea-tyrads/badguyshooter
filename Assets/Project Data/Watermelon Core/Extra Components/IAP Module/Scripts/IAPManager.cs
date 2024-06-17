@@ -24,6 +24,7 @@ namespace Watermelon
 
         public static void Initialise(GameObject initObject, IAPSettings settings)
         {
+            
             if(isInitialised)
             {
                 Debug.Log("[IAP Manager]: Module is already initialized!");

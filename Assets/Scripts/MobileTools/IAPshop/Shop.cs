@@ -18,8 +18,6 @@ namespace MobileTools.IAPshop
         public ScreenUI successUI;
         public ShopListener listener;
         public string noAdsID = "no_ads";
-
-
         [Header("Last purchase")]
         //public Data data;
         //public Payload payload;
@@ -78,6 +76,7 @@ namespace MobileTools.IAPshop
 
         void TryPurchase(ShopItem item)
         {
+            Debug.LogWarning("[IAP] TRY PURCHASE: "+item.Id);
             if (testMode)
                 Purchase(item.Id);
             else

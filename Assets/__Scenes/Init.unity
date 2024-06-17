@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 1083078138}
   - component: {fileID: 1083078139}
   m_Layer: 0
-  m_Name: autoset
+  m_Name: AutoSetPassword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

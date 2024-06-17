@@ -15,22 +15,18 @@ namespace Watermelon
         [SerializeField] InitModule[] modules;
         public InitModule[] Modules => modules;
 
-        public void Initialise(Initialiser initialiser)
+        public void Initialise(Initialiser init)
         {
-            for (var i = 0; i < coreModules.Length; i++)
+            foreach (var module in coreModules)
             {
-                if(coreModules[i] != null)
-                {
-                    coreModules[i].CreateComponent(initialiser);
-                }
+                if (module == null) continue;
+                module.CreateComponent(init);
             }
 
-            for (var i = 0; i < modules.Length; i++)
+            foreach (var module in modules)
             {
-                if(modules[i] != null)
-                {
-                    modules[i].CreateComponent(initialiser);
-                }
+                if (module == null) continue;
+                module.CreateComponent(init);
             }
         }
     }

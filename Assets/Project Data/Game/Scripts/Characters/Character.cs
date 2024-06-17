@@ -6,12 +6,10 @@ namespace Watermelon.SquadShooter
     [System.Serializable]
     public class Character
     {
-        #region Inspector
-
-        [SerializeField] CharacterType type;
-        public CharacterType Type => type;
-
         [SerializeField] string name;
+        [SerializeField] CharacterType type;
+
+        public CharacterType Type => type;
         public string Name => name;
 
         [SerializeField] int requiredLevel;
@@ -21,15 +19,14 @@ namespace Watermelon.SquadShooter
         public Sprite LockedSprite => lockedSprite;
 
         [SerializeField] CharacterStageData[] stages;
-        public CharacterStageData[] Stages => stages;
 
+        public CharacterStageData[] Stages => stages;
         [SerializeField] CharacterUpgrade[] upgrades;
         public CharacterUpgrade[] Upgrades => upgrades;
 
         CharacterSave save;
         public CharacterSave Save => save;
 
-        #endregion
 
         public void Initialise()
         {
@@ -48,6 +45,7 @@ namespace Watermelon.SquadShooter
                 if (!upgrades[i].ChangeStage) continue;
                 return stages[upgrades[i].StageIndex];
             }
+
             return stages[0];
         }
 
@@ -58,10 +56,11 @@ namespace Watermelon.SquadShooter
                 if (!upgrades[i].ChangeStage) continue;
                 return i;
             }
+
             return 0;
         }
 
-        public CharacterUpgrade GetCurrentUpgrade() 
+        public CharacterUpgrade GetCurrentUpgrade()
             => upgrades[save.UpgradeLevel];
 
         public CharacterUpgrade GetNextUpgrade()
@@ -79,7 +78,14 @@ namespace Watermelon.SquadShooter
         }
 
         public bool IsSelected() => CharactersController.SelectedCharacter.type == type;
+        public bool onlyShop;
+        public bool IsPurchased() => PlayerPrefs.HasKey(SaveKey);
+        public string saveKey;
+        public string SaveKey => "Skin_" + saveKey;
+        public void Purchase() => PlayerPrefs.SetInt(SaveKey, 1);
 
-        public bool IsUnlocked() => ExperienceController.CurrentLevel >= requiredLevel;
+        public bool IsUnlocked() => onlyShop
+            ? IsPurchased()
+            : ExperienceController.CurrentLevel >= requiredLevel;
     }
 }
