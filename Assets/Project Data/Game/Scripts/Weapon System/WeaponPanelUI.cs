@@ -216,11 +216,11 @@ namespace Watermelon.SquadShooter
             // Debug.LogError("SELECTED");
             if (!IsUnlocked) return;
             
-            if (weaponIndex != WeaponsController.SelectedWeaponIndex)
-            {
+           // if (weaponIndex != WeaponsController.SelectedWeaponIndex)
+          //  {
                 AudioController.PlaySound(AudioController.Sounds.buttonSound);
                 weaponController.OnWeaponSelected(weaponIndex);
-            }
+           // }
 
             UIGeneralPowerIndicator.UpdateText();
         }
@@ -229,7 +229,6 @@ namespace Watermelon.SquadShooter
         {
             if (Upgrade.NextStage.Price >
                 CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Amount) return;
-
             Select();
 
             CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);

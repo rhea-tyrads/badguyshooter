@@ -672,9 +672,20 @@ namespace Watermelon.SquadShooter
             if (Random.Range(0.0f, 1.0f) <= ActiveRoom.LevelData.HealSpawnPercent)
             {
                 var health = Mathf.RoundToInt(Stats.HpForPlayer.Random());
+
+                var r = Random.Range(1, 5);
+                var boosterType = r switch
+                {
+                    1 => DropableItemType.MultishotBooster,
+                    2 => DropableItemType.AtkSpeedBooster,
+                    3 => DropableItemType.MoveSpeedBooster,
+                    4 => DropableItemType.Heal,
+                    _ => DropableItemType.MultishotBooster
+                };
+
                 Drop.Spawn(new DropData
                     {
-                        dropType = DropableItemType.MultishotBooster,
+                        dropType = boosterType,
                         amount = health
                     },
                     transform.position,

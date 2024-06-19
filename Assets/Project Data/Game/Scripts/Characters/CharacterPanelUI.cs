@@ -30,7 +30,9 @@ namespace Watermelon.SquadShooter
         [SerializeField] Sprite upgradesBuyButtonActiveSprite;
         [SerializeField] Sprite upgradesBuyButtonDisableSprite;
         [SerializeField] TextMeshProUGUI upgradesText;
-
+        public GameObject shopStateMode;
+    
+        
         [Space]
         [SerializeField] GameObject upgradesMaxObject;
 
@@ -92,6 +94,7 @@ namespace Watermelon.SquadShooter
                     Select();
 
                 lockedStateObject.SetActive(false);
+                shopStateMode.SetActive(false);
                 upgradesStateObject.SetActive(true);
                 powerObject.SetActive(true);
 
@@ -106,6 +109,12 @@ namespace Watermelon.SquadShooter
                 previewImage.sprite = с.LockedSprite;
                 previewImage.color = lockedPreviewColor;
                 SetRequiredLevel(с.RequiredLevel);
+
+                if (character.onlyShop)
+                {
+                    shopStateMode.SetActive(true);
+                    lockedStateObject.SetActive(false);
+                }
             }
 
             mainButton.onClick.AddListener(OnSelectButtonClicked);

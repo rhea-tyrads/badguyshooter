@@ -29,7 +29,7 @@ namespace MobileTools.IAPshop
 
         void NoAds()
         {
-             SDKEvents.Instance.TryPurchaseNoAds();
+            SDKEvents.Instance.TryPurchaseNoAds();
         }
 
         void RefreshItems()
@@ -55,6 +55,7 @@ namespace MobileTools.IAPshop
                 GiveItem(id);
         }
 
+        public CharactersDatabase characters;
 
         void GiveItem(string id)
         {
@@ -64,6 +65,9 @@ namespace MobileTools.IAPshop
             BonusController.Instance.AddHp(item.respawnBoostAmount);
             CurrenciesController.Add(CurrencyType.Coins, item.goldAmount);
             weapons.UnlockWeapon(item.weapon);
+
+            var character = characters.Characters.Find(c => c.Type == item.skin);
+            if (character.onlyShop) character.Purchase();
 
             save.Add(id);
             RefreshItems();

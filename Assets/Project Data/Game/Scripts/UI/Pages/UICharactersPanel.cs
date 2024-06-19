@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon;
@@ -15,12 +16,10 @@ namespace Watermelon.SquadShooter
 
         Pool stageStarPool;
 
-        protected override int SelectedIndex => Mathf.Clamp(CharactersController.GetCharacterIndex(CharactersController.SelectedCharacter.Type), 0, int.MaxValue);
+        protected override int SelectedIndex
+            => Mathf.Clamp(CharactersController.GetCharacterIndex(CharactersController.SelectedCharacter.Type), 0, int.MaxValue);
 
-        public GameObject GetStageStarObject()
-        {
-            return stageStarPool.Get();
-        }
+        public GameObject GetStageStarObject() => stageStarPool.Get();
 
         public bool IsAnyActionAvailable()
         {
@@ -153,10 +152,10 @@ namespace Watermelon.SquadShooter
 
             stageStarPool = new Pool(new PoolSettings(stageStarPrefab.name, stageStarPrefab, 1, true));
 
-            for (var i = 0; i < charactersDatabase.Characters.Length; i++)
+            foreach (var c in charactersDatabase.Characters)
             {
                 var newPanel = AddNewPanel();
-                newPanel.Initialise(charactersDatabase.Characters[i], this);
+                newPanel.Initialise(c, this);
             }
         }
 
@@ -184,16 +183,8 @@ namespace Watermelon.SquadShooter
             UIController.HidePage<UICharactersPanel>(onFinish);
         }
 
-        public override CharacterPanelUI GetPanel(CharacterType characterType)
-        {
-            for (var i = 0; i < itemPanels.Count; i++)
-            {
-                if (itemPanels[i].Character.Type == characterType)
-                    return itemPanels[i];
-            }
-
-            return null;
-        }
+        public override CharacterPanelUI GetPanel(CharacterType characterType) 
+            => itemPanels.FirstOrDefault(t => t.Character.Type == characterType);
 
         #endregion
     }

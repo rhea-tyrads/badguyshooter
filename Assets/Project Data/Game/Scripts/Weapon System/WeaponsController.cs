@@ -120,6 +120,7 @@ namespace Watermelon.SquadShooter
 
         public void OnWeaponSelected(int weaponIndex)
         {
+            Debug.LogError("SELECTED!!!!!!");
             SelectedWeaponIndex = weaponIndex;
             var weapon = instance.database.GetWeaponByIndex(weaponIndex);
             var page = UIController.GetPage<UIWeaponPage>();

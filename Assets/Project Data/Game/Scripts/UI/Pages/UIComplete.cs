@@ -38,10 +38,12 @@ namespace Watermelon
 
         public override void Initialise()
         {
-            cardsUIPool = new Pool(new PoolSettings(dropCardPrefab.name, dropCardPrefab, 1, true, cardsContainerTransform));
+            cardsUIPool =
+                new Pool(new PoolSettings(dropCardPrefab.name, dropCardPrefab, 1, true, cardsContainerTransform));
         }
 
-        public void SetData(int currentWorld, int currentLevel, int collectedMoney, int collectedExperience, List<WeaponType> collectedCards)
+        public void SetData(int currentWorld, int currentLevel, int collectedMoney, int collectedExperience,
+            List<WeaponType> collectedCards)
         {
             this.currentWorld = currentWorld;
             this.currentLevel = currentLevel;
@@ -51,6 +53,7 @@ namespace Watermelon
         }
 
         #region Show/Hide
+
         public override void PlayShowAnimation()
         {
             claimButton.gameObject.SetActive(false);
@@ -71,19 +74,15 @@ namespace Watermelon
             panelContentCanvasGroup.DOFade(1.0f, 0.3f, 0.1f);
 
             moneyGainedText.text = "0";
-            Tween.DoFloat(0, collectedMoney, 0.4f, (result) =>
-            {
-                moneyGainedText.text = string.Format(PLUS_TEXT, result.ToString("00"));
-            }, 0.2f);
+            Tween.DoFloat(0, collectedMoney, 0.4f,
+                (result) => { moneyGainedText.text = string.Format(PLUS_TEXT, result.ToString("00")); }, 0.2f);
 
             experienceGainedText.text = "0";
-            Tween.DoFloat(0, collectedExperience, 0.4f, (result) =>
-            {
-                experienceGainedText.text = string.Format(PLUS_TEXT, result.ToString("00"));
-            }, 0.3f);
+            Tween.DoFloat(0, collectedExperience, 0.4f,
+                (result) => { experienceGainedText.text = string.Format(PLUS_TEXT, result.ToString("00")); }, 0.3f);
 
             var cardsDropped = !collectedCards.IsNullOrEmpty();
-            if(cardsDropped)
+            if (cardsDropped)
             {
                 var uniqueCards = new List<WeaponType>();
                 foreach (var type in collectedCards.Where(type => uniqueCards.FindIndex(x => x == type) == -1))
@@ -105,18 +104,18 @@ namespace Watermelon
                     });
                 }
 
-                panelRectTransform.DOSize(new Vector2(0, 815), 0.4f).SetEasing(Ease.Type.BackOut);
-
+                panelRectTransform.DOSize(new Vector2(0, 1100), 0.4f).SetEasing(Ease.Type.BackOut);
                 showTime = 1.1f;
             }
 
-            Tween.DelayedCall(showTime, () => { 
+            Tween.DelayedCall(showTime, () =>
+            {
                 UIController.OnPageOpened(this);
                 UIGamepadButton.EnableTag(UIGamepadButtonTag.Complete);
             });
 
             UIGamepadButton.DisableTag(UIGamepadButtonTag.Game);
-            
+
             Invoke(nameof(ShowClaim), claimButtonDelay);
         }
 
@@ -124,6 +123,7 @@ namespace Watermelon
         {
             claimButton.gameObject.SetActive(true);
         }
+
         public override void PlayHideAnimation()
         {
             if (!isPageDisplayed)
@@ -140,6 +140,7 @@ namespace Watermelon
         #endregion
 
         #region Experience
+
         public void UpdateExperienceLabel(int experienceGained)
         {
             experienceGainedText.text = experienceGained.ToString();

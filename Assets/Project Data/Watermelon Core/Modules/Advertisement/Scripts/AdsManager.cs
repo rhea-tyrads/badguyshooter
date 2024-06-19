@@ -23,7 +23,8 @@ namespace Watermelon
 
         const string GDPR_PREF_NAME = "GDPR_STATE";
 
-        static readonly AdProviderHandler[] AD_PROVIDERS = {
+        static readonly AdProviderHandler[] AD_PROVIDERS =
+        {
             new AdDummyHandler(AdProvider.Dummy),
 
 #if MODULE_ADMOB
@@ -212,6 +213,8 @@ namespace Watermelon
 
             if (!settings.AutoShowInterstitial) return;
             if (!(lastInterstitialTime < Time.time)) return;
+            if (!ApplovinController.Instance.IsInterstitialReady) return;
+            
             ShowInterstitial(null);
             ResetInterstitialDelayTime();
         }
@@ -355,7 +358,6 @@ namespace Watermelon
         public static void ShowInterstitial(AdProviderHandler.InterstitialCallback callback,
             bool ignoreConditions = false)
         {
-            return;
             ApplovinController.Instance.ShowInterstitial("inter");
             return;
             var advertisingModules = settings.InterstitialType;

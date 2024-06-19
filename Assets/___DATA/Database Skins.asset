@@ -79,7 +79,7 @@ MonoBehaviour:
       changeStage: 0
       stageIndex: -1
     onlyShop: 0
-    saveKey: 
+    saveKey: Jim
   - name: Mike
     type: 1
     requiredLevel: 3
@@ -146,7 +146,7 @@ MonoBehaviour:
       changeStage: 0
       stageIndex: -1
     onlyShop: 0
-    saveKey: 
+    saveKey: Mike
   - name: Dustin
     type: 2
     requiredLevel: 5
@@ -213,14 +213,14 @@ MonoBehaviour:
       changeStage: 0
       stageIndex: -1
     onlyShop: 0
-    saveKey: 
+    saveKey: Dustin
   - name: Spaceman
     type: 3
     requiredLevel: 0
-    lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    lockedSprite: {fileID: 21300000, guid: c487bd9b69d5d364ba8cd2fd8fe4aae5, type: 3}
     stages:
-    - previewSprite: {fileID: 21300000, guid: a5de68ec5515c4c4f9d15b47b8a8a358, type: 3}
-      lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    - previewSprite: {fileID: 21300000, guid: 7db8ba5276d638246a7d7c8bdd28748b, type: 3}
+      lockedSprite: {fileID: 21300000, guid: c487bd9b69d5d364ba8cd2fd8fe4aae5, type: 3}
       prefab: {fileID: 4772110511189316351, guid: e3df02e11ccf3624f9eeb061793027bd,
         type: 3}
       healthBarOffset: {x: 0, y: 2.34375, z: 0}
@@ -284,10 +284,10 @@ MonoBehaviour:
   - name: Policeman
     type: 4
     requiredLevel: 0
-    lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    lockedSprite: {fileID: 21300000, guid: 7fa24c52caf50fd49a7f49ac60e437e5, type: 3}
     stages:
-    - previewSprite: {fileID: 21300000, guid: a5de68ec5515c4c4f9d15b47b8a8a358, type: 3}
-      lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    - previewSprite: {fileID: 21300000, guid: ef0d18b680848c34b8b3272be3abf319, type: 3}
+      lockedSprite: {fileID: 21300000, guid: 7fa24c52caf50fd49a7f49ac60e437e5, type: 3}
       prefab: {fileID: 2938383021690581412, guid: 093e2ec9060209f4b9b4a905d9897b9e,
         type: 3}
       healthBarOffset: {x: 0, y: 2.34375, z: 0}
@@ -351,10 +351,10 @@ MonoBehaviour:
   - name: Alien
     type: 5
     requiredLevel: 0
-    lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    lockedSprite: {fileID: 21300000, guid: 7c447c6ff17559840aeb2eeb703a1060, type: 3}
     stages:
-    - previewSprite: {fileID: 21300000, guid: a5de68ec5515c4c4f9d15b47b8a8a358, type: 3}
-      lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    - previewSprite: {fileID: 21300000, guid: 2c3554a813bc1574ea7a0db41bf99590, type: 3}
+      lockedSprite: {fileID: 21300000, guid: 7c447c6ff17559840aeb2eeb703a1060, type: 3}
       prefab: {fileID: 851335526816930387, guid: 2116bbb405547584b8872f8aea7cddf9,
         type: 3}
       healthBarOffset: {x: 0, y: 2.34375, z: 0}
@@ -418,10 +418,10 @@ MonoBehaviour:
   - name: Ninja
     type: 5
     requiredLevel: 0
-    lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    lockedSprite: {fileID: 21300000, guid: 209bf0ab964624c4d8e4c1c0a5400666, type: 3}
     stages:
-    - previewSprite: {fileID: 21300000, guid: a5de68ec5515c4c4f9d15b47b8a8a358, type: 3}
-      lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    - previewSprite: {fileID: 21300000, guid: e126726053dfefe4c8f4e09fe30f5850, type: 3}
+      lockedSprite: {fileID: 21300000, guid: 209bf0ab964624c4d8e4c1c0a5400666, type: 3}
       prefab: {fileID: 243640222364362184, guid: 687291dcd9fa1ea4baee71336257baf6,
         type: 3}
       healthBarOffset: {x: 0, y: 2.34375, z: 0}
@@ -485,10 +485,10 @@ MonoBehaviour:
   - name: Skeleton
     type: 5
     requiredLevel: 0
-    lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    lockedSprite: {fileID: 21300000, guid: 315a87a58afe8e642bc0dd25af098e6d, type: 3}
     stages:
-    - previewSprite: {fileID: 21300000, guid: a5de68ec5515c4c4f9d15b47b8a8a358, type: 3}
-      lockedSprite: {fileID: 21300000, guid: 83962838e12590049bcd0591eecb995e, type: 3}
+    - previewSprite: {fileID: 21300000, guid: 49f0245f5fa6dbb4f87c06e56d00bf25, type: 3}
+      lockedSprite: {fileID: 21300000, guid: 315a87a58afe8e642bc0dd25af098e6d, type: 3}
       prefab: {fileID: 8944514822810443993, guid: 2c30734de0bf64147acb024f8b588f06,
         type: 3}
       healthBarOffset: {x: 0, y: 2.34375, z: 0}
