@@ -34,12 +34,12 @@ public class UIPowerupPanel : MonoBehaviour
         return;
         gameObject.SetActive(true);
     }
-    
+
     void FixedUpdate()
     {
         container.SetActive(GameController.IsGameActive);
- 
-        
+
+
         var player = LevelController.characterBehaviour;
         if (!player)
         {
@@ -49,10 +49,13 @@ public class UIPowerupPanel : MonoBehaviour
             multishotSpd.SetActive(false);
             return;
         }
-        
+
         atkSpd.SetActive(player.isAtkSpdBooster);
         moveSpd.SetActive(player.isMoveSpeedBooster);
         multishotSpd.SetActive(player.isMultishotBooster);
+        hp.SetActive(player.isHpBonus);
+        crit.SetActive(player.IsCritical);
+        respawn.SetActive(player.respawnCount > 0);
     }
 
     public void SetBonuses(BonusUI ui)

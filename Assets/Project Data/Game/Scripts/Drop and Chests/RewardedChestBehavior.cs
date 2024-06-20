@@ -29,17 +29,14 @@ namespace Watermelon.SquadShooter
         public override void Init(List<DropData> drop)
         {
             base.Init(drop);
-
             rvAnimator.transform.localScale = Vector3.zero;
-
             isRewarded = true;
         }
 
         public override void ChestApproached()
         {
             Appriached = true;
-            if (opened)
-                return;
+            if (opened) return;
 
             animatorRef.SetTrigger(SHAKE_HASH);
             rvAnimator.SetBool(IS_OPEN_HASH, true);
@@ -90,23 +87,27 @@ namespace Watermelon.SquadShooter
 
         void Fail()
         {
-             
+            opened = true;
+            animatorRef.SetTrigger(OPEN_HASH);
+            rvAnimator.SetBool(IS_OPEN_HASH, false);
+            Tween.DelayedCall(0.3f, () =>
+            {
+                particle.SetActive(false);
+            });
+            gamepadButton.SetFocus(false);
         }
 
         void Receive()
         {
             opened = true;
-
             animatorRef.SetTrigger(OPEN_HASH);
             rvAnimator.SetBool(IS_OPEN_HASH, false);
-
             Tween.DelayedCall(0.3f, () =>
             {
                 DropResources();
                 particle.SetActive(false);
                 Vibration.Vibrate(VibrationIntensity.Light);
             });
-
             gamepadButton.SetFocus(false);
         }
     }

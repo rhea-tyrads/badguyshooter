@@ -16,13 +16,10 @@ namespace Watermelon.SquadShooter
         public GameObject moveSpeedBoostVfx;
         public GameObject atkSpeedBoostVfx;
         public GameObject multishotBoostVfx;
-
         public float critMultiplier = 2f;
         public float critChance = 0.15f;
         public bool IsCritical;
-
         public int respawnCount;
-
         public float CritMult => IsCritical && Random.value <= critChance ? critMultiplier : 1f;
         static readonly int SHADER_HIT_SHINE_COLOR_HASH = Shader.PropertyToID("_EmissionColor");
         static CharacterBehaviour characterBehaviour;
@@ -216,7 +213,6 @@ namespace Watermelon.SquadShooter
             isHpBonus = false;
             IsCritical = false;
             IsDead = false;
-
             stunTimer = 0;
             atkSpdTimer = 0;
             moveSlowTimer = 0;
@@ -855,7 +851,7 @@ namespace Watermelon.SquadShooter
         {
             isMoveSpeedBooster = true;
             moveSpeedBoostTimer = forever ? 9999999999999999f : moveSpeedBoostDuration;
-            moveBoostFactor = 1.7f;
+            moveBoostFactor = 1.3f;
             if (moveSpeedBoostVfx) moveSpeedBoostVfx.SetActive((true));
         }
 

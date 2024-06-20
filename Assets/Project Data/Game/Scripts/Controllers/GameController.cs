@@ -31,11 +31,6 @@ namespace Watermelon
 
         static bool isGameActive;
         public static bool IsGameActive => isGameActive;
-        public bool isgameACTEAE;
-        void Update()
-        {
-            isgameACTEAE = IsGameActive;
-        }
 
         void Awake()
         {
@@ -93,7 +88,7 @@ namespace Watermelon
             isGameActive = true;
         }
 
-        public AdjustController adjust;
+
         public static void LevelComplete()
         {
             if (!isGameActive) return;
@@ -124,8 +119,10 @@ namespace Watermelon
             if (pageType != typeof(UIComplete)) return;
             LevelController.UnloadLevel();
             UIController.OnPageOpenedEvent -= OnCompletePageOpened;
+            AdsManager.ShowInterstitial(null);
         }
 
+        public static bool isDoubleReward;
         public static void OnLevelCompleteClosed()
         {
             UIController.HidePage<UIComplete>(() =>
@@ -144,12 +141,21 @@ namespace Watermelon
 
         static void ShowMainMenuAfterLevelComplete()
         {
+            var xp = LevelController.CurrentLevelData.XPAmount;
+            if (isDoubleReward)
+            {
+                isDoubleReward = false;
+                xp *= 2;
+                WeaponsController.AddCards(LevelController.cardRewards);
+            }
+            
            // AdsManager.ShowInterstitial(null);
             CustomMusicController.ToggleMusic(AudioController.Music.menuMusic, 0.3f, 0.3f);
             CameraController.SetCameraShiftState(false);
             CameraController.EnableCamera(CameraType.Menu);
             UIController.ShowPage<UIMainMenu>();
-            ExperienceController.GainXPPoints(LevelController.CurrentLevelData.XPAmount);
+            
+            ExperienceController.GainXPPoints(xp);
             SaveController.Save(true);
             LevelController.LoadCurrentLevel();
         }

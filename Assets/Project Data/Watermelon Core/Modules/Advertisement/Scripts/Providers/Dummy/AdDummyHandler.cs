@@ -24,7 +24,7 @@ namespace Watermelon
                 var dummyCanvasPrefab = AdsManager.InitModule.DummyCanvasPrefab;
                 if (dummyCanvasPrefab != null)
                 {
-                    var dummyCanvas = GameObject.Instantiate(dummyCanvasPrefab);
+                    var dummyCanvas = Object.Instantiate(dummyCanvasPrefab);
                     dummyCanvas.transform.position = Vector3.zero;
                     dummyCanvas.transform.localScale = Vector3.one;
                     dummyCanvas.transform.rotation = Quaternion.identity;

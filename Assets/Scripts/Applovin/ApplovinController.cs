@@ -1,4 +1,5 @@
 using System;
+using com.adjust.sdk;
 using MobileTools.MonoCache.System;
 using MobileTools.Utilities;
 using UnityEngine;
@@ -35,9 +36,20 @@ namespace Applovin
         {
             get
             {
-                if (Keys.IsNoAdsPurchased) return false;
-                if (!useInterstitialTimer) return interstitial.IsLoaded;
+                if (Keys.IsNoAdsPurchased)
+                {
+                    //  Debug.LogError("NO ADS");
+                    return false;
+                }
+
+                if (!useInterstitialTimer)
+                {
+                    //  Debug.LogError("Is loaded: " + interstitial.IsLoaded);
+                    return interstitial.IsLoaded;
+                }
+
                 secondsPassed = DateUtils.SecondsPassed(LastTimeWatch);
+                // Debug.LogError("Seconds pass: " + secondsPassed + ", " + interstitialRateSec);
                 return secondsPassed > interstitialRateSec && interstitial.IsLoaded;
             }
         }
@@ -48,18 +60,17 @@ namespace Applovin
             InitSdk();
             InitModules();
             SubscribeEvents();
-            
+
             MaxSdk.SetHasUserConsent(false);
             MaxSdk.SetIsAgeRestrictedUser(false);
-            
-            if (!PlayerPrefs.HasKey("APPLOVIN_FRIST_LAUNCH"))
-            {
-                PlayerPrefs.SetInt("APPLOVIN_FRIST_LAUNCH", 1);
-                // ResetInterstitialTimer();
-            }
+
+            if (PlayerPrefs.HasKey("APPLOVIN_FRIST_LAUNCH")) return;
+            PlayerPrefs.SetInt("APPLOVIN_FRIST_LAUNCH", 1);
+            ResetInterstitialTimer();
         }
 
-      //  [NaughtyAttributes.Button]
+
+        //  [NaughtyAttributes.Button]
         public void ShowRewarded(string msg)
         {
             rewarded.Show(msg);
@@ -68,9 +79,10 @@ namespace Applovin
         string InterstitialAmountKey => nameof(InterstitialWatchedAmount);
         int InterstitialWatchedAmount => PlayerPrefs.GetInt(InterstitialAmountKey, 0);
 
-      //  [NaughtyAttributes.Button()]
+        //  [NaughtyAttributes.Button()]
         public void ShowInterstitial(string msg)
         {
+ 
             if (IsInterstitialReady)
             {
                 var amount = InterstitialWatchedAmount;
@@ -80,6 +92,8 @@ namespace Applovin
                     PlayerPrefs.SetInt(InterstitialAmountKey, amount);
                     ResetInterstitialTimer();
                     interstitial.Show(msg);
+                    var startEvent = new AdjustEvent("d0y1pr");
+                    Adjust.trackEvent(startEvent);
                 }
                 else
                 {
@@ -146,8 +160,20 @@ namespace Applovin
 
         void RewardReceived()
         {
+            var startEvent = new AdjustEvent("d0y1pr");
+            Adjust.trackEvent(startEvent);
             ResetInterstitialTimer();
             OnRewardReceived();
+
+            var amount = PlayerPrefs.GetInt("REWARD_ADS_WATCHED", 0);
+            amount++;
+            PlayerPrefs.SetInt("REWARD_ADS_WATCHED", amount);
+            
+            if (amount % 10 == 0)
+            {
+                var e = new AdjustEvent("mk7pqt");
+                Adjust.trackEvent(e);
+            }
         }
     }
 }

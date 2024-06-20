@@ -71,6 +71,7 @@ namespace Watermelon.SquadShooter
             description.OnSelect += SelectWeaponYA;
             description.OnUpgrade += UpgradeWep;
             description.Hide();
+   
         }
 
         public static int GetCeilingKeyPower(int currentKeyUpgrade)
@@ -144,6 +145,8 @@ namespace Watermelon.SquadShooter
             description.damage.text = "DAMAGE " + Damage(weapon.Type);
             description.firerate.text = "FIRERATE " + FireRate(weapon.Type);
             description.radius.text = "RANGE " + Radius(weapon.Type);
+            description.upgradePriceTxt.text = upgrade.NextStage.Price.ToString();
+  
             description.SetIndex(weaponIndex);
             description.Show();
 
@@ -167,12 +170,17 @@ namespace Watermelon.SquadShooter
 
         void UpgradeWep()
         {
+
             var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
             Debug.LogError(SelectedWeaponIndex);
 
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
             panel.UpgradeButton();
+            
+            var data = panel.Data;
+            var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
+            description.upgradePriceTxt.text = upgrade.NextStage.Price.ToString();
         }
 
         public static void AddCard(WeaponType weaponType, int amount)

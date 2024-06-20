@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Applovin;
 using TMPro;
 using UnityEngine.UI;
 using Watermelon.SquadShooter;
@@ -30,7 +31,7 @@ namespace Watermelon
 
         int currentWorld;
         int currentLevel;
-        int collectedMoney;
+      public  int collectedMoney;
         int collectedExperience;
         List<WeaponType> collectedCards;
 
@@ -60,20 +61,17 @@ namespace Watermelon
             var showTime = 0.7f;
 
             dotsBackground.ApplyParams();
-
             cardsUIPool.ReturnToPoolEverything();
 
             // RESET
-            panelRectTransform.sizeDelta = new Vector2(0, 335f);
+            //    panelRectTransform.sizeDelta = new Vector2(0, 335f);
             dotsBackground.BackgroundImage.color = Color.white.SetAlpha(0.0f);
             panelContentCanvasGroup.alpha = 0;
-
             levelText.text = string.Format(LEVEL_TEXT, currentWorld, currentLevel);
-
             dotsBackground.BackgroundImage.DOColor(Color.white, 0.3f);
             panelContentCanvasGroup.DOFade(1.0f, 0.3f, 0.1f);
-
             moneyGainedText.text = "0";
+
             Tween.DoFloat(0, collectedMoney, 0.4f,
                 (result) => { moneyGainedText.text = string.Format(PLUS_TEXT, result.ToString("00")); }, 0.2f);
 
@@ -90,24 +88,27 @@ namespace Watermelon
 
                 for (var i = 0; i < uniqueCards.Count; i++)
                 {
-                    var cardUIObject = cardsUIPool.Get();
-                    cardUIObject.SetActive(true);
+                    var ui = cardsUIPool.Get();
+                    ui.SetActive(true);
 
-                    var droppedCardPanel = cardUIObject.GetComponent<DroppedCardPanel>();
-                    droppedCardPanel.Initialise(uniqueCards[i]);
+                    var panel = ui.GetComponent<DroppedCardPanel>();
+                    panel.Initialise(uniqueCards[i]);
 
-                    var droppedCardCanvasGroup = droppedCardPanel.CanvasGroup;
-                    droppedCardCanvasGroup.alpha = 0.0f;
-                    droppedCardCanvasGroup.DOFade(1.0f, 0.5f, 0.1f * i + 0.45f).OnComplete(delegate
+                    var canvasGroup = panel.CanvasGroup;
+                    canvasGroup.alpha = 0.0f;
+                    canvasGroup.DOFade(1.0f, 0.5f, 0.1f * i + 0.45f).OnComplete(delegate
                     {
-                        droppedCardPanel.OnDisplayed();
+                        panel.OnDisplayed();
                     });
                 }
 
-                panelRectTransform.DOSize(new Vector2(0, 1100), 0.4f).SetEasing(Ease.Type.BackOut);
+                //  panelRectTransform.DOSize(new Vector2(0, 1100), 0.4f).SetEasing(Ease.Type.BackOut);
                 showTime = 1.1f;
             }
 
+            var size = cardsDropped ? 1100 : 650;
+            panelRectTransform.DOSize(new Vector2(0, size), 0.4f).SetEasing(Ease.Type.BackOut);
+            
             Tween.DelayedCall(showTime, () =>
             {
                 UIController.OnPageOpened(this);
@@ -116,7 +117,31 @@ namespace Watermelon
 
             UIGamepadButton.DisableTag(UIGamepadButtonTag.Game);
 
+            doubleRewardButton.gameObject.SetActive(ApplovinController.Instance.IsRewardedLoaded);
+            doubleRewardButton.onClick.RemoveListener(DoubleReward);
+            doubleRewardButton.onClick.AddListener(DoubleReward);
             Invoke(nameof(ShowClaim), claimButtonDelay);
+        }
+
+        void DoubleReward()
+        {
+            ApplovinController.Instance.ShowRewarded("x2 Rewards");
+            ApplovinController.Instance.OnRewardReceived -= Receive;
+            ApplovinController.Instance.OnRewardDisplayFail -= Fail;
+            ApplovinController.Instance.OnRewardReceived += Receive;
+            ApplovinController.Instance.OnRewardDisplayFail += Fail;
+        }
+
+        void Receive()
+        {
+            GameController.isDoubleReward = true;
+            CurrenciesController.Add(CurrencyType.Coins, collectedMoney);
+            ContinueButton();
+        }
+
+        void Fail()
+        {
+            ContinueButton();
         }
 
         void ShowClaim()
@@ -126,27 +151,24 @@ namespace Watermelon
 
         public override void PlayHideAnimation()
         {
-            if (!isPageDisplayed)
-                return;
+            if (!isPageDisplayed) return;
 
             Overlay.Show(0.3f, () =>
             {
                 UIController.OnPageClosed(this);
-
                 Overlay.Hide(0.3f, null);
             });
         }
 
         #endregion
 
-        #region Experience
-
+ 
         public void UpdateExperienceLabel(int experienceGained)
         {
             experienceGainedText.text = experienceGained.ToString();
         }
 
-        #endregion
+ 
 
         public void ContinueButton()
         {

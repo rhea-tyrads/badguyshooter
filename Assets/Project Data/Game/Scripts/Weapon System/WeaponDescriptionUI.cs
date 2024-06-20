@@ -6,6 +6,7 @@ using MobileTools.SDK;
 using MobileTools.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class WeaponDescriptionUI : PopupUI
@@ -31,7 +32,7 @@ public class WeaponDescriptionUI : PopupUI
 
     void Awake()
     {
-        selectButton.onClick.AddListener(Click);
+        selectButton.onClick.AddListener(Select);
         upgradeButton.onClick.AddListener(Upgrade);
     }
 
@@ -58,8 +59,9 @@ public class WeaponDescriptionUI : PopupUI
         upgradeButton.gameObject.SetActive(true);  
     }
 
-    void Click()
+    void Select()
     {
+        Hide();
         OnSelect();
     }
 

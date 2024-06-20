@@ -114,15 +114,13 @@ namespace Watermelon
                 lastInterstitialTime = Time.time + settings.InterstitialStartDelay;
             }
 
-            Initialiser.InitialiserGameObject.AddComponent<AdsManager.AdEventExecutor>();
+            Initialiser.InitialiserGameObject.AddComponent<AdEventExecutor>();
 
             advertisingActiveModules = new Dictionary<AdProvider, AdProviderHandler>();
-            for (var i = 0; i < AD_PROVIDERS.Length; i++)
+            foreach (var ad in AD_PROVIDERS)
             {
-                if (IsModuleEnabled(AD_PROVIDERS[i].ProviderType))
-                {
-                    advertisingActiveModules.Add(AD_PROVIDERS[i].ProviderType, AD_PROVIDERS[i]);
-                }
+                if (!IsModuleEnabled(ad.ProviderType)) continue;
+                advertisingActiveModules.Add(ad.ProviderType, ad);
             }
 
             if (settings.SystemLogs)
@@ -198,26 +196,26 @@ namespace Watermelon
 
         #endregion
 
-        static void Update()
-        {
-            if (mainThreadEventsCount > 0)
-            {
-                for (var i = 0; i < mainThreadEventsCount; i++)
-                {
-                    mainThreadEvents[i]?.Invoke();
-                }
-
-                mainThreadEvents.Clear();
-                mainThreadEventsCount = 0;
-            }
-
-            if (!settings.AutoShowInterstitial) return;
-            if (!(lastInterstitialTime < Time.time)) return;
-            if (!ApplovinController.Instance.IsInterstitialReady) return;
-            
-            ShowInterstitial(null);
-            ResetInterstitialDelayTime();
-        }
+        // static void Update()
+        // {
+        //     if (mainThreadEventsCount > 0)
+        //     {
+        //         for (var i = 0; i < mainThreadEventsCount; i++)
+        //         {
+        //             mainThreadEvents[i]?.Invoke();
+        //         }
+        //
+        //         mainThreadEvents.Clear();
+        //         mainThreadEventsCount = 0;
+        //     }
+        //
+        //     if (!settings.AutoShowInterstitial) return;
+        //     if (!(lastInterstitialTime < Time.time)) return;
+        //     if (!ApplovinController.Instance.IsInterstitialReady) return;
+        //
+        //     ShowInterstitial(null);
+        //     ResetInterstitialDelayTime();
+        // }
 
         public static void TryToLoadFirstAds()
         {
@@ -250,34 +248,34 @@ namespace Watermelon
             if (isFirstAdLoaded)
                 return true;
 
-            if (settings.IsGDPREnabled && !AdsManager.IsGDPRStateExist())
+            if (settings.IsGDPREnabled && !IsGDPRStateExist())
                 return false;
 
-            if (settings.IsIDFAEnabled && !AdsManager.IsIDFADetermined())
+            if (settings.IsIDFAEnabled && !IsIDFADetermined())
                 return false;
 
             var isRewardedVideoModuleInititalized =
-                AdsManager.IsModuleInititalized(AdsManager.Settings.RewardedVideoType);
-            var isInterstitialModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.InterstitialType);
-            var isBannerModuleInitialized = AdsManager.IsModuleInititalized(AdsManager.Settings.BannerType);
+                IsModuleInititalized(Settings.RewardedVideoType);
+            var isInterstitialModuleInitialized = IsModuleInititalized(Settings.InterstitialType);
+            var isBannerModuleInitialized = IsModuleInititalized(Settings.BannerType);
 
-            var isRewardedVideoActive = AdsManager.Settings.RewardedVideoType != AdProvider.Disable;
-            var isInterstitialActive = AdsManager.Settings.InterstitialType != AdProvider.Disable;
-            var isBannerActive = AdsManager.Settings.BannerType != AdProvider.Disable;
+            var isRewardedVideoActive = Settings.RewardedVideoType != AdProvider.Disable;
+            var isInterstitialActive = Settings.InterstitialType != AdProvider.Disable;
+            var isBannerActive = Settings.BannerType != AdProvider.Disable;
 
             if ((!isRewardedVideoActive || isRewardedVideoModuleInititalized) &&
                 (!isInterstitialActive || isInterstitialModuleInitialized) &&
                 (!isBannerActive || isBannerModuleInitialized))
             {
                 if (isRewardedVideoActive)
-                    AdsManager.RequestRewardBasedVideo();
+                    RequestRewardBasedVideo();
 
-                var isForcedAdEnabled = AdsManager.IsForcedAdEnabled(false);
+                var isForcedAdEnabled = IsForcedAdEnabled(false);
                 if (isInterstitialActive && isForcedAdEnabled)
-                    AdsManager.RequestInterstitial();
+                    RequestInterstitial();
 
                 if (isBannerActive && isForcedAdEnabled)
-                    AdsManager.ShowBanner();
+                    ShowBanner();
 
                 isFirstAdLoaded = true;
 
@@ -358,6 +356,7 @@ namespace Watermelon
         public static void ShowInterstitial(AdProviderHandler.InterstitialCallback callback,
             bool ignoreConditions = false)
         {
+            if (!ApplovinController.Instance.IsInterstitialReady) return;
             ApplovinController.Instance.ShowInterstitial("inter");
             return;
             var advertisingModules = settings.InterstitialType;
@@ -659,7 +658,7 @@ namespace Watermelon
         {
             void Update()
             {
-                AdsManager.Update();
+              //  AdsManager.Update();
             }
         }
     }

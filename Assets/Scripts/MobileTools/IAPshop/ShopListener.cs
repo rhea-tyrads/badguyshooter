@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using com.adjust.sdk;
 using MobileTools.SDK;
 using MobileTools.Utilities;
 using UnityEngine;
@@ -53,6 +54,9 @@ namespace MobileTools.IAPshop
                 RemoveAds();
             else
                 GiveItem(id);
+            
+            var startEvent = new AdjustEvent("eb9edt");
+            Adjust.trackEvent(startEvent);
         }
 
         public CharactersDatabase characters;

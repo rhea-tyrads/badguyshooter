@@ -211,7 +211,7 @@ MonoBehaviour:
   isMoveSpeedBooster: 0
   isMultishotBooster: 0
   multishotBoosterDuration: 10
-  moveSpeedBoostDuration: 5
+  moveSpeedBoostDuration: 10
   isAtkSpdBooster: 0
   atkSpdBoosterDuration: 10
   atkSpdBoosterMult: 2

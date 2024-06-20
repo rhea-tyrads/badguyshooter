@@ -46,9 +46,9 @@ MonoBehaviour:
     bannerPosition: 0
   testMode: 0
   systemLogs: 1
-  interstitialFirstStartDelay: 40
-  interstitialStartDelay: 40
-  interstitialShowingDelay: 30
+  interstitialFirstStartDelay: 90
+  interstitialStartDelay: 90
+  interstitialShowingDelay: 90
   autoShowInterstitial: 0
   isGDPREnabled: 0
   isIDFAEnabled: 0

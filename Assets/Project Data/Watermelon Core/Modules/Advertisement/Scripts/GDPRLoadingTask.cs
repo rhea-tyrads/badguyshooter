@@ -10,7 +10,7 @@ namespace Watermelon
         {
             isActive = true;
 
-            var gdprPanelObject = GameObject.Instantiate(AdsManager.InitModule.GDPRPrefab);
+            var gdprPanelObject = Object.Instantiate(AdsManager.InitModule.GDPRPrefab);
             gdprPanelObject.transform.ResetGlobal();
 
             gdprPanel = gdprPanelObject.GetComponent<GDPRPanel>();

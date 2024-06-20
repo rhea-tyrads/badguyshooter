@@ -527,10 +527,12 @@ namespace Watermelon.LevelSystem
             }
         }
 
+        public static List<WeaponType> cardRewards = new();
         public static void OnLevelCompleted()
         {
             isGameplayActive = false;
             CurrenciesController.Add(CurrencyType.Coins, CurrentLevelData.GetCoinsReward());
+            cardRewards = CurrentLevelData.GetCardsReward();
             WeaponsController.AddCards(CurrentLevelData.GetCardsReward());
             uiComplete.UpdateExperienceLabel(currentLevelData.XPAmount);
             InitialiseCharacterSuggestion();
