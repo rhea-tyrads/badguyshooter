@@ -45,7 +45,7 @@ MonoBehaviour:
   dummyContainer:
     bannerPosition: 0
   testMode: 0
-  systemLogs: 1
+  systemLogs: 0
   interstitialFirstStartDelay: 90
   interstitialStartDelay: 90
   interstitialShowingDelay: 90

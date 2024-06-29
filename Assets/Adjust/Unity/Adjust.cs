@@ -18,7 +18,6 @@ namespace com.adjust.sdk
         public bool startManually = true;
         [HideInInspector]
         public string appToken;
-
         [HideInInspector]
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
         [HideInInspector]
@@ -100,38 +99,39 @@ namespace com.adjust.sdk
             DontDestroyOnLoad(transform.gameObject);
 
 #if UNITY_ANDROID && UNITY_2019_2_OR_NEWER
-            Application.deepLinkActivated += appWillOpenUrl;
+            Application.deepLinkActivated += Adjust.appWillOpenUrl;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
                 // Cold start and Application.absoluteURL not null so process Deep Link.
-                appWillOpenUrl(Application.absoluteURL);
+                Adjust.appWillOpenUrl(Application.absoluteURL);
             }
 #endif
 
-            if (startManually) return;
-            
-            var adjustConfig = new AdjustConfig(appToken, environment, (logLevel == AdjustLogLevel.Suppress));
-            adjustConfig.setLogLevel(logLevel);
-            adjustConfig.setSendInBackground(sendInBackground);
-            adjustConfig.setEventBufferingEnabled(eventBuffering);
-            adjustConfig.setLaunchDeferredDeeplink(launchDeferredDeeplink);
-            adjustConfig.setDefaultTracker(defaultTracker);
-            adjustConfig.setUrlStrategy(urlStrategy.ToLowerCaseString());
-            adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
-            adjustConfig.setDelayStart(startDelay);
-            adjustConfig.setNeedsCost(needsCost);
-            adjustConfig.setPreinstallTrackingEnabled(preinstallTracking);
-            adjustConfig.setPreinstallFilePath(preinstallFilePath);
-            adjustConfig.setAllowAdServicesInfoReading(adServicesInfoReading);
-            adjustConfig.setAllowIdfaReading(idfaInfoReading);
-            adjustConfig.setCoppaCompliantEnabled(coppaCompliant);
-            adjustConfig.setPlayStoreKidsAppEnabled(playStoreKidsApp);
-            adjustConfig.setLinkMeEnabled(linkMe);
-            if (!skAdNetworkHandling)
+            if (!this.startManually)
             {
-                adjustConfig.deactivateSKAdNetworkHandling();
+                AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
+                adjustConfig.setLogLevel(this.logLevel);
+                adjustConfig.setSendInBackground(this.sendInBackground);
+                adjustConfig.setEventBufferingEnabled(this.eventBuffering);
+                adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
+                adjustConfig.setDefaultTracker(this.defaultTracker);
+                adjustConfig.setUrlStrategy(this.urlStrategy.ToLowerCaseString());
+                adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
+                adjustConfig.setDelayStart(this.startDelay);
+                adjustConfig.setNeedsCost(this.needsCost);
+                adjustConfig.setPreinstallTrackingEnabled(this.preinstallTracking);
+                adjustConfig.setPreinstallFilePath(this.preinstallFilePath);
+                adjustConfig.setAllowAdServicesInfoReading(this.adServicesInfoReading);
+                adjustConfig.setAllowIdfaReading(this.idfaInfoReading);
+                adjustConfig.setCoppaCompliantEnabled(this.coppaCompliant);
+                adjustConfig.setPlayStoreKidsAppEnabled(this.playStoreKidsApp);
+                adjustConfig.setLinkMeEnabled(this.linkMe);
+                if (!skAdNetworkHandling)
+                {
+                    adjustConfig.deactivateSKAdNetworkHandling();
+                }
+                Adjust.start(adjustConfig);
             }
-            start(adjustConfig);
         }
 
         void OnApplicationPause(bool pauseStatus)

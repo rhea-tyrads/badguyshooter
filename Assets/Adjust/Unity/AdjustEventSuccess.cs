@@ -28,7 +28,7 @@ namespace com.adjust.sdk
             EventToken = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyEventToken);
             CallbackId = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyCallbackId);
 
-            var jsonResponseString = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyJsonResponse);
+            string jsonResponseString = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
             if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
             {

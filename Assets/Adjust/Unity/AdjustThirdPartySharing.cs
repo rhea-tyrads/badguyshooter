@@ -12,8 +12,8 @@ namespace com.adjust.sdk
         public AdjustThirdPartySharing(bool? isEnabled)
         {
             this.isEnabled = isEnabled;
-            granularOptions = new Dictionary<string, List<string>>();
-            partnerSharingSettings = new Dictionary<string, List<string>>();
+            this.granularOptions = new Dictionary<string, List<string>>();
+            this.partnerSharingSettings = new Dictionary<string, List<string>>();
         }
 
         public void addGranularOption(string partnerName, string key, string value)

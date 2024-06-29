@@ -50,6 +50,7 @@ namespace MobileTools.Android
 
         void Update()
         {
+            return;
             if (Application.platform != RuntimePlatform.Android) return;
             if (!Input.GetKey(KeyCode.Escape)) return;
             Application.Quit();

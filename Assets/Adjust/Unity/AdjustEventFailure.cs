@@ -34,7 +34,7 @@ namespace com.adjust.sdk
                 WillRetry = willRetry;
             }
 
-            var jsonResponseString = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyJsonResponse);
+            string jsonResponseString = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
             if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
             {

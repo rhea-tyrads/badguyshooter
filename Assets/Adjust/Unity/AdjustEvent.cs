@@ -23,12 +23,12 @@ namespace com.adjust.sdk
         public AdjustEvent(string eventToken)
         {
             this.eventToken = eventToken;
-            isReceiptSet = false;
+            this.isReceiptSet = false;
         }
 
         public void setRevenue(double amount, string currency)
         {
-            revenue = amount;
+            this.revenue = amount;
             this.currency = currency;
         }
 

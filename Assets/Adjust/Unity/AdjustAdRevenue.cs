@@ -22,7 +22,7 @@ namespace com.adjust.sdk
 
         public void setRevenue(double amount, string currency)
         {
-            revenue = amount;
+            this.revenue = amount;
             this.currency = currency;
         }
 

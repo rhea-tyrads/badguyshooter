@@ -23,7 +23,7 @@ namespace com.adjust.sdk
             Message = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyTimestamp);
 
-            var jsonResponseString = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyJsonResponse);
+            string jsonResponseString = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
             if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
             {
