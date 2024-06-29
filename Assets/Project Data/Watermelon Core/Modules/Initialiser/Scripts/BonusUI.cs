@@ -66,7 +66,7 @@ public class BonusUI : MonoBehaviour
         canvasCast.enabled = false;
     }
 
-    void SwitchHP()
+    void SwitchHP(BonusSlot bonusSlot)
     {
         if (stackMode)
         {
@@ -80,7 +80,7 @@ public class BonusUI : MonoBehaviour
         }
     }
 
-    void SwitchCrit()
+    void SwitchCrit(BonusSlot bonusSlot)
     {
         if (stackMode)
             critBonus.Increment();
@@ -92,7 +92,7 @@ public class BonusUI : MonoBehaviour
         }
     }
 
-    void SwitchRespawn()
+    void SwitchRespawn(BonusSlot bonusSlot)
     {
         if (stackMode)
             respawnBonus.Increment();
@@ -104,7 +104,7 @@ public class BonusUI : MonoBehaviour
         }
     }
 
-    void SwitchMovement()
+    void SwitchMovement(BonusSlot bonusSlot)
     {
         if (stackMode)
             movementBonus.Increment();
@@ -116,7 +116,7 @@ public class BonusUI : MonoBehaviour
         }
     }
 
-    void SwitchFireraet()
+    void SwitchFireraet(BonusSlot bonusSlot)
     {
         if (stackMode)
             firerateBonus.Increment();
@@ -129,7 +129,7 @@ public class BonusUI : MonoBehaviour
 
     }
 
-    void SwitchMultishot()
+    void SwitchMultishot(BonusSlot bonusSlot)
     {
         if (stackMode)
             multishotBonus.Increment();

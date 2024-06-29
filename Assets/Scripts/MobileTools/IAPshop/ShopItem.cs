@@ -14,21 +14,22 @@ namespace MobileTools.IAPshop
         public ShopPurchaseType purchaseType;
         public ShopItemType itemType;
         public string adjustToken;
+        public double priceIDR = 0;
 
-     //   [HideIf(nameof(IsWeapon))]
+        //   [HideIf(nameof(IsWeapon))]
         public BonusPackUI bonuses;
 
-       // [ShowIf(nameof(ShowWeapon))]
+        // [ShowIf(nameof(ShowWeapon))]
         public WeaponType weapon;
-     //   [ShowIf(nameof(IsBundle))]
+        //   [ShowIf(nameof(IsBundle))]
         public CharacterType skin;
-      //  [ShowIf(nameof(IsBooster))]
+        //  [ShowIf(nameof(IsBooster))]
         public int hpBoostAmount;
-     //   [ShowIf(nameof(IsBooster))]
+        //   [ShowIf(nameof(IsBooster))]
         public int critBoostAmount;
-    //    [ShowIf(nameof(IsBooster))]
+        //    [ShowIf(nameof(IsBooster))]
         public int respawnBoostAmount;
-     //   [ShowIf(nameof(IsBooster))]
+        //   [ShowIf(nameof(IsBooster))]
         public int goldAmount;
 
 

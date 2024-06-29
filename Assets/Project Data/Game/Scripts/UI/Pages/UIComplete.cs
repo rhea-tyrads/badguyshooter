@@ -14,6 +14,7 @@ namespace Watermelon
         public Button claimButton;
         const string LEVEL_TEXT = "LEVEL {0}-{1}";
         const string PLUS_TEXT = "+{0}";
+
         [SerializeField] Button doubleRewardButton;
         [SerializeField] DotsBackground dotsBackground;
         [SerializeField] RectTransform panelRectTransform;
@@ -31,7 +32,7 @@ namespace Watermelon
 
         int currentWorld;
         int currentLevel;
-      public  int collectedMoney;
+        public int collectedMoney;
         int collectedExperience;
         List<WeaponType> collectedCards;
 
@@ -96,10 +97,7 @@ namespace Watermelon
 
                     var canvasGroup = panel.CanvasGroup;
                     canvasGroup.alpha = 0.0f;
-                    canvasGroup.DOFade(1.0f, 0.5f, 0.1f * i + 0.45f).OnComplete(delegate
-                    {
-                        panel.OnDisplayed();
-                    });
+                    canvasGroup.DOFade(1.0f, 0.5f, 0.1f * i + 0.45f).OnComplete(delegate { panel.OnDisplayed(); });
                 }
 
                 //  panelRectTransform.DOSize(new Vector2(0, 1100), 0.4f).SetEasing(Ease.Type.BackOut);
@@ -108,7 +106,7 @@ namespace Watermelon
 
             var size = cardsDropped ? 1100 : 650;
             panelRectTransform.DOSize(new Vector2(0, size), 0.4f).SetEasing(Ease.Type.BackOut);
-            
+
             Tween.DelayedCall(showTime, () =>
             {
                 UIController.OnPageOpened(this);
@@ -134,6 +132,20 @@ namespace Watermelon
 
         void Receive()
         {
+            var r = Random.Range(0, 3);
+            switch (r)
+            {
+                case 0:
+                    BonusController.Instance.AddCrit();
+                    break;
+                case 1:
+                    BonusController.Instance.AddHp();
+                    break;
+                case 2:
+                    BonusController.Instance.AddRespawn();
+                    break;
+            }
+
             GameController.isDoubleReward = true;
             CurrenciesController.Add(CurrencyType.Coins, collectedMoney);
             ContinueButton();
@@ -162,13 +174,12 @@ namespace Watermelon
 
         #endregion
 
- 
+
         public void UpdateExperienceLabel(int experienceGained)
         {
             experienceGainedText.text = experienceGained.ToString();
         }
 
- 
 
         public void ContinueButton()
         {

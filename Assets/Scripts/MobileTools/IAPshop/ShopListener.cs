@@ -54,9 +54,12 @@ namespace MobileTools.IAPshop
                 RemoveAds();
             else
                 GiveItem(id);
-            
-            var startEvent = new AdjustEvent("eb9edt");
-            Adjust.trackEvent(startEvent);
+            //
+            // var item = Find(id);
+            // var send = new AdjustEvent("eb9edt");
+            // const string currency = "IDR";
+            // send.setRevenue(item.priceIDR, currency);
+            // Adjust.trackEvent(send);
         }
 
         public CharactersDatabase characters;

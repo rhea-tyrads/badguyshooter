@@ -28,9 +28,9 @@ public class BonusController : Singleton<BonusController>
 
         if (IsFirstLaunch)
         {
-            file.critBonus = 3;
-            file.hpBonus =  3;
-            file.respawnBonus =  3;
+            file.critBonus = 1;
+            file.hpBonus =  1;
+            file.respawnBonus =  1;
             Save();
         }
 

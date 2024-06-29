@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id">
-  <string name="gcm_defaultSenderId" translatable="false">52664797870</string>
-  <string name="google_storage_bucket" translatable="false">climbmaster-cf949-b3cf8.appspot.com</string>
-  <string name="project_id" translatable="false">climbmaster-cf949-b3cf8</string>
-  <string name="google_api_key" translatable="false">AIzaSyDPiFDzq1ZTPk9fmpIsSPzcJ_K-nlf4_Co</string>
-  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDPiFDzq1ZTPk9fmpIsSPzcJ_K-nlf4_Co</string>
-  <string name="google_app_id" translatable="false">1:52664797870:android:8266ae62ff69e132eefb3f</string>
+  <string name="gcm_defaultSenderId" translatable="false">515349170274</string>
+  <string name="google_storage_bucket" translatable="false">solo-shooter-efb1b.appspot.com</string>
+  <string name="project_id" translatable="false">solo-shooter-efb1b</string>
+  <string name="google_api_key" translatable="false">AIzaSyDtSX4R7QIcQ6KdR0ACuzN-4hbAt4BpFLM</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDtSX4R7QIcQ6KdR0ACuzN-4hbAt4BpFLM</string>
+  <string name="google_app_id" translatable="false">1:515349170274:android:ed1f7cf7ec610b6196e93b</string>
 </resources>

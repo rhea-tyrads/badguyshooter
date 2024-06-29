@@ -93,18 +93,28 @@ namespace MobileTools.IAPshop
             var product = purchaseEvent.purchasedProduct;
             var productID = product.definition.id;
             Purchase(productID);
+       
+            var item = listener.Find(productID);
+            var token = product.receipt;
+            var transaction = product.transactionID;
+            
+            var adjustEvent = new AdjustEvent("eb9edt");
+            adjustEvent.setProductId(productID); 
+            adjustEvent.setPurchaseToken(token);
+            adjustEvent.setRevenue(item.priceIDR,  "IDR");
+            adjustEvent.setTransactionId(transaction);
+            Adjust.trackEvent(adjustEvent);
+            
             return PurchaseProcessingResult.Complete;
         }
 
         void Purchase(string id)
         {
             if(id == noAdsID)return;
-            //Debug.LogError("AAYAAA");
-            SDKEvents.Instance.ProductPurchase(id);
-            // AudioPlayer.Instance.PlaySound(Game.Instance.gameplay.so.sounds.purchaseSuccess);
             Debug.Log("Purchase complete: " + id);
+            
+            SDKEvents.Instance.ProductPurchase(id);
             if (successUI) successUI.Show();
-
             var item = listener.Find(id);
             var token = item.adjustToken;
             var send = new AdjustEvent(token);

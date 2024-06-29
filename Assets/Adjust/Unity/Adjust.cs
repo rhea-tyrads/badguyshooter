@@ -18,6 +18,7 @@ namespace com.adjust.sdk
         public bool startManually = true;
         [HideInInspector]
         public string appToken;
+
         [HideInInspector]
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
         [HideInInspector]

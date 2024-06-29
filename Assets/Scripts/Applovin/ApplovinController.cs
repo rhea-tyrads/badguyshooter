@@ -92,8 +92,8 @@ namespace Applovin
                     PlayerPrefs.SetInt(InterstitialAmountKey, amount);
                     ResetInterstitialTimer();
                     interstitial.Show(msg);
-                    var startEvent = new AdjustEvent("d0y1pr");
-                    Adjust.trackEvent(startEvent);
+                   // var startEvent = new AdjustEvent("d0y1pr");
+                   // Adjust.trackEvent(startEvent);
                 }
                 else
                 {
@@ -160,8 +160,8 @@ namespace Applovin
 
         void RewardReceived()
         {
-            var startEvent = new AdjustEvent("d0y1pr");
-            Adjust.trackEvent(startEvent);
+          //  var startEvent = new AdjustEvent("d0y1pr");
+           // Adjust.trackEvent(startEvent);
             ResetInterstitialTimer();
             OnRewardReceived();
 
