@@ -39,7 +39,7 @@ namespace MobileTools.IAPshop
         bool IsBundle => itemType == ShopItemType.Bundle;
         bool IsBooster => itemType == ShopItemType.BoosterPack || IsBundle;
         public event Action<ShopItem> OnTryPurchase = delegate { };
-
+        public bool IsPurchased;
         #endregion
 
         public GameObject purchasedContainer;
@@ -50,8 +50,11 @@ namespace MobileTools.IAPshop
                 purchaseButton.onClick.AddListener(TryPurchase);
         }
 
+
+
         public void SetLock(bool isPurchased)
         {
+            IsPurchased = isPurchased;
             purchasedContainer.SetActive(isPurchased);
         }
 
@@ -66,7 +69,10 @@ namespace MobileTools.IAPshop
         }
 
         void TryPurchase()
-            => OnTryPurchase(this);
+        {
+            if (IsPurchased) return;
+            OnTryPurchase(this);
+        }
     }
 
     public enum ShopItemType

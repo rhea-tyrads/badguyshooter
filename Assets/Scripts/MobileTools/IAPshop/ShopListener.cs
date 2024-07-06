@@ -59,7 +59,7 @@ namespace MobileTools.IAPshop
             // var send = new AdjustEvent("eb9edt");
             // const string currency = "IDR";
             // send.setRevenue(item.priceIDR, currency);
-            // Adjust.trackEvent(send);
+            // Adjust.trackEvent(send);b
         }
 
         public CharactersDatabase characters;

@@ -175,7 +175,7 @@ namespace Watermelon.SquadShooter
             if (Upgrade.IsMaxedOut)
             {
                 upgradesMaxObject.SetActive(true);
-                upgradesBuyButton.gameObject.SetActive(false);
+               // upgradesBuyButton.gameObject.SetActive(false);
 
                 if (gamepadButton)
                     gamepadButton.SetFocus(false);
@@ -197,13 +197,13 @@ namespace Watermelon.SquadShooter
 
             if (CurrenciesController.HasAmount(currencyType, price))
             {
-                upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
+              //  upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
                 if (gamepadButton)
                     gamepadButton.SetFocus(weaponIndex == WeaponsController.SelectedWeaponIndex);
             }
             else
             {
-                upgradesBuyButtonImage.sprite = upgradesBuyButtonDisableSprite;
+              //  upgradesBuyButtonImage.sprite = upgradesBuyButtonDisableSprite;
                 if (gamepadButton)
                     gamepadButton.SetFocus(false);
             }

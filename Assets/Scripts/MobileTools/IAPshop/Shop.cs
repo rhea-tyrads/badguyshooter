@@ -1,6 +1,9 @@
 using System;
+using System.Globalization;
 using com.adjust.sdk;
+using Firebase.Analytics;
 using MobileTools.SDK;
+using MobileTools.SDK.Firebase;
 using MobileTools.Utilities;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -105,9 +108,22 @@ namespace MobileTools.IAPshop
             adjustEvent.setTransactionId(transaction);
             Adjust.trackEvent(adjustEvent);
             
+            SendInAppPurchaseEvent(purchaseEvent.purchasedProduct.definition.id);
+         
+            
             return PurchaseProcessingResult.Complete;
         }
 
+        void SendInAppPurchaseEvent(string productId)
+        {
+            FirebaseAnalytics.LogEvent("in_app_purchase", new Parameter[]
+            {
+                new("product_id", productId),
+                new("timestamp", DateTime.Now.ToString(CultureInfo.InvariantCulture))
+            });
+
+            Debug.Log("In-App Purchase event sent to Firebase");
+        }
         void Purchase(string id)
         {
             if(id == noAdsID)return;

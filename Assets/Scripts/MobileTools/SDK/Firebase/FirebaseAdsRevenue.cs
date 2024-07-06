@@ -1,5 +1,6 @@
 //using Firebase.Analytics;
 
+using Firebase.Analytics;
 using UnityEngine;
 
 namespace MobileTools.SDK.Firebase
@@ -28,28 +29,34 @@ namespace MobileTools.SDK.Firebase
         {
             DontDestroyOnLoad(gameObject);
 
-            //MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
-            //MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
-            //MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
-            //MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
+            MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
+            MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
+            MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
+            MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
         }
+        private float lastTime;
+        public float CurrentTime => Time.time;
+        void OnAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo impressionData)
+        {
+            if (CurrentTime - lastTime > 1)
+            {
+                Debug.LogError("[Firebase] Ad revenue send");
 
-        //void OnAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo impressionData)
-        //{
-        //    Debug.LogError("[Firebase] Ad revenue send");
+                double revenue = impressionData.Revenue;
+                var impressionParameters = new[]
+                {
+                    new Parameter("ad_platform", "AppLovin"),
+                    new Parameter("ad_source", impressionData.NetworkName),
+                    new Parameter("ad_unit_name", impressionData.AdUnitIdentifier),
+                    new Parameter("ad_format", impressionData.AdFormat),
+                    new Parameter("value", revenue),
+                    new Parameter("currency", "USD"), // All AppLovin revenue is sent in USD
+                };
 
-        //    double revenue = impressionData.Revenue;
-        //    var impressionParameters = new[]
-        //    {
-        //        new Parameter("ad_platform", "AppLovin"),
-        //        new Parameter("ad_source", impressionData.NetworkName),
-        //        new Parameter("ad_unit_name", impressionData.AdUnitIdentifier),
-        //        new Parameter("ad_format", impressionData.AdFormat),
-        //        new Parameter("value", revenue),
-        //        new Parameter("currency", "USD"), // All AppLovin revenue is sent in USD
-        //    };
+                FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
+            }
 
-        //    FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
-        //}
+            lastTime = CurrentTime;
+        }
     }
 }
