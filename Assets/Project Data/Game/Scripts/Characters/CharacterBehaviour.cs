@@ -124,9 +124,12 @@ namespace Watermelon.SquadShooter
 
         public static bool NoDamage { get; private set; } = false;
 
-        public static bool IsDead { get; private set; } = false;
+        public static bool IsDead { get; private set; }  
+        public static bool IsShieldImmune { get;   set; }  
 
         public static SimpleCallback OnDied;
+        public static SimpleCallback OnDamageToShieldImmune;
+        
 
         #endregion
 
@@ -296,8 +299,15 @@ namespace Watermelon.SquadShooter
 
         public virtual void TakeDamage(float damage)
         {
+            
             if (currentHealth <= 0) return;
-
+            
+            if (IsShieldImmune)
+            {
+                OnDamageToShieldImmune?.Invoke();
+                return;
+            }
+            
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
             healthbarBehaviour.OnHealthChanged();
             mainCameraCase.Shake(0.04f, 0.04f, 0.3f, 1.4f);
