@@ -8,8 +8,8 @@
         Character_Spaceman = 3,
         Character_Policeman = 4,
         Character_Alien = 5,
-        Character_Ninja = 5,
-        Character_Skeleton = 5,
-        Character_Fireman = 6,
+        Character_Ninja = 6,
+        Character_Skeleton = 7,
+        Character_Fireman = 8,
     }
 }

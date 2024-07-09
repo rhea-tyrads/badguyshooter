@@ -36,6 +36,7 @@ namespace MobileTools.IAPshop
             InitBuilder();
             SDKEvents.Instance.OnTryPurchaseNoAds += TryPurchaseRemoveAds;
             if (successUI) successUI.Hide();
+            CheckAllProducts();
         }
 
         void OnDisable()
@@ -150,6 +151,26 @@ namespace MobileTools.IAPshop
                 where product.hasReceipt
                 select product.definition.id).ToList();
 
+        void CheckAllProducts()
+        {
+        
+            var purchasedProducts = GetPurchasedProducts();
+            foreach (var id in purchasedProducts)
+            {
+                var item = listener.Find(id);
+                if(item == null) continue;
+                
+                listener.weapons.UnlockWeapon(item.weapon);
+                listener.weapons.UnlockWeapon(item.weapon_2);
+                var character = listener.FindCharacter( item.skin);
+                if (character.onlyShop) character.Purchase();
+                var character2 = listener.FindCharacter( item.skin_2);
+                if (character2.onlyShop) character2.Purchase();
+                
+                Debug.Log($"Purchased product: {id}");
+ 
+            }
+        }
         void CheckNoAds(string id)
         {
             var purchasedProducts = GetPurchasedProducts();

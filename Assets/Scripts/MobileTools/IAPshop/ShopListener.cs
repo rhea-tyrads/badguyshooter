@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using com.adjust.sdk;
 using MobileTools.SDK;
 using MobileTools.Utilities;
@@ -18,7 +19,7 @@ namespace MobileTools.IAPshop
         public ShopSave save;
 
         public ShopItem Find(string product)
-            => items.Find(c => c.Id == product);
+            => items.FirstOrDefault(c => c.Id == product);
 
         void Start()
         {
@@ -59,7 +60,7 @@ namespace MobileTools.IAPshop
         }
 
         public CharactersDatabase characters;
-
+        public Character FindCharacter(CharacterType type)=>characters.Characters.Find(c => c.Type ==type);
         void GiveItem(string id)
         {
             var item = Find(id);

@@ -13,6 +13,13 @@ MonoBehaviour:
   m_Name: Database Weapons
   m_EditorClassIdentifier: 
   weapons:
+  - name: REVOLVER
+    description: Cowboy's best choose
+    availableOnlyInShop: 0
+    type: 4
+    upgradeType: 4
+    rarity: 0
+    icon: {fileID: 21300000, guid: 181339df77d826f47abd15f3bc923fba, type: 3}
   - name: MINIGUN
     description: Basic weapon
     availableOnlyInShop: 0
@@ -69,13 +76,6 @@ MonoBehaviour:
     upgradeType: 5
     rarity: 0
     icon: {fileID: 21300000, guid: f8496b6d0bb9cec48b6616e2e3319b30, type: 3}
-  - name: REVOLVER
-    description: Cowboy's best choose
-    availableOnlyInShop: 1
-    type: 4
-    upgradeType: 4
-    rarity: 0
-    icon: {fileID: 21300000, guid: 181339df77d826f47abd15f3bc923fba, type: 3}
   raritySettings:
   - rarity: 0
     name: COMMON
