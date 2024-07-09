@@ -54,12 +54,8 @@ namespace MobileTools.IAPshop
                 RemoveAds();
             else
                 GiveItem(id);
-            //
-            // var item = Find(id);
-            // var send = new AdjustEvent("eb9edt");
-            // const string currency = "IDR";
-            // send.setRevenue(item.priceIDR, currency);
-            // Adjust.trackEvent(send);b
+            
+            if (id == "special_offer") Keys.PurchaseSpecialOffer();
         }
 
         public CharactersDatabase characters;
@@ -67,14 +63,19 @@ namespace MobileTools.IAPshop
         void GiveItem(string id)
         {
             var item = Find(id);
+
             BonusController.Instance.AddHp(item.hpBoostAmount);
             BonusController.Instance.AddHp(item.critBoostAmount);
             BonusController.Instance.AddHp(item.respawnBoostAmount);
             CurrenciesController.Add(CurrencyType.Coins, item.goldAmount);
+
             weapons.UnlockWeapon(item.weapon);
+            weapons.UnlockWeapon(item.weapon_2);
 
             var character = characters.Characters.Find(c => c.Type == item.skin);
             if (character.onlyShop) character.Purchase();
+            var character2 = characters.Characters.Find(c => c.Type == item.skin_2);
+            if (character2.onlyShop) character2.Purchase();
 
             save.Add(id);
             RefreshItems();

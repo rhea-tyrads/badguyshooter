@@ -1,66 +1,170 @@
 fileFormatVersion: 2
 guid: aa8c3d70488664345bfd643096d89b2f
-timeCreated: 1527089283
-licenseType: Store
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: Bon_L_thigh
-    100002: Bon_R_thigh
-    100004: Bone_Head
-    100006: Bone_HIP
-    100008: Bone_L_ArmDown
-    100010: Bone_L_ArmUp
-    100012: Bone_L_Fingers
-    100014: Bone_L_Foot
-    100016: Bone_L_Hand
-    100018: Bone_L_Leg
-    100020: Bone_L_Thumb
-    100022: Bone_LowBack
-    100024: Bone_R_ArmDown
-    100026: Bone_R_ArmUp
-    100028: Bone_R_Fingers
-    100030: Bone_R_Foot
-    100032: Bone_R_Hand
-    100034: Bone_R_Leg
-    100036: Bone_R_Thumb
-    100038: Bone_UpBack
-    100040: CTRL_hip
-    100042: CTRL_ROOT
-    100044: Stag
-    100046: //RootNode
-    400000: Bon_L_thigh
-    400002: Bon_R_thigh
-    400004: Bone_Head
-    400006: Bone_HIP
-    400008: Bone_L_ArmDown
-    400010: Bone_L_ArmUp
-    400012: Bone_L_Fingers
-    400014: Bone_L_Foot
-    400016: Bone_L_Hand
-    400018: Bone_L_Leg
-    400020: Bone_L_Thumb
-    400022: Bone_LowBack
-    400024: Bone_R_ArmDown
-    400026: Bone_R_ArmUp
-    400028: Bone_R_Fingers
-    400030: Bone_R_Foot
-    400032: Bone_R_Hand
-    400034: Bone_R_Leg
-    400036: Bone_R_Thumb
-    400038: Bone_UpBack
-    400040: CTRL_hip
-    400042: CTRL_ROOT
-    400044: //RootNode
-    400046: Stag
-    2100000: AntlerKnight_mat
-    4300000: Stag
-    7400000: Take 001
-    9500000: //RootNode
-    13700000: Stag
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Bon_L_thigh
+  - first:
+      1: 100002
+    second: Bon_R_thigh
+  - first:
+      1: 100004
+    second: Bone_Head
+  - first:
+      1: 100006
+    second: Bone_HIP
+  - first:
+      1: 100008
+    second: Bone_L_ArmDown
+  - first:
+      1: 100010
+    second: Bone_L_ArmUp
+  - first:
+      1: 100012
+    second: Bone_L_Fingers
+  - first:
+      1: 100014
+    second: Bone_L_Foot
+  - first:
+      1: 100016
+    second: Bone_L_Hand
+  - first:
+      1: 100018
+    second: Bone_L_Leg
+  - first:
+      1: 100020
+    second: Bone_L_Thumb
+  - first:
+      1: 100022
+    second: Bone_LowBack
+  - first:
+      1: 100024
+    second: Bone_R_ArmDown
+  - first:
+      1: 100026
+    second: Bone_R_ArmUp
+  - first:
+      1: 100028
+    second: Bone_R_Fingers
+  - first:
+      1: 100030
+    second: Bone_R_Foot
+  - first:
+      1: 100032
+    second: Bone_R_Hand
+  - first:
+      1: 100034
+    second: Bone_R_Leg
+  - first:
+      1: 100036
+    second: Bone_R_Thumb
+  - first:
+      1: 100038
+    second: Bone_UpBack
+  - first:
+      1: 100040
+    second: CTRL_hip
+  - first:
+      1: 100042
+    second: CTRL_ROOT
+  - first:
+      1: 100044
+    second: Stag
+  - first:
+      1: 100046
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Bon_L_thigh
+  - first:
+      4: 400002
+    second: Bon_R_thigh
+  - first:
+      4: 400004
+    second: Bone_Head
+  - first:
+      4: 400006
+    second: Bone_HIP
+  - first:
+      4: 400008
+    second: Bone_L_ArmDown
+  - first:
+      4: 400010
+    second: Bone_L_ArmUp
+  - first:
+      4: 400012
+    second: Bone_L_Fingers
+  - first:
+      4: 400014
+    second: Bone_L_Foot
+  - first:
+      4: 400016
+    second: Bone_L_Hand
+  - first:
+      4: 400018
+    second: Bone_L_Leg
+  - first:
+      4: 400020
+    second: Bone_L_Thumb
+  - first:
+      4: 400022
+    second: Bone_LowBack
+  - first:
+      4: 400024
+    second: Bone_R_ArmDown
+  - first:
+      4: 400026
+    second: Bone_R_ArmUp
+  - first:
+      4: 400028
+    second: Bone_R_Fingers
+  - first:
+      4: 400030
+    second: Bone_R_Foot
+  - first:
+      4: 400032
+    second: Bone_R_Hand
+  - first:
+      4: 400034
+    second: Bone_R_Leg
+  - first:
+      4: 400036
+    second: Bone_R_Thumb
+  - first:
+      4: 400038
+    second: Bone_UpBack
+  - first:
+      4: 400040
+    second: CTRL_hip
+  - first:
+      4: 400042
+    second: CTRL_ROOT
+  - first:
+      4: 400044
+    second: //RootNode
+  - first:
+      4: 400046
+    second: Stag
+  - first:
+      21: 2100000
+    second: AntlerKnight_mat
+  - first:
+      43: 4300000
+    second: Stag
+  - first:
+      74: 7400000
+    second: Take 001
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Stag
   externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -69,17 +173,20 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Bone_UpBack' has translation animation that
-      will be discarded.\n\t'Bone_Head' has translation animation that will be discarded.\n"
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'Bone_UpBack' has translation animation
+      that will be discarded.\n\t'Bone_Head' has translation animation that will
+      be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -91,35 +198,52 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 1.3
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: Bone_HIP
       humanName: Hips
@@ -294,7 +418,7 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: CTRL_hip
       parentName: CTRL_ROOT
-      position: {x: 0.0000000020817885, y: 0.033563163, z: 0.640812}
+      position: {x: 2.7063235e-11, y: 0.0004363211, z: 0.008330555}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Bone_HIP
@@ -304,97 +428,97 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: Bon_L_thigh
       parentName: Bone_HIP
-      position: {x: 0.066015474, y: -0.04762577, z: 0.105863646}
+      position: {x: 0.00085820106, y: -0.0006191349, z: 0.0013762275}
       rotation: {x: 0.7067369, y: 0.076851174, z: 0.009023791, w: 0.7032321}
       scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
     - name: Bone_L_Leg
       parentName: Bon_L_thigh
-      position: {x: -0.3562539, y: 0.000000038146972, z: 0}
+      position: {x: -0.0046313005, y: 4.959106e-10, z: 0}
       rotation: {x: 0.008957012, y: -0.21743539, z: 0.040172555, w: 0.97520655}
       scale: {x: 1.0000001, y: 1, z: 1}
     - name: Bone_L_Foot
       parentName: Bone_L_Leg
-      position: {x: -0.3096064, y: -0.0000022697448, z: -0.0000000047683715}
+      position: {x: -0.004024881, y: -0.000000029506674, z: -6.1988824e-11}
       rotation: {x: 0.0020412942, y: 0.79428416, z: -0.022844853, w: 0.6071133}
       scale: {x: 1.0000001, y: 1, z: 1.0000001}
     - name: Bone_LowBack
       parentName: Bone_HIP
-      position: {x: 0.029015502, y: 0.005043845, z: 0}
+      position: {x: 0.00037720145, y: 0.00006556998, z: 0}
       rotation: {x: 0.00000004561369, y: 0.00000004172245, z: 0.99900895, w: 0.04451055}
       scale: {x: 1, y: 1, z: 1}
     - name: Bone_UpBack
       parentName: Bone_LowBack
-      position: {x: -0.19304244, y: -0.0000000667572, z: 0.0000000012961072}
+      position: {x: -0.0025095518, y: -8.678433e-10, z: 1.6849392e-11}
       rotation: {x: 0.00000007541936, y: -7.5036827e-10, z: 0.05444742, w: 0.9985167}
       scale: {x: 0.9999999, y: 0.9999999, z: 1}
     - name: Bone_L_ArmUp
       parentName: Bone_UpBack
-      position: {x: -0.2992508, y: -0.020651164, z: 0.14260864}
+      position: {x: -0.0038902594, y: -0.0002684651, z: 0.0018539125}
       rotation: {x: -0.4744255, y: 0.5216783, z: 0.5125759, w: 0.48993677}
       scale: {x: 1, y: 1.0000001, z: 1.0000001}
     - name: Bone_L_ArmDown
       parentName: Bone_L_ArmUp
-      position: {x: -0.26383892, y: 0, z: 1.177068e-10}
+      position: {x: -0.003429906, y: 0, z: 1.5301885e-12}
       rotation: {x: 0.0018918659, y: 0.042304356, z: -0.03739723, w: 0.9984029}
       scale: {x: 0.99999994, y: 0.99999994, z: 1}
     - name: Bone_L_Hand
       parentName: Bone_L_ArmDown
-      position: {x: -0.25215542, y: 0.0000003814697, z: -3.6379787e-14}
+      position: {x: -0.0032780194, y: 0.000000004959105, z: -4.729372e-16}
       rotation: {x: -0.0458248, y: 0.11709773, z: 0.0841133, w: 0.98849034}
       scale: {x: 1.0000001, y: 1.0000001, z: 1}
     - name: Bone_L_Thumb
       parentName: Bone_L_Hand
-      position: {x: -0.05233627, y: -0.03341372, z: 0.040522}
+      position: {x: -0.0006803715, y: -0.0004343783, z: 0.0005267858}
       rotation: {x: -0.47283924, y: 0.078986526, z: 0.36577886, w: 0.7977406}
       scale: {x: 1, y: 0.9999999, z: 0.99999976}
     - name: Bone_L_Fingers
       parentName: Bone_L_Hand
-      position: {x: -0.15168442, y: 0, z: 0.0000000028226712}
+      position: {x: -0.001971897, y: 0, z: 3.669472e-11}
       rotation: {x: 0, y: 0, z: 0.3550533, w: 0.93484604}
       scale: {x: 1, y: 1, z: 1}
     - name: Bone_Head
       parentName: Bone_UpBack
-      position: {x: -0.37823662, y: 0.062474374, z: 0.00000007629395}
+      position: {x: -0.0049170754, y: 0.00081216666, z: 9.918213e-10}
       rotation: {x: 0.00000003449148, y: -0.00000013280379, z: -0.04736106, w: 0.9988779}
       scale: {x: 1.0000004, y: 1.0000004, z: 1}
     - name: Bone_R_ArmUp
       parentName: Bone_UpBack
-      position: {x: -0.29925087, y: -0.02065123, z: -0.14261001}
+      position: {x: -0.003890261, y: -0.00026846598, z: -0.0018539298}
       rotation: {x: 0.48990518, y: 0.5126819, z: 0.521754, w: -0.47426033}
       scale: {x: 1, y: 1.0000001, z: 1.0000001}
     - name: Bone_R_ArmDown
       parentName: Bone_R_ArmUp
-      position: {x: -0.2638389, y: -0.000000023841856, z: -0.000000076293944}
+      position: {x: -0.0034299053, y: -3.0994407e-10, z: -9.918212e-10}
       rotation: {x: -0.0018869038, y: 0.042392377, z: 0.037495814, w: 0.99839544}
       scale: {x: 0.99999994, y: 1, z: 1.0000001}
     - name: Bone_R_Hand
       parentName: Bone_R_ArmDown
-      position: {x: -0.25215548, y: -0.00000031948088, z: 0}
+      position: {x: -0.0032780208, y: -0.00000000415325, z: 0}
       rotation: {x: 0.2206404, y: 0.012447553, z: -0.15637529, w: 0.96265763}
       scale: {x: 1.0000001, y: 1.0000001, z: 1}
     - name: Bone_R_Thumb
       parentName: Bone_R_Hand
-      position: {x: -0.05233635, y: 0.033413652, z: 0.04052208}
+      position: {x: -0.00068037247, y: 0.0004343774, z: 0.0005267869}
       rotation: {x: 0.47283933, y: 0.0789865, z: -0.3657789, w: 0.7977406}
       scale: {x: 0.99999964, y: 0.9999999, z: 0.99999976}
     - name: Bone_R_Fingers
       parentName: Bone_R_Hand
-      position: {x: -0.15168445, y: 0.000000076293944, z: 0.00000015258789}
+      position: {x: -0.0019718974, y: 9.918212e-10, z: 0.0000000019836424}
       rotation: {x: 0.00000012700659, y: -0.00000004000492, z: -0.30043185, w: 0.9538033}
       scale: {x: 0.99999976, y: 0.99999964, z: 0.99999994}
     - name: Bon_R_thigh
       parentName: Bone_HIP
-      position: {x: 0.066015474, y: -0.04762577, z: -0.10585998}
+      position: {x: 0.00085820106, y: -0.0006191349, z: -0.0013761796}
       rotation: {x: 0.7033205, y: 0.009012168, z: 0.07686493, w: 0.70664763}
       scale: {x: 0.99999994, y: 1, z: 1.0000001}
     - name: Bone_R_Leg
       parentName: Bon_R_thigh
-      position: {x: -0.356254, y: 0.000000095367426, z: -0.000000047683713}
+      position: {x: -0.0046313014, y: 0.0000000012397763, z: -6.1988814e-10}
       rotation: {x: -0.0089575, y: -0.21743599, z: -0.04017265, w: 0.97520643}
       scale: {x: 1.0000004, y: 1.0000001, z: 1.0000001}
     - name: Bone_R_Foot
       parentName: Bone_R_Leg
-      position: {x: -0.30960628, y: 0.000002298355, z: 0.0000000333786}
+      position: {x: -0.00402488, y: 0.000000029878613, z: 4.3392165e-10}
       rotation: {x: -0.0020028828, y: 0.7942848, z: 0.022871299, w: 0.60711163}
       scale: {x: 0.99999994, y: 1, z: 1.0000001}
     - name: Stag
@@ -409,14 +533,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.012999999
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

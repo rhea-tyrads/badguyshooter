@@ -549,3 +549,70 @@ MonoBehaviour:
       stageIndex: -1
     onlyShop: 1
     saveKey: Skeleton
+  - name: Fireman
+    type: 6
+    requiredLevel: 0
+    lockedSprite: {fileID: 21300000, guid: 1e197b3285b782e4dbfdf53e21637a09, type: 3}
+    stages:
+    - previewSprite: {fileID: 21300000, guid: ebf8638e64d5ef74dab664b8fe84c20a, type: 3}
+      lockedSprite: {fileID: 21300000, guid: 1e197b3285b782e4dbfdf53e21637a09, type: 3}
+      prefab: {fileID: 5944526536063773591, guid: b3f06df032010ee438f3087bee05fae5,
+        type: 3}
+      healthBarOffset: {x: 0, y: 2.34375, z: 0}
+    upgrades:
+    - currencyType: 0
+      price: 0
+      stats:
+        health: 180
+        bulletDamageMultiplier: 1
+        power: 70
+        keyUpgradeNumber: -1
+      changeStage: 0
+      stageIndex: -1
+    - currencyType: 0
+      price: 500
+      stats:
+        health: 180
+        bulletDamageMultiplier: 1
+        power: 75
+        keyUpgradeNumber: -1
+      changeStage: 0
+      stageIndex: -1
+    - currencyType: 0
+      price: 580
+      stats:
+        health: 180
+        bulletDamageMultiplier: 1
+        power: 82
+        keyUpgradeNumber: -1
+      changeStage: 0
+      stageIndex: -1
+    - currencyType: 0
+      price: 640
+      stats:
+        health: 180
+        bulletDamageMultiplier: 1
+        power: 88
+        keyUpgradeNumber: -1
+      changeStage: 0
+      stageIndex: -1
+    - currencyType: 0
+      price: 760
+      stats:
+        health: 180
+        bulletDamageMultiplier: 1
+        power: 93
+        keyUpgradeNumber: -1
+      changeStage: 0
+      stageIndex: -1
+    - currencyType: 0
+      price: 900
+      stats:
+        health: 180
+        bulletDamageMultiplier: 1
+        power: 100
+        keyUpgradeNumber: -1
+      changeStage: 0
+      stageIndex: -1
+    onlyShop: 1
+    saveKey: Fireman

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using com.adjust.sdk;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon;
@@ -35,6 +36,7 @@ namespace Watermelon.SquadShooter
         }
 
         public static event SimpleCallback OnNewWeaponSelected;
+        public static event SimpleCallback OnOpenGunInfo;
         public static event SimpleCallback OnWeaponUpgraded;
         public static event SimpleCallback OnWeaponCardsAmountChanged;
         public static event WeaponDelagate OnWeaponUnlocked;
@@ -123,6 +125,8 @@ namespace Watermelon.SquadShooter
         {
             Debug.LogError("SELECTED!!!!!!");
             SelectedWeaponIndex = weaponIndex;
+         
+            
             var weapon = instance.database.GetWeaponByIndex(weaponIndex);
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
@@ -151,13 +155,13 @@ namespace Watermelon.SquadShooter
             description.Show();
 
             Debug.Log("WEAPON SELECTED: " + weapon.Type);
-
+            OnOpenGunInfo?.Invoke();
             return;
 
             SelectedWeaponIndex = weaponIndex;
             CharacterBehaviour.GetBehaviour().SetGun(GetCurrentWeapon(), true);
             CharacterBehaviour.GetBehaviour().Graphics.Grunt();
-            OnNewWeaponSelected?.Invoke();
+
         }
 
         void SelectWeaponYA()
@@ -181,6 +185,29 @@ namespace Watermelon.SquadShooter
             var data = panel.Data;
             var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
             description.upgradePriceTxt.text = upgrade.NextStage.Price.ToString();
+
+            SendAdjustEvent();
+        }
+        
+        void SendAdjustEvent()
+        {
+            var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
+            var token = weapon.Type switch
+            {
+                WeaponType.CrossBow => "cqttkc",
+                WeaponType.Flamethrower => "38achz",
+                WeaponType.Laser => "sfh9j8",
+                WeaponType.LavaLauncher => "8464n9",
+                WeaponType.Minigun => "mja0ls",
+                WeaponType.PoisonGun => "ht3riw",
+                WeaponType.Revolver => "qqksvy",
+                WeaponType.Shotgun => "8dozub",
+                WeaponType.TeslaGun => "wlg785",
+                _ => string.Empty
+            };
+
+            var send = new AdjustEvent(token);
+            Adjust.trackEvent(send);
         }
 
         public static void AddCard(WeaponType weaponType, int amount)

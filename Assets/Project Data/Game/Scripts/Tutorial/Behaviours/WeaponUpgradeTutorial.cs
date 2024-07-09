@@ -18,19 +18,14 @@ namespace Watermelon.SquadShooter
         public int Progress => saveData.progress;
 
         TutorialBaseSave saveData;
-
         WeaponData weaponData;
         BaseWeaponUpgrade weaponUpgrade;
-
         UIMainMenu mainMenuUI;
         UIWeaponPage weaponPageUI;
-
         WeaponTab weaponTab;
         CharacterTab characterTab;
-
         bool isActive;
         int stepNumber;
-
         UIGamepadButton activatedGamepadButton;
         UIGamepadButton noAdsGamepadButton;
         UIGamepadButton settingsGamepadButton;
@@ -39,30 +34,21 @@ namespace Watermelon.SquadShooter
         bool isInitialised;
         public bool IsInitialised => isInitialised;
 
-        public WeaponUpgradeTutorial()
-        {
-            TutorialController.RegisterTutorial(this);
-        }
+        public WeaponUpgradeTutorial() => TutorialController.RegisterTutorial(this);
 
         public void Initialise()
         {
-            if (isInitialised)
-                return;
+            if (isInitialised) return;
 
             isInitialised = true;
-
-            // Load save file
-            saveData = SaveController.GetSaveObject<TutorialBaseSave>(string.Format(ITutorial.SAVE_IDENTIFIER, TutorialID.ToString()));
-
+            saveData = SaveController.GetSaveObject<TutorialBaseSave>(string.Format(ITutorial.SAVE_IDENTIFIER,
+                TutorialID.ToString()));
             weaponData = WeaponsController.GetWeaponData(FIRST_WEAPON_TYPE);
             weaponUpgrade = UpgradesController.GetUpgrade<BaseWeaponUpgrade>(weaponData.UpgradeType);
-
             mainMenuUI = UIController.GetPage<UIMainMenu>();
             weaponPageUI = UIController.GetPage<UIWeaponPage>();
-
             weaponTab = mainMenuUI.WeaponTab;
             characterTab = mainMenuUI.CharacterTab;
-
             noAdsGamepadButton = mainMenuUI.NoAdsGamepadButton;
             settingsGamepadButton = mainMenuUI.SettingsGamepadButton;
             playGamepadButton = mainMenuUI.PlayGamepadButton;
@@ -70,149 +56,114 @@ namespace Watermelon.SquadShooter
 
         public void StartTutorial()
         {
-            if (isActive)
-                return;
-
+            if (isActive) return;
             isActive = true;
-
             weaponTab.Disable();
             characterTab.Disable();
-
             UIController.OnPageOpenedEvent += OnMainMenuPageOpened;
             Control.OnInputChanged += OnInputTypeChanged;
         }
 
         void OnInputTypeChanged(InputType input)
         {
-            if (activatedGamepadButton != null)
-                activatedGamepadButton.StopHighLight();
-
+            if (activatedGamepadButton) activatedGamepadButton.StopHighLight();
             TutorialCanvasController.ResetTutorialCanvas();
 
-            if (stepNumber == STEP_TUTORIAL_ACTIVATED)
+            switch (stepNumber)
             {
-                TutorialCanvasController.ActivateTutorialCanvas(weaponTab.RectTransform, false, true);
-
-                if (input == InputType.Gamepad)
+                case STEP_TUTORIAL_ACTIVATED:
                 {
-                    activatedGamepadButton = weaponTab.GamepadButton;
-                    if (activatedGamepadButton != null)
-                        activatedGamepadButton.StartHighlight();
+                    TutorialCanvasController.ActivateTutorialCanvas(weaponTab.RectTransform, false, true);
 
-                    if (characterTab.GamepadButton != null)
-                        characterTab.GamepadButton.SetFocus(false);
-
-                    if (noAdsGamepadButton != null)
-                        noAdsGamepadButton.SetFocus(false);
-
-                    if (settingsGamepadButton != null)
-                        settingsGamepadButton.SetFocus(false);
-
-                    if (playGamepadButton != null)
-                        playGamepadButton.SetFocus(false);
-                }
-                else
-                {
-                    TutorialCanvasController.ActivatePointer(weaponTab.RectTransform.position + new Vector3(0, 0.1f, 0), TutorialCanvasController.POINTER_TOPDOWN);
-                }
-            }
-            else if (stepNumber == STEP_PAGE_OPENED)
-            {
-                var weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
-                if (weaponPanel != null)
-                {
-                    TutorialCanvasController.ActivateTutorialCanvas(weaponPanel.RectTransform, true, true);
-
-                    if (Control.InputType == InputType.Gamepad)
+                    if (input == InputType.Gamepad)
                     {
-                        if (weaponPageUI.GamepadCloseButton != null)
-                            weaponPageUI.GamepadCloseButton.SetFocus(false);
-
-                        if (characterTab.GamepadButton != null)
-                            characterTab.GamepadButton.SetFocus(false);
-
-                        if (noAdsGamepadButton != null)
-                            noAdsGamepadButton.SetFocus(false);
-
-                        if (settingsGamepadButton != null)
-                            settingsGamepadButton.SetFocus(false);
-
-                        if (playGamepadButton != null)
-                            playGamepadButton.SetFocus(false);
-
                         activatedGamepadButton = weaponTab.GamepadButton;
-                        if (activatedGamepadButton != null)
-                            activatedGamepadButton.StartHighlight();
+                        if (activatedGamepadButton) activatedGamepadButton.StartHighlight();
+                        if (characterTab.GamepadButton) characterTab.GamepadButton.SetFocus(false);
+                        if (noAdsGamepadButton) noAdsGamepadButton.SetFocus(false);
+                        if (settingsGamepadButton) settingsGamepadButton.SetFocus(false);
+                        if (playGamepadButton) playGamepadButton.SetFocus(false);
                     }
                     else
                     {
-                        TutorialCanvasController.ActivatePointer(weaponPanel.UpgradeButtonTransform.position, TutorialCanvasController.POINTER_TOPDOWN);
+                        TutorialCanvasController.ActivatePointer(
+                            weaponTab.RectTransform.position + new Vector3(0, 0.1f, 0),
+                            TutorialCanvasController.POINTER_TOPDOWN);
                     }
+
+                    break;
+                }
+                case STEP_PAGE_OPENED:
+                {
+                    var weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
+                    if (weaponPanel)
+                    {
+                        TutorialCanvasController.ActivateTutorialCanvas(weaponPanel.RectTransform, true, true);
+
+                        if (Control.InputType == InputType.Gamepad)
+                        {
+                            if (weaponPageUI.GamepadCloseButton) weaponPageUI.GamepadCloseButton.SetFocus(false);
+                            if (characterTab.GamepadButton) characterTab.GamepadButton.SetFocus(false);
+                            if (noAdsGamepadButton) noAdsGamepadButton.SetFocus(false);
+                            if (settingsGamepadButton) settingsGamepadButton.SetFocus(false);
+                            if (playGamepadButton) playGamepadButton.SetFocus(false);
+                            activatedGamepadButton = weaponTab.GamepadButton;
+                            if (activatedGamepadButton) activatedGamepadButton.StartHighlight();
+                        }
+                        else
+                        {
+                            TutorialCanvasController.ActivatePointer(weaponPanel.UpgradeButtonTransform.position,
+                                TutorialCanvasController.POINTER_TOPDOWN);
+                        }
+                    }
+
+                    break;
                 }
             }
         }
 
         void OnMainMenuPageOpened(UIPage page, System.Type pageType)
         {
-            if (pageType == typeof(UIMainMenu))
+            if (pageType != typeof(UIMainMenu)) return;
+            if (ActiveRoom.CurrentLevelIndex < 2) return;
+            var stage = weaponUpgrade.NextStage;
+            if (stage == null) return;
+
+            // Player has enough money to upgrade first weapon
+            if (CurrenciesController.HasAmount(stage.CurrencyType, stage.Price))
             {
-                if (ActiveRoom.CurrentLevelIndex >= 2)
+                UIController.OnPageOpenedEvent -= OnMainMenuPageOpened;
+                stepNumber = STEP_TUTORIAL_ACTIVATED;
+                weaponTab.Activate();
+                weaponTab.Button.onClick.AddListener(OnWeaponTabOpened);
+                TutorialCanvasController.ActivateTutorialCanvas(weaponTab.RectTransform, false, true);
+
+                if (Control.InputType == InputType.Gamepad)
                 {
-                    var stage = weaponUpgrade.NextStage;
-                    if(stage != null)
-                    {
-                        // Player has enough money to upgrade first weapon
-                        if (CurrenciesController.HasAmount(stage.CurrencyType, stage.Price))
-                        {
-                            UIController.OnPageOpenedEvent -= OnMainMenuPageOpened;
-
-                            stepNumber = STEP_TUTORIAL_ACTIVATED;
-
-                            weaponTab.Activate();
-                            weaponTab.Button.onClick.AddListener(OnWeaponTabOpened);
-
-                            TutorialCanvasController.ActivateTutorialCanvas(weaponTab.RectTransform, false, true);
-
-                            if (Control.InputType == InputType.Gamepad)
-                            {
-                                activatedGamepadButton = weaponTab.GamepadButton;
-                                if (activatedGamepadButton != null)
-                                    activatedGamepadButton.StartHighlight();
-
-                                if (characterTab.GamepadButton != null)
-                                    characterTab.GamepadButton.SetFocus(false);
-
-                                if (noAdsGamepadButton != null)
-                                    noAdsGamepadButton.SetFocus(false);
-
-                                if (settingsGamepadButton != null)
-                                    settingsGamepadButton.SetFocus(false);
-
-                                if (playGamepadButton != null)
-                                    playGamepadButton.SetFocus(false);
-                            }
-                            else
-                            {
-                                TutorialCanvasController.ActivatePointer(weaponTab.RectTransform.position + new Vector3(0, 0.1f, 0), TutorialCanvasController.POINTER_TOPDOWN);
-                            }
-                        }
-                        else
-                        {
-                            weaponTab.Disable();
-                        }
-                    }
+                    activatedGamepadButton = weaponTab.GamepadButton;
+                    if (activatedGamepadButton) activatedGamepadButton.StartHighlight();
+                    if (characterTab.GamepadButton) characterTab.GamepadButton.SetFocus(false);
+                    if (noAdsGamepadButton) noAdsGamepadButton.SetFocus(false);
+                    if (settingsGamepadButton) settingsGamepadButton.SetFocus(false);
+                    if (playGamepadButton) playGamepadButton.SetFocus(false);
                 }
+                else
+                {
+                    TutorialCanvasController.ActivatePointer(weaponTab.RectTransform.position + new Vector3(0, 0.1f, 0),
+                        TutorialCanvasController.POINTER_TOPDOWN);
+                }
+            }
+            else
+            {
+                weaponTab.Disable();
             }
         }
 
         void OnWeaponTabOpened()
         {
             TutorialCanvasController.ResetTutorialCanvas();
-
             weaponTab.Button.onClick.RemoveListener(OnWeaponTabOpened);
-
             UIController.OnPageOpenedEvent += OnWeaponPageOpened;
-
             weaponPageUI.GraphicRaycaster.enabled = false;
         }
 
@@ -221,7 +172,7 @@ namespace Watermelon.SquadShooter
             UIController.OnPageOpenedEvent -= OnWeaponPageOpened;
 
             var weaponPanel = weaponPageUI.GetPanel(FIRST_WEAPON_TYPE);
-            if (weaponPanel != null)
+            if (weaponPanel)
             {
                 stepNumber = STEP_PAGE_OPENED;
 
@@ -229,36 +180,26 @@ namespace Watermelon.SquadShooter
 
                 if (Control.InputType == InputType.Gamepad)
                 {
-                    if (weaponPageUI.GamepadCloseButton != null)
-                        weaponPageUI.GamepadCloseButton.SetFocus(false);
-
-                    if (characterTab.GamepadButton != null)
-                        characterTab.GamepadButton.SetFocus(false);
-
-                    if (noAdsGamepadButton != null)
-                        noAdsGamepadButton.SetFocus(false);
-
-                    if (settingsGamepadButton != null)
-                        settingsGamepadButton.SetFocus(false);
-
-                    if (playGamepadButton != null)
-                        playGamepadButton.SetFocus(false);
-
+                    if (weaponPageUI.GamepadCloseButton) weaponPageUI.GamepadCloseButton.SetFocus(false);
+                    if (characterTab.GamepadButton) characterTab.GamepadButton.SetFocus(false);
+                    if (noAdsGamepadButton) noAdsGamepadButton.SetFocus(false);
+                    if (settingsGamepadButton) settingsGamepadButton.SetFocus(false);
+                    if (playGamepadButton) playGamepadButton.SetFocus(false);
                     activatedGamepadButton = weaponTab.GamepadButton;
-                    if (activatedGamepadButton != null)
-                        activatedGamepadButton.StartHighlight();
+                    if (activatedGamepadButton) activatedGamepadButton.StartHighlight();
                 }
                 else
                 {
-                    TutorialCanvasController.ActivatePointer(weaponPanel.UpgradeButtonTransform.position, TutorialCanvasController.POINTER_TOPDOWN);
+                    TutorialCanvasController.ActivatePointer(weaponPanel.UpgradeButtonTransform.position,
+                        TutorialCanvasController.POINTER_TOPDOWN);
                 }
 
-                WeaponsController.OnWeaponUpgraded += OnWeaponUpgraded;
+                Debug.LogError("ZZZZZZZZZZZZZZZ");
+                WeaponsController.OnOpenGunInfo += OnWeaponUpgraded;
+              //  WeaponsController.OnWeaponUpgraded += OnWeaponUpgraded;
 
-                if(WeaponsController.IsTutorialWeaponUpgraded())
-                {
+                if (WeaponsController.IsTutorialWeaponUpgraded())
                     OnWeaponUpgraded();
-                }
             }
 
             weaponPageUI.GraphicRaycaster.enabled = true;
@@ -266,48 +207,29 @@ namespace Watermelon.SquadShooter
 
         void OnWeaponUpgraded()
         {
-            WeaponsController.OnWeaponUpgraded -= OnWeaponUpgraded;
-
+            Debug.LogError("AAAAAAAAa");
+            WeaponsController.OnOpenGunInfo -= OnWeaponUpgraded;
+          //  WeaponsController.OnWeaponUpgraded -= OnWeaponUpgraded;
             TutorialCanvasController.ResetTutorialCanvas();
-
             if (Control.InputType == InputType.Gamepad)
             {
-                if(weaponPageUI.GamepadCloseButton != null)
-                    weaponPageUI.GamepadCloseButton.SetFocus(true);
-
-                if (characterTab.GamepadButton != null)
-                    characterTab.GamepadButton.SetFocus(true);
-				
-                if (weaponTab.GamepadButton != null)
-                    weaponTab.GamepadButton.SetFocus(true);
-
-                if (noAdsGamepadButton != null)
-                    noAdsGamepadButton.SetFocus(true);
-
-                if (settingsGamepadButton != null)
-                    settingsGamepadButton.SetFocus(true);
-
-                if (playGamepadButton != null)
-                    playGamepadButton.SetFocus(true);
-
-                if (activatedGamepadButton != null)
-                    activatedGamepadButton.StopHighLight();
+                if (weaponPageUI.GamepadCloseButton) weaponPageUI.GamepadCloseButton.SetFocus(true);
+                if (characterTab.GamepadButton) characterTab.GamepadButton.SetFocus(true);
+                if (weaponTab.GamepadButton) weaponTab.GamepadButton.SetFocus(true);
+                if (noAdsGamepadButton) noAdsGamepadButton.SetFocus(true);
+                if (settingsGamepadButton) settingsGamepadButton.SetFocus(true);
+                if (playGamepadButton) playGamepadButton.SetFocus(true);
+                if (activatedGamepadButton) activatedGamepadButton.StopHighLight();
             }
-			
-			weaponTab.Activate();
-			characterTab.Activate();
-
+            weaponTab.Activate();
+            characterTab.Activate();
             FinishTutorial();
         }
 
-        public void FinishTutorial()
-        {
-            saveData.isFinished = true;
-        }
+        public void FinishTutorial() => saveData.isFinished = true;
 
         public void Unload()
         {
-
         }
     }
 }

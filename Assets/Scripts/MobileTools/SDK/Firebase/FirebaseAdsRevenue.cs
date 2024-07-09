@@ -25,6 +25,9 @@ namespace MobileTools.SDK.Firebase
 
     public class FirebaseAdsRevenue : MonoBehaviour
     {
+        public float CurrentTime => Time.time;
+        float lastTime;
+
         void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -34,8 +37,8 @@ namespace MobileTools.SDK.Firebase
             MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
             MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
         }
-        private float lastTime;
-        public float CurrentTime => Time.time;
+
+
         void OnAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo impressionData)
         {
             if (CurrentTime - lastTime > 1)

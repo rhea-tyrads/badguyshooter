@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using com.adjust.sdk;
 using Firebase.Analytics;
 using MobileTools.SDK;
@@ -79,7 +81,7 @@ namespace MobileTools.IAPshop
 
         void TryPurchase(ShopItem item)
         {
-            Debug.LogWarning("[IAP] TRY PURCHASE: "+item.Id);
+            Debug.LogWarning("[IAP] TRY PURCHASE: " + item.Id);
             if (testMode)
                 Purchase(item.Id);
             else
@@ -96,25 +98,25 @@ namespace MobileTools.IAPshop
             var product = purchaseEvent.purchasedProduct;
             var productID = product.definition.id;
             Purchase(productID);
-       
+
             var item = listener.Find(productID);
             var token = product.receipt;
             var transaction = product.transactionID;
-            
+
             var adjustEvent = new AdjustEvent("eb9edt");
-            adjustEvent.setProductId(productID); 
+            adjustEvent.setProductId(productID);
             adjustEvent.setPurchaseToken(token);
-            adjustEvent.setRevenue(item.priceIDR,  "IDR");
+            adjustEvent.setRevenue(item == null ? productID == "no_ads" ? 47700 : 1 : item.priceIDR, "IDR");
             adjustEvent.setTransactionId(transaction);
             Adjust.trackEvent(adjustEvent);
-            
-            SendInAppPurchaseEvent(purchaseEvent.purchasedProduct.definition.id);
-         
-            
+
+            FirebaseEvent(purchaseEvent.purchasedProduct.definition.id);
+
+
             return PurchaseProcessingResult.Complete;
         }
 
-        void SendInAppPurchaseEvent(string productId)
+        void FirebaseEvent(string productId)
         {
             FirebaseAnalytics.LogEvent("in_app_purchase", new Parameter[]
             {
@@ -124,11 +126,17 @@ namespace MobileTools.IAPshop
 
             Debug.Log("In-App Purchase event sent to Firebase");
         }
+
         void Purchase(string id)
         {
-            if(id == noAdsID)return;
+            if (id == noAdsID)
+            {
+                Keys.PurchaseNoAds();
+                return;
+            }
+
             Debug.Log("Purchase complete: " + id);
-            
+
             SDKEvents.Instance.ProductPurchase(id);
             if (successUI) successUI.Show();
             var item = listener.Find(id);
@@ -137,8 +145,22 @@ namespace MobileTools.IAPshop
             Adjust.trackEvent(send);
         }
 
+        List<string> GetPurchasedProducts()
+            => (from product in _controller.products.all
+                where product.hasReceipt
+                select product.definition.id).ToList();
+
         void CheckNoAds(string id)
         {
+            var purchasedProducts = GetPurchasedProducts();
+            foreach (var productId in purchasedProducts)
+            {
+                Debug.Log($"Purchased product: {productId}");
+                if (productId != id) continue;
+                Keys.PurchaseNoAds();
+                return;
+            }
+
             var product = _controller?.products.WithID(id);
             if (product == null) return;
             if (product.hasReceipt)

@@ -10,5 +10,6 @@
         Character_Alien = 5,
         Character_Ninja = 5,
         Character_Skeleton = 5,
+        Character_Fireman = 6,
     }
 }

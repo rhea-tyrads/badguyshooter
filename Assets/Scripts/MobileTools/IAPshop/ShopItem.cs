@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-//using NaughtyAttributes;
+ 
 using Watermelon.SquadShooter;
 
 namespace MobileTools.IAPshop
@@ -16,20 +16,24 @@ namespace MobileTools.IAPshop
         public string adjustToken;
         public double priceIDR = 0;
 
-        //   [HideIf(nameof(IsWeapon))]
+        //[HideIf(nameof(IsWeapon))]
         public BonusPackUI bonuses;
 
         // [ShowIf(nameof(ShowWeapon))]
         public WeaponType weapon;
-        //   [ShowIf(nameof(IsBundle))]
+        public WeaponType weapon_2;
+        
+        //[ShowIf(nameof(IsBundle))]
         public CharacterType skin;
-        //  [ShowIf(nameof(IsBooster))]
+        public CharacterType skin_2;
+        
+        //[ShowIf(nameof(IsBooster))]
         public int hpBoostAmount;
-        //   [ShowIf(nameof(IsBooster))]
+        //[ShowIf(nameof(IsBooster))]
         public int critBoostAmount;
-        //    [ShowIf(nameof(IsBooster))]
+        //[ShowIf(nameof(IsBooster))]
         public int respawnBoostAmount;
-        //   [ShowIf(nameof(IsBooster))]
+        //[ShowIf(nameof(IsBooster))]
         public int goldAmount;
 
 
@@ -40,6 +44,7 @@ namespace MobileTools.IAPshop
         bool IsBooster => itemType == ShopItemType.BoosterPack || IsBundle;
         public event Action<ShopItem> OnTryPurchase = delegate { };
         public bool IsPurchased;
+
         #endregion
 
         public GameObject purchasedContainer;
@@ -49,7 +54,6 @@ namespace MobileTools.IAPshop
             if (purchaseButton)
                 purchaseButton.onClick.AddListener(TryPurchase);
         }
-
 
 
         public void SetLock(bool isPurchased)

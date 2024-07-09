@@ -16,20 +16,16 @@ public class LaserBulletBehaviour : PlayerBulletBehavior
         bool autoDisableOnHit = true)
     {
         base.Initialise(damage, speed, currentTarget, autoDisableTime, autoDisableOnHit);
-
     }
 
     protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
     {
-
         ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
-       
     }
 
     protected override void OnObstacleHitted()
     {
         base.OnObstacleHitted();
         ParticlesController.PlayParticle(PARTICLE_WAll_HIT_HASH).SetPosition(transform.position);
- 
     }
 }

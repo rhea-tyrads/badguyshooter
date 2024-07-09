@@ -43,23 +43,19 @@ namespace Watermelon.SquadShooter
             if (other.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
             {
                 var baseEnemyBehavior = other.GetComponent<BaseEnemyBehavior>();
-                if (baseEnemyBehavior != null)
-                {
-                    if (!baseEnemyBehavior.IsDead)
-                    {
-                        disableTweenCase.KillActive();
+                if (baseEnemyBehavior == null) return;
+                if (baseEnemyBehavior.IsDead) return;
+                disableTweenCase.KillActive();
 
-                        // Disable bullet
-                        if (autoDisableOnHit)
-                            gameObject.SetActive(false);
+                // Disable bullet
+                if (autoDisableOnHit)
+                    gameObject.SetActive(false);
 
-                        // Deal damage to enemy
-                        baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damage, transform.position, transform.forward);
+                // Deal damage to enemy
+                baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damage, transform.position, transform.forward);
 
-                        // Call hit callback
-                        OnEnemyHitted(baseEnemyBehavior);
-                    }
-                }
+                // Call hit callback
+                OnEnemyHitted(baseEnemyBehavior);
             }
             else
             {
