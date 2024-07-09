@@ -23,6 +23,7 @@ namespace MobileTools.IAPshop
         public ScreenUI successUI;
         public ShopListener listener;
         public string noAdsID = "no_ads";
+
         [Header("Last purchase")]
         //public Data data;
         //public Payload payload;
@@ -36,7 +37,7 @@ namespace MobileTools.IAPshop
             InitBuilder();
             SDKEvents.Instance.OnTryPurchaseNoAds += TryPurchaseRemoveAds;
             if (successUI) successUI.Hide();
-            CheckAllProducts();
+            RestorePurchases();
         }
 
         void OnDisable()
@@ -58,7 +59,7 @@ namespace MobileTools.IAPshop
         {
             //  Debug.Log("Shop Initialized");
             _controller = controller;
-            CheckNoAds(noAdsID);
+            //  CheckNoAds(noAdsID);
         }
 
         void InitItems()
@@ -78,6 +79,25 @@ namespace MobileTools.IAPshop
                 item.Set(data);
                 item.OnTryPurchase += TryPurchase;
             }
+        }
+
+        private const string LastRestoreTimeKey = "LastRestoreTime";
+
+        private bool ShouldRestorePurchases()
+        {
+            var lastRestoreTimeString = PlayerPrefs.GetString(LastRestoreTimeKey, string.Empty);
+
+            if (string.IsNullOrEmpty(lastRestoreTimeString))
+            {
+                // No restore time recorded, so we should restore purchases
+                return true;
+            }
+
+            var lastRestoreTime = DateTime.Parse(lastRestoreTimeString);
+            var currentTime = DateTime.Now;
+
+            // Check if more than a day has passed since the last restore
+            return (currentTime - lastRestoreTime).TotalDays >= 1;
         }
 
         void TryPurchase(ShopItem item)
@@ -151,42 +171,37 @@ namespace MobileTools.IAPshop
                 where product.hasReceipt
                 select product.definition.id).ToList();
 
-        void CheckAllProducts()
-        {
         
+        void RestorePurchases()
+        {
+            if (!ShouldRestorePurchases()) return;
+            
             var purchasedProducts = GetPurchasedProducts();
             foreach (var id in purchasedProducts)
             {
+                if (id != noAdsID)
+                {
+                    Keys.PurchaseNoAds();
+                    continue;
+                }
+
                 var item = listener.Find(id);
-                if(item == null) continue;
-                
+                if (item == null) continue;
+
                 listener.weapons.UnlockWeapon(item.weapon);
                 listener.weapons.UnlockWeapon(item.weapon_2);
-                var character = listener.FindCharacter( item.skin);
+                var character = listener.FindCharacter(item.skin);
                 if (character.onlyShop) character.Purchase();
-                var character2 = listener.FindCharacter( item.skin_2);
+                var character2 = listener.FindCharacter(item.skin_2);
                 if (character2.onlyShop) character2.Purchase();
-                
+
                 Debug.Log($"Purchased product: {id}");
- 
-            }
-        }
-        void CheckNoAds(string id)
-        {
-            var purchasedProducts = GetPurchasedProducts();
-            foreach (var productId in purchasedProducts)
-            {
-                Debug.Log($"Purchased product: {productId}");
-                if (productId != id) continue;
-                Keys.PurchaseNoAds();
-                return;
             }
 
-            var product = _controller?.products.WithID(id);
-            if (product == null) return;
-            if (product.hasReceipt)
-                listener.RemoveAds();
+            PlayerPrefs.SetString(LastRestoreTimeKey, DateTime.Now.ToString());
+            PlayerPrefs.Save();
         }
+ 
 
         void CheckSubscription(string id)
         {
