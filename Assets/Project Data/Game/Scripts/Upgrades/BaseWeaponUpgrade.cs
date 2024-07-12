@@ -1,52 +1,39 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Watermelon.Upgrades
 {
     [System.Serializable]
     public class BaseWeaponUpgrade : Upgrade<BaseWeaponUpgradeStage>
     {
-        [Header("Prefabs")]
-        [SerializeField] GameObject weaponPrefab;
+        [Space(20)]
+        public float DPS_DEFAULT;
+        public float DPS_MAX;
+
+
+        private void OnValidate()
+        {
+            DPS_DEFAULT = GET_DPS(FirstStage);
+            DPS_MAX = GET_DPS(MaxStage);
+        }
+
+        float GET_DPS(BaseWeaponUpgradeStage stage)
+        {
+            var damage = stage.Damage;
+            var fireRate = stage.FireRate;
+            var bullets = stage.BulletsPerShot;
+            return damage.Middle() * fireRate * bullets.Middle();
+        }
+
+        [Header("Prefabs")] [SerializeField] GameObject weaponPrefab;
         public GameObject WeaponPrefab => weaponPrefab;
 
         [SerializeField] GameObject bulletPrefab;
         public GameObject BulletPrefab => bulletPrefab;
-        
+
         public override void Initialise()
         {
-
         }
-    }
-
-    [System.Serializable]
-    public class BaseWeaponUpgradeStage : BaseUpgradeStage
-    {
- 
-
-        [Header("Data")]
-        [SerializeField] DuoInt damage;
-        public DuoInt Damage => damage;
-
-        [SerializeField] float rangeRadius;
-        public float RangeRadius => rangeRadius;
-
-        [SerializeField, Tooltip("Shots Per Second")] float fireRate;
-        public float FireRate => fireRate;
-
-        [SerializeField] float spread;
-        public float Spread => spread;
-
-        [SerializeField] int power;
-        public int Power => power;
-
-        [SerializeField] DuoInt bulletsPerShot = new(1,1);
-        public DuoInt BulletsPerShot => bulletsPerShot;
-
-        [SerializeField] DuoFloat bulletSpeed;
-        public DuoFloat BulletSpeed => bulletSpeed;
-
-        // key upgrade - "ideal" way to play the game, based on this upgrades sequence is built economy
-        [SerializeField] int keyUpgradeNumber = -1;
-        public int KeyUpgradeNumber => keyUpgradeNumber;
     }
 }

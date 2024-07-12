@@ -8,7 +8,7 @@ public class RevolverBulletBehaviour : PlayerBulletBehavior
 {
     static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Minigun Hit");
     static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
-    const float knockBackForce = 1;
+    public float knockBackForce = 1;
     [SerializeField] TrailRenderer trailRenderer;
     public CharacterBehaviour owner;
 
@@ -21,8 +21,8 @@ public class RevolverBulletBehaviour : PlayerBulletBehavior
 
     protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
     {
-        var knockBackDir = (baseEnemyBehavior.Position - owner.transform.position).normalized;
-        baseEnemyBehavior.KnockBack(knockBackDir, knockBackForce);
+       // var knockBackDir = (baseEnemyBehavior.Position - owner.transform.position).normalized;
+      //  baseEnemyBehavior.KnockBack(knockBackDir, knockBackForce);
         ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
         trailRenderer.Clear();
     }

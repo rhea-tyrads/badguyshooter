@@ -532,7 +532,7 @@ namespace Watermelon.SquadShooter
             });
         }
 
-        const float knockBackDuration = 0.2f;
+        const float knockBackDuration = 0.1f;
         const float moveSlowDuration = 1f;
         const float dpsDuration = 3f;
         public float knockBackTimer;

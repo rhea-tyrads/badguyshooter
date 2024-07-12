@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Watermelon;
 using Watermelon.SquadShooter;
 
@@ -7,46 +8,37 @@ public class RevolverBehaviour : BaseGunBehavior
 {
     [LineSpacer]
     // [SerializeField] Transform barrelTransform;
-    [SerializeField] ParticleSystem shootParticleSystem;
+    [SerializeField]
+    ParticleSystem shootParticleSystem;
 
+    [SerializeField] ParticleSystem shootParticleSystem_2;
+    [SerializeField] Transform shootPoint_2;
     [SerializeField] LayerMask targetLayers;
     [SerializeField] float bulletDisableTime;
 
     // [Space]
     // [SerializeField] float fireRotationSpeed;
-
-    [Space]
-    [SerializeField] List<float> bulletStreamAngles;
-    const float RELOAD_TIME = 1f;
+    [Space] [SerializeField] List<float> bulletStreamAngles;
+    public float RELOAD_TIME = 0.1f;
     float _reloadTimer;
     const int BULLETS_TOTAL = 6;
     int _bullets;
-
     float spread;
     float attackDelay;
     DuoFloat bulletSpeed;
-
     float nextShootTime;
-
     Pool bulletPool;
-
     Vector3 shootDirection;
-
     RevolverUpgrade upgrade;
-
     TweenCase shootTweenCase;
 
     public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
     {
         base.Initialise(characterBehaviour, data);
-
         upgrade = UpgradesController.GetUpgrade<RevolverUpgrade>(data.UpgradeType);
-
         var bulletObj = upgrade.BulletPrefab;
         bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
-
         RecalculateDamage();
-
         _bullets = BULLETS_TOTAL;
     }
 
@@ -58,7 +50,6 @@ public class RevolverBehaviour : BaseGunBehavior
     public override void RecalculateDamage()
     {
         var stage = upgrade.GetCurrentStage();
-
         damage = stage.Damage;
         var atkSpdMult = characterBehaviour.isAtkSpdBooster ? characterBehaviour.atkSpdBoosterMult : 1;
         attackDelay = 1f / (stage.FireRate * atkSpdMult);
@@ -66,8 +57,15 @@ public class RevolverBehaviour : BaseGunBehavior
         bulletSpeed = stage.BulletSpeed;
     }
 
+    [FormerlySerializedAs("shootPointsOffset")]
+    public Vector3 shootPointOffset;
+
+    private float offsetDir = 1;
+    private bool isLeft;
+
     public override void GunUpdate()
     {
+        var shootPos = isLeft ? shootPoint : shootPoint_2;
         if (!characterBehaviour.IsCloseEnemyFound) return;
         //  barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
         if (nextShootTime >= Time.timeSinceLevelLoad) return;
@@ -85,57 +83,60 @@ public class RevolverBehaviour : BaseGunBehavior
             }
         }
 
-        shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) -
-                         shootPoint.position;
+        // offsetDir *= -1;
+        // shootPoint.localPosition += offsetDir * shootPointOffset;
+        shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPos.position.y) -
+                         shootPos.position;
 
         if (Physics.Raycast(transform.position, shootDirection, out var hitInfo, 300f, targetLayers) &&
             hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
         {
-            if (Vector3.Angle(shootDirection, transform.forward.SetY(0f)) < 40f)
+            if (!(Vector3.Angle(shootDirection, transform.forward.SetY(0f)) < 90f)) return;
+
+            shootTweenCase.KillActive();
+            shootTweenCase = transform.DOLocalMoveZ(-0.0825f, attackDelay * 0.3f).OnComplete(delegate
             {
-                shootTweenCase.KillActive();
+                shootTweenCase = transform.DOLocalMoveZ(0, attackDelay * 0.6f);
+            });
+            characterBehaviour.SetTargetActive();
 
-                shootTweenCase = transform.DOLocalMoveZ(-0.0825f, attackDelay * 0.3f).OnComplete(delegate
+            shootParticleSystem.Play();
+            //   if (isLeft) shootParticleSystem.Play();
+            // else shootParticleSystem_2.Play();
+
+            nextShootTime = Time.timeSinceLevelLoad + attackDelay / characterBehaviour.AtkSpdMult;
+
+            if (bulletStreamAngles.IsNullOrEmpty())
+                bulletStreamAngles = new List<float> { 0 };
+
+            var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random() +
+                                characterBehaviour.MultishotBoosterAmount;
+            var finalSpread = characterBehaviour.isMultishotBooster && spread == 0 ? 30 : spread;
+
+            for (var k = 0; k < bulletsNumber; k++)
+            {
+                foreach (var streamAngle in bulletStreamAngles)
                 {
-                    shootTweenCase = transform.DOLocalMoveZ(0, attackDelay * 0.6f);
-                });
-
-                characterBehaviour.SetTargetActive();
-
-                shootParticleSystem.Play();
-
-                nextShootTime = Time.timeSinceLevelLoad + attackDelay / characterBehaviour.AtkSpdMult;
-
-                if (bulletStreamAngles.IsNullOrEmpty())
-                    bulletStreamAngles = new List<float> {0};
-
-                var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random()+ characterBehaviour.MultishotBoosterAmount;
-                var finalSpread = characterBehaviour.isMultishotBooster && spread == 0? 30 : spread;
-                
-                for (var k = 0; k < bulletsNumber; k++)
-                {
-                    foreach (var streamAngle in bulletStreamAngles)
-                    {
-                        var bullet = bulletPool.Get(
-                                new PooledObjectSettings()
-                                    .SetPosition(shootPoint.position)
-                                    .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
-                                        (Random.Range(-finalSpread, finalSpread) +
-                                         streamAngle)))
-                            .GetComponent<RevolverBulletBehaviour>();
-                        bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
-                            bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                        bullet.owner = Owner;
-                    }
+                    var bullet = bulletPool.Get(
+                            new PooledObjectSettings()
+                                .SetPosition(shootPos.position)
+                                .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
+                                    (Random.Range(-finalSpread, finalSpread) +
+                                     streamAngle)))
+                        .GetComponent<RevolverBulletBehaviour>();
+                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
+                        bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
+                    bullet.owner = Owner;
                 }
-
-                _bullets--;
-                if (_bullets <= 0) _reloadTimer = RELOAD_TIME;
-
-                characterBehaviour.OnGunShooted();
-
-                AudioController.PlaySound(AudioController.Sounds.shotMinigun);
             }
+
+            _bullets--;
+            if (_bullets <= 0) _reloadTimer = RELOAD_TIME;
+
+            characterBehaviour.OnGunShooted();
+
+            AudioController.PlaySound(AudioController.Sounds.shotMinigun);
+            // isLeft = !isLeft;
         }
         else
         {

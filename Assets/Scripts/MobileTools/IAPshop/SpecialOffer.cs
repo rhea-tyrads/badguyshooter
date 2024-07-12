@@ -36,7 +36,7 @@ public class SpecialOffer : MonoBehaviour
         var world = ActiveRoom.CurrentWorldIndex;
         var level = ActiveRoom.CurrentLevelIndex + 1;
 
-        if (level % 3 == 0)
+        if (level % 4 == 0)
             Show();
     }
 
@@ -60,11 +60,9 @@ public class SpecialOffer : MonoBehaviour
 
     bool ShouldShowOffer()
     {
-        if (!PlayerPrefs.HasKey("SpecialOfferFirstTime"))
-        {
-            PlayerPrefs.SetInt("SpecialOfferFirstTime", 1);
-            return false;
-        }
+        if (PlayerPrefs.HasKey("SpecialOfferFirstTime")) return true;
+        PlayerPrefs.SetInt("SpecialOfferFirstTime", 1);
+        return false;
 
         if (!PlayerPrefs.HasKey(LastShowTimeKey)) return true;
         var lastShowTime = DateTime.Parse(PlayerPrefs.GetString(LastShowTimeKey));

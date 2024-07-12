@@ -25,10 +25,9 @@ namespace Watermelon
         public static DuoInt One => new(1);
         public static DuoInt Zero => new(0);
 
-        public int Random()
-        {
-            return UnityEngine.Random.Range(firstValue, secondValue + 1); // Because second parameter is exclusive. Withot + 1 method Random.Range(1,2) will always return 1
-        }
+        public int Random() => UnityEngine.Random.Range(firstValue, secondValue + 1); 
+        public float Middle() =>  (firstValue+secondValue)/2f; 
+ 
 
         public int Clamp(int value)
         {

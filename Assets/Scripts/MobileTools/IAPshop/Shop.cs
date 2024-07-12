@@ -127,7 +127,7 @@ namespace MobileTools.IAPshop
             var adjustEvent = new AdjustEvent("eb9edt");
             adjustEvent.setProductId(productID);
             adjustEvent.setPurchaseToken(token);
-            adjustEvent.setRevenue(item == null ? productID == "no_ads" ? 47700 : 1 : item.priceIDR, "IDR");
+            adjustEvent.setRevenue(item == null ? productID == "no_ads" ? 97300 : 1 : item.priceIDR, "IDR");
             adjustEvent.setTransactionId(transaction);
             Adjust.trackEvent(adjustEvent);
 

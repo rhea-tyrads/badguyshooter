@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Database Upgrades
   m_EditorClassIdentifier: 
   upgrades:
-  - {fileID: 11400000, guid: 306aaf9116710ae4d84734cf8d4cbe4c, type: 2}
-  - {fileID: 11400000, guid: 6a6d797bd91aff6468c68279d209a03d, type: 2}
-  - {fileID: 11400000, guid: 4e4f3ddb0fc66534589a15b3abfc9614, type: 2}
-  - {fileID: 11400000, guid: 9944305768a26704bb068ca8d4e2b363, type: 2}
   - {fileID: 11400000, guid: a86336bd817332847b4a27f50e5dce10, type: 2}
+  - {fileID: 11400000, guid: 6a6d797bd91aff6468c68279d209a03d, type: 2}
+  - {fileID: 11400000, guid: 99aa1d1d42aa7e04e9345f6f9252026d, type: 2}
+  - {fileID: 11400000, guid: 306aaf9116710ae4d84734cf8d4cbe4c, type: 2}
+  - {fileID: 11400000, guid: 9944305768a26704bb068ca8d4e2b363, type: 2}
+  - {fileID: 11400000, guid: 4e4f3ddb0fc66534589a15b3abfc9614, type: 2}
   - {fileID: 11400000, guid: 83f3aeb17c2a17047aa4381d25213f39, type: 2}
   - {fileID: 11400000, guid: de673a40edf60d949821cfb030fe029f, type: 2}
   - {fileID: 11400000, guid: 024aec899f7bdb04d890d1c0877f9ae0, type: 2}

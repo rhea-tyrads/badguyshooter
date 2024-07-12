@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Applovin;
+using MobileTools.Utilities;
 using TMPro;
 using UnityEngine.UI;
 using Watermelon.SquadShooter;
@@ -22,12 +23,10 @@ namespace Watermelon
         [SerializeField] CanvasGroup panelContentCanvasGroup;
         [SerializeField] TextMeshProUGUI levelText;
 
-        [Space]
-        [SerializeField] GameObject dropCardPrefab;
+        [Space] [SerializeField] GameObject dropCardPrefab;
         [SerializeField] Transform cardsContainerTransform;
 
-        [Space]
-        [SerializeField] TextMeshProUGUI experienceGainedText;
+        [Space] [SerializeField] TextMeshProUGUI experienceGainedText;
         [SerializeField] TextMeshProUGUI moneyGainedText;
 
         int currentWorld;
@@ -115,11 +114,28 @@ namespace Watermelon
 
             UIGamepadButton.DisableTag(UIGamepadButtonTag.Game);
 
-            doubleRewardButton.gameObject.SetActive(ApplovinController.Instance.IsRewardedLoaded);
-            doubleRewardButton.onClick.RemoveListener(DoubleReward);
-            doubleRewardButton.onClick.AddListener(DoubleReward);
-            Invoke(nameof(ShowClaim), claimButtonDelay);
+            if (Keys.IsNoAdsPurchased)
+            {
+                foreach (var go in noAdsModeEnable) go.SetActive(true);
+                foreach (var go in noAdsModeDisable) go.SetActive(false);
+                doubleRewardButton.gameObject.SetActive(true);
+                
+                doubleRewardButton.onClick.RemoveListener(Receive);
+                doubleRewardButton.onClick.AddListener(Receive);
+                
+            }
+            else
+            {
+                doubleRewardButton.gameObject.SetActive(ApplovinController.Instance.IsRewardedLoaded);
+                doubleRewardButton.onClick.RemoveListener(DoubleReward);
+                doubleRewardButton.onClick.AddListener(DoubleReward);
+                if (ApplovinController.Instance.IsRewardedLoaded) ShowClaim();
+                else Invoke(nameof(ShowClaim), claimButtonDelay);
+            }
         }
+
+        public List<GameObject> noAdsModeDisable = new();
+        public List<GameObject> noAdsModeEnable = new();
 
         void DoubleReward()
         {

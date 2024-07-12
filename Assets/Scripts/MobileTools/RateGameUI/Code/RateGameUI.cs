@@ -61,7 +61,7 @@ namespace MobileTools.RateGameUI.Code
         void SendFeedback()
         {
             sendFeedbackButton.onClick.RemoveListener(SendFeedback);
-            var subject = "Climb Master Feedback";
+            var subject = "SoloShooter3D Feedback";
             var uri = "mailto:" + email + "?subject=" + subject + "&body=" + feedbackInput.text;
             Application.OpenURL(uri);
             Invoke(nameof(Hide), 0.4f);

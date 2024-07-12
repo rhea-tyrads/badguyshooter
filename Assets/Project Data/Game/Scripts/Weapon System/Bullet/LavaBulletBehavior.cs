@@ -58,36 +58,24 @@ namespace Watermelon.SquadShooter
 
             var hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
-            for (var i = 0; i < hitColliders.Length; i++)
+            foreach (var col in hitColliders)
             {
-                if (hitColliders[i].gameObject.layer == PhysicsHelper.LAYER_ENEMY)
-                {
-                    var enemy = hitColliders[i].GetComponent<BaseEnemyBehavior>();
-                    if (enemy != null && !enemy.IsDead)
-                    {
-                        var explosionDamageMultiplier = 1.0f - Mathf.InverseLerp(0, explosionRadius, Vector3.Distance(transform.position, hitColliders[i].transform.position));
-
-                        // Deal damage to enemy
-                        enemy.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damageValue.Lerp(explosionDamageMultiplier), transform.position, (transform.position - prevPosition).normalized);
-
-                        characterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
-                    }
-                }
+                if (col.gameObject.layer != PhysicsHelper.LAYER_ENEMY) continue;
+                var enemy = col.GetComponent<BaseEnemyBehavior>();
+                if (enemy == null || enemy.IsDead) continue;
+                var explosionDamageMultiplier = 1.0f - Mathf.InverseLerp(0, explosionRadius, Vector3.Distance(transform.position, col.transform.position));
+                enemy.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damageValue.Lerp(explosionDamageMultiplier), transform.position, (transform.position - prevPosition).normalized);
+                characterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
             }
 
             AudioController.PlaySound(AudioController.Sounds.explode);
-
-            // Disable projectile
             gameObject.SetActive(false);
-
-            // Spawn splash particle
             ParticlesController.PlayParticle(SPLASH_PARTICLE_HASH).SetPosition(transform.position);
         }
 
         protected override void OnObstacleHitted()
         {
             base.OnObstacleHitted();
-
             ParticlesController.PlayParticle(WALL_SPLASH_PARTICLE_HASH).SetPosition(transform.position);
         }
     }

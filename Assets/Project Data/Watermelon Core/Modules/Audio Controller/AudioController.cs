@@ -120,20 +120,14 @@ namespace Watermelon
             if (!musicAudioClips.IsNullOrEmpty())
                 PlayMusic(musicAudioClips.GetRandomItem());
         }
-
-        /// <summary>
-        /// Stop all active streams
-        /// </summary>
+ 
         public static void ReleaseStreams()
         {
             ReleaseMusic();
             ReleaseSounds();
             ReleaseCustomStreams();
         }
-
-        /// <summary>
-        /// Releasing all active music.
-        /// </summary>
+ 
         public static void ReleaseMusic()
         {
             var activeMusicCount = instance.activeMusicSources.Count - 1;
@@ -145,9 +139,7 @@ namespace Watermelon
             }
         }
 
-        /// <summary>
-        /// Releasing all active sounds.
-        /// </summary>
+ 
         public static void ReleaseSounds()
         {
             var activeStreamsCount = instance.activeSoundSources.Count - 1;
@@ -159,9 +151,7 @@ namespace Watermelon
             }
         }
 
-        /// <summary>
-        /// Releasing all active custom sources.
-        /// </summary>
+ 
         public static void ReleaseCustomStreams()
         {
             var activeStreamsCount = instance.activeCustomSourcesCases.Count - 1;

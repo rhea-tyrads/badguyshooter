@@ -15,6 +15,7 @@ namespace Watermelon
         PoisonGun = 7,
         Flamethrower = 8,
         GrenadeLauncher= 9,
-        SniperRiffle=10
+        SniperRiffle=10,
+        DouPistol=11
     }
 }

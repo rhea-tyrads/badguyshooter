@@ -14,8 +14,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Transform rightHandHolder;
 
         [Space]
-        [SerializeField]
-        protected Transform shootPoint;
+        [SerializeField] protected Transform shootPoint;
 
         [Header("Upgrade")]
         [SerializeField] Vector3 upgradeParticleOffset;
@@ -83,10 +82,7 @@ namespace Watermelon.SquadShooter
 
         public abstract void RecalculateDamage();
 
-        public AnimationClip GetShootAnimationClip()
-        {
-            return characterShootAnimation;
-        }
+        public AnimationClip GetShootAnimationClip() => characterShootAnimation;
 
         public virtual void PlayBounceAnimation()
         {

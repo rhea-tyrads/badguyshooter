@@ -21,8 +21,8 @@ public class CrossBowBulletBehaviour : PlayerBulletBehavior
 
     protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
     {
-        var knockBackDir = (baseEnemyBehavior.Position - owner.transform.position).normalized;
-        baseEnemyBehavior.KnockBack(knockBackDir, knockBackForce);
+      //  var knockBackDir = (baseEnemyBehavior.Position - owner.transform.position).normalized;
+      //  baseEnemyBehavior.KnockBack(knockBackDir, knockBackForce);
         ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
         trailRenderer.Clear();
     }

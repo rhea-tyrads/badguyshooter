@@ -6,7 +6,7 @@ namespace Watermelon.SquadShooter
 {
     public class WeaponUpgradeTutorial : ITutorial
     {
-        const WeaponType FIRST_WEAPON_TYPE = WeaponType.Minigun;
+        const WeaponType FIRST_WEAPON_TYPE = WeaponType.Revolver;
 
         public TutorialID TutorialID => TutorialID.WeaponUpgrade;
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Watermelon.SquadShooter
@@ -14,8 +15,10 @@ namespace Watermelon.SquadShooter
 
         protected BaseEnemyBehavior currentTarget;
 
-        public virtual void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime, bool autoDisableOnHit = true)
+        public virtual void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget,
+            float autoDisableTime, bool autoDisableOnHit = true)
         {
+            hitted.Clear();
             this.damage = damage;
             this.speed = speed;
             this.autoDisableOnHit = autoDisableOnHit;
@@ -38,10 +41,15 @@ namespace Watermelon.SquadShooter
                 transform.position += transform.forward * (speed * Time.fixedDeltaTime);
         }
 
+        public List<Transform> hitted = new();
+
         void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
             {
+                if (hitted.Contains(other.transform)) return;
+                hitted.Add(other.transform);
+
                 var baseEnemyBehavior = other.GetComponent<BaseEnemyBehavior>();
                 if (baseEnemyBehavior == null) return;
                 if (baseEnemyBehavior.IsDead) return;
@@ -52,7 +60,8 @@ namespace Watermelon.SquadShooter
                     gameObject.SetActive(false);
 
                 // Deal damage to enemy
-                baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damage, transform.position, transform.forward);
+                baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damage, transform.position,
+                    transform.forward);
 
                 // Call hit callback
                 OnEnemyHitted(baseEnemyBehavior);

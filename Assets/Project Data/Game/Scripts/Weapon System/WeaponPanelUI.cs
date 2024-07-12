@@ -225,6 +225,18 @@ namespace Watermelon.SquadShooter
             UIGeneralPowerIndicator.UpdateText();
         }
 
+        public void UpgradePlease()
+        {
+             
+           if (Upgrade.NextStage.Price >
+               CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Amount) return;
+           SendAdjustEvent();
+           AudioController.PlaySound(AudioController.Sounds.buttonSound);
+           CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);
+           Upgrade.UpgradeStage();
+           weaponController.WeaponUpgraded(Data);
+           UIGeneralPowerIndicator.UpdateText(true);
+        }
         public void UpgradeButton()
         {
             /*

@@ -13,7 +13,7 @@ namespace Watermelon.Upgrades
         protected string title;
         public string Title => title;
 
-        public int UpgradeLevel { get => save.UpgradeLevel; set => save.UpgradeLevel = value; }
+        public int UpgradeLevel { get => save?.UpgradeLevel ?? 1; set => save.UpgradeLevel = value; }
 
         [NonSerialized]
         protected UpgradeSavableObject save;

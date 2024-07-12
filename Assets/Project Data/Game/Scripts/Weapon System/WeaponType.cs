@@ -13,6 +13,7 @@
         PoisonGun = 7,
         Flamethrower = 8,
         GrenadeLauncher= 9,
-        SniperRiffle = 10
+        SniperRiffle = 10,
+        DuoPistols = 11
     }
 }
