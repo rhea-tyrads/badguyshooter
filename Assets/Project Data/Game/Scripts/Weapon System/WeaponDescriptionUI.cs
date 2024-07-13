@@ -43,7 +43,7 @@ public class WeaponDescriptionUI : PopupUI
         SDKEvents.Instance.OnWeaponUpgradePossibile += Possibile;
     }
 
-    void Possibile(int cost)
+ public   void Possibile(int cost)
     {
         upgradeButton.gameObject.SetActive(true);
         upgradePriceTxt.text = cost.ToString();
@@ -54,9 +54,9 @@ public class WeaponDescriptionUI : PopupUI
         upgradeButton.gameObject.SetActive(false);
     }
 
-    void NotPossible()
+  public  void NotPossible()
     {
-        upgradeButton.gameObject.SetActive(true);  
+        upgradeButton.gameObject.SetActive(false);  
     }
 
     void Select()
@@ -75,7 +75,7 @@ public class WeaponDescriptionUI : PopupUI
         Index = index;
     }
 
-    public void SetUpgradePossible(bool isPossible)
+    public void IsEnoughMoney(bool isPossible)
     {
         upgradeButton.interactable = isPossible;
     }

@@ -144,21 +144,21 @@ namespace Watermelon.SquadShooter
             upgradeStateObject.SetActive(true);
             shopState.SetActive(false);
 
-            if (Upgrade.NextStage != null)
+            if (Upgrade.NextStage == null)
+            {
+                if (SDKEvents.Instance)
+                    SDKEvents.Instance.WeaponUpgradeMaxed();
+
+                //upgradePriceText.text = "MAXED OUT";
+                //upgradeCurrencyImage.gameObject.SetActive(false);
+            }
+            else
             {
                 if (SDKEvents.Instance)
                     SDKEvents.Instance.WeaponUpgradePossibile(Upgrade.NextStage.Price);
 
                 upgradePriceText.text = Upgrade.NextStage.Price.ToString();
                 upgradeCurrencyImage.sprite = CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Icon;
-            }
-            else
-            {
-                if (SDKEvents.Instance)
-                    SDKEvents.Instance.WeaponUpgradeMaxed();
-
-                upgradePriceText.text = "MAXED OUT";
-                upgradeCurrencyImage.gameObject.SetActive(false);
             }
 
             powerObject.SetActive(true);
@@ -174,7 +174,7 @@ namespace Watermelon.SquadShooter
 
             if (Upgrade.IsMaxedOut)
             {
-                upgradesMaxObject.SetActive(true);
+              //  upgradesMaxObject.SetActive(true);
                 // upgradesBuyButton.gameObject.SetActive(false);
 
                 if (gamepadButton)

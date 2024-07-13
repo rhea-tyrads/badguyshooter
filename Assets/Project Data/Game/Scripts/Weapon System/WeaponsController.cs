@@ -16,8 +16,7 @@ namespace Watermelon.SquadShooter
 
         [SerializeField] WeaponDatabase database;
 
-        [Header("Drop")]
-        [SerializeField] GameObject cardPrefab;
+        [Header("Drop")] [SerializeField] GameObject cardPrefab;
 
         static WeaponsController instance;
         static GlobalWeaponsSave save;
@@ -73,7 +72,6 @@ namespace Watermelon.SquadShooter
             description.OnSelect += SelectWeaponYA;
             description.OnUpgrade += UpgradeWep;
             description.Hide();
-   
         }
 
         public static int GetCeilingKeyPower(int currentKeyUpgrade)
@@ -124,7 +122,7 @@ namespace Watermelon.SquadShooter
         public void OnWeaponSelected(int weaponIndex)
         {
             SelectedWeaponIndex = weaponIndex;
-            
+
             var weapon = instance.database.GetWeaponByIndex(weaponIndex);
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
@@ -132,10 +130,20 @@ namespace Watermelon.SquadShooter
             var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
             //   var stats = upgrade.GetCurrentStage();
 
-            var price = upgrade.NextStage.Price;
-            var currencyType = upgrade.NextStage.CurrencyType;
-            var canUpgrade = CurrenciesController.HasAmount(currencyType, price);
-            description.SetUpgradePossible(canUpgrade);
+            if (upgrade.IsMaxedOut)
+            {
+                description.NotPossible();
+                // description.IsEnoughMoney(false);
+            }
+            else
+            {
+                var price = upgrade.NextStage.Price;
+                var currencyType = upgrade.NextStage.CurrencyType;
+                var canUpgrade = CurrenciesController.HasAmount(currencyType, price);
+                description.IsEnoughMoney(canUpgrade);
+                description.Possibile(upgrade.NextStage.Price);
+            }
+
 
             description.weaponName.text = data.Name;
             description.weaponImage.sprite = data.Icon;
@@ -147,8 +155,8 @@ namespace Watermelon.SquadShooter
             description.damage.text = "DAMAGE " + Damage(weapon.Type);
             description.firerate.text = "FIRERATE " + FireRate(weapon.Type);
             description.radius.text = "RANGE " + Radius(weapon.Type);
-            description.upgradePriceTxt.text = upgrade.NextStage.Price.ToString();
-  
+
+
             description.SetIndex(weaponIndex);
             description.Show();
 
@@ -159,7 +167,6 @@ namespace Watermelon.SquadShooter
             SelectedWeaponIndex = weaponIndex;
             CharacterBehaviour.GetBehaviour().SetGun(GetCurrentWeapon(), true);
             CharacterBehaviour.GetBehaviour().Graphics.Grunt();
-
         }
 
         void SelectWeaponYA()
@@ -172,21 +179,33 @@ namespace Watermelon.SquadShooter
 
         void UpgradeWep()
         {
-
             var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
-            Debug.LogError(SelectedWeaponIndex);
+//            Debug.LogError(SelectedWeaponIndex);
 
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
             panel.UpgradePlease();
-            
+
             var data = panel.Data;
             var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
-            description.upgradePriceTxt.text = upgrade.NextStage.Price.ToString();
+
+            description.levelText.text = "LVL. " + upgrade.UpgradeLevel;
+            description.damage.text = "DAMAGE " + Damage(weapon.Type);
+            description.firerate.text = "FIRERATE " + FireRate(weapon.Type);
+            description.radius.text = "RANGE " + Radius(weapon.Type);
+            Debug.LogWarning("____" + upgrade.UpgradeLevel + " / " + upgrade.Upgrades.Length);
+            if (upgrade.NextStage == null)
+            {
+                description.NotPossible();
+            }
+            else
+            {
+                description.upgradePriceTxt.text = upgrade.NextStage.Price.ToString();
+            }
 
             SendAdjustEvent();
         }
-        
+
         void SendAdjustEvent()
         {
             var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
@@ -204,6 +223,7 @@ namespace Watermelon.SquadShooter
                 _ => string.Empty
             };
 
+            if (token.Equals(string.Empty)) return;
             var send = new AdjustEvent(token);
             Adjust.trackEvent(send);
         }
@@ -277,8 +297,8 @@ namespace Watermelon.SquadShooter
         #region Access
 
         int Damage(WeaponType type) => GetBase(type).Damage.firstValue;
-        int FireRate(WeaponType type) => (int) GetBase(type).FireRate;
-        int Radius(WeaponType type) => (int) GetBase(type).RangeRadius;
+        int FireRate(WeaponType type) => (int)GetBase(type).FireRate;
+        int Radius(WeaponType type) => (int)GetBase(type).RangeRadius;
 
         BaseWeaponUpgradeStage GetUpgrade(UpgradeType type) =>
             type switch
