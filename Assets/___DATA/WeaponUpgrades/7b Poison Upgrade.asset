@@ -36,8 +36,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 8
-      secondValue: 15
+      firstValue: 20
+      secondValue: 28
     rangeRadius: 6.25
     fireRate: 2.1
     spread: 0
@@ -53,8 +53,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 12
-      secondValue: 15
+      firstValue: 25
+      secondValue: 32
     rangeRadius: 6.25
     fireRate: 2.2
     spread: 0
@@ -70,8 +70,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 15
-      secondValue: 18
+      firstValue: 32
+      secondValue: 38
     rangeRadius: 6.25
     fireRate: 2.3
     spread: 0
@@ -87,8 +87,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 16
-      secondValue: 18
+      firstValue: 37
+      secondValue: 42
     rangeRadius: 6.25
     fireRate: 2.4
     spread: 0
@@ -104,8 +104,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 18
-      secondValue: 20
+      firstValue: 40
+      secondValue: 50
     rangeRadius: 6.25
     fireRate: 2.5
     spread: 0
@@ -121,8 +121,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 20
-      secondValue: 22
+      firstValue: 45
+      secondValue: 55
     rangeRadius: 6.25
     fireRate: 2.6
     spread: 0
@@ -138,8 +138,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 22
-      secondValue: 24
+      firstValue: 50
+      secondValue: 60
     rangeRadius: 6.25
     fireRate: 2.7
     spread: 0
@@ -155,8 +155,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 24
-      secondValue: 26
+      firstValue: 55
+      secondValue: 65
     rangeRadius: 6.25
     fireRate: 2.8
     spread: 0
@@ -172,8 +172,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 24
-      secondValue: 28
+      firstValue: 60
+      secondValue: 70
     rangeRadius: 6.25
     fireRate: 2.9
     spread: 0
@@ -189,8 +189,8 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 24
-      secondValue: 30
+      firstValue: 60
+      secondValue: 80
     rangeRadius: 6.25
     fireRate: 3
     spread: 0
@@ -202,6 +202,8 @@ MonoBehaviour:
       firstValue: 12.5
       secondValue: 12.5
     keyUpgradeNumber: -1
+  DPS_DEFAULT: 50.399998
+  DPS_MAX: 210
   weaponPrefab: {fileID: 6347890837037930244, guid: 81bc4c7e3861e954aa7f42fc116f9cb5,
     type: 3}
   bulletPrefab: {fileID: 7995167561492624291, guid: b87fd3e9908a8864089911f0bddd7a32,

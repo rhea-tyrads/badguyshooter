@@ -32,12 +32,12 @@ MonoBehaviour:
       firstValue: 0
       secondValue: 0
     keyUpgradeNumber: -1
-  - price: 0
+  - price: 10
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
       firstValue: 4
-      secondValue: 5
+      secondValue: 6
     rangeRadius: 7.03125
     fireRate: 10
     spread: 5
@@ -202,7 +202,7 @@ MonoBehaviour:
       firstValue: 23.4375
       secondValue: 23.4375
     keyUpgradeNumber: -1
-  DPS_DEFAULT: 45
+  DPS_DEFAULT: 50
   DPS_MAX: 220
   weaponPrefab: {fileID: 6347890837037930244, guid: 60d8b7dff4bbbbc4db793104d2c025a1,
     type: 3}

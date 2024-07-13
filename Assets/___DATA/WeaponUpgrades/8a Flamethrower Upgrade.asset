@@ -32,14 +32,14 @@ MonoBehaviour:
       firstValue: 0
       secondValue: 0
     keyUpgradeNumber: -1
-  - price: 0
+  - price: 10
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 15
-      secondValue: 20
+      firstValue: 3
+      secondValue: 6
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -53,10 +53,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 17
-      secondValue: 22
+      firstValue: 4
+      secondValue: 7
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -70,10 +70,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 20
-      secondValue: 24
+      firstValue: 5
+      secondValue: 8
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -87,10 +87,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 22
-      secondValue: 26
+      firstValue: 9
+      secondValue: 10
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -104,10 +104,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 24
-      secondValue: 28
+      firstValue: 10
+      secondValue: 11
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -121,10 +121,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 26
-      secondValue: 30
+      firstValue: 10
+      secondValue: 13
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -138,10 +138,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 30
-      secondValue: 35
+      firstValue: 10
+      secondValue: 15
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -155,10 +155,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 32
-      secondValue: 38
+      firstValue: 11
+      secondValue: 16
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -172,10 +172,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 34
-      secondValue: 40
+      firstValue: 12
+      secondValue: 17
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -189,10 +189,10 @@ MonoBehaviour:
     currencyType: 0
     previewSprite: {fileID: 0}
     damage:
-      firstValue: 40
-      secondValue: 50
+      firstValue: 15
+      secondValue: 20
     rangeRadius: 6.5
-    fireRate: 1.5
+    fireRate: 10
     spread: 0
     power: 10
     bulletsPerShot:
@@ -202,6 +202,8 @@ MonoBehaviour:
       firstValue: 25
       secondValue: 25
     keyUpgradeNumber: -1
+  DPS_DEFAULT: 45
+  DPS_MAX: 175
   weaponPrefab: {fileID: 6347890837037930244, guid: b390104dad33a014a8ad99b173c697e6,
     type: 3}
   bulletPrefab: {fileID: 7995167561492624291, guid: ebeadb2a14bb25f4696b996b5d229202,

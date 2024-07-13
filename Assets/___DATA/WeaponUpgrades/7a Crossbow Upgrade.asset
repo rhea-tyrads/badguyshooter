@@ -39,7 +39,7 @@ MonoBehaviour:
       firstValue: 120
       secondValue: 120
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.45
     spread: 0
     power: 10
     bulletsPerShot:
@@ -73,7 +73,7 @@ MonoBehaviour:
       firstValue: 160
       secondValue: 160
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.33
     spread: 0
     power: 10
     bulletsPerShot:
@@ -90,7 +90,7 @@ MonoBehaviour:
       firstValue: 180
       secondValue: 180
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.36
     spread: 0
     power: 10
     bulletsPerShot:
@@ -107,7 +107,7 @@ MonoBehaviour:
       firstValue: 200
       secondValue: 200
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.38
     spread: 0
     power: 10
     bulletsPerShot:
@@ -124,7 +124,7 @@ MonoBehaviour:
       firstValue: 220
       secondValue: 220
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.4
     spread: 0
     power: 10
     bulletsPerShot:
@@ -141,7 +141,7 @@ MonoBehaviour:
       firstValue: 240
       secondValue: 240
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.44
     spread: 0
     power: 10
     bulletsPerShot:
@@ -158,7 +158,7 @@ MonoBehaviour:
       firstValue: 280
       secondValue: 280
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.48
     spread: 0
     power: 10
     bulletsPerShot:
@@ -175,7 +175,7 @@ MonoBehaviour:
       firstValue: 320
       secondValue: 320
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.52
     spread: 0
     power: 10
     bulletsPerShot:
@@ -192,7 +192,7 @@ MonoBehaviour:
       firstValue: 400
       secondValue: 400
     rangeRadius: 6.5
-    fireRate: 0.3
+    fireRate: 0.55
     spread: 0
     power: 10
     bulletsPerShot:
@@ -202,6 +202,8 @@ MonoBehaviour:
       firstValue: 25
       secondValue: 25
     keyUpgradeNumber: -1
+  DPS_DEFAULT: 54
+  DPS_MAX: 220
   weaponPrefab: {fileID: 6347890837037930244, guid: 06dbd0b1434df2a4b8d9e4f4324adc6b,
     type: 3}
   bulletPrefab: {fileID: 7995167561492624291, guid: 8ce1dc475b803094c939ecd6a5d3a353,
