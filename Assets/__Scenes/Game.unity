@@ -5300,6 +5300,7 @@ GameObject:
   - component: {fileID: 1060784223}
   - component: {fileID: 1060784225}
   - component: {fileID: 1060784226}
+  - component: {fileID: 1060784227}
   m_Layer: 0
   m_Name: Script Holder
   m_TagString: Untagged
@@ -5730,6 +5731,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ui: {fileID: 2057937226}
   showButton: {fileID: 1378406573}
+--- !u!114 &1060784227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060784196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ba37b39ce05ef44baeea3294e936996, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1061634452
 PrefabInstance:
   m_ObjectHideFlags: 0

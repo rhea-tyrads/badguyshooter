@@ -24,7 +24,7 @@ namespace MobileTools.InternetCheck
                         HasConnection();
                         break;
                     case NetworkReachability.ReachableViaLocalAreaNetwork:
-                        Debug.Log("Connected to Wi-Fi network.");
+//                        Debug.Log("Connected to Wi-Fi network.");
                         HasConnection();
                         break;
                 }
