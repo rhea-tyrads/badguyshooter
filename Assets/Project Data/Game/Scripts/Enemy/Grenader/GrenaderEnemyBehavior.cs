@@ -72,7 +72,7 @@ namespace Watermelon.SquadShooter
             switch (enemyCallbackType)
             {
                 case EnemyCallbackType.Hit:
-                    var grenade = grenadePool.GetMultiPooledObjectByIndex(Tier == EnemyTier.Elite ? 1 : 0, new PooledObjectSettings()).GetComponent<GrenadeBehavior>();
+                    var grenade = grenadePool.GetMultiByIndex(Tier == EnemyTier.Elite ? 1 : 0, new PooledObjectSettings()).GetComponent<GrenadeBehavior>();
 
                     grenade.Throw(grenadeStartPosition.position, TargetPosition, Damage);
                     grenadeObject.SetActive(false);

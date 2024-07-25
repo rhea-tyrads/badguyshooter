@@ -338,7 +338,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83b654761260730408a3599564a91c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trailRenderer: {fileID: 0}
+  hitVfx: Minigun Hit
+  wallHitVfx: Minigun Wall Hit
+  hitted: []
   owner: {fileID: 0}
 --- !u!65 &6925777729979834486
 BoxCollider:

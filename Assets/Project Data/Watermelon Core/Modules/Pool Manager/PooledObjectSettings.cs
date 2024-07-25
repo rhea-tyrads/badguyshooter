@@ -96,7 +96,7 @@ namespace Watermelon
             return this;
         }
 
-        public PooledObjectSettings SetEulerRotation(Vector3 eulerRotation)
+        public PooledObjectSettings SetRotation(Vector3 eulerRotation)
         {
             this.eulerRotation = eulerRotation;
             applyEulerRotation = true;

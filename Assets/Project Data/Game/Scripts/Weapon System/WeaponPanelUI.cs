@@ -68,7 +68,7 @@ namespace Watermelon.SquadShooter
 
             Data = data;
             Upgrade = upgrade;
-            panelRectTransform = (RectTransform) transform;
+            PanelRectTransform = (RectTransform) transform;
             gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
             weaponIndex = index;
             weaponController = controller;

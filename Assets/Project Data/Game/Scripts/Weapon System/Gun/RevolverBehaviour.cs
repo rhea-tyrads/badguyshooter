@@ -7,32 +7,18 @@ using Watermelon.SquadShooter;
 public class RevolverBehaviour : BaseGunBehavior
 {
     [LineSpacer]
-    // [SerializeField] Transform barrelTransform;
-    [SerializeField]
-    ParticleSystem shootParticleSystem;
-
-    [FormerlySerializedAs("shootParticleSystem_2")]
     [SerializeField] ParticleSystem shootParticleSystem2;
-
-    [FormerlySerializedAs("shootPoint_2")]
     [SerializeField] Transform shootPoint2;
-
-    [SerializeField] LayerMask targetLayers;
     [SerializeField] float bulletDisableTime;
-
-    // [Space]
-    // [SerializeField] float fireRotationSpeed;
-    [Space] [SerializeField] List<float> bulletStreamAngles;
-    [FormerlySerializedAs("RELOAD_TIME")] public float reloadTime = 0.1f;
-    float _reloadTimer;
+    [Space]
+    [SerializeField] Vector3 shootPointOffset;
+    [SerializeField] float reloadTime = 0.1f;
     const int BULLETS_TOTAL = 6;
+    float _offsetDir = 1;
+    bool _isLeft;
+    float _reloadTimer;
     int _bullets;
     float _spread;
-    float _attackDelay;
-    DuoFloat _bulletSpeed;
-    float _nextShootTime;
-    Pool _bulletPool;
-    Vector3 _shootDirection;
     RevolverUpgrade _upgrade;
     TweenCase _shootTweenCase;
 
@@ -61,18 +47,13 @@ public class RevolverBehaviour : BaseGunBehavior
         _bulletSpeed = stage.BulletSpeed;
     }
 
-    [FormerlySerializedAs("shootPointsOffset")]
-    public Vector3 shootPointOffset;
-
-    float _offsetDir = 1;
-    bool _isLeft;
+    int BulletsNumber => RandomBulletsAmount(_upgrade);
 
     public override void GunUpdate()
     {
         var shootPos = _isLeft ? shootPoint : shootPoint2;
-        if (!CharacterBehaviour.IsCloseEnemyFound) return;
-        //  barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
-        if (_nextShootTime >= Time.timeSinceLevelLoad) return;
+        if (NoTarget) return;
+        if (NotReady) return;
 
         if (_bullets <= 0)
         {
@@ -87,42 +68,27 @@ public class RevolverBehaviour : BaseGunBehavior
 
         // offsetDir *= -1;
         // shootPoint.localPosition += offsetDir * shootPointOffset;
-        _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPos.position.y) -
-                          shootPos.position;
+        _shootDirection = AimAtTarget();
+        if (OutOfAngle) return;
 
-        if (Physics.Raycast(transform.position, _shootDirection, out var hitInfo, 300f, targetLayers) &&
-            hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
+        if (TargetInSight)
         {
-            if (!(Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) < 90f)) return;
-
-            _shootTweenCase.KillActive();
-            _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate
-            {
-                _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f);
-            });
-            CharacterBehaviour.SetTargetActive();
-
-            shootParticleSystem.Play();
             //   if (isLeft) shootParticleSystem.Play();
             // else shootParticleSystem_2.Play();
 
-            _nextShootTime = Time.timeSinceLevelLoad + _attackDelay / CharacterBehaviour.AtkSpdMult;
+            PlayShootAnimation();
+            _nextShootTime = FireRate();
 
-            if (bulletStreamAngles.IsNullOrEmpty())
-                bulletStreamAngles = new List<float> { 0 };
-
-            var bulletsNumber = _upgrade.GetCurrentStage().BulletsPerShot.Random() +
-                                CharacterBehaviour.MultishotBoosterAmount;
             var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
 
-            for (var k = 0; k < bulletsNumber; k++)
+            for (var k = 0; k < BulletsNumber; k++)
             {
                 foreach (var streamAngle in bulletStreamAngles)
                 {
                     var bullet = _bulletPool.Get(
                             new PooledObjectSettings()
                                 .SetPosition(shootPos.position)
-                                .SetEulerRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
+                                .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
                                     (Random.Range(-finalSpread, finalSpread) +
                                      streamAngle)))
                         .GetComponent<RevolverBulletBehaviour>();
@@ -134,26 +100,26 @@ public class RevolverBehaviour : BaseGunBehavior
 
             _bullets--;
             if (_bullets <= 0) _reloadTimer = reloadTime;
-
-            CharacterBehaviour.OnGunShooted();
-
-            AudioController.Play(AudioController.Sounds.shotMinigun);
             // isLeft = !isLeft;
         }
         else
         {
-            CharacterBehaviour.SetTargetUnreachable();
+            TargetUnreachable();
         }
+    }
+
+    void PlayShootAnimation()
+    {
+        _shootTweenCase.KillActive();
+        _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
+        if (shootParticleSystem) shootParticleSystem.Play();
+        CharacterBehaviour.FocusOnTarget();
+        CharacterBehaviour.OnGunShooted();
+        AudioController.Play(AudioController.Sounds.shotMinigun);
     }
 
     public override void OnGunUnloaded()
     {
-        // Destroy bullets pool
-        if (_bulletPool != null)
-        {
-            _bulletPool.Clear();
-            _bulletPool = null;
-        }
     }
 
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)

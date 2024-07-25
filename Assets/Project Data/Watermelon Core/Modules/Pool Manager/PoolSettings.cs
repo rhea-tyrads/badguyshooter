@@ -59,7 +59,7 @@ namespace Watermelon
 
             for (var i = 0; i < origin.MultiPoolPrefabsAmount; i++)
             {
-                multiPoolPrefabsList.Add(origin.MultiPoolPrefabByIndex(i));
+                multiPoolPrefabsList.Add(origin.MultiPoolByIndex(i));
             }
 
             size = origin.Size;

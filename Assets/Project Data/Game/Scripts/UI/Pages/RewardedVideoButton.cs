@@ -1,9 +1,7 @@
-﻿using System;
-using Applovin;
+﻿using Applovin;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Utilities;
 
 namespace Watermelon
 {

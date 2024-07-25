@@ -81,7 +81,7 @@ namespace Watermelon
             audioSources.Clear();
             for (var i = 0; i < AUDIO_SOURCES_AMOUNT; i++)
             {
-                audioSources.Add(CreateAudioSourceObject(false));
+                audioSources.Add(CreateSource(false));
             }
 
             // Load default states
@@ -288,34 +288,29 @@ namespace Watermelon
 
         public static void Play(AudioClip clip, float volumePercentage = 1.0f, float pitch = 1.0f, float minDelay = 0f)
         {
-            if (clip == null)
+            if (!clip)
                 Debug.LogError("[AudioController]: Audio clip is null");
 
             if (minDelay > 0)
             {
                 if (minDelayQueue.Exists(data => data.AudioHash.Equals(clip.GetHashCode())))
-                {
                     return;
-                }
 
                 minDelayQueue.Add(new AudioMinDelayData(clip.GetHashCode(), minDelay));
             }
 
             var source = instance.GetAudioSource();
-
             SetSourceDefaultSettings(source, AudioType.Sound);
-
             source.clip = clip;
             source.volume *= volumePercentage;
             source.pitch = pitch;
             source.Play();
-
             AddSound(source);
         }
 
         public static AudioCase PlaySmartSound(AudioClip clip, float volumePercentage = 1.0f, float pitch = 1.0f)
         {
-            if (clip == null)
+            if (!clip)
                 Debug.LogError("[AudioController]: Audio clip is null");
 
             var source = instance.GetAudioSource();
@@ -336,7 +331,7 @@ namespace Watermelon
 
         public static AudioCaseCustom GetCustomSource(bool autoRelease, AudioType audioType)
         {
-            AudioSource source = null;
+            AudioSource source;
 
             if (!instance.customSources.IsNullOrEmpty())
             {
@@ -345,7 +340,7 @@ namespace Watermelon
             }
             else
             {
-                source = instance.CreateAudioSourceObject(true);
+                source = instance.CreateSource(true);
             }
 
             SetSourceDefaultSettings(source, audioType);
@@ -389,43 +384,37 @@ namespace Watermelon
                     return audioSources[i];
             }
 
-            var createdSource = CreateAudioSourceObject(false);
+            var createdSource = CreateSource(false);
             audioSources.Add(createdSource);
             return createdSource;
         }
 
-        AudioSource CreateAudioSourceObject(bool isCustom)
+        AudioSource CreateSource(bool isCustom)
         {
             var audioSource = targetGameObject.AddComponent<AudioSource>();
             SetSourceDefaultSettings(audioSource);
             return audioSource;
         }
 
-        void SetVolumeForAudioSources(float volume)
+        void SetVolumeForAudioSources(float vol)
         {
-            SetSoundsVolume(volume);
-            SetMusicVolume(volume);
+            SetSoundsVolume(vol);
+            SetMusicVolume(vol);
 
             foreach (var audi in activeCustomSourcesCases)
-            {
-                audi.source.volume = volume;
-            }
+                audi.source.volume = vol;
         }
 
-        public static void SetSoundsVolume(float newVolume)
+        static void SetSoundsVolume(float newVolume)
         {
             foreach (var src in instance.activeSoundSources)
-            {
                 src.volume = newVolume;
-            }
         }
 
-        public static void SetMusicVolume(float newVolume)
+        static void SetMusicVolume(float newVolume)
         {
             foreach (var src in instance.activeMusicSources)
-            {
                 src.volume = newVolume;
-            }
         }
 
         public static void SetVolume(float volume)

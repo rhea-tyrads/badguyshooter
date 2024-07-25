@@ -4,36 +4,26 @@ namespace Watermelon.SquadShooter
 {
     public class ShotgunBulletBehavior : PlayerBulletBehavior
     {
-        static readonly int ParticleHitHash = ParticlesController.GetHash("Shotgun Hit");
-        static readonly int ParticleWallHitHash = ParticlesController.GetHash("Shotgun Wall Hit");
-
         [SerializeField] TrailRenderer trailRenderer;
         [SerializeField] Transform graphicsTransform;
 
-        public override void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime, bool autoDisableOnHit = true)
+        public override void Initialise(float dmg, float speed, BaseEnemyBehavior currentTarget, float lifeTime, bool disableOnHit = true)
         {
-            base.Initialise(damage, speed, currentTarget, autoDisableTime, autoDisableOnHit);
-
+            base.Initialise(dmg, speed, currentTarget, lifeTime, disableOnHit);
             trailRenderer.Clear();
-
             transform.localScale = Vector3.one * 0.1f;
             transform.DOScale(1.0f, 0.25f).SetEasing(Ease.Type.CubicIn);
         }
 
-        protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
+        protected override void OnEnemyHitted(BaseEnemyBehavior target)
         {
-            ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
-
-            baseEnemyBehavior.Stun(0.1f);
-
+            target.Stun(0.1f);
             trailRenderer.Clear();
         }
 
         protected override void OnObstacleHitted()
         {
             base.OnObstacleHitted();
-
-            ParticlesController.Play(ParticleWallHitHash).SetPosition(transform.position);
             trailRenderer.Clear();
         }
     }

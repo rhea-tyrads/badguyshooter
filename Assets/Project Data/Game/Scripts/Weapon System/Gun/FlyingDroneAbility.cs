@@ -8,17 +8,14 @@ public class FlyingDroneAbility : MonoBehaviour
 {
     [SerializeField] Transform shootPoint;
     [SerializeField] CharacterBehaviour characterBehaviour;
-
     [SerializeField] Pool bulletPool;
     Vector3 _shootDirection;
-
     [SerializeField] LayerMask targetLayers;
     [SerializeField] ParticleSystem shootParticleSystem;
     public float attackDelay = 3f;
     public float shootFrequency = 0.1f;
     public float damage;
     public float bulletSpeed;
-
     bool _isShooting;
     public int bulletsNumber;
     public Transform model;
@@ -43,17 +40,14 @@ public class FlyingDroneAbility : MonoBehaviour
 
     void Update()
     {
-        if ( characterBehaviour.IsCloseEnemyFound)
+        if (characterBehaviour.IsCloseEnemyFound)
         {
             var enemyPos = characterBehaviour.ClosestEnemyBehaviour.transform.position;
             _shootDirection = enemyPos.SetY(shootPoint.position.y) - shootPoint.position;
             model.forward = _shootDirection;
-        
         }
- 
 
         if (_isShooting) return;
-
         if (_isReloading)
         {
             _reloadTimer -= Time.deltaTime;
@@ -77,7 +71,7 @@ public class FlyingDroneAbility : MonoBehaviour
         // if (!(Vector3.Angle(shootDirection, transform.forward.SetY(0f)) < 40f)) return;
 
         //  shootParticleSystem.Play();
-        if ( !characterBehaviour.IsCloseEnemyFound)return;
+        if (!characterBehaviour.IsCloseEnemyFound) return;
         _attackTimer = attackDelay / characterBehaviour.AtkSpdMult;
         StartCoroutine(Shoot());
         return;
@@ -85,14 +79,13 @@ public class FlyingDroneAbility : MonoBehaviour
         {
             var bullet = bulletPool.Get(new PooledObjectSettings()
                     .SetPosition(shootPoint.position)
-                    .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up))
+                    .SetRotation(characterBehaviour.transform.eulerAngles + Vector3.up))
                 .GetComponent<FlyingDroneBulletBehaviour>();
             lastBullet.Add(bullet);
 
             bullet.Initialise(
                 damage * characterBehaviour.Stats.BulletDamageMultiplier * characterBehaviour.critMultiplier,
                 bulletSpeed, characterBehaviour.ClosestEnemyBehaviour, 10f);
-            bullet.owner = characterBehaviour;
         }
 
         AudioController.Play(AudioController.Sounds.shotMinigun);
@@ -114,16 +107,15 @@ public class FlyingDroneAbility : MonoBehaviour
 
             var bullet = bulletPool.Get(new PooledObjectSettings()
                     .SetPosition(shootPoint.position)
-                    .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up))
+                    .SetRotation(characterBehaviour.transform.eulerAngles + Vector3.up))
                 .GetComponent<FlyingDroneBulletBehaviour>();
-          //  lastBullet.Add(bullet);
+            //  lastBullet.Add(bullet);
 
             bullet.Initialise(
                 damage * characterBehaviour.Stats.BulletDamageMultiplier * characterBehaviour.critMultiplier,
                 bulletSpeed, characterBehaviour.ClosestEnemyBehaviour, 10f);
-            bullet.owner = characterBehaviour;
             AudioController.Play(AudioController.Sounds.shotTesla);
-            
+
             Debug.LogError("Shoot - " + i);
         }
 

@@ -64,7 +64,7 @@ namespace Watermelon.SquadShooter
             _character = с;
             _charactersPanel = panel;
 
-            panelRectTransform = (RectTransform) transform;
+            PanelRectTransform = (RectTransform) transform;
             _gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
 
             previewImage.sprite = с.GetCurrentStage().PreviewSprite;
@@ -194,7 +194,7 @@ namespace Watermelon.SquadShooter
             var upgradeStateIndex = _character.GetCurrentUpgradeIndex() - 1;
             upgradesStatesImages[upgradeStateIndex].DOColor(upgradeStateActiveColor, 0.3f).OnComplete(delegate
             {
-                isUpgradeAnimationPlaying = false;
+                IsUpgradeAnimationPlaying = false;
 
                 RedrawUpgradeButton();
             });
@@ -299,7 +299,7 @@ namespace Watermelon.SquadShooter
             var currencyType = _character.Upgrades[upgradeStateIndex].CurrencyType;
             if (CurrenciesController.Has(currencyType, price))
             {
-                isUpgradeAnimationPlaying = true;
+                IsUpgradeAnimationPlaying = true;
                 CurrenciesController.Substract(currencyType, price);
                 _character.UpgradeCharacter();
                 if (CharactersController.SelectedCharacter.Type == _character.Type)

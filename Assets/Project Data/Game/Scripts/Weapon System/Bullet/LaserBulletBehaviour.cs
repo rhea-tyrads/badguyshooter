@@ -3,26 +3,18 @@ using Watermelon.SquadShooter;
 
 public class LaserBulletBehaviour : PlayerBulletBehavior
 {
-    static readonly int ParticleHitHash = ParticlesController.GetHash("Minigun Hit");
-    static readonly int ParticleWAllHitHash = ParticlesController.GetHash("Minigun Wall Hit");
-
-
-    public CharacterBehaviour owner;
-
-    public override void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime,
-        bool autoDisableOnHit = true)
+    public override void Initialise(float dmg, float speed, BaseEnemyBehavior currentTarget, float lifeTime,
+        bool disableOnHit = true)
     {
-        base.Initialise(damage, speed, currentTarget, autoDisableTime, autoDisableOnHit);
+        base.Initialise(dmg, speed, currentTarget, lifeTime, disableOnHit);
     }
 
-    protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
+    protected override void OnEnemyHitted(BaseEnemyBehavior target)
     {
-        ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
     }
 
     protected override void OnObstacleHitted()
     {
         base.OnObstacleHitted();
-        ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
     }
 }

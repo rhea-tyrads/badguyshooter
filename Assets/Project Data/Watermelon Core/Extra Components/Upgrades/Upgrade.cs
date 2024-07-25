@@ -7,10 +7,7 @@ namespace Watermelon.Upgrades
         [SerializeField]
         protected T[] upgrades;
         public override BaseUpgradeStage[] Upgrades => upgrades;
-
-
         protected T FirstStage => upgrades[1];
-
         protected T MaxStage => upgrades[^1];
 
         public T GetCurrentStage()

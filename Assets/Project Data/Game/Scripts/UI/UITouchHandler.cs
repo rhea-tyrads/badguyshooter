@@ -9,9 +9,9 @@ namespace Watermelon
     {
         public static bool Enabled { get; set; }
 
-        static bool isPointerDown;
+        static bool _isPointerDown;
 
-        public static float ClampedOffset { get; private set; }
+        static float ClampedOffset { get; set; }
 
         [SerializeField] float maxOffset;
         [SerializeField] float minOffset;
@@ -25,21 +25,19 @@ namespace Watermelon
 
         void Awake()
         {
-            isPointerDown = false;
+            _isPointerDown = false;
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            isPointerDown = true;
-
+            _isPointerDown = true;
             center = eventData.position;
             absolutePosition = eventData.position;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            isPointerDown = false;
-
+            _isPointerDown = false;
             center = absolutePosition;
         }
 
@@ -58,18 +56,14 @@ namespace Watermelon
 
         void Update()
         {
-            if (isPointerDown)
-            {
-                center = Vector2.Lerp(center, absolutePosition, snappingLerp * Time.deltaTime);
-
-                ClampedOffset = Mathf.Clamp01(Mathf.InverseLerp(minOffset, maxOffset, Offset.magnitude));
-            }
+            if (!_isPointerDown) return;
+            center = Vector2.Lerp(center, absolutePosition, snappingLerp * Time.deltaTime);
+            ClampedOffset = Mathf.Clamp01(Mathf.InverseLerp(minOffset, maxOffset, Offset.magnitude));
         }
 
         public static Vector3 GetInputDirection()
         {
-            if (!isPointerDown) return Vector3.zero;
-
+            if (!_isPointerDown) return Vector3.zero;
             if (ClampedOffset <= 0) return Vector3.zero;
 
             Vector3 prevPoint = center;

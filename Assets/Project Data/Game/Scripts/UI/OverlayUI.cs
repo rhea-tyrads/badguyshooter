@@ -7,21 +7,21 @@ namespace Watermelon
     {
         [SerializeField] CurrencyUIPanelSimple coinsUI;
 
-        static Canvas canvas;
+        static Canvas _canvas;
 
         public void Initialise()
         {
-            canvas = GetComponent<Canvas>();
+            _canvas = GetComponent<Canvas>();
         }
 
         public static void ShowOverlay()
         {
-            canvas.enabled = true;
+            _canvas.enabled = true;
         }
 
         public static void HideOverlay()
         {
-            canvas.enabled = false;
+            _canvas.enabled = false;
         }
     }
 }

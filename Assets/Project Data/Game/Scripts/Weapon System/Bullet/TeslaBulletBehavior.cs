@@ -7,9 +7,6 @@ namespace Watermelon.SquadShooter
 {
     public class TeslaBulletBehavior : PlayerBulletBehavior
     {
-        static readonly int ParticleHitHash = ParticlesController.GetHash("Tesla Hit");
-        static readonly int ParticleWallHitHash = ParticlesController.GetHash("Tesla Wall Hit");
-
         [Space(5f)]
         [SerializeField] TrailRenderer trailRenderer;
 
@@ -24,7 +21,7 @@ namespace Watermelon.SquadShooter
         {
             base.Initialise(damage, speed, currentTarget, autoDisableTime, autoDisableOnHit);
 
-            this._stunDuration = stunDuration;
+            _stunDuration = stunDuration;
             trailRenderer.Clear();
 
             transform.localScale = Vector3.one * 0.1f;
@@ -67,41 +64,32 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
+        protected override void OnEnemyHitted(BaseEnemyBehavior target)
         {
-            baseEnemyBehavior.Stun(_stunDuration);
-            ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
+            target.Stun(_stunDuration);
 
             trailRenderer.Clear();
 
             for (var i = 0; i < _targets.Count; i++)
             {
-                if (_targets[i].IsDead || _targets[i].Equals(baseEnemyBehavior))
-                {
-                    _targets.RemoveAt(i);
-                    i--;
-                }
+                if (!_targets[i].IsDead && !_targets[i].Equals(target)) continue;
+                _targets.RemoveAt(i);
+                i--;
             }
 
             _hitsPerformed++;
 
             // all hits after the first one deal 30% of damage
             if (_hitsPerformed == 1)
-            {
                 Damage *= 0.3f;
-            }
 
             if (_hitsPerformed >= _targetsHitGoal || _targets.Count == 0)
-            {
                 DisableBullet();
-            }
         }
 
         protected override void OnObstacleHitted()
         {
             base.OnObstacleHitted();
-
-            ParticlesController.Play(ParticleWallHitHash).SetPosition(transform.position);
             DisableBullet();
         }
 

@@ -37,7 +37,7 @@ namespace Watermelon.SquadShooter
                     var bullets = bulletsCount.Random();
                     for (var i = 0; i < bullets; i++)
                     {
-                        var bullet = bulletPool.Get(new PooledObjectSettings(false).SetPosition(shootPoint.position).SetEulerRotation(shootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
+                        var bullet = bulletPool.Get(new PooledObjectSettings(false).SetPosition(shootPoint.position).SetRotation(shootPoint.eulerAngles)).GetComponent<EnemyBulletBehavior>();
                         bullet.transform.LookAt(target.position.SetY(shootPoint.position.y));
                         bullet.Initialise(Damage, bulletSpeed, Stats.AttackDistance + 10f);
                         bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : (Random.Range(spreadAngle * 0.25f, spreadAngle * 0.5f) * (Random.Range(0, 2) == 0 ? -1f : 1f)), 0f));

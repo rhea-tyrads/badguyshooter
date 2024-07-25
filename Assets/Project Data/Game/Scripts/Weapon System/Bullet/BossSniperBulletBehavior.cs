@@ -5,20 +5,17 @@ namespace Watermelon.SquadShooter
 {
     public class BossSniperBulletBehavior : EnemyBulletBehavior
     {
-        static readonly int ParticleWAllHitHash = ParticlesController.GetHash("Minigun Wall Hit");
-
+        static readonly int _particleWAllHitHash = ParticlesController.GetHash("Minigun Wall Hit");
         [SerializeField] LayerMask collisionLayer;
-
         List<Vector3> _hitPoints;
-
-        int _nextHitPointId = 0;
+        int _nextHitPointId;
         Vector3 NextHitPoint => _hitPoints[_nextHitPointId];
 
         public void InitialiseBullet(float damage, float speed, float selfDestroyDistance, List<Vector3> hitPoints)
         {
             Initialise(damage, speed, selfDestroyDistance);
 
-            this._hitPoints = new List<Vector3>(hitPoints.ToArray());
+            _hitPoints = new List<Vector3>(hitPoints.ToArray());
             _nextHitPointId = 0;
         }
 
@@ -30,40 +27,32 @@ namespace Watermelon.SquadShooter
             if (distanceTraveledDuringThisFrame > distanceToNextHitPoint)
             {
                 transform.position = NextHitPoint;
-
                 _nextHitPointId++;
-
                 if (_nextHitPointId >= _hitPoints.Count)
                 {
-                    ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
+                    ParticlesController.Play(_particleWAllHitHash).SetPosition(transform.position);
                     SelfDestroy();
                 }
                 else
                 {
-                    ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
+                    ParticlesController.Play(_particleWAllHitHash).SetPosition(transform.position);
                     transform.forward = (NextHitPoint - transform.position).normalized;
                 }
             }
             else
             {
                 var directionToNextHitPoint = (NextHitPoint - transform.position).normalized;
-
                 transform.position += directionToNextHitPoint * distanceTraveledDuringThisFrame;
             }
         }
 
         protected override void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.layer == PhysicsHelper.LAYER_PLAYER)
-            {
-                var character = other.GetComponent<CharacterBehaviour>();
-                if (character != null)
-                {
-                    character.TakeDamage(Damage);
-
-                    SelfDestroy();
-                }
-            }
+            if (other.gameObject.layer != PhysicsHelper.LAYER_PLAYER) return;
+            var character = other.GetComponent<CharacterBehaviour>();
+            if (character == null) return;
+            character.TakeDamage(Damage);
+            SelfDestroy();
         }
     }
 }

@@ -6,24 +6,24 @@ namespace Watermelon.SquadShooter
     {
         [SerializeField] TrailRenderer trailRenderer;
 
-        static readonly int ParticleHitHash = ParticlesController.GetHash("Shotgun Hit");
-        static readonly int ParticleWallHitHash = ParticlesController.GetHash("Shotgun Wall Hit");
+        static readonly int _particleHitHash = ParticlesController.GetHash("Shotgun Hit");
+        static readonly int _particleWallHitHash = ParticlesController.GetHash("Shotgun Wall Hit");
 
         protected float Damage;
         protected float Speed;
 
-        protected float SelfDestroyDistance;
-        protected float DistanceTraveled = 0;
+        float _selfDestroyDistance;
+        float _distanceTraveled = 0;
 
         protected TweenCase DisableTweenCase;
 
         public virtual void Initialise(float damage, float speed, float selfDestroyDistance)
         {
-            this.Damage = damage;
-            this.Speed = speed;
+            Damage = damage;
+            Speed = speed;
 
-            this.SelfDestroyDistance = selfDestroyDistance;
-            DistanceTraveled = 0;
+            _selfDestroyDistance = selfDestroyDistance;
+            _distanceTraveled = 0;
 
             trailRenderer.Clear();
             var time = trailRenderer.time;
@@ -42,17 +42,13 @@ namespace Watermelon.SquadShooter
 
         protected virtual void FixedUpdate()
         {
-            transform.position += transform.forward * Speed * Time.fixedDeltaTime;
+            transform.position += transform.forward * (Speed * Time.fixedDeltaTime);
 
-            if (SelfDestroyDistance != -1)
-            {
-                DistanceTraveled += Speed * Time.fixedDeltaTime;
+            if (_selfDestroyDistance == -1) return;
+            _distanceTraveled += Speed * Time.fixedDeltaTime;
 
-                if (DistanceTraveled >= SelfDestroyDistance)
-                {
-                    SelfDestroy();
-                }
-            }
+            if (_distanceTraveled >= _selfDestroyDistance)
+                SelfDestroy();
         }
 
         protected virtual void OnTriggerEnter(Collider other)
@@ -64,23 +60,20 @@ namespace Watermelon.SquadShooter
                 {
                     // Deal damage to enemy
                     characterBehaviour.TakeDamage(Damage);
-
                     SelfDestroy();
                 }
 
-                ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
+                ParticlesController.Play(_particleHitHash).SetPosition(transform.position);
             }
             else if (other.gameObject.layer == PhysicsHelper.LAYER_OBSTACLE)
             {
                 SelfDestroy();
-
-                ParticlesController.Play(ParticleWallHitHash).SetPosition(transform.position);
+                ParticlesController.Play(_particleWallHitHash).SetPosition(transform.position);
             }
         }
 
-        public void SelfDestroy()
+        protected void SelfDestroy()
         {
-            // Disable bullet
             trailRenderer.Clear();
             gameObject.SetActive(false);
             trailRenderer.gameObject.SetActive(false);

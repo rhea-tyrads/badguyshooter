@@ -342,6 +342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61df5a5d0d3c09c46bd2b14cef54d686, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitVfx: Minigun Hit
+  wallHitVfx: Minigun Wall Hit
   hitted: []
   knockBackForce: 3
   trailRenderer: {fileID: 4173962772436254626}

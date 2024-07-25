@@ -5,26 +5,17 @@ namespace Watermelon.SquadShooter
     public class TeslaGunBehavior : BaseGunBehavior
     {
         [LineSpacer]
-        [SerializeField] ParticleSystem shootParticleSystem;
         [SerializeField] GameObject lightningLoopParticle;
-
-        [SerializeField] LayerMask targetLayers;
         [SerializeField] float chargeDuration;
-        DuoFloat _bulletSpeed;
         [SerializeField] DuoInt targetsHitGoal;
         [SerializeField] float stunDuration = 0.2f;
-
-        Pool _bulletPool;
-
         TweenCase _shootTweenCase;
-        Vector3 _shootDirection;
-
         bool _isCharging;
         bool _isCharged;
         bool _isChargeParticleActivated;
         float _fullChargeTime;
-
         TeslaGunUpgrade _upgrade;
+ 
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
@@ -46,21 +37,15 @@ namespace Watermelon.SquadShooter
         public override void RecalculateDamage()
         {
             var stage = _upgrade.GetCurrentStage();
-
             damage = stage.Damage;
             _bulletSpeed = stage.BulletSpeed;
         }
 
         public override void GunUpdate()
         {
-            // if no enemy - cancel charge
-            if (!CharacterBehaviour.IsCloseEnemyFound)
+            if (NoTarget)
             {
-                if (_isCharging || _isCharged)
-                {
-                    CancelCharge();
-                }
-
+                if (_isCharging || _isCharged) CancelCharge();
                 return;
             }
 
@@ -71,23 +56,23 @@ namespace Watermelon.SquadShooter
             {
                 _isCharging = true;
                 _isChargeParticleActivated = false;
-
-
                 _fullChargeTime = Time.timeSinceLevelLoad + (chargeDuration / atkSpdMult);
             }
+
+            _shootDirection = AimAtTarget();
 
             // wait for full charge
             if (_fullChargeTime >= Time.timeSinceLevelLoad)
             {
-                // start charge particle 0.5 sec before charge complete
+                //start charge particle 0.5 sec before charge complete
                 if (!_isChargeParticleActivated && _fullChargeTime - Time.timeSinceLevelLoad <= 0.5f)
                 {
                     _isChargeParticleActivated = true;
                     shootParticleSystem.Play();
                 }
 
-                if (IsEnemyVisible()) CharacterBehaviour.SetTargetActive();
-                else CharacterBehaviour.SetTargetUnreachable();
+                if (TargetInSight && !OutOfAngle) CharacterBehaviour.FocusOnTarget();
+                else CharacterBehaviour.TargetUnreachable();
 
                 return;
             }
@@ -99,77 +84,48 @@ namespace Watermelon.SquadShooter
                 lightningLoopParticle.SetActive(true);
             }
 
-            if (IsEnemyVisible())
+
+            if (OutOfAngle) return;
+
+            if (TargetInSight)
             {
-                CharacterBehaviour.SetTargetActive();
+                PlayShootAnimation();
+                _nextShootTime = FireRate();
 
-                _shootTweenCase.KillActive();
-
-                _shootTweenCase = transform.DOLocalMoveZ(-0.15f, chargeDuration/ atkSpdMult * 0.3f).OnComplete(delegate
-                {
-                    _shootTweenCase = transform.DOLocalMoveZ(0, chargeDuration / atkSpdMult* 0.6f);
-                });
-
-                var bulletsNumber = _upgrade.GetCurrentStage().BulletsPerShot.Random();
-
-                for (var k = 0; k < bulletsNumber; k++)
+                for (var k = 0; k < BulletsNumber; k++)
                 {
                     var bullet = _bulletPool
                         .Get(new PooledObjectSettings().SetPosition(shootPoint.position)
-                            .SetEulerRotation(CharacterBehaviour.transform.eulerAngles))
+                            .SetRotation(CharacterBehaviour.transform.eulerAngles))
                         .GetComponent<TeslaBulletBehavior>();
-                    bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier* CharacterBehaviour.critMultiplier,
+                    bullet.Initialise(
+                        damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
+                        CharacterBehaviour.critMultiplier,
                         _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, 5f, false, stunDuration);
                     bullet.SetTargetsHitGoal(targetsHitGoal.Random());
                 }
 
-                CharacterBehaviour.OnGunShooted();
-                CharacterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
 
                 CancelCharge();
-
-                AudioController.Play(AudioController.Sounds.shotTesla, volumePercentage: 0.8f);
             }
             else
             {
-                CharacterBehaviour.SetTargetUnreachable();
+                TargetUnreachable();
             }
         }
 
-        public bool IsEnemyVisible()
+        int BulletsNumber => RandomBulletsAmount(_upgrade);
+
+        void PlayShootAnimation()
         {
-            if (!CharacterBehaviour.IsCloseEnemyFound)
-                return false;
+            _shootTweenCase.KillActive();
+            _shootTweenCase = transform.DOLocalMoveZ(-0.15f, chargeDuration / _attackDelay * 0.3f).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, chargeDuration / _attackDelay * 0.6f); });
+            if (shootParticleSystem) shootParticleSystem.Play();
+            CharacterBehaviour.FocusOnTarget();
+            CharacterBehaviour.OnGunShooted();
+            AudioController.Play(AudioController.Sounds.shotTesla, volumePercentage: 0.8f);
 
-            _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) -
-                             shootPoint.position;
-
-            RaycastHit hitInfo;
-            if (Physics.Raycast(shootPoint.position - _shootDirection.normalized * 1.5f, _shootDirection, out hitInfo,
-                    300f, targetLayers) ||
-                Physics.Raycast(shootPoint.position, _shootDirection, out hitInfo, 300f, targetLayers)
-               )
-            {
-                if (hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
-                {
-                    if (Vector3.Angle(_shootDirection, transform.forward) < 40f)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
+            CharacterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
         }
 
         void CancelCharge()
@@ -191,25 +147,17 @@ namespace Watermelon.SquadShooter
 
             var defCol = Gizmos.color;
             Gizmos.color = Color.red;
-
             var shootDirection =
                 CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) -
                 shootPoint.position;
-
             Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 1.5f,
                 CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
-
             Gizmos.color = defCol;
         }
 
         public override void OnGunUnloaded()
         {
-            // Destroy bullets pool
-            if (_bulletPool != null)
-            {
-                _bulletPool.Clear();
-                _bulletPool = null;
-            }
+
         }
 
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)

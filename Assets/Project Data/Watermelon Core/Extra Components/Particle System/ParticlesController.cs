@@ -7,31 +7,26 @@ namespace Watermelon
     public partial class ParticlesController : MonoBehaviour
     {
         [SerializeField] Particle[] particles;
-        static readonly Dictionary<int, Particle> Registered = new();
-        static readonly List<ParticleCase> Active = new();
-        static readonly List<TweenCase> Delayed = new();
+        static readonly Dictionary<int, Particle> _registered = new();
+        static readonly List<ParticleCase> _active = new();
+        static readonly List<TweenCase> _delayed = new();
         static int _activeParticlesCount;
-      
-
         public void Initialise()
         {
             foreach (var particle in particles)
                 Register(particle);
-
             StartCoroutine(CheckForActive());
         }
 
         public static void Clear()
         {
-            foreach (var tween in Delayed)
+            foreach (var tween in _delayed)
                 tween.KillActive();
-
-            Delayed.Clear();
-
+            _delayed.Clear();
             for (var i = _activeParticlesCount - 1; i >= 0; i--)
             {
-                Active[i].OnDisable();
-                Active.RemoveAt(i);
+                _active[i].OnDisable();
+                _active.RemoveAt(i);
                 _activeParticlesCount--;
             }
         }
@@ -48,20 +43,20 @@ namespace Watermelon
 
                 for (var i = _activeParticlesCount - 1; i >= 0; i--)
                 {
-                    if (Active[i] != null)
+                    if (_active[i] != null)
                     {
-                        if (Active[i].IsForceDisabledRequired())
-                            Active[i].ParticleSystem.Stop();
+                        if (_active[i].IsForceDisabledRequired())
+                            _active[i].ParticleSystem.Stop();
 
-                        if (Active[i].ParticleSystem.IsAlive()) continue;
+                        if (_active[i].ParticleSystem.IsAlive()) continue;
                         
-                        Active[i].OnDisable();
-                        Active.RemoveAt(i);
+                        _active[i].OnDisable();
+                        _active.RemoveAt(i);
                         _activeParticlesCount--;
                     }
                     else
                     {
-                        Active.RemoveAt(i);
+                        _active.RemoveAt(i);
                         _activeParticlesCount--;
                     }
                 }
@@ -79,16 +74,16 @@ namespace Watermelon
                 delayTweenCase = Tween.DelayedCall(delay, () =>
                 {
                     particleCase.ParticleSystem.Play();
-                    Active.Add(particleCase);
+                    _active.Add(particleCase);
                     _activeParticlesCount++;
-                    Delayed.Remove(delayTweenCase);
+                    _delayed.Remove(delayTweenCase);
                 });
 
-                Delayed.Add(delayTweenCase);
+                _delayed.Add(delayTweenCase);
                 return particleCase;
             }
 
-            Active.Add(particleCase);
+            _active.Add(particleCase);
             _activeParticlesCount++;
             return particleCase;
         }
@@ -98,10 +93,10 @@ namespace Watermelon
         static int Register(Particle particle)
         {
             var particleHash = particle.ParticleName.GetHashCode();
-            if (!Registered.ContainsKey(particleHash))
+            if (!_registered.ContainsKey(particleHash))
             {
                 particle.Initialise();
-                Registered.Add(particleHash, particle);
+                _registered.Add(particleHash, particle);
                 return particleHash;
             }
 
@@ -120,8 +115,8 @@ namespace Watermelon
         public static ParticleCase Play(string particleName, float delay = 0)
         {
             var particleHash = particleName.GetHashCode();
-            if (Registered.ContainsKey(particleHash))
-                return ActivateParticle(Registered[particleHash], delay);
+            if (_registered.ContainsKey(particleHash))
+                return ActivateParticle(_registered[particleHash], delay);
 
             Debug.LogError($"[Particles System]: Particle with type {particleName} is missing!");
             return null;
@@ -129,8 +124,8 @@ namespace Watermelon
 
         public static ParticleCase Play(int particleHash, float delay = 0)
         {
-            if (Registered.ContainsKey(particleHash))
-                return ActivateParticle(Registered[particleHash], delay);
+            if (_registered.ContainsKey(particleHash))
+                return ActivateParticle(_registered[particleHash], delay);
 
             Debug.LogError($"[Particles System]: Particle with hash {particleHash} is missing!");
             return null;
@@ -139,8 +134,8 @@ namespace Watermelon
         public static ParticleCase Play(Particle particle, float delay = 0)
         {
             var particleHash = particle.ParticleName.GetHashCode();
-            if (Registered.ContainsKey(particleHash))
-                return ActivateParticle(Registered[particleHash], delay);
+            if (_registered.ContainsKey(particleHash))
+                return ActivateParticle(_registered[particleHash], delay);
             Debug.LogError($"[Particles System]: Particle with hash {particleHash} is missing!");
             return null;
         }

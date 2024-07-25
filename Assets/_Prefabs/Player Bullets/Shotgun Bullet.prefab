@@ -285,6 +285,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85dd5375841ee1442a12ff8cf47cfaa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitVfx: Shotgun Hit
+  wallHitVfx: Shotgun Wall Hit
+  hitted: []
   trailRenderer: {fileID: 4173962772436254626}
   graphicsTransform: {fileID: 1331736153482759877}
 --- !u!65 &6925777729979834486

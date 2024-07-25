@@ -9624,6 +9624,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810b0fda063ac0849a986bf05cf47f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitVfx: Lava Hit
+  wallHitVfx: Lava Wall Hit
+  hitted: []
 --- !u!65 &3489831812173736447
 BoxCollider:
   m_ObjectHideFlags: 0

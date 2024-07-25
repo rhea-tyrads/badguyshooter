@@ -13,7 +13,6 @@ namespace Watermelon.SquadShooter
         [SerializeField] Image weaponPreviewImage;
         [SerializeField] Image weaponBackgroundImage;
         [SerializeField] TextMeshProUGUI rarityText;
-
         [SerializeField] GameObject newRibbonObject;
 
         [Space]
@@ -24,40 +23,33 @@ namespace Watermelon.SquadShooter
         [SerializeField] GameObject progressEquipButtonObject;
         [SerializeField] GameObject progressEquipedObject;
 
-        CanvasGroup canvasGroup;
-        public CanvasGroup CanvasGroup => canvasGroup;
+        CanvasGroup _canvasGroup;
+        public CanvasGroup CanvasGroup => _canvasGroup;
+        WeaponData _weaponData;
+        RarityData _rarityData;
+        BaseWeaponUpgrade _weaponUpgrade;
 
-        WeaponData weaponData;
-        RarityData rarityData;
-        BaseWeaponUpgrade weaponUpgrade;
-
-        int currentCardsAmount;
+        int _currentCardsAmount;
 
         public void Initialise(WeaponType weaponType)
         {
-            canvasGroup = GetComponent<CanvasGroup>();
+            _canvasGroup = GetComponent<CanvasGroup>();
 
-            weaponData = WeaponsController.GetWeaponData(weaponType);
-            rarityData = WeaponsController.GetRarityData(weaponData.Rarity);
-            weaponUpgrade = UpgradesController.Get<BaseWeaponUpgrade>(weaponData.UpgradeType);
-
-            currentCardsAmount = weaponData.CardsAmount;
-
-            titleText.text = weaponData.Name;
-
-            weaponPreviewImage.sprite = weaponData.Icon;
-
-            rarityText.text = rarityData.Name;
-            rarityText.color = rarityData.TextColor;
-
-            weaponBackgroundImage.color = rarityData.MainColor;
-
+            _weaponData = WeaponsController.GetWeaponData(weaponType);
+            _rarityData = WeaponsController.GetRarityData(_weaponData.Rarity);
+            _weaponUpgrade = UpgradesController.Get<BaseWeaponUpgrade>(_weaponData.UpgradeType);
+            _currentCardsAmount = _weaponData.CardsAmount;
+            titleText.text = _weaponData.Name;
+            weaponPreviewImage.sprite = _weaponData.Icon;
+            rarityText.text = _rarityData.Name;
+            rarityText.color = _rarityData.TextColor;
+            weaponBackgroundImage.color = _rarityData.MainColor;
             progressPanelObject.SetActive(false);
         }
 
         public void OnDisplayed()
         {
-            var target = weaponUpgrade.Upgrades[1].Price;
+            var target = _weaponUpgrade.Upgrades[1].Price;
 
             progressPanelObject.SetActive(true);
             progressFillbarObject.SetActive(true);
@@ -65,15 +57,15 @@ namespace Watermelon.SquadShooter
             progressEquipButtonObject.SetActive(false);
             progressEquipedObject.SetActive(false);
 
-            progressFillbarText.text = string.Format(CARDS_TEXT, currentCardsAmount, target);
+            progressFillbarText.text = string.Format(CARDS_TEXT, _currentCardsAmount, target);
 
             progressPanelObject.transform.localScale = Vector3.one * 0.8f;
             progressPanelObject.transform.DOScale(Vector3.one, 0.15f).SetEasing(Ease.Type.BackOut);
 
             progressFillbarImage.fillAmount = 0.0f;
-            progressFillbarImage.DOFillAmount((float)currentCardsAmount / target, 0.4f, 0.1f).OnComplete(delegate
+            progressFillbarImage.DOFillAmount((float)_currentCardsAmount / target, 0.4f, 0.1f).OnComplete(delegate
             {
-                if (currentCardsAmount >= target)
+                if (_currentCardsAmount >= target)
                 {
                     Tween.DelayedCall(0.5f, delegate
                     {
@@ -89,11 +81,9 @@ namespace Watermelon.SquadShooter
 
         public void OnEquipButtonClicked()
         {
-            WeaponsController.Select(weaponData.Type);
-
+            WeaponsController.Select(_weaponData.Type);
             progressEquipButtonObject.SetActive(false);
             progressEquipedObject.SetActive(true);
-
             AudioController.Play(AudioController.Sounds.buttonSound);
         }
     }

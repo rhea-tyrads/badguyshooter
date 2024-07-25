@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,25 +10,18 @@ namespace Watermelon
         [Header("Power")]
         [SerializeField] protected GameObject powerObject;
         [SerializeField] protected TextMeshProUGUI powerText;
-
         [Header("Selection")]
         [SerializeField] protected Image selectionImage;
         [SerializeField] protected Transform backgroundTransform;
-
-        protected RectTransform panelRectTransform;
-        public RectTransform RectTransform => panelRectTransform;
-
+        protected RectTransform PanelRectTransform;
+        public RectTransform RectTransform => PanelRectTransform;
         public abstract bool IsUnlocked { get; }
-
-        protected bool isUpgradeAnimationPlaying;
-
+        protected bool IsUpgradeAnimationPlaying;
         protected BaseUpgrade BaseUpgrade { get; private set; }
 
         public void OnMoneyAmountChanged()
         {
-            if (isUpgradeAnimationPlaying)
-                return;
-
+            if (IsUpgradeAnimationPlaying) return;
             RedrawUpgradeButton();
         }
 

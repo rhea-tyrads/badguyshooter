@@ -398,8 +398,7 @@ namespace Watermelon.SquadShooter
 
                 if (_gunBehaviour)
                 {
-                    _gunBehaviour.OnGunUnloaded();
-
+                    _gunBehaviour.Unload();
                     Destroy(_gunBehaviour.gameObject);
                 }
 
@@ -681,9 +680,7 @@ namespace Watermelon.SquadShooter
             {
                 _multiShotTimer -= Time.fixedDeltaTime;
                 if (_multiShotTimer <= 0)
-                {
                     MultishotOff();
-                }
             }
 
             if (isAtkSpdBooster)
@@ -725,7 +722,7 @@ namespace Watermelon.SquadShooter
                 _ringTweenCase = _targetRing.transform.DOScale(Vector3.one * enemyBehavior.Stats.TargetRingSize, 0.2f)
                     .SetEasing(Ease.Type.BackIn);
                 CameraController.SetEnemyTarget(enemyBehavior);
-                SetTargetActive();
+                FocusOnTarget();
                 return;
             }
 
@@ -745,14 +742,14 @@ namespace Watermelon.SquadShooter
             EnemyDetector.TryAddClosestEnemy(enemy);
         }
 
-        public void SetTargetActive()
+        public void FocusOnTarget()
         {
             _targetRingRenderer.material.color = _closestEnemyBehaviour && _closestEnemyBehaviour.Tier == EnemyTier.Elite
                 ? targetRingSpecialColor
                 : targetRingActiveColor;
         }
 
-        public void SetTargetUnreachable()
+        public void TargetUnreachable()
         {
             _targetRingRenderer.material.color = targetRingDisabledColor;
         }

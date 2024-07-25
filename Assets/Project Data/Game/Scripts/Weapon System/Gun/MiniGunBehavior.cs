@@ -7,40 +7,18 @@ namespace Watermelon.SquadShooter
     {
         [LineSpacer]
         [SerializeField] Transform barrelTransform;
-        [SerializeField] ParticleSystem shootParticleSystem;
-
-        [SerializeField] LayerMask targetLayers;
-        [SerializeField] float bulletDisableTime;
-
-        [Space]
         [SerializeField] float fireRotationSpeed;
-
-        [Space]
-        [SerializeField] List<float> bulletStreamAngles;
-
         float _spread;
-        float _attackDelay;
-        DuoFloat _bulletSpeed;
-
-        float _nextShootTime;
-
-        Pool _bulletPool;
-
-        Vector3 _shootDirection;
-
         MinigunUpgrade _upgrade;
+        TweenCase _shootAnim;
 
-        TweenCase _shootTweenCase;
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
             base.Initialise(characterBehaviour, data);
-
             _upgrade = UpgradesController.Get<MinigunUpgrade>(data.UpgradeType);
-
-            var bulletObj = _upgrade.BulletPrefab;
-            _bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
-
+            var bulletPrefab = _upgrade.BulletPrefab;
+            _bulletPool = new Pool(new PoolSettings(bulletPrefab.name, bulletPrefab, 5, true));
             RecalculateDamage();
         }
 
@@ -52,7 +30,6 @@ namespace Watermelon.SquadShooter
         public override void RecalculateDamage()
         {
             var stage = _upgrade.GetCurrentStage();
-
             damage = stage.Damage;
             var atkSpdMult = CharacterBehaviour.isAtkSpdBooster ? CharacterBehaviour.atkSpdBoosterMult : 1;
             _attackDelay = 1f / (stage.FireRate * atkSpdMult);
@@ -60,78 +37,60 @@ namespace Watermelon.SquadShooter
             _bulletSpeed = stage.BulletSpeed;
         }
 
+        void RotateBarrelAnimation()
+        {
+            barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
+        }
+
+        int BulletsNumber => RandomBulletsAmount(_upgrade);
         public override void GunUpdate()
         {
-            if (!CharacterBehaviour.IsCloseEnemyFound) return;
-            if (CharacterBehaviour.ClosestEnemyBehaviour.isInStealth) return;
+            if (NoTarget) return;
+            RotateBarrelAnimation();
+            if (NotReady) return;
 
-            barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
+            _shootDirection = AimAtTarget();
+            if (OutOfAngle) return;
 
-            if (_nextShootTime >= Time.timeSinceLevelLoad)
-                return;
-
-            _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
-
-            if (Physics.Raycast(transform.position, _shootDirection, out var hitInfo, 300f, targetLayers) &&
-                hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
+            if (TargetInSight)
             {
-                if (Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) < 40f)
+                PlayShootAnimation();
+                _nextShootTime = FireRate();
+
+                for (var k = 0; k < BulletsNumber; k++)
                 {
-                    _shootTweenCase.KillActive();
-
-                    _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate
+                    foreach (var streamAngle in bulletStreamAngles)
                     {
-                        _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f);
-                    });
-
-                    CharacterBehaviour.SetTargetActive();
-
-                    shootParticleSystem.Play();
-
-                    _nextShootTime = Time.timeSinceLevelLoad + _attackDelay /CharacterBehaviour.AtkSpdMult;
-
-                    if (bulletStreamAngles.IsNullOrEmpty())
-                    {
-                        bulletStreamAngles = new List<float> {0};
+                        var angle = Vector3.up * (Random.Range(-_spread, _spread) + streamAngle);
+                        var settings = new PooledObjectSettings()
+                            .SetPosition(shootPoint.position)
+                            .SetRotation(CharacterBehaviour.transform.eulerAngles + angle);
+                        
+                        var bullet = _bulletPool.GetPlayerBullet(settings);
+                        bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
                     }
-
-                    var bulletsNumber = _upgrade.GetCurrentStage().BulletsPerShot.Random();
-
-                    for (var k = 0; k < bulletsNumber; k++)
-                    {
-                        foreach (var streamAngle in bulletStreamAngles)
-                        {
-                            var bullet = _bulletPool
-                                .Get(new PooledObjectSettings()
-                                    .SetPosition(shootPoint.position)
-                                    .SetEulerRotation(CharacterBehaviour.transform.eulerAngles +
-                                                      Vector3.up * (Random.Range((float) -_spread, _spread) +
-                                                                    streamAngle)))
-                                .GetComponent<PlayerBulletBehavior>();
-                            bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier,
-                                _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                        }
-                    }
-
-                    CharacterBehaviour.OnGunShooted();
-
-                    AudioController.Play(AudioController.Sounds.shotMinigun);
                 }
             }
             else
             {
-                CharacterBehaviour.SetTargetUnreachable();
+                TargetUnreachable();
             }
+        }
+
+        void PlayShootAnimation()
+        {
+            _shootAnim.KillActive();
+            _shootAnim = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f)
+                .OnComplete(delegate { _shootAnim = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
+            if (shootParticleSystem)  shootParticleSystem.Play();
+            CharacterBehaviour.FocusOnTarget();
+            CharacterBehaviour.OnGunShooted();
+            AudioController.Play(AudioController.Sounds.shotMinigun);
         }
 
         public override void OnGunUnloaded()
         {
-            // Destroy bullets pool
-            if (_bulletPool != null)
-            {
-                _bulletPool.Clear();
-                _bulletPool = null;
-            }
+ 
         }
 
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)

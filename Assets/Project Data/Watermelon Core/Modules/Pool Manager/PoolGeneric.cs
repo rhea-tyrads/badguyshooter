@@ -156,12 +156,12 @@ namespace Watermelon
         /// <returns></returns>
         T GetPooledComponentSingleType(PooledObjectSettings settings)
         {
-            if (!inited)
+            if (!isInit)
                 InitializeAsSingleTypePool();
 
-            for (var i = 0; i < pooledObjects.Count; i++)
+            for (var i = 0; i < PooledObjects.Count; i++)
             {
-                var pooledObject = pooledObjects[i];
+                var pooledObject = PooledObjects[i];
 
                 if(pooledObject == null)
                 {
@@ -174,16 +174,16 @@ namespace Watermelon
                     newObject.name += " " + PoolManager.SpawnedObjectsAmount;
                     newObject.SetActive(false);
 
-                    pooledObjects[i] = newObject;
+                    PooledObjects[i] = newObject;
 
                     InitGenericSingleObject(newObject);
 
                     pooledComponents[i] = newObject.GetComponent<T>();
                 }
 
-                if (settings.UseActiveOnHierarchy ? !pooledObjects[i].activeInHierarchy : !pooledObjects[i].activeSelf)
+                if (settings.UseActiveOnHierarchy ? !PooledObjects[i].activeInHierarchy : !PooledObjects[i].activeSelf)
                 {
-                    SetupPooledObject(pooledObjects[i], settings);
+                    SetupPooledObject(PooledObjects[i], settings);
                     return pooledComponents[i];
                 }
             }
@@ -201,16 +201,16 @@ namespace Watermelon
 
         T[] GetPooledComponentsSingleType(int amount, PooledObjectSettings settings)
         {
-            if (!inited)
+            if (!isInit)
                 InitializeAsSingleTypePool();
 
             var result = new T[amount];
 
             var counter = 0;
 
-            for (var i = 0; i < pooledObjects.Count; i++)
+            for (var i = 0; i < PooledObjects.Count; i++)
             {
-                var obj = pooledObjects[i];
+                var obj = PooledObjects[i];
                 if (!obj.activeSelf)
                 {
                     obj.SetActive(true);
@@ -249,7 +249,7 @@ namespace Watermelon
         /// <returns></returns>
         T GetPooledComponentMultiType(PooledObjectSettings settings, int poolIndex)
         {
-            if (!inited)
+            if (!isInit)
                 InitializeAsMultiTypePool();
 
             var chosenPoolIndex = 0;
@@ -285,7 +285,7 @@ namespace Watermelon
                 chosenPoolIndex = randomPoolIndex;
             }
 
-            var objectsList = multiPooledObjects[chosenPoolIndex];
+            var objectsList = MultiPooledObjects[chosenPoolIndex];
 
             for (var i = 0; i < objectsList.Count; i++)
             {

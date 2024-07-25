@@ -7,6 +7,11 @@ namespace Watermelon.SquadShooter
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public abstract class PlayerBulletBehavior : MonoBehaviour
     {
+        [SerializeField] string hitVfx;
+        [SerializeField] string wallHitVfx;
+
+        int _hitVfx  ;
+        int _hitWallVfx  ;
         protected float Damage;
         protected float Speed;
         bool _autoDisableOnHit;
@@ -15,19 +20,22 @@ namespace Watermelon.SquadShooter
 
         protected BaseEnemyBehavior CurrentTarget;
 
-        public virtual void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget,
-            float autoDisableTime, bool autoDisableOnHit = true)
+        public virtual void Initialise(float dmg, float speed, BaseEnemyBehavior currentTarget,
+            float lifeTime, bool disableOnHit = true)
         {
             hitted.Clear();
-            this.Damage = damage;
-            this.Speed = speed;
-            this._autoDisableOnHit = autoDisableOnHit;
+            Damage = dmg;
+            Speed = speed;
+            _autoDisableOnHit = disableOnHit;
+            CurrentTarget = currentTarget;
 
-            this.CurrentTarget = currentTarget;
+            _hitVfx = ParticlesController.GetHash(hitVfx);
+            _hitWallVfx = ParticlesController.GetHash(wallHitVfx);
 
-            if (autoDisableTime > 0)
+
+            if (lifeTime > 0)
             {
-                _disableTweenCase = Tween.DelayedCall(autoDisableTime, delegate
+                _disableTweenCase = Tween.DelayedCall(lifeTime, delegate
                 {
                     // Disable bullet
                     gameObject.SetActive(false);
@@ -55,19 +63,18 @@ namespace Watermelon.SquadShooter
                 if (baseEnemyBehavior.IsDead) return;
                 _disableTweenCase.KillActive();
 
-                // Disable bullet
                 if (_autoDisableOnHit)
                     gameObject.SetActive(false);
 
-                // Deal damage to enemy
                 baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : Damage, transform.position,
                     transform.forward);
 
-                // Call hit callback
+                ParticlesController.Play(_hitVfx).SetPosition(transform.position);
                 OnEnemyHitted(baseEnemyBehavior);
             }
             else
             {
+                ParticlesController.Play(_hitWallVfx).SetPosition(transform.position);
                 OnObstacleHitted();
             }
         }
@@ -82,7 +89,7 @@ namespace Watermelon.SquadShooter
             _disableTweenCase.KillActive();
         }
 
-        protected abstract void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior);
+        protected abstract void OnEnemyHitted(BaseEnemyBehavior target);
 
         protected virtual void OnObstacleHitted()
         {
