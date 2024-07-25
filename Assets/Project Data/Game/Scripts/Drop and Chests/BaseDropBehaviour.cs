@@ -9,6 +9,7 @@ namespace Watermelon.SquadShooter
     {
         public bool IsRewarded { get; set; } = false;
 
+        // ReSharper disable once InconsistentNaming
         protected bool isPicked = false;
         public bool IsPicked => isPicked;
 
@@ -20,8 +21,8 @@ namespace Watermelon.SquadShooter
         public int DropAmount => dropData.amount;
         public DropableItemType DropType => dropData.dropType;
 
-        protected float availableToPickDelay;
-        protected float autoPickDelay;
+        protected float AvailableToPickDelay;
+        protected float AutoPickDelay;
 
         public abstract void Initialise(DropData dropData, float availableToPickDelay = -1f, float autoPickDelay = -1f, bool ignoreCollector = false);
         public abstract void Pick(bool moveToPlayer = true);

@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.adjust.sdk;
 using UnityEngine;
-using UnityEngine.UI;
-using Watermelon;
 using Watermelon.LevelSystem;
 using Watermelon.Upgrades;
 
@@ -54,7 +51,7 @@ namespace Watermelon.SquadShooter
                 weapons[i].Initialise();
                 weaponsLink.Add(weapons[i].Type, i);
 
-                var baseUpgrade = UpgradesController.GetUpgrade<BaseWeaponUpgrade>(weapons[i].UpgradeType);
+                var baseUpgrade = UpgradesController.Get<BaseWeaponUpgrade>(weapons[i].UpgradeType);
                 for (var j = 0; j < baseUpgrade.UpgradesCount; j++)
                 {
                     var currentStage = baseUpgrade.Upgrades[j] as BaseWeaponUpgradeStage;
@@ -69,8 +66,8 @@ namespace Watermelon.SquadShooter
             weaponPageUI.SetWeaponsController(this);
             keyUpgradeStages.OrderBy(s => s.KeyUpgradeNumber);
             CheckWeaponUpdateState();
-            description.OnSelect += SelectWeaponYA;
-            description.OnUpgrade += UpgradeWep;
+            description.OnSelect += SelectWeapon;
+            description.OnUpgrade += UpgradeSelected;
             description.Hide();
         }
 
@@ -91,14 +88,14 @@ namespace Watermelon.SquadShooter
         {
             foreach (var data in weapons)
             {
-                var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
+                var upgrade = UpgradesController.Get<BaseUpgrade>(data.UpgradeType);
                 if (upgrade.UpgradeLevel != 0 || data.CardsAmount < upgrade.NextStage.Price) continue;
                 upgrade.UpgradeStage();
                 OnWeaponUnlocked?.Invoke(data);
             }
         }
 
-        public static void SelectWeapon(WeaponType weaponType)
+        public static void Select(WeaponType weaponType)
         {
             var weaponIndex = 0;
             for (var i = 0; i < instance.database.Weapons.Length; i++)
@@ -108,18 +105,18 @@ namespace Watermelon.SquadShooter
                 break;
             }
 
-            instance.OnWeaponSelected(weaponIndex);
+            instance.OnSelected(weaponIndex);
         }
 
         public static bool IsTutorialWeaponUpgraded()
         {
-            var upg = UpgradesController.GetUpgrade<BaseUpgrade>(UpgradeType.Minigun);
+            var upg = UpgradesController.Get<BaseUpgrade>(UpgradeType.Minigun);
             return upg.UpgradeLevel >= 2;
         }
 
         public WeaponDescriptionUI description;
 
-        public void OnWeaponSelected(int weaponIndex)
+        public void OnSelected(int weaponIndex)
         {
             SelectedWeaponIndex = weaponIndex;
 
@@ -127,7 +124,7 @@ namespace Watermelon.SquadShooter
             var page = UIController.GetPage<UIWeaponPage>();
             var panel = page.GetPanel(weapon.Type);
             var data = panel.Data;
-            var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
+            var upgrade = UpgradesController.GetByType(data.UpgradeType);
             //   var stats = upgrade.GetCurrentStage();
 
             if (upgrade.IsMaxedOut)
@@ -139,7 +136,7 @@ namespace Watermelon.SquadShooter
             {
                 var price = upgrade.NextStage.Price;
                 var currencyType = upgrade.NextStage.CurrencyType;
-                var canUpgrade = CurrenciesController.HasAmount(currencyType, price);
+                var canUpgrade = CurrenciesController.Has(currencyType, price);
                 description.IsEnoughMoney(canUpgrade);
                 description.Possibile(upgrade.NextStage.Price);
             }
@@ -155,8 +152,6 @@ namespace Watermelon.SquadShooter
             description.damage.text = "DAMAGE " + Damage(weapon.Type);
             description.firerate.text = "FIRERATE " + FireRate(weapon.Type);
             description.radius.text = "RANGE " + Radius(weapon.Type);
-
-
             description.SetIndex(weaponIndex);
             description.Show();
 
@@ -169,7 +164,7 @@ namespace Watermelon.SquadShooter
             CharacterBehaviour.GetBehaviour().Graphics.Grunt();
         }
 
-        void SelectWeaponYA()
+        void SelectWeapon()
         {
             SelectedWeaponIndex = description.Index;
             CharacterBehaviour.GetBehaviour().SetGun(GetCurrentWeapon(), true);
@@ -177,7 +172,7 @@ namespace Watermelon.SquadShooter
             OnNewWeaponSelected?.Invoke();
         }
 
-        void UpgradeWep()
+        void UpgradeSelected()
         {
             var weapon = instance.database.GetWeaponByIndex(SelectedWeaponIndex);
 //            Debug.LogError(SelectedWeaponIndex);
@@ -187,7 +182,7 @@ namespace Watermelon.SquadShooter
             panel.UpgradePlease();
 
             var data = panel.Data;
-            var upgrade = UpgradesController.GetUpgradeByType(data.UpgradeType);
+            var upgrade = UpgradesController.GetByType(data.UpgradeType);
 
             description.levelText.text = "LVL. " + upgrade.UpgradeLevel;
             description.damage.text = "DAMAGE " + Damage(weapon.Type);
@@ -244,10 +239,8 @@ namespace Watermelon.SquadShooter
         public static void AddCards(List<WeaponType> cards)
         {
             if (cards.IsNullOrEmpty()) return;
-
             foreach (var weapon in cards.Select(type => weapons[weaponsLink[type]]))
                 weapon.Save.CardsAmount++;
-
             OnWeaponCardsAmountChanged?.Invoke();
         }
 
@@ -255,11 +248,11 @@ namespace Watermelon.SquadShooter
 
         public static WeaponData GetWeaponData(WeaponType weaponType) => instance.database.GetWeapon(weaponType);
 
-        public static RarityData GetRarityData(Rarity rarity) => instance.database.GetRarityData(rarity);
+        public static RarityData GetRarityData(Rarity rarity) => instance.database.GetRarity(rarity);
 
         public void WeaponUpgraded(WeaponData weaponData)
         {
-            AudioController.PlaySound(AudioController.Sounds.upgrade);
+            AudioController.Play(AudioController.Sounds.upgrade);
             var characterBehaviour = CharacterBehaviour.GetBehaviour();
             characterBehaviour.SetGun(GetCurrentWeapon(), true, true, true);
             OnWeaponUpgraded?.Invoke();
@@ -269,19 +262,19 @@ namespace Watermelon.SquadShooter
         {
             foreach (var data in instance.database.Weapons)
             {
-                var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
+                var upgrade = UpgradesController.Get<BaseUpgrade>(data.UpgradeType);
                 if (upgrade.UpgradeLevel == 0)
                     upgrade.UpgradeStage();
             }
         }
 
-        public void UnlockWeapon(WeaponType weaponType)
+        public void Unlock(WeaponType weaponType)
         {
             if (weaponType == WeaponType.Dummy) return;
             if (IsWeaponUnlocked(weaponType)) return;
 
             var data = instance.database.Weapons.Find(w => w.Type == weaponType);
-            var upgrade = UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType);
+            var upgrade = UpgradesController.Get<BaseUpgrade>(data.UpgradeType);
             if (upgrade.UpgradeLevel == 0)
                 upgrade.UpgradeStage();
 
@@ -289,10 +282,10 @@ namespace Watermelon.SquadShooter
         }
 
         public static BaseWeaponUpgrade GetCurrentWeaponUpgrade() =>
-            UpgradesController.GetUpgrade<BaseWeaponUpgrade>(GetCurrentWeapon().UpgradeType);
+            UpgradesController.Get<BaseWeaponUpgrade>(GetCurrentWeapon().UpgradeType);
 
         public static BaseWeaponUpgrade GetWeaponUpgrade(WeaponType type) =>
-            UpgradesController.GetUpgrade<BaseWeaponUpgrade>(GetWeaponData(type).UpgradeType);
+            UpgradesController.Get<BaseWeaponUpgrade>(GetWeaponData(type).UpgradeType);
 
         #region Access
 
@@ -303,16 +296,16 @@ namespace Watermelon.SquadShooter
         BaseWeaponUpgradeStage GetUpgrade(UpgradeType type) =>
             type switch
             {
-                UpgradeType.Minigun => UpgradesController.GetUpgrade<MinigunUpgrade>(type).GetCurrentStage(),
-                UpgradeType.Shotgun => UpgradesController.GetUpgrade<ShotgunUpgrade>(type).GetCurrentStage(),
-                UpgradeType.Tesla => UpgradesController.GetUpgrade<TeslaGunUpgrade>(type).GetCurrentStage(),
-                UpgradeType.LavaLauncher => UpgradesController.GetUpgrade<LavaLauncherUpgrade>(type).GetCurrentStage(),
-                UpgradeType.Revolver => UpgradesController.GetUpgrade<RevolverUpgrade>(type).GetCurrentStage(),
-                UpgradeType.Laser => UpgradesController.GetUpgrade<LaserUpgrade>(type).GetCurrentStage(),
-                UpgradeType.CrossBow => UpgradesController.GetUpgrade<CrossbowUpgrade>(type).GetCurrentStage(),
-                UpgradeType.PoisonGun => UpgradesController.GetUpgrade<PoisonGunUpgrade>(type).GetCurrentStage(),
-                UpgradeType.Flamethrower => UpgradesController.GetUpgrade<FlameThrowerUpgrade>(type).GetCurrentStage(),
-                _ => UpgradesController.GetUpgrade<MinigunUpgrade>(type).GetCurrentStage()
+                UpgradeType.Minigun => UpgradesController.Get<MinigunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Shotgun => UpgradesController.Get<ShotgunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Tesla => UpgradesController.Get<TeslaGunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.LavaLauncher => UpgradesController.Get<LavaLauncherUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Revolver => UpgradesController.Get<RevolverUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Laser => UpgradesController.Get<LaserUpgrade>(type).GetCurrentStage(),
+                UpgradeType.CrossBow => UpgradesController.Get<CrossbowUpgrade>(type).GetCurrentStage(),
+                UpgradeType.PoisonGun => UpgradesController.Get<PoisonGunUpgrade>(type).GetCurrentStage(),
+                UpgradeType.Flamethrower => UpgradesController.Get<FlameThrowerUpgrade>(type).GetCurrentStage(),
+                _ => UpgradesController.Get<MinigunUpgrade>(type).GetCurrentStage()
             };
 
         BaseWeaponUpgradeStage GetBase(WeaponType type) =>
@@ -333,7 +326,7 @@ namespace Watermelon.SquadShooter
         public static bool IsWeaponUnlocked(WeaponType type)
             => (from data in instance.database.Weapons
                 where data.Type == type
-                select UpgradesController.GetUpgrade<BaseUpgrade>(data.UpgradeType)
+                select UpgradesController.Get<BaseUpgrade>(data.UpgradeType)
                 into upgrade
                 select upgrade.UpgradeLevel > 0).FirstOrDefault();
 

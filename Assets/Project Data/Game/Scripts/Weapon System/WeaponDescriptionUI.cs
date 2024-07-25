@@ -1,12 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using MobileTools.RateGameUI.Code;
 using MobileTools.SDK;
-using MobileTools.Utilities;
 using TMPro;
-using UnityEngine;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class WeaponDescriptionUI : PopupUI

@@ -4,8 +4,8 @@ namespace Watermelon
 {
     public class RingEffectCase : TweenCase
     {
-        static readonly int SHADER_SCALE_PROPERTY = Shader.PropertyToID("_Scale");
-        static readonly int SHADER_COLOR_PROPERTY = Shader.PropertyToID("_Color");
+        static readonly int ShaderScaleProperty = Shader.PropertyToID("_Scale");
+        static readonly int ShaderColorProperty = Shader.PropertyToID("_Color");
 
         GameObject ringGameObject;
         MeshRenderer ringMeshRenderer;
@@ -27,7 +27,7 @@ namespace Watermelon
 
             ringMeshRenderer.GetPropertyBlock(materialPropertyBlock);
             //materialPropertyBlock.SetFloat(SHADER_SCALE_PROPERTY, 0.1f);
-            materialPropertyBlock.SetColor(SHADER_COLOR_PROPERTY, targetGradient.Evaluate(0.0f));
+            materialPropertyBlock.SetColor(ShaderColorProperty, targetGradient.Evaluate(0.0f));
             ringMeshRenderer.SetPropertyBlock(materialPropertyBlock);
         }
 
@@ -37,7 +37,7 @@ namespace Watermelon
 
             ringMeshRenderer.GetPropertyBlock(materialPropertyBlock);
             //materialPropertyBlock.SetFloat(SHADER_SCALE_PROPERTY, targetSize);
-            materialPropertyBlock.SetColor(SHADER_COLOR_PROPERTY, targetGradient.Evaluate(1.0f));
+            materialPropertyBlock.SetColor(ShaderColorProperty, targetGradient.Evaluate(1.0f));
             ringMeshRenderer.SetPropertyBlock(materialPropertyBlock);
 
             ringGameObject.SetActive(false);
@@ -49,7 +49,7 @@ namespace Watermelon
 
             ringMeshRenderer.GetPropertyBlock(materialPropertyBlock);
             //materialPropertyBlock.SetFloat(SHADER_SCALE_PROPERTY, Mathf.LerpUnclamped(0.1f, targetSize, interpolatedState));
-            materialPropertyBlock.SetColor(SHADER_COLOR_PROPERTY, targetGradient.Evaluate(interpolatedState));
+            materialPropertyBlock.SetColor(ShaderColorProperty, targetGradient.Evaluate(interpolatedState));
             ringMeshRenderer.SetPropertyBlock(materialPropertyBlock);
 
             ringGameObject.transform.localScale = Vector3.one * Mathf.LerpUnclamped(0.1f, targetSize, interpolatedState);

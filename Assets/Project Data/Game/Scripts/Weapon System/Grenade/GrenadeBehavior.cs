@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Watermelon;
 using Watermelon.LevelSystem;
 
 namespace Watermelon.SquadShooter
@@ -89,12 +88,12 @@ namespace Watermelon.SquadShooter
 
             yield return new WaitForSeconds(0.5f);
 
-            var explosionCase = ParticlesController.PlayParticle(explosionParticleHash);
+            var explosionCase = ParticlesController.Play(explosionParticleHash);
             explosionCase.SetPosition(transform.position);
 
-            var explosionDecalCase = ParticlesController.PlayParticle(explosionDecalParticleHash);
+            var explosionDecalCase = ParticlesController.Play(explosionDecalParticleHash);
             explosionDecalCase.SetPosition(transform.position).SetScale(Vector3.one * 3f).SetRotation(Quaternion.Euler(-90f, 0f, 0f));
-            AudioController.PlaySound(AudioController.Sounds.explode);
+            AudioController.Play(AudioController.Sounds.explode);
 
             gameObject.SetActive(false);
 

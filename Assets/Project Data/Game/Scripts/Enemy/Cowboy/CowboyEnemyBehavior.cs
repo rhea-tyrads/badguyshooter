@@ -48,7 +48,7 @@ namespace Watermelon.SquadShooter
                     bullet.Initialise(Damage, bulletSpeed, 200);
 
                     leftGunFireParticle.Play();
-                    AudioController.PlaySound(AudioController.Sounds.enemyShot);
+                    AudioController.Play(AudioController.Sounds.enemyShot);
 
                     break;
                 case EnemyCallbackType.RightHit:
@@ -57,7 +57,7 @@ namespace Watermelon.SquadShooter
                     bullet.Initialise(Damage, bulletSpeed, 200);
 
                     rightGunFireParticle.Play();
-                    AudioController.PlaySound(AudioController.Sounds.enemyShot);
+                    AudioController.Play(AudioController.Sounds.enemyShot);
 
                     break;
 

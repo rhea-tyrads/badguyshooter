@@ -2,13 +2,14 @@
 using System.Linq;
 using UnityEngine;
 using Watermelon.SquadShooter;
+using static UnityEngine.Object;
 
 namespace Watermelon.LevelSystem
 {
     public static class ActiveRoom
     {
         static GameObject levelObject;
-
+ 
         static RoomData roomData;
         public static RoomData RoomData => roomData;
 
@@ -23,11 +24,11 @@ namespace Watermelon.LevelSystem
         static List<AbstractChestBehavior> chests;
         public static List<AbstractChestBehavior> Chests => chests;
 
-        static int currentLevelIndex;
-        public static int CurrentLevelIndex => currentLevelIndex;
+        static int _level;
+        public static int Level => _level;
 
-        static int currentWorldIndex;
-        public static int CurrentWorldIndex => currentWorldIndex;
+        static int _world;
+        public static int World => _world;
 
         static ExitPointBehaviour exitPointBehaviour;
         public static ExitPointBehaviour ExitPointBehaviour => exitPointBehaviour;
@@ -47,18 +48,18 @@ namespace Watermelon.LevelSystem
 
         public static void SetLevelData(int currentWorldIndex, int currentLevelIndex)
         {
-            ActiveRoom.currentWorldIndex = currentWorldIndex;
-            ActiveRoom.currentLevelIndex = currentLevelIndex;
+            _world = currentWorldIndex;
+            _level = currentLevelIndex;
         }
 
-        public static void SetLevelData(LevelData levelData)
+        public static void SetLevelData(LevelData data)
         {
-            ActiveRoom.levelData = levelData;
+            levelData = data;
         }
 
-        public static void SetRoomData(RoomData roomData)
+        public static void SetRoomData(RoomData data)
         {
-            ActiveRoom.roomData = roomData;
+            roomData = data;
         }
 
         public static void Unload()
@@ -72,26 +73,21 @@ namespace Watermelon.LevelSystem
 
             activeObjects.Clear();
 
-            // Unload enemies
-            for (var i = 0; i < enemies.Count; i++)
+            foreach (var enemy in enemies)
             {
-                enemies[i].Unload();
-
-                Object.Destroy(enemies[i].gameObject);
+                enemy.Unload();
+                Destroy(enemy.gameObject);
             }
 
             enemies.Clear();
 
-            if (exitPointBehaviour != null)
+            if (exitPointBehaviour)
             {
                 exitPointBehaviour.Unload();
-
-                Object.Destroy(exitPointBehaviour.gameObject);
-
+                Destroy(exitPointBehaviour.gameObject);
                 exitPointBehaviour = null;
             }
 
-            // Unload custom objects
             UnloadCustomObjects();
         }
 
@@ -110,8 +106,7 @@ namespace Watermelon.LevelSystem
 
         public static void SpawnExitPoint(GameObject exitPointPrefab, Vector3 position)
         {
-            exitPointBehaviour = Object
-                .Instantiate(exitPointPrefab, position, Quaternion.identity, levelObject.transform)
+            exitPointBehaviour = Instantiate(exitPointPrefab, position, Quaternion.identity, levelObject.transform)
                 .GetComponent<ExitPointBehaviour>();
             exitPointBehaviour.Initialise();
         }
@@ -135,7 +130,7 @@ namespace Watermelon.LevelSystem
 
         public static BaseEnemyBehavior SpawnEnemy(EnemyData enemyData, EnemyEntityData enemyEntityData, bool isActive)
         {
-            var enemy = Object.Instantiate(enemyData.Prefab, enemyEntityData.Position, enemyEntityData.Rotation, levelObject.transform).GetComponent<BaseEnemyBehavior>();
+            var enemy = Instantiate(enemyData.Prefab, enemyEntityData.Position, enemyEntityData.Rotation, levelObject.transform).GetComponent<BaseEnemyBehavior>();
             enemy.transform.localScale = enemyEntityData.Scale;
             enemy.SetEnemyData(enemyData, enemyEntityData.IsElite);
             enemy.SetPatrollingPoints(enemyEntityData.PathPoints);
@@ -167,7 +162,7 @@ namespace Watermelon.LevelSystem
             {
                 enemy.Unload();
 
-                Object.Destroy(enemy.gameObject);
+                Destroy(enemy.gameObject);
             }
 
             enemies.Clear();
@@ -236,7 +231,7 @@ namespace Watermelon.LevelSystem
 
         public static void SpawnCustomObject(CustomObjectData objectData)
         {
-            var customObject = Tween.Instantiate(objectData.PrefabRef);
+            var customObject = Instantiate(objectData.PrefabRef);
             customObject.transform.SetParent(levelObject.transform);
             customObject.transform.SetPositionAndRotation(objectData.Position, objectData.Rotation);
             customObject.transform.localScale = objectData.Scale;
@@ -250,9 +245,9 @@ namespace Watermelon.LevelSystem
             if (customObjects.IsNullOrEmpty())
                 return;
 
-            for (var i = 0; i < customObjects.Count; i++)
+            foreach (var obj in customObjects)
             {
-                Tween.Destroy(customObjects[i]);
+                Destroy(obj);
             }
 
             customObjects.Clear();

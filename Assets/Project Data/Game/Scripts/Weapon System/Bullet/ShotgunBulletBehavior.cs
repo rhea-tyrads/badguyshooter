@@ -4,8 +4,8 @@ namespace Watermelon.SquadShooter
 {
     public class ShotgunBulletBehavior : PlayerBulletBehavior
     {
-        static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Shotgun Hit");
-        static readonly int PARTICLE_WALL_HIT_HASH = ParticlesController.GetHash("Shotgun Wall Hit");
+        static readonly int ParticleHitHash = ParticlesController.GetHash("Shotgun Hit");
+        static readonly int ParticleWallHitHash = ParticlesController.GetHash("Shotgun Wall Hit");
 
         [SerializeField] TrailRenderer trailRenderer;
         [SerializeField] Transform graphicsTransform;
@@ -22,7 +22,7 @@ namespace Watermelon.SquadShooter
 
         protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
         {
-            ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
+            ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
 
             baseEnemyBehavior.Stun(0.1f);
 
@@ -33,7 +33,7 @@ namespace Watermelon.SquadShooter
         {
             base.OnObstacleHitted();
 
-            ParticlesController.PlayParticle(PARTICLE_WALL_HIT_HASH).SetPosition(transform.position);
+            ParticlesController.Play(ParticleWallHitHash).SetPosition(transform.position);
             trailRenderer.Clear();
         }
     }

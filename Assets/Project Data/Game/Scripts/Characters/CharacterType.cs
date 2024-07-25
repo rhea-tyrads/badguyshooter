@@ -2,14 +2,14 @@
 {
     public enum CharacterType
     {
-        Character_01 = 0,
-        Character_02 = 1,
-        Character_03 = 2,
-        Character_Spaceman = 3,
-        Character_Policeman = 4,
-        Character_Alien = 5,
-        Character_Ninja = 6,
-        Character_Skeleton = 7,
-        Character_Fireman = 8,
+        Character01 = 0,
+        Character02 = 1,
+        Character03 = 2,
+        CharacterSpaceman = 3,
+        CharacterPoliceman = 4,
+        CharacterAlien = 5,
+        CharacterNinja = 6,
+        CharacterSkeleton = 7,
+        CharacterFireman = 8,
     }
 }

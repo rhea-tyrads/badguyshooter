@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Watermelon;
 using Watermelon.SquadShooter;
@@ -18,11 +15,11 @@ public class FiremanBulletBehaviour : MonoBehaviour
         hitVfx.gameObject.SetActive(false);
     }
 
-    bool Inactive;
+    bool _inactive;
 
     void OnTriggerEnter(Collider other)
     {
-        if (Inactive) return;
+        if (_inactive) return;
         if (other.gameObject.layer != PhysicsHelper.LAYER_ENEMY) return;
         
         var baseEnemyBehavior = other.GetComponent<BaseEnemyBehavior>();
@@ -33,7 +30,7 @@ public class FiremanBulletBehaviour : MonoBehaviour
     {
         if (enemy == null) return;
         if (enemy.IsDead) return;
-        Inactive = true;
+        _inactive = true;
         enemy.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damage, transform.position, transform.forward);
         container.SetActive(false);
         hitVfx.gameObject.SetActive(true);
@@ -43,7 +40,7 @@ public class FiremanBulletBehaviour : MonoBehaviour
 
     void Activate()
     {
-        Inactive = false;
+        _inactive = false;
         container.SetActive(true);
     }
 }

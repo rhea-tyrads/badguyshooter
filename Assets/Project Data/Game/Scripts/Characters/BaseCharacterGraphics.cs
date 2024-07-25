@@ -8,11 +8,11 @@ namespace Watermelon.SquadShooter
     {
         static readonly int PARTICLE_UPGRADE = ParticlesController.GetHash("Upgrade");
 
-        readonly int ANIMATION_SHOT_HASH = Animator.StringToHash("Shot");
-        readonly int ANIMATION_HIT_HASH = Animator.StringToHash("Hit");
+        readonly int _animationShotHash = Animator.StringToHash("Shot");
+        readonly int _animationHitHash = Animator.StringToHash("Hit");
 
-        readonly int JUMP_ANIMATION_HASH = Animator.StringToHash("Jump");
-        readonly int GRUNT_ANIMATION_HASH = Animator.StringToHash("Grunt");
+        readonly int _jumpAnimationHash = Animator.StringToHash("Jump");
+        readonly int _gruntAnimationHash = Animator.StringToHash("Grunt");
 
         [SerializeField]
         protected Animator characterAnimator;
@@ -61,36 +61,36 @@ namespace Watermelon.SquadShooter
         [SerializeField] Transform leftHandController;
         [SerializeField] Transform rightHandController;
 
-        protected CharacterBehaviour characterBehaviour;
-        protected CharacterAnimationHandler animationHandler;
+        protected CharacterBehaviour CharacterBehaviour;
+        protected CharacterAnimationHandler AnimationHandler;
 
-        protected Material characterMaterial;
-        public Material CharacterMaterial => characterMaterial;
+        public Material CharacterMaterial;
+ 
 
-        int animatorShootingLayerIndex;
+        int _animatorShootingLayerIndex;
 
-        AnimatorOverrideController animatorOverrideController;
+        AnimatorOverrideController _animatorOverrideController;
 
-        TweenCase rigWeightCase;
+        TweenCase _rigWeightCase;
 
-        protected RagdollBehavior ragdoll;
+        protected RagdollBehavior Ragdoll;
 
         public virtual void Initialise(CharacterBehaviour characterBehaviour)
         {
-            this.characterBehaviour = characterBehaviour;
+            this.CharacterBehaviour = characterBehaviour;
 
-            ragdoll = new RagdollBehavior();
-            ragdoll.Initialise(characterAnimator.transform);
+            Ragdoll = new RagdollBehavior();
+            Ragdoll.Initialise(characterAnimator.transform);
 
-            animationHandler = characterAnimator.GetComponent<CharacterAnimationHandler>();
-            animationHandler.Inititalise(characterBehaviour);
+            AnimationHandler = characterAnimator.GetComponent<CharacterAnimationHandler>();
+            AnimationHandler.Inititalise(characterBehaviour);
 
-            animatorOverrideController = new AnimatorOverrideController(characterAnimator.runtimeAnimatorController);
-            characterAnimator.runtimeAnimatorController = animatorOverrideController;
+            _animatorOverrideController = new AnimatorOverrideController(characterAnimator.runtimeAnimatorController);
+            characterAnimator.runtimeAnimatorController = _animatorOverrideController;
 
-            characterMaterial = meshRenderer.sharedMaterial;
+            CharacterMaterial = meshRenderer.sharedMaterial;
 
-            animatorShootingLayerIndex = characterAnimator.GetLayerIndex("Shooting");
+            _animatorShootingLayerIndex = characterAnimator.GetLayerIndex("Shooting");
         }
 
         public abstract void OnMovingStarted();
@@ -101,15 +101,15 @@ namespace Watermelon.SquadShooter
 
         public void Jump()
         {
-            characterAnimator.SetTrigger(JUMP_ANIMATION_HASH);
+            characterAnimator.SetTrigger(_jumpAnimationHash);
 
-            rigWeightCase.KillActive();
+            _rigWeightCase.KillActive();
             mainRig.weight = 0f;
         }
 
         public void Grunt()
         {
-            characterAnimator.SetTrigger(GRUNT_ANIMATION_HASH);
+            characterAnimator.SetTrigger(_gruntAnimationHash);
 
             var strength = 0.1f;
             var durationIn = 0.1f;
@@ -133,24 +133,24 @@ namespace Watermelon.SquadShooter
 
         public void EnableRig()
         {
-            rigWeightCase = Tween.DoFloat(0, 1, 0.2f, (value) => mainRig.weight = value);
+            _rigWeightCase = Tween.DoFloat(0, 1, 0.2f, (value) => mainRig.weight = value);
         }
 
         public abstract void CustomFixedUpdate();
 
         public void SetShootingAnimation(AnimationClip animationClip)
         {
-            animatorOverrideController["Shot"] = animationClip;
+            _animatorOverrideController["Shot"] = animationClip;
         }
 
         public void OnShoot()
         {
-            characterAnimator.Play(ANIMATION_SHOT_HASH, animatorShootingLayerIndex, 0);
+            characterAnimator.Play(_animationShotHash, _animatorShootingLayerIndex, 0);
         }
 
         public void PlayHitAnimation()
         {
-            characterAnimator.SetTrigger(ANIMATION_HIT_HASH);
+            characterAnimator.SetTrigger(_animationHitHash);
         }
 
         public void PlayBounceAnimation()
@@ -161,7 +161,7 @@ namespace Watermelon.SquadShooter
 
         public void PlayUpgradeParticle()
         {
-            var particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE).SetPosition(transform.position + new Vector3(0, 0.5f, 0)).SetScale((5).ToVector3());
+            var particleCase = ParticlesController.Play(PARTICLE_UPGRADE).SetPosition(transform.position + new Vector3(0, 0.5f, 0)).SetScale((5).ToVector3());
             particleCase.ParticleSystem.transform.rotation = CameraController.MainCamera.transform.rotation;
             particleCase.ParticleSystem.transform.Rotate(Vector3.up, 180);
         }
@@ -172,18 +172,18 @@ namespace Watermelon.SquadShooter
 
             characterAnimator.enabled = false;
 
-            characterBehaviour.Weapon.gameObject.SetActive(false);
+            CharacterBehaviour.Weapon.gameObject.SetActive(false);
 
-            ragdoll?.ActivateWithForce(transform.position + transform.forward, 700, 100);
+            Ragdoll?.ActivateWithForce(transform.position + transform.forward, 700, 100);
         }
 
         public void DisableRagdoll()
         {
-            ragdoll?.Disable();
+            Ragdoll?.Disable();
 
             mainRig.weight = 1.0f;
 
-            characterBehaviour.Weapon.gameObject.SetActive(true);
+            CharacterBehaviour.Weapon.gameObject.SetActive(true);
             characterAnimator.enabled = true;
         }
 
@@ -271,15 +271,15 @@ namespace Watermelon.SquadShooter
                     // Prepare ragdoll
                     RagdollHelper.CreateRagdoll(tempAnimator, 60, 1, LayerMask.NameToLayer("Ragdoll"));
 
-                    movementSettings.RotationSpeed = 8;
-                    movementSettings.MoveSpeed = 5;
-                    movementSettings.Acceleration = 781.25f;
-                    movementSettings.AnimationMultiplier = new DuoFloat(0, 1.4f);
+                    movementSettings.rotationSpeed = 8;
+                    movementSettings.moveSpeed = 5;
+                    movementSettings.acceleration = 781.25f;
+                    movementSettings.animationMultiplier = new DuoFloat(0, 1.4f);
 
-                    movementAimingSettings.RotationSpeed = 8;
-                    movementAimingSettings.MoveSpeed = 4.375f;
-                    movementAimingSettings.Acceleration = 781.25f;
-                    movementAimingSettings.AnimationMultiplier = new DuoFloat(0, 1.2f);
+                    movementAimingSettings.rotationSpeed = 8;
+                    movementAimingSettings.moveSpeed = 4.375f;
+                    movementAimingSettings.acceleration = 781.25f;
+                    movementAimingSettings.animationMultiplier = new DuoFloat(0, 1.2f);
 
                     var tempAnimationHandler = tempAnimator.GetComponent<CharacterAnimationHandler>();
                     if (tempAnimationHandler == null)

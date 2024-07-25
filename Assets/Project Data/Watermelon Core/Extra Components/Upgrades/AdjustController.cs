@@ -9,7 +9,7 @@ using Watermelon.LevelSystem;
 public class AdjustController : MonoBehaviour
 {
     public List<string> levelCompleteEvents = new();
-    DateTime sessionStartTime;
+    DateTime _sessionStartTime;
 
     [SerializeField] GameSettings config;
 
@@ -36,7 +36,7 @@ public class AdjustController : MonoBehaviour
 
     void StartSession()
     {
-        sessionStartTime = DateTime.Now;
+        _sessionStartTime = DateTime.Now;
         var startEvent = new AdjustEvent("mi8sge");
         Adjust.trackEvent(startEvent);
     }
@@ -45,7 +45,7 @@ public class AdjustController : MonoBehaviour
     void EndSession()
     {
         var sessionEndTime = DateTime.Now;
-        var sessionDuration = sessionEndTime - sessionStartTime;
+        var sessionDuration = sessionEndTime - _sessionStartTime;
         var endEvent = new AdjustEvent("iay4np");
         endEvent.addCallbackParameter("duration", sessionDuration.TotalSeconds.ToString());
         Adjust.trackEvent(endEvent);
@@ -53,8 +53,8 @@ public class AdjustController : MonoBehaviour
 
     public void LevelComplete(int world, int level)
     {
-        world = ActiveRoom.CurrentWorldIndex;
-        level = ActiveRoom.CurrentLevelIndex + 1;
+        world = ActiveRoom.World;
+        level = ActiveRoom.Level + 1;
 
         var worlds = config.LevelsDatabase.Worlds;
         var number = 0;
@@ -64,6 +64,7 @@ public class AdjustController : MonoBehaviour
         for (var w = 0; w < world + 1; w++)
         {
             if (shouldBreak) break;
+            if (w >= worlds.Length) return;
 
             for (var l = 0; l < worlds[w].Levels.Length; l++)
             {
@@ -79,7 +80,7 @@ public class AdjustController : MonoBehaviour
         }
 
         //Debug.LogError("LEVEL COMPLETE: " + number);
-        
+
         if (number < 1) number = 1;
         var token = levelCompleteEvents[number - 1];
         var send = new AdjustEvent(token);

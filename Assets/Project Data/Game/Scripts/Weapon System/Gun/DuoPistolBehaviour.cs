@@ -11,8 +11,8 @@ public class DuoPistolBehaviour : BaseGunBehavior
     [SerializeField]
     ParticleSystem shootParticleSystem;
 
-    [SerializeField] ParticleSystem shootParticleSystem_2;
-    [SerializeField] Transform shootPoint_2;
+    [FormerlySerializedAs("shootParticleSystem_2")] [SerializeField] ParticleSystem shootParticleSystem2;
+    [FormerlySerializedAs("shootPoint_2")] [SerializeField] Transform shootPoint2;
 
     [SerializeField] LayerMask targetLayers;
     [SerializeField] float bulletDisableTime;
@@ -21,33 +21,33 @@ public class DuoPistolBehaviour : BaseGunBehavior
     // [SerializeField] float fireRotationSpeed;
 
     [Space] [SerializeField] List<float> bulletStreamAngles;
-    public float RELOAD_TIME = 0.1f;
+    [FormerlySerializedAs("RELOAD_TIME")] public float reloadTime = 0.1f;
     float _reloadTimer;
     const int BULLETS_TOTAL = 6;
     int _bullets;
 
-    float spread;
-    float attackDelay;
-    DuoFloat bulletSpeed;
+    float _spread;
+    float _attackDelay;
+    DuoFloat _bulletSpeed;
 
-    float nextShootTime;
+    float _nextShootTime;
 
-    Pool bulletPool;
+    Pool _bulletPool;
 
-    Vector3 shootDirection;
+    Vector3 _shootDirection;
 
-    DuoPistolUpgrade upgrade;
+    DuoPistolUpgrade _upgrade;
 
-    TweenCase shootTweenCase;
+    TweenCase _shootTweenCase;
 
     public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
     {
         base.Initialise(characterBehaviour, data);
 
-        upgrade = UpgradesController.GetUpgrade<DuoPistolUpgrade>(data.UpgradeType);
+        _upgrade = UpgradesController.Get<DuoPistolUpgrade>(data.UpgradeType);
 
-        var bulletObj = upgrade.BulletPrefab;
-        bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
+        var bulletObj = _upgrade.BulletPrefab;
+        _bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
         RecalculateDamage();
 
@@ -61,27 +61,27 @@ public class DuoPistolBehaviour : BaseGunBehavior
 
     public override void RecalculateDamage()
     {
-        var stage = upgrade.GetCurrentStage();
+        var stage = _upgrade.GetCurrentStage();
 
         damage = stage.Damage;
-        var atkSpdMult = characterBehaviour.isAtkSpdBooster ? characterBehaviour.atkSpdBoosterMult : 1;
-        attackDelay = 1f / (stage.FireRate * atkSpdMult);
-        spread = stage.Spread;
-        bulletSpeed = stage.BulletSpeed;
+        var atkSpdMult = CharacterBehaviour.isAtkSpdBooster ? CharacterBehaviour.atkSpdBoosterMult : 1;
+        _attackDelay = 1f / (stage.FireRate * atkSpdMult);
+        _spread = stage.Spread;
+        _bulletSpeed = stage.BulletSpeed;
     }
 
     [FormerlySerializedAs("shootPointsOffset")]
     public Vector3 shootPointOffset;
 
-    private float offsetDir = 1;
-    private bool isLeft;
+    float _offsetDir = 1;
+    bool _isLeft;
 
     public override void GunUpdate()
     {
-        var shootPos = isLeft ? shootPoint : shootPoint_2;
-        if (!characterBehaviour.IsCloseEnemyFound) return;
+        var shootPos = _isLeft ? shootPoint : shootPoint2;
+        if (!CharacterBehaviour.IsCloseEnemyFound) return;
         //  barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
-        if (nextShootTime >= Time.timeSinceLevelLoad) return;
+        if (_nextShootTime >= Time.timeSinceLevelLoad) return;
 
         if (_bullets <= 0)
         {
@@ -98,72 +98,72 @@ public class DuoPistolBehaviour : BaseGunBehavior
 
         // offsetDir *= -1;
         // shootPoint.localPosition += offsetDir * shootPointOffset;
-        shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPos.position.y) -
+        _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPos.position.y) -
                          shootPos.position;
 
-        if (Physics.Raycast(transform.position, shootDirection, out var hitInfo, 300f, targetLayers) &&
+        if (Physics.Raycast(transform.position, _shootDirection, out var hitInfo, 300f, targetLayers) &&
             hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
         {
-            if (!(Vector3.Angle(shootDirection, transform.forward.SetY(0f)) < 90f)) return;
+            if (!(Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) < 90f)) return;
 
-            shootTweenCase.KillActive();
-            shootTweenCase = transform.DOLocalMoveZ(-0.0825f, attackDelay * 0.3f).OnComplete(delegate
+            _shootTweenCase.KillActive();
+            _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate
             {
-                shootTweenCase = transform.DOLocalMoveZ(0, attackDelay * 0.6f);
+                _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f);
             });
 
-            characterBehaviour.SetTargetActive();
+            CharacterBehaviour.SetTargetActive();
             shootParticleSystem.Play();
             // if (isLeft) shootParticleSystem.Play();
             // else shootParticleSystem_2.Play();
 
-            nextShootTime = Time.timeSinceLevelLoad + attackDelay / characterBehaviour.AtkSpdMult;
+            _nextShootTime = Time.timeSinceLevelLoad + _attackDelay / CharacterBehaviour.AtkSpdMult;
 
             if (bulletStreamAngles.IsNullOrEmpty())
                 bulletStreamAngles = new List<float> { 0 };
 
-            var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random() +
-                                characterBehaviour.MultishotBoosterAmount;
-            var finalSpread = characterBehaviour.isMultishotBooster && spread == 0 ? 30 : spread;
+            var bulletsNumber = _upgrade.GetCurrentStage().BulletsPerShot.Random() +
+                                CharacterBehaviour.MultishotBoosterAmount;
+            var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
 
             for (var k = 0; k < bulletsNumber; k++)
             {
                 foreach (var streamAngle in bulletStreamAngles)
                 {
-                    var bullet = bulletPool.Get(
+                    var bullet = _bulletPool.Get(
                             new PooledObjectSettings()
                                 .SetPosition(shootPos.position)
-                                .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
+                                .SetEulerRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
                                     (Random.Range(-finalSpread, finalSpread) +
                                      streamAngle)))
                         .GetComponent<DuoPistolsBulletBehaviour>();
-                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier,
-                        bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
+                    bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier,
+                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
                     bullet.owner = Owner;
                 }
             }
 
             _bullets--;
-            if (_bullets <= 0) _reloadTimer = RELOAD_TIME;
+            if (_bullets <= 0) _reloadTimer = reloadTime;
 
-            characterBehaviour.OnGunShooted();
+            CharacterBehaviour.OnGunShooted();
 
-            AudioController.PlaySound(AudioController.Sounds.shotMinigun);
+            AudioController.Play(AudioController.Sounds.shotMinigun);
             //isLeft = !isLeft;
         }
         else
         {
-            characterBehaviour.SetTargetUnreachable();
+            CharacterBehaviour.SetTargetUnreachable();
         }
     }
 
     public override void OnGunUnloaded()
     {
         // Destroy bullets pool
-        if (bulletPool != null)
+        if (_bulletPool != null)
         {
-            bulletPool.Clear();
-            bulletPool = null;
+            _bulletPool.Clear();
+            _bulletPool = null;
         }
     }
 
@@ -175,6 +175,6 @@ public class DuoPistolBehaviour : BaseGunBehavior
 
     public override void Reload()
     {
-        bulletPool.ReturnToPoolEverything();
+        _bulletPool.ReturnToPoolEverything();
     }
 }

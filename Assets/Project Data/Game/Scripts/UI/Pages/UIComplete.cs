@@ -162,7 +162,7 @@ namespace Watermelon
                     break;
             }
 
-            GameController.isDoubleReward = true;
+            GameController.IsDoubleReward = true;
             CurrenciesController.Add(CurrencyType.Coins, collectedMoney);
             ContinueButton();
         }
@@ -199,7 +199,7 @@ namespace Watermelon
 
         public void ContinueButton()
         {
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
             GameController.OnLevelCompleteClosed();
         }
     }

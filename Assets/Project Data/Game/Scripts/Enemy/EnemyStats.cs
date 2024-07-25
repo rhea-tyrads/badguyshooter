@@ -88,7 +88,7 @@ namespace Watermelon.SquadShooter
 
             for (var i = 0; i < WeaponsController.Database.Weapons.Length; i++)
             {
-                var weaponUpg = UpgradesController.GetUpgrade<BaseUpgrade>(WeaponsController.Database.Weapons[i].UpgradeType) as BaseWeaponUpgrade;
+                var weaponUpg = UpgradesController.Get<BaseUpgrade>(WeaponsController.Database.Weapons[i].UpgradeType) as BaseWeaponUpgrade;
                 var firstStage = weaponUpg.Upgrades[1] as BaseWeaponUpgradeStage; // 0 stage is for locked weapon - has no stats
 
                 var relation = new HpToWeaponRelation(WeaponsController.Database.Weapons[i].Type, hp / firstStage.Damage.Lerp(0.5f));

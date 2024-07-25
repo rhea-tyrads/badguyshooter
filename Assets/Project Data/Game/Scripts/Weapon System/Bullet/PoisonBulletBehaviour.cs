@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Watermelon;
 using Watermelon.SquadShooter;
 
 public class PoisonBulletBehaviour : PlayerBulletBehavior
 {
-    static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Minigun Hit");
-    static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
  
-    const float movementSlowFactor = 0.65f;
+    const float MOVEMENT_SLOW_FACTOR = 0.65f;
     [SerializeField] TrailRenderer trailRenderer;
     public CharacterBehaviour owner;
-
+    static readonly int ParticleHitHash = ParticlesController.GetHash("Minigun Hit");
+    static readonly int ParticleWAllHitHash = ParticlesController.GetHash("Minigun Wall Hit");
+    
     public override void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime,
         bool autoDisableOnHit = true)
     {
@@ -22,15 +20,15 @@ public class PoisonBulletBehaviour : PlayerBulletBehavior
 
     protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
     {
-        baseEnemyBehavior.ApplyMovementSlow(movementSlowFactor);
-        ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
+        baseEnemyBehavior.ApplyMovementSlow(MOVEMENT_SLOW_FACTOR);
+        ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
         trailRenderer.Clear();
     }
 
     protected override void OnObstacleHitted()
     {
         base.OnObstacleHitted();
-        ParticlesController.PlayParticle(PARTICLE_WAll_HIT_HASH).SetPosition(transform.position);
+        ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
         trailRenderer.Clear();
     }
 }

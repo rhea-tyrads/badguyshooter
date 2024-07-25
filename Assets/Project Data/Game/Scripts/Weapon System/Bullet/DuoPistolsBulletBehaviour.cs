@@ -1,13 +1,11 @@
- 
-using System.Collections.Generic;
 using UnityEngine;
 using Watermelon;
 using Watermelon.SquadShooter;
 
 public class DuoPistolsBulletBehaviour : PlayerBulletBehavior
 {
-    static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Minigun Hit");
-    static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
+    static readonly int ParticleHitHash = ParticlesController.GetHash("Minigun Hit");
+    static readonly int ParticleWAllHitHash = ParticlesController.GetHash("Minigun Wall Hit");
    public float knockBackForce = 1.5f;
     [SerializeField] TrailRenderer trailRenderer;
     public CharacterBehaviour owner;
@@ -28,14 +26,14 @@ public class DuoPistolsBulletBehaviour : PlayerBulletBehavior
             baseEnemyBehavior.KnockBack(knockBackDir, knockBackForce);
         }
 
-        ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
+        ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
         trailRenderer.Clear();
     }
 
     protected override void OnObstacleHitted()
     {
         base.OnObstacleHitted();
-        ParticlesController.PlayParticle(PARTICLE_WAll_HIT_HASH).SetPosition(transform.position);
+        ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
         trailRenderer.Clear();
     }
 }

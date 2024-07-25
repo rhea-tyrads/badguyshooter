@@ -1,20 +1,22 @@
-﻿namespace Watermelon.SquadShooter
+﻿using UnityEngine.Serialization;
+
+namespace Watermelon.SquadShooter
 {
     [System.Serializable]
     public class CharacterDynamicAnimation
     {
-        public CharacterPanelUI CharacterPanel;
+        [FormerlySerializedAs("CharacterPanel")] public CharacterPanelUI characterPanel;
 
-        public float Delay;
+        [FormerlySerializedAs("Delay")] public float delay;
 
-        public SimpleCallback OnAnimationStarted;
+        public SimpleCallback AnimationStarted;
 
         public CharacterDynamicAnimation(CharacterPanelUI characterPanel, float delay, SimpleCallback onAnimationStarted)
         {
-            CharacterPanel = characterPanel;
-            Delay = delay;
+            this.characterPanel = characterPanel;
+            this.delay = delay;
 
-            OnAnimationStarted = onAnimationStarted;
+            AnimationStarted = onAnimationStarted;
         }
     }
 }

@@ -12,35 +12,26 @@ namespace Watermelon.LevelSystem
 
         public void Initialise()
         {
-            for (var i = 0; i < worlds.Length; i++)
-            {
-                worlds[i].Initialise();
-            }
+            foreach (var world in worlds)
+                world.Initialise();
         }
 
-        public WorldData GetWorld(int worldIndex)
-        {
-            if (worlds.IsInRange(worldIndex))
-            {
-                return worlds[worldIndex];
-            }
+        public WorldData GetWorld(int id) 
+            => worlds.IsInRange(id)
+                ? worlds[id] 
+                : worlds[id % worlds.Length];
 
-            return worlds[worldIndex % worlds.Length];
-        }
-
-        public LevelData GetRandomLevel()
+        LevelData GetRandomLevel()
         {
             LevelData tempLevel = null;
 
             do
             {
                 var randomWorld = worlds.GetRandomItem();
-                if (randomWorld != null)
-                {
-                    var randomLevel = randomWorld.Levels.GetRandomItem();
-                    if (randomLevel != null)
-                        tempLevel = randomLevel;
-                }
+                if (!randomWorld) continue;
+                var randomLevel = randomWorld.Levels.GetRandomItem();
+                if (randomLevel != null)
+                    tempLevel = randomLevel;
             }
             while (tempLevel == null);
 
@@ -50,34 +41,27 @@ namespace Watermelon.LevelSystem
         public LevelData GetLevel(int worldIndex, int levelIndex)
         {
             var world = GetWorld(worldIndex);
-            if(world != null)
-            {
-                if (world.Levels.IsInRange(levelIndex))
-                {
-                    return world.Levels[levelIndex];
-                }
-            }
-
-            return GetRandomLevel();
+            if (!world) return GetRandomLevel();
+            return world.Levels.IsInRange(levelIndex) ? world.Levels[levelIndex] : GetRandomLevel();
         }
 
-        public bool DoesNextLevelExist(int worldIndex, int levelIndex)
+        public bool IsNextLevel(int worldIndex, int levelIndex)
         {
             var world = GetWorld(worldIndex);
-            if (world != null)
+            return world && world.Levels.IsInRange(levelIndex + 1);
+        }
+        public bool IsNextWorld(int id ) => worlds.IsInRange(id);
+
+        public int GetRandomWorld(int id)
+        {
+            for (var i = 0; i < 100; i++)
             {
-                if (world.Levels.IsInRange(levelIndex + 1))
-                {
-                    return true;
-                }
+                var r = Random.Range(2, worlds.Length);
+                if (r != id) return r;
             }
 
-            return false;
+            return 5;
         }
-
-        public int GetWorldsAmount()
-        {
-            return worlds.Length;
-        }
+        public int TotalWorlds => worlds.Length;
     }
 }

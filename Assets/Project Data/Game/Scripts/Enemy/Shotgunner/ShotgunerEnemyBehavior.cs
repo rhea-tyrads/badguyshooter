@@ -45,7 +45,7 @@ namespace Watermelon.SquadShooter
                     }
 
                     shootParticle.Play();
-                    AudioController.PlaySound(AudioController.Sounds.shotShotgun);
+                    AudioController.Play(AudioController.Sounds.shotShotgun);
 
                     break;
                 case EnemyCallbackType.HitFinish:

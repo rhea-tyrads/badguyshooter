@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using com.adjust.sdk;
 using MobileTools.SDK;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Watermelon;
 using Watermelon.Upgrades;
 
 namespace Watermelon.SquadShooter
@@ -87,7 +85,7 @@ namespace Watermelon.SquadShooter
 
         public bool IsNextUpgradeCanBePurchased() =>
             IsUnlocked && !Upgrade.IsMaxedOut &&
-            CurrenciesController.HasAmount(CurrencyType.Coins, Upgrade.NextStage.Price);
+            CurrenciesController.Has(CurrencyType.Coins, Upgrade.NextStage.Price);
 
         public void UpdateUI()
         {
@@ -195,7 +193,7 @@ namespace Watermelon.SquadShooter
             var price = Upgrade.NextStage.Price;
             var currencyType = Upgrade.NextStage.CurrencyType;
 
-            if (CurrenciesController.HasAmount(currencyType, price))
+            if (CurrenciesController.Has(currencyType, price))
             {
                 //  upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
                 if (gamepadButton)
@@ -218,8 +216,8 @@ namespace Watermelon.SquadShooter
 
             // if (weaponIndex != WeaponsController.SelectedWeaponIndex)
             //  {
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
-            weaponController.OnWeaponSelected(weaponIndex);
+            AudioController.Play(AudioController.Sounds.buttonSound);
+            weaponController.OnSelected(weaponIndex);
             // }
 
             UIGeneralPowerIndicator.UpdateText();
@@ -231,7 +229,7 @@ namespace Watermelon.SquadShooter
            if (Upgrade.NextStage.Price >
                CurrenciesController.GetCurrency(Upgrade.NextStage.CurrencyType).Amount) return;
            SendAdjustEvent();
-           AudioController.PlaySound(AudioController.Sounds.buttonSound);
+           AudioController.Play(AudioController.Sounds.buttonSound);
            CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);
            Upgrade.UpgradeStage();
            weaponController.WeaponUpgraded(Data);
@@ -245,7 +243,7 @@ namespace Watermelon.SquadShooter
                 */
    
            // SendAdjustEvent();
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
             Select();
             return;
             CurrenciesController.Add(Upgrade.NextStage.CurrencyType, -Upgrade.NextStage.Price);

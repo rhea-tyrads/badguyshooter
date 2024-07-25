@@ -4,7 +4,7 @@ namespace Watermelon.SquadShooter
 {
     public class CharacterUpgradeTutorial : ITutorial
     {
-        const CharacterType FIRST_CHARACTER_TYPE = CharacterType.Character_01;
+        const CharacterType FIRST_CHARACTER_TYPE = CharacterType.Character01;
 
         public TutorialID TutorialID => TutorialID.CharacterUpgrade;
 
@@ -50,7 +50,7 @@ namespace Watermelon.SquadShooter
             // Load save file
             saveData = SaveController.GetSaveObject<TutorialBaseSave>(string.Format(ITutorial.SAVE_IDENTIFIER, TutorialID.ToString()));
 
-            firstCharacter = CharactersController.GetCharacter(FIRST_CHARACTER_TYPE);
+            firstCharacter = CharactersController.Get(FIRST_CHARACTER_TYPE);
 
             mainMenuUI = UIController.GetPage<UIMainMenu>();
             characterPanelUI = UIController.GetPage<UICharactersPanel>();
@@ -148,13 +148,13 @@ namespace Watermelon.SquadShooter
 
             if (pageType == typeof(UIMainMenu))
             {
-                if (ActiveRoom.CurrentLevelIndex >= 1)
+                if (ActiveRoom.Level >= 1)
                 {
                     var nextStage = firstCharacter.GetNextUpgrade();
                     if(nextStage != null)
                     {
                         // Player has enough money to upgrade first character
-                        if (CurrenciesController.HasAmount(nextStage.CurrencyType, nextStage.Price))
+                        if (CurrenciesController.Has(nextStage.CurrencyType, nextStage.Price))
                         {
                             stepNumber = STEP_TUTORIAL_ACTIVATED;
 

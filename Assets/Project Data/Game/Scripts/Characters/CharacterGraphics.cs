@@ -10,9 +10,9 @@ namespace Watermelon.SquadShooter
         static readonly int ANIMATOR_MOVEMENT_X_HASH = Animator.StringToHash("MovementX");
         static readonly int ANIMATOR_MOVEMENT_Y_HASH = Animator.StringToHash("MovementY");
 
-        Vector3 enemyPosition;
-        float angle;
-        Vector2 rotatedInput;
+        Vector3 _enemyPosition;
+        float _angle;
+        Vector2 _rotatedInput;
 
         void Awake()
         {
@@ -31,18 +31,18 @@ namespace Watermelon.SquadShooter
 
         public override void OnMoving(float speedPercent, Vector3 direction, bool isTargetFound)
         {
-            characterAnimator.SetFloat(ANIMATOR_MOVEMENT_SPEED, characterBehaviour.MovementSettings.AnimationMultiplier.Lerp(speedPercent));
+            characterAnimator.SetFloat(ANIMATOR_MOVEMENT_SPEED, CharacterBehaviour.MovementSettings.animationMultiplier.Lerp(speedPercent));
 
             if (isTargetFound)
             {
-                enemyPosition = characterBehaviour.ClosestEnemyBehaviour.transform.position;
+                _enemyPosition = CharacterBehaviour.ClosestEnemyBehaviour.transform.position;
 
-                angle = Mathf.Atan2(enemyPosition.x - transform.position.x, enemyPosition.z - transform.position.z) * 180 / Mathf.PI;
+                _angle = Mathf.Atan2(_enemyPosition.x - transform.position.x, _enemyPosition.z - transform.position.z) * 180 / Mathf.PI;
 
-                rotatedInput = Quaternion.Euler(0, 0, angle) * new Vector2(direction.x, direction.z);
+                _rotatedInput = Quaternion.Euler(0, 0, _angle) * new Vector2(direction.x, direction.z);
 
-                characterAnimator.SetFloat(ANIMATOR_MOVEMENT_X_HASH, rotatedInput.x);
-                characterAnimator.SetFloat(ANIMATOR_MOVEMENT_Y_HASH, rotatedInput.y);
+                characterAnimator.SetFloat(ANIMATOR_MOVEMENT_X_HASH, _rotatedInput.x);
+                characterAnimator.SetFloat(ANIMATOR_MOVEMENT_Y_HASH, _rotatedInput.y);
             }
             else
             {

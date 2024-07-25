@@ -56,7 +56,7 @@ namespace Watermelon
         
         public void Replay()
         {
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
             GameController.OnReplayLevel();
         }
 

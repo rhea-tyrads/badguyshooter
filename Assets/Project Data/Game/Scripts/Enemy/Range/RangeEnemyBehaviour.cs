@@ -62,7 +62,7 @@ namespace Watermelon.SquadShooter
             Tween.DelayedCall(0.2f, () =>
             {
                 if (!IsDead)
-                    AudioController.PlaySound(AudioController.Sounds.enemyShot, 0.6f);
+                    AudioController.Play(AudioController.Sounds.enemyShot, 0.6f);
             });
         }
 
@@ -94,7 +94,7 @@ namespace Watermelon.SquadShooter
 
                 gunFireParticle.Play();
 
-                AudioController.PlaySound(AudioController.Sounds.enemyShot);
+                AudioController.Play(AudioController.Sounds.enemyShot);
             }
             else if (enemyCallbackType == EnemyCallbackType.HitFinish)
             {

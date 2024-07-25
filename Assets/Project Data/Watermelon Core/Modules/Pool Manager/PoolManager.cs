@@ -6,28 +6,17 @@ using System.Collections.Generic;
 
 namespace Watermelon
 {
-    /// <summary>
-    /// Class that manages all pool operations.
-    /// </summary>
+ 
     public class PoolManager : MonoBehaviour
     {
         static PoolManager instance;
-
-        /// <summary>
-        /// List of all existing pools.
-        /// </summary>
+ 
         [SerializeField] List<Pool> poolsList = new();
-
-        /// <summary>
-        /// Dictionary which allows to acces Pool by name.
-        /// </summary>
+ 
         Dictionary<string, Pool> poolsDictionary;
 
         int spawnedObjectAmount = 0;
-
-        /// <summary>
-        /// Amount of spawned objects.
-        /// </summary>
+ 
         public static int SpawnedObjectsAmount => instance.spawnedObjectAmount;
 
         static Transform objectsContainer;
@@ -35,16 +24,13 @@ namespace Watermelon
 
         void Awake()
         {
-            InitSingletone(this);
+            InitSingleton(this);
         }
 
-        /// <summary>
-        /// Initialize a single instance of PoolManager.
-        /// </summary>
-        static void InitSingletone(PoolManager poolManager = null)
+ 
+        static void InitSingleton(PoolManager poolManager = null)
         {
-            if (instance != null)
-                return;
+            if (instance != null) return;
 
             if(poolManager == null)
                 poolManager = FindObjectOfType<PoolManager>();
@@ -55,19 +41,16 @@ namespace Watermelon
                 instance = poolManager;
 
 #if UNITY_EDITOR
-                // Create container object
                 var containerObject = new GameObject("[POOL OBJECTS]");
                 objectsContainer = containerObject.transform;
                 objectsContainer.ResetGlobal();
 #endif
 
-                // Link and initialise pools
                 poolManager.poolsDictionary = new Dictionary<string, Pool>();
 
                 foreach (var pool in poolManager.poolsList)
                 {
                     poolManager.poolsDictionary.Add(pool.Name, pool);
-
                     pool.Initialize();
                 }
 
@@ -79,13 +62,11 @@ namespace Watermelon
 
         public static void Unload()
         {
-            var poolManager = instance; 
-            if(poolManager != null)
+            var poolManager = instance;
+            if (poolManager == null) return;
+            foreach (var pool in poolManager.poolsList)
             {
-                for(var i = 0; i < poolManager.poolsList.Count; i++)
-                {
-                    poolManager.poolsList[i].ReturnToPoolEverything(true);
-                }
+                pool.ReturnToPoolEverything(true);
             }
         }
 
@@ -101,19 +82,12 @@ namespace Watermelon
             return Instantiate(prefab, parrent);
         }
 
-        /// <summary>
-        /// Returns reference to Pool by it's name.
-        /// </summary>
-        /// <param name="poolName">Name of Pool which should be returned.</param>
-        /// <returns>Reference to Pool.</returns>
         public static Pool GetPoolByName(string poolName)
         {
-            InitSingletone();
+            InitSingleton();
 
             if (instance.poolsDictionary.ContainsKey(poolName))
-            {
                 return instance.poolsDictionary[poolName];
-            }
 
             Debug.LogError("[PoolManager] Not found pool with name: '" + poolName + "'");
 
@@ -122,7 +96,7 @@ namespace Watermelon
 
         public static PoolGeneric<T> GetPoolByName<T>(string poolName) where T : Component
         {
-            InitSingletone();
+            InitSingleton();
 
             if (instance.poolsDictionary.ContainsKey(poolName))
             {
@@ -144,15 +118,10 @@ namespace Watermelon
 
             return null;
         }
-
-        /// <summary>
-        /// Adds new pool at runtime.
-        /// </summary>
-        /// <param name="poolBuilder">Pool builder settings.</param>
-        /// <returns>Newly created pool.</returns>
+ 
         public static Pool AddPool(PoolSettings poolBuilder)
         {
-            InitSingletone();
+            InitSingleton();
 
             if (instance.poolsDictionary.ContainsKey(poolBuilder.name))
             {
@@ -171,12 +140,11 @@ namespace Watermelon
 
         public static PoolGeneric<T> AddPool<T>(PoolSettings poolBuilder) where T : Component
         {
-            InitSingletone();
+            InitSingleton();
 
             if (instance.poolsDictionary.ContainsKey(poolBuilder.name))
             {
                 Debug.LogError("[Pool manager] Adding a new pool failed. Name \"" + poolBuilder.name + "\" already exists.");
-
                 return GetPoolByName<T>(poolBuilder.name);
             }
 
@@ -191,7 +159,7 @@ namespace Watermelon
 
         public static void AddPool(Pool pool)
         {
-            InitSingletone();
+            InitSingleton();
 
             if (instance.poolsDictionary.ContainsKey(pool.Name))
             {
@@ -214,17 +182,8 @@ namespace Watermelon
             instance.poolsList.Remove(pool);
         }
 
-        public static bool PoolExists(string name)
-        {
-            if (instance == null)
-            {
-                return false;
-            }
-            else
-            {
-                return instance.poolsDictionary.ContainsKey(name);
-            }
-        }
+        public static bool PoolExists(string name) 
+            => instance  && instance.poolsDictionary.ContainsKey(name);
 
         public static void RemoveAllNullObjects()
         {
@@ -236,17 +195,8 @@ namespace Watermelon
 
         // editor methods
 
-        bool IsAllPrefabsAssignedAtPool(int poolIndex)
-        {
-            if (poolsList != null && poolIndex < poolsList.Count)
-            {
-                return poolsList[poolIndex].IsAllPrefabsAssigned();
-            }
-            else
-            {
-                return true;
-            }
-        }
+        bool IsAllPrefabsAssignedAtPool(int poolIndex) 
+            => poolsList == null || poolIndex >= poolsList.Count || poolsList[poolIndex].IsAllPrefabsAssigned();
 
         void RecalculateWeightsAtPool(int poolIndex)
         {
@@ -255,40 +205,4 @@ namespace Watermelon
     }
 }
 
-// -----------------
-// Pool Manager v 1.6.5
-// -----------------
-
-// Changelog
-// v 1.6.5
-// • Removed Initialise method
-// • Now manager works as Singleton
-// • Added generic AddPool method
-// v 1.6.4
-// • Added pro theme support
-// v 1.6 
-// • Added runtime pool creation
-// • Added extended functions for multi pool
-// • Added new pool constructor and GetPooledObject overrides
-// • Generic pool upgate
-// • Added clear method to pool
-// v 1.5.1 
-// • Added Multi objects pool type
-// • Added drag n drop support
-// v 1.4.5  
-// • Added editor changes save
-// • Updated cache system
-// • Added ability to ignore cache for required pools
-// • Fixed created object's names
-// • Core refactoring
-// • Editor UX improvements
-// v 1.3.1  
-// • Added RandomPools system
-// • Added objectsContainer access property
-// v 1.2.1 
-// • Added cache system
-// • Fixed errors on build
-// v 1.1.0 
-// • Added PoolManager editor
-// v 1.0.0 
-// • Basic version of pool
+ 

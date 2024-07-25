@@ -10,9 +10,9 @@ namespace Utilities
             => PlayerPrefs.SetString(key, value.ToString(CultureInfo.InvariantCulture));
 
         public static DateTime Load(string key)
-            => !PlayerPrefs.HasKey(key)
-                ? DateTime.Now
-                : DateTime.Parse(PlayerPrefs.GetString(key, string.Empty));
+            => PlayerPrefs.HasKey(key)
+                ? DateTime.Parse(PlayerPrefs.GetString(key, string.Empty))
+                : DateTime.Now;
 
         public static TimeSpan TimePassed(string key)
             => DateTime.Now - Load(key);

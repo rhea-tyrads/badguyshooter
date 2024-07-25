@@ -7,36 +7,28 @@ namespace Watermelon.SquadShooter
 {
     public class CharactersController : MonoBehaviour
     {
-        const CharacterType DEFAULT_CHARACTER_TYPE = CharacterType.Character_01;
-
-        static CharactersController charactersController;
-
+        const CharacterType DEFAULT_CHARACTER_TYPE = CharacterType.Character01;
+        static CharactersController _charactersController;
         [SerializeField] CharactersDatabase database;
-
         public static int BasePower { get; private set; }
-
-        static Character selectedCharacter;
-        public static Character SelectedCharacter => selectedCharacter;
-
-        public static Character LastUnlockedCharacter => charactersController.database.GetLastUnlockedCharacter();
-        public static Character NextCharacterToUnlock => charactersController.database.GetNextCharacterToUnlock();
-
-        static CharacterGlobalSave characterSave;
-
+        static Character _selectedCharacter;
+        public static Character SelectedCharacter => _selectedCharacter;
+        public static Character LastUnlockedCharacter => _charactersController.database.GetLastUnlocked();
+        public static Character NextCharacterToUnlock => _charactersController.database.GetNextToUnlock();
+        static CharacterGlobalSave _characterSave;
         public static event CharacterCallback OnCharacterSelectedEvent;
         public static event CharacterCallback OnCharacterUpgradedEvent;
-
-        static List<CharacterUpgrade> keyUpgrades = new();
+        static readonly List<CharacterUpgrade> KEY_UPGRADES = new();
 
         public void Initialise()
         {
-            charactersController = this;
+            _charactersController = this;
             database.Initialise();
-            characterSave = SaveController.GetSaveObject<CharacterGlobalSave>("characters");
+            _characterSave = SaveController.GetSaveObject<CharacterGlobalSave>("characters");
 
             // Check if character from save is unlocked
-            selectedCharacter = database.GetCharacter(IsCharacterUnlocked(characterSave.SelectedCharacterType)
-                ? characterSave.SelectedCharacterType
+            _selectedCharacter = database.Get(IsUnlocked(_characterSave.selectedCharacterType)
+                ? _characterSave.selectedCharacterType
                 : DEFAULT_CHARACTER_TYPE);
 
             foreach (var character in database.Characters)
@@ -44,62 +36,62 @@ namespace Watermelon.SquadShooter
                 foreach (var upgrade in character.Upgrades)
                 {
                     if (upgrade.Stats.KeyUpgradeNumber == -1) continue;
-                    keyUpgrades.Add(upgrade);
+                    KEY_UPGRADES.Add(upgrade);
                     if (upgrade.Stats.KeyUpgradeNumber == 0)
                         BasePower = upgrade.Stats.Power;
                 }
             }
 
-            keyUpgrades.OrderBy(u => u.Stats.KeyUpgradeNumber);
+            KEY_UPGRADES.OrderBy(u => u.Stats.KeyUpgradeNumber);
         }
 
-        public static bool IsCharacterUnlocked(CharacterType characterType)
+        public static bool IsUnlocked(CharacterType characterType)
         {
-            var character = charactersController.database.GetCharacter(characterType);
+            var character = _charactersController.database.Get(characterType);
             return character != null && character.IsUnlocked();
         }
 
-        public static void SelectCharacter(CharacterType characterType)
+        public static void Select(CharacterType characterType)
         {
-            if (selectedCharacter.Type == characterType) return;
+            if (_selectedCharacter.Type == characterType) return;
 
-            var character = charactersController.database.GetCharacter(characterType);
+            var character = _charactersController.database.Get(characterType);
             if (character == null) return;
 
-            selectedCharacter = character;
-            characterSave.SelectedCharacterType = characterType;
+            _selectedCharacter = character;
+            _characterSave.selectedCharacterType = characterType;
             var characterBehaviour = CharacterBehaviour.GetBehaviour();
             var characterStage = character.GetCurrentStage();
             var characterUpgrade = character.GetCurrentUpgrade();
             characterBehaviour.SetStats(characterUpgrade.Stats);
             characterBehaviour.SetGraphics(characterStage.Prefab, false, false);
-            OnCharacterSelectedEvent?.Invoke(characterType, selectedCharacter);
+            OnCharacterSelectedEvent?.Invoke(characterType, _selectedCharacter);
         }
 
         public static void OnCharacterUpgraded(Character character)
         {
-            AudioController.PlaySound(AudioController.Sounds.upgrade);
+            AudioController.Play(AudioController.Sounds.upgrade);
             OnCharacterUpgradedEvent?.Invoke(character.Type, character);
         }
 
         public static CharactersDatabase GetDatabase()
-            => charactersController.database;
+            => _charactersController.database;
 
-        public static Character GetCharacter(CharacterType characterType) =>
-            charactersController.database.GetCharacter(characterType);
+        public static Character Get(CharacterType characterType) =>
+            _charactersController.database.Get(characterType);
 
-        public static int GetCharacterIndex(CharacterType characterType) =>
-            System.Array.FindIndex(charactersController.database.Characters, x => x.Type == characterType);
+        public static int GetIndex(CharacterType characterType) =>
+            System.Array.FindIndex(_charactersController.database.Characters, x => x.Type == characterType);
 
         public static int GetCeilingUpgradePower(int currentKeyUpgrade)
         {
-            for (var i = keyUpgrades.Count - 1; i >= 0; i--)
+            for (var i = KEY_UPGRADES.Count - 1; i >= 0; i--)
             {
-                if (keyUpgrades[i].Stats.KeyUpgradeNumber <= currentKeyUpgrade)
-                    return keyUpgrades[i].Stats.Power;
+                if (KEY_UPGRADES[i].Stats.KeyUpgradeNumber <= currentKeyUpgrade)
+                    return KEY_UPGRADES[i].Stats.Power;
             }
 
-            return keyUpgrades[0].Stats.Power;
+            return KEY_UPGRADES[0].Stats.Power;
         }
 
         public delegate void CharacterCallback(CharacterType characterType, Character character);

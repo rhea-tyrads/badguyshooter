@@ -137,7 +137,7 @@ namespace Watermelon.SquadShooter
 
             Tween.DelayedCall(0.3f, () =>
             {
-                AudioController.PlaySound(AudioController.Sounds.punch1);
+                AudioController.Play(AudioController.Sounds.punch1);
             });
         }
 
@@ -205,7 +205,7 @@ namespace Watermelon.SquadShooter
 
             animatorRef.Play(ANIMATOR_DIE_HASH, -1, 0);
 
-            AudioController.PlaySound(AudioController.Sounds.bossScream, 0.6f);
+            AudioController.Play(AudioController.Sounds.bossScream, 0.6f);
             DropResources();
 
             LevelController.OnEnemyKilled(this);
@@ -244,18 +244,18 @@ namespace Watermelon.SquadShooter
 
                     if (Vector3.Distance(transform.position, target.position) <= kickDistance)
                     {
-                        ParticlesController.PlayParticle(PARTICLE_KICK_HASH).SetPosition(leftFootTransform.position);
+                        ParticlesController.Play(PARTICLE_KICK_HASH).SetPosition(leftFootTransform.position);
 
                         characterBehaviour.TakeDamage(characterBehaviour.MaxHealth * 0.5f);
                     }
                     break;
 
                 case EnemyCallbackType.BossLeftStep:
-                    ParticlesController.PlayParticle(PARTICLE_STEP_HASH).SetPosition(leftFootTransform.position);
+                    ParticlesController.Play(PARTICLE_STEP_HASH).SetPosition(leftFootTransform.position);
                     break;
 
                 case EnemyCallbackType.BossRightStep:
-                    ParticlesController.PlayParticle(PARTICLE_STEP_HASH).SetPosition(rightFootTransform.position);
+                    ParticlesController.Play(PARTICLE_STEP_HASH).SetPosition(rightFootTransform.position);
                     break;
 
                 case EnemyCallbackType.BossEnterFall:
@@ -271,7 +271,7 @@ namespace Watermelon.SquadShooter
                     break;
 
                 case EnemyCallbackType.BossDeathFall:
-                    ParticlesController.PlayParticle(PARTICLE_DEATH_FALL_HASH).SetPosition(backTransform.position);
+                    ParticlesController.Play(PARTICLE_DEATH_FALL_HASH).SetPosition(backTransform.position);
 
                     mainCameraCase.Shake(0.04f, 0.04f, 0.3f, 1.4f);
                     break;
@@ -309,7 +309,7 @@ namespace Watermelon.SquadShooter
                 animatorRef.SetBool(ANIMATOR_RUN_HASH, true);
             }
 
-            AudioController.PlaySound(AudioController.Sounds.shoot2, 0.3f);
+            AudioController.Play(AudioController.Sounds.shoot2, 0.3f);
         }
 
         void OnBossEnterFall()
@@ -318,11 +318,11 @@ namespace Watermelon.SquadShooter
 
             healthbarBehaviour.HealthBarTransform.gameObject.SetActive(true);
 
-            ParticlesController.PlayParticle(PARTICLE_ENTER_FALL_HASH).SetPosition(transform.position);
+            ParticlesController.Play(PARTICLE_ENTER_FALL_HASH).SetPosition(transform.position);
 
             mainCameraCase.Shake(0.04f, 0.04f, 0.3f, 1.4f);
 
-            AudioController.PlaySound(AudioController.Sounds.jumpLanding);
+            AudioController.Play(AudioController.Sounds.jumpLanding);
 
             CharacterBehaviour.GetBehaviour().TryAddClosestEnemy(this);
 
@@ -330,7 +330,7 @@ namespace Watermelon.SquadShooter
 
             Tween.DelayedCall(0.4f, () =>
             {
-                AudioController.PlaySound(AudioController.Sounds.bossScream, 0.6f);
+                AudioController.Play(AudioController.Sounds.bossScream, 0.6f);
             });
         }
 

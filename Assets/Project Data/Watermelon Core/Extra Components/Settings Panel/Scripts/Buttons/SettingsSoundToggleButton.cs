@@ -46,7 +46,7 @@ namespace Watermelon
             }
 
             // Play button sound
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
     }
 }

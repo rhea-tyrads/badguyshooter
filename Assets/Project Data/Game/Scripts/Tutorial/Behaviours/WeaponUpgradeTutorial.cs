@@ -44,7 +44,7 @@ namespace Watermelon.SquadShooter
             saveData = SaveController.GetSaveObject<TutorialBaseSave>(string.Format(ITutorial.SAVE_IDENTIFIER,
                 TutorialID.ToString()));
             weaponData = WeaponsController.GetWeaponData(FIRST_WEAPON_TYPE);
-            weaponUpgrade = UpgradesController.GetUpgrade<BaseWeaponUpgrade>(weaponData.UpgradeType);
+            weaponUpgrade = UpgradesController.Get<BaseWeaponUpgrade>(weaponData.UpgradeType);
             mainMenuUI = UIController.GetPage<UIMainMenu>();
             weaponPageUI = UIController.GetPage<UIWeaponPage>();
             weaponTab = mainMenuUI.WeaponTab;
@@ -125,12 +125,12 @@ namespace Watermelon.SquadShooter
         void OnMainMenuPageOpened(UIPage page, System.Type pageType)
         {
             if (pageType != typeof(UIMainMenu)) return;
-            if (ActiveRoom.CurrentLevelIndex < 2) return;
+            if (ActiveRoom.Level < 2) return;
             var stage = weaponUpgrade.NextStage;
             if (stage == null) return;
 
             // Player has enough money to upgrade first weapon
-            if (CurrenciesController.HasAmount(stage.CurrencyType, stage.Price))
+            if (CurrenciesController.Has(stage.CurrencyType, stage.Price))
             {
                 UIController.OnPageOpenedEvent -= OnMainMenuPageOpened;
                 stepNumber = STEP_TUTORIAL_ACTIVATED;

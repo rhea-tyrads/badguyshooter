@@ -8,12 +8,10 @@ namespace MobileTools.RateGameUI.Code
 {
     public class RateGameUI : MobilePopupUI
     {
-        [Space(20)]
-        public string googleStoreLink;
+        [Space(20)] public string googleStoreLink;
         public string email;
 
-        [Space(20)]
-        public List<RateButtonUI> stars = new();
+        [Space(20)] public List<RateButtonUI> stars = new();
         public Button sendFeedbackButton;
         public Button hideFeedbackButton;
         public Sprite starActive;
@@ -69,7 +67,6 @@ namespace MobileTools.RateGameUI.Code
 
         void Review()
         {
-
             Application.OpenURL(googleStoreLink);
             Hide();
         }

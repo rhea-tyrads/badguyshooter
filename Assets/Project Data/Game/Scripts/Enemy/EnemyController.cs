@@ -5,16 +5,17 @@ namespace Watermelon.SquadShooter
     public class EnemyController : MonoBehaviour
     {
         [SerializeField] EnemiesDatabase database;
-        public static EnemiesDatabase Database => instance.database;
-
-        static EnemyController instance;
-        public static bool IgnoreAttackAfterDamage = false; // used only by Creatives to ignore attack after damage
+        public static EnemiesDatabase Database => _instance.database;
+        static EnemyController _instance;
+        
+        // used only by Creatives to ignore attack after damage
+        public static readonly bool IgnoreAttackAfterDamage = false; 
+      
 
         public void Initialise()
         {
-            instance = this;
-
-            var baseCharacter = CharactersController.GetCharacter(CharacterType.Character_01);
+            _instance = this;
+            var baseCharacter = CharactersController.Get(CharacterType.Character01);
             database.InitialiseStatsRealation(baseCharacter.Upgrades[0].Stats.Health);
         }
 
@@ -22,8 +23,7 @@ namespace Watermelon.SquadShooter
         public static void OnLevelWillBeStarted()
         {
             var characterStats = CharactersController.SelectedCharacter.GetCurrentUpgrade().Stats;
-
-            Database.SetCurrentCharacterStats(characterStats.Health, CharacterBehaviour.GetBehaviour().Weapon.Damage.Lerp(0.5f));
+            Database.SetCurrentCharacterStats(characterStats.Health, CharacterBehaviour.GetBehaviour().Weapon.damage.Lerp(0.5f));
         }
     }
 }

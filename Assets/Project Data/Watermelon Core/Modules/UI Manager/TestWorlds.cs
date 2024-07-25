@@ -32,11 +32,11 @@ public class TestWorlds : MonoBehaviour
     void Click(TestWorldsUI testWorldsUI)
     {
         var levelSave = SaveController.GetSaveObject<LevelSave>("level");
-        levelSave.WorldIndex = testWorldsUI.id;
-        levelSave.LevelIndex = 0;
+        levelSave.World = testWorldsUI.id;
+        levelSave.Level = 0;
         SaveController.MarkAsSaveIsRequired();
         
-        Debug.LogWarning(  "SET: "+levelSave.WorldIndex);
+        Debug.LogWarning(  "SET: "+levelSave.World);
         foreach (var ui in uis)
             ui.background.color=Color.white;
         

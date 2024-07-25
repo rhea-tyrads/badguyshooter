@@ -21,14 +21,14 @@ public class CharacterAbilityShield : MonoBehaviour
 
     void Subscribe()
     {
-        CharacterBehaviour.OnDamageToShieldImmune += Damaged;
+        CharacterBehaviour.DamageToShieldImmune += Damaged;
         Activate();
     }
 
     void Damaged()
     {
-        if (Invincible) return;
-        Invincible = true;
+        if (_invincible) return;
+        _invincible = true;
         Invoke(nameof(FinishInvincible), invincibleDuration);
 
         _currentShield--;
@@ -41,8 +41,8 @@ public class CharacterAbilityShield : MonoBehaviour
         PlayDmgVfx();
     }
 
-    void FinishInvincible() => Invincible = false;
-    private bool Invincible;
+    void FinishInvincible() => _invincible = false;
+    private bool _invincible;
 
     void PlayDmgVfx()
     {

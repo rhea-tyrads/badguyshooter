@@ -19,10 +19,8 @@ namespace Watermelon
             }
         }
 
-        public ExperienceLevelData GetDataForLevel(int level)
-        {
-            return experienceData[Mathf.Clamp(level - 1, 0, experienceData.Count - 1)];
-        }
+        public ExperienceLevelData GetData(int level) 
+            => experienceData[Mathf.Clamp(level - 1, 0, experienceData.Count - 1)];
     }
 
     [System.Serializable]

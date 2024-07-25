@@ -30,14 +30,14 @@ namespace Watermelon.LevelSystem
 
         public void Initialise()
         {
-            for (int i = 0; i < levels.Length; i++)
+            for (var i = 0; i < levels.Length; i++)
             {
                 levels[i].Initialise(this);
             }
 
             itemsDisctionary = new Dictionary<int, LevelItem>();
 
-            for (int i = 0; i < items.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
                 itemsDisctionary.Add(items[i].Hash, items[i]);
             }
@@ -47,7 +47,7 @@ namespace Watermelon.LevelSystem
         public void LoadWorld()
         {
             // creating items pools
-            for (int i = 0; i < items.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
                 items[i].OnWorldLoaded();
             }
@@ -56,7 +56,7 @@ namespace Watermelon.LevelSystem
         public void UnloadWorld()
         {
             // releasing items pools
-            for (int i = 0; i < items.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
                 items[i].OnWorldUnloaded();
             }

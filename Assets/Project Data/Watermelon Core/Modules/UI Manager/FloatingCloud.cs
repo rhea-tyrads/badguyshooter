@@ -222,7 +222,7 @@ namespace Watermelon
 
                 // Play appear sound
                 if (floatingCloudData.AppearAudioClip != null)
-                    AudioController.PlaySound(floatingCloudData.AppearAudioClip);
+                    AudioController.Play(floatingCloudData.AppearAudioClip);
 
                 var cloudRadius = floatingCloudData.CloudRadius;
                 var centerPoint = rectTransform.position;
@@ -281,7 +281,7 @@ namespace Watermelon
                                 {
                                     // Play collect sound
                                     if (floatingCloudData.CollectAudioClip != null)
-                                        AudioController.PlaySound(floatingCloudData.CollectAudioClip, pitch: defaultPitch);
+                                        AudioController.Play(floatingCloudData.CollectAudioClip, pitch: defaultPitch);
 
                                     defaultPitch += 0.01f;
 

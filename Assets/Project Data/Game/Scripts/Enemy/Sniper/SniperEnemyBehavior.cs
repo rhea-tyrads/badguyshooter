@@ -104,7 +104,7 @@ namespace Watermelon.SquadShooter
 
                 gunFireParticle.Play();
 
-                AudioController.PlaySound(AudioController.Sounds.enemySniperShoot);
+                AudioController.Play(AudioController.Sounds.enemySniperShoot);
             }
             else if (enemyCallbackType == EnemyCallbackType.HitFinish)
             {

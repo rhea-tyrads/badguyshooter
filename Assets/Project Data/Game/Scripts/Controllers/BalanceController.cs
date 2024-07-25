@@ -12,85 +12,70 @@ namespace Watermelon.SquadShooter
         [SerializeField] bool disableDifficulty = false;
 
         [SerializeField] List<DifficultySettings> difficultyPresets;
-
-        TextMeshProUGUI devText;
-
-        static BalanceController instance;
-
-        public static Difficulty CurrentDifficulty { get; private set; }
+        TextMeshProUGUI _devText;
+        static BalanceController _instance;
+        static Difficulty CurrentDifficulty { get; set; }
         public static int PowerRequirement { get; private set; }
-        public static int CurrentGeneralPower => CharactersController.SelectedCharacter.GetCurrentUpgrade().Stats.Power + (WeaponsController.GetCurrentWeaponUpgrade().CurrentStage as BaseWeaponUpgradeStage).Power;
-        static int upgradesDifference;
+
+        public static int CurrentGeneralPower
+            => CharactersController.SelectedCharacter.GetCurrentUpgrade().Stats.Power +
+               ((BaseWeaponUpgradeStage)WeaponsController.GetCurrentWeaponUpgrade().CurrentStage).Power;
+
+        static int _upgradesDifference;
 
         static int BaseCreaturePower => CharactersController.BasePower;
         static int BaseWeaponPower => WeaponsController.BasePower;
 
         public void Initialise()
         {
-            instance = this;
-
+            _instance = this;
             CharactersController.OnCharacterUpgradedEvent += OnCharacterSelectedOrUpgraded;
             CharactersController.OnCharacterSelectedEvent += OnCharacterSelectedOrUpgraded;
-
             WeaponsController.OnWeaponUpgraded += UpdateDifficulty;
             WeaponsController.OnNewWeaponSelected += UpdateDifficulty;
 
-            if(showDevText)
+            if (showDevText)
             {
                 var devTextObject = new GameObject("[BALANCE DEV TEXT]");
                 devTextObject.transform.SetParent(UIController.MainCanvas.transform);
                 devTextObject.transform.ResetLocal();
-
                 var devRectTransform = devTextObject.AddComponent<RectTransform>();
                 devRectTransform.anchorMin = new Vector2(0, 1);
                 devRectTransform.anchorMax = new Vector2(0, 1);
                 devRectTransform.pivot = new Vector2(0, 1);
-
                 devRectTransform.sizeDelta = new Vector2(300, 145);
                 devRectTransform.anchoredPosition = new Vector2(35, -325);
-
-                devText = devTextObject.AddComponent<TextMeshProUGUI>();
-                devText.fontSize = 28;
+                _devText = devTextObject.AddComponent<TextMeshProUGUI>();
+                _devText.fontSize = 28;
             }
         }
 
         public static void UpdateDifficulty()
         {
-            if (LevelController.CurrentLevelData == null || instance.disableDifficulty)
+            if (LevelController.CurrentLevelData == null || _instance.disableDifficulty)
             {
                 CurrentDifficulty = Difficulty.Default;
-                instance.UpdateDevText();
+                _instance.UpdateDevText();
                 PowerRequirement = 1;
 
                 return;
             }
 
-            PowerRequirement = WeaponsController.GetCeilingKeyPower(LevelController.CurrentLevelData.RequiredUpg) + CharactersController.GetCeilingUpgradePower(LevelController.CurrentLevelData.RequiredUpg);
+            PowerRequirement = WeaponsController.GetCeilingKeyPower(LevelController.CurrentLevelData.RequiredUpg) +
+                               CharactersController.GetCeilingUpgradePower(LevelController.CurrentLevelData
+                                   .RequiredUpg);
 
-            upgradesDifference = Mathf.RoundToInt((PowerRequirement - CurrentGeneralPower) / 6f);
+            _upgradesDifference = Mathf.RoundToInt((PowerRequirement - CurrentGeneralPower) / 6f);
 
-            // up to 2 skips - easy
-            if (upgradesDifference < 3)
+            CurrentDifficulty = _upgradesDifference switch
             {
-                CurrentDifficulty = Difficulty.Easy;
-            }
-            // up to 6 skips - normal
-            else if (upgradesDifference < 7)
-            {
-                CurrentDifficulty = Difficulty.Normal;
-            }
-            // up to 12 skips - medium
-            else if (upgradesDifference < 13)
-            {
-                CurrentDifficulty = Difficulty.Medium;
-            }
-            // more then 12 skips - hard
-            else
-            {
-                CurrentDifficulty = Difficulty.Hard;
-            }
+                < 3 => Difficulty.Easy, // up to 2 skips - easy
+                < 7 => Difficulty.Normal, // up to 6 skips - normal
+                < 13 => Difficulty.Medium, // up to 12 skips - medium
+                _ => Difficulty.Hard
+            };
 
-            instance.UpdateDevText();
+            _instance.UpdateDevText();
         }
 
         void OnCharacterSelectedOrUpgraded(CharacterType characterType, Character character)
@@ -103,33 +88,29 @@ namespace Watermelon.SquadShooter
             var weaponUpg = upgrade as BaseWeaponUpgrade;
 
             if (weaponUpg != null)
-            {
                 UpdateDifficulty();
-            }
         }
 
         public static DifficultySettings GetActiveDifficultySettings()
         {
-            for (var i = 0; i < instance.difficultyPresets.Count; i++)
+            foreach (var settings in _instance.difficultyPresets)
             {
-                if (instance.difficultyPresets[i].Difficulty.Equals(CurrentDifficulty))
-                {
-                    return instance.difficultyPresets[i];
-                }
+                if (!settings.Difficulty.Equals(CurrentDifficulty)) continue;
+                return settings;
             }
 
             Debug.LogError("[Balance Controller] Difficulty preset not found for: " + CurrentDifficulty);
-            return instance.difficultyPresets[0];
+            return _instance.difficultyPresets[0];
         }
 
         void UpdateDevText()
         {
             if (LevelController.CurrentLevelData != null && showDevText)
             {
-                devText.text = "lvl: " + (ActiveRoom.CurrentWorldIndex + 1) + "-" + (ActiveRoom.CurrentLevelIndex + 1)
-                    + "\npwr: " + CurrentGeneralPower + "/" + PowerRequirement
-                    + "\nupg: " + upgradesDifference
-                    + "\ndif: " + CurrentDifficulty.ToString().ToLower();
+                _devText.text = "lvl: " + (ActiveRoom.World + 1) + "-" + (ActiveRoom.Level + 1)
+                                + "\npwr: " + CurrentGeneralPower + "/" + PowerRequirement
+                                + "\nupg: " + _upgradesDifference
+                                + "\ndif: " + CurrentDifficulty.ToString().ToLower();
             }
         }
     }

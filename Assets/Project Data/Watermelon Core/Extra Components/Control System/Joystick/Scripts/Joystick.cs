@@ -199,7 +199,7 @@ namespace Watermelon
             return Vector2.zero;
         }
 
-        public void EnableMovementControl()
+        public void EnableMovement()
         {
             gameObject.SetActive(true);
         }

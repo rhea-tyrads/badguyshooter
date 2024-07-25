@@ -317,7 +317,7 @@ namespace Watermelon.SquadShooter
             {
                 lastFlotingTextTime = Time.realtimeSinceStartup;
 
-                FloatingTextController.SpawnFloatingText("Hit", "-" + damage.ToString("F0"),
+                FloatingTextController.Spawn("Hit", "-" + damage.ToString("F0"),
                     transform.position + transform.forward * stats.HitTextOffsetForward +
                     new Vector3(Random.Range(-0.3f, 0.3f), stats.HitTextOffsetY, Random.Range(-0.1f, 0.1f)),
                     Quaternion.identity, 1f);
@@ -344,7 +344,7 @@ namespace Watermelon.SquadShooter
             {
                 lastFlotingTextTime = Time.realtimeSinceStartup;
 
-                FloatingTextController.SpawnFloatingText("Hit", "-" + damage.ToString("F0"),
+                FloatingTextController.Spawn("Hit", "-" + damage.ToString("F0"),
                     transform.position + transform.forward * stats.HitTextOffsetForward +
                     new Vector3(Random.Range(-0.3f, 0.3f), stats.HitTextOffsetY, Random.Range(-0.1f, 0.1f)),
                     Quaternion.identity, 1f);
@@ -416,7 +416,7 @@ namespace Watermelon.SquadShooter
 
             DropResources();
 
-            AudioController.PlaySound(AudioController.Sounds.enemyScreems.GetRandomItem());
+            AudioController.Play(AudioController.Sounds.enemyScreems.GetRandomItem());
 
             LevelController.OnEnemyKilled(this);
 
@@ -633,7 +633,7 @@ namespace Watermelon.SquadShooter
                                 });
                             }
 
-                            AudioController.PlaySound(AudioController.Sounds.coinAppear, 0.6f);
+                            AudioController.Play(AudioController.Sounds.coinAppear, 0.6f);
                             break;
                         }
                         case DropableItemType.WeaponCard:

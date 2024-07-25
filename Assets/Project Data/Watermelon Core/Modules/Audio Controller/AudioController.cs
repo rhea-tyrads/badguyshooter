@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Watermelon
 {
@@ -56,7 +57,8 @@ namespace Watermelon
 
             if (settings == null)
             {
-                Debug.LogError("[AudioController]: Audio Settings is NULL! Please assign audio settings scriptable on Audio Controller script.");
+                Debug.LogError(
+                    "[AudioController]: Audio Settings is NULL! Please assign audio settings scriptable on Audio Controller script.");
 
                 return;
             }
@@ -99,7 +101,7 @@ namespace Watermelon
             listenerObject.transform.position = Vector3.zero;
 
             // Mark as non-destroyable
-            GameObject.DontDestroyOnLoad(listenerObject);
+            Object.DontDestroyOnLoad(listenerObject);
 
             // Add listener component to created object
             audioListener = listenerObject.AddComponent<AudioListener>();
@@ -120,14 +122,14 @@ namespace Watermelon
             if (!musicAudioClips.IsNullOrEmpty())
                 PlayMusic(musicAudioClips.GetRandomItem());
         }
- 
+
         public static void ReleaseStreams()
         {
             ReleaseMusic();
             ReleaseSounds();
             ReleaseCustomStreams();
         }
- 
+
         public static void ReleaseMusic()
         {
             var activeMusicCount = instance.activeMusicSources.Count - 1;
@@ -139,7 +141,7 @@ namespace Watermelon
             }
         }
 
- 
+
         public static void ReleaseSounds()
         {
             var activeStreamsCount = instance.activeSoundSources.Count - 1;
@@ -151,7 +153,7 @@ namespace Watermelon
             }
         }
 
- 
+
         public static void ReleaseCustomStreams()
         {
             var activeStreamsCount = instance.activeCustomSourcesCases.Count - 1;
@@ -284,21 +286,19 @@ namespace Watermelon
         }
 
 
-        public static void PlaySound(AudioClip clip, float volumePercentage = 1.0f, float pitch = 1.0f, float minDelay = 0f)
+        public static void Play(AudioClip clip, float volumePercentage = 1.0f, float pitch = 1.0f, float minDelay = 0f)
         {
             if (clip == null)
                 Debug.LogError("[AudioController]: Audio clip is null");
 
             if (minDelay > 0)
             {
-                if (minDelayQueue.Exists(data => data.audioHash.Equals(clip.GetHashCode())))
+                if (minDelayQueue.Exists(data => data.AudioHash.Equals(clip.GetHashCode())))
                 {
                     return;
                 }
-                else
-                {
-                    minDelayQueue.Add(new AudioMinDelayData(clip.GetHashCode(), minDelay));
-                }
+
+                minDelayQueue.Add(new AudioMinDelayData(clip.GetHashCode(), minDelay));
             }
 
             var source = instance.GetAudioSource();
@@ -360,24 +360,23 @@ namespace Watermelon
         public static void ReleaseCustomSource(AudioCaseCustom audioCase, float fadeTime = 0)
         {
             var streamID = instance.activeCustomSourcesCases.FindIndex(x => x.source == audioCase.source);
-            if (streamID != -1)
+            if (streamID == -1) return;
+
+            if (fadeTime == 0)
             {
-                if (fadeTime == 0)
+                instance.activeCustomSourcesCases[streamID].source.Stop();
+                instance.activeCustomSourcesCases[streamID].source.clip = null;
+                instance.activeCustomSourcesCases.RemoveAt(streamID);
+                instance.customSources.Add(audioCase.source);
+            }
+            else
+            {
+                instance.activeCustomSourcesCases[streamID].source.DOVolume(0f, fadeTime).OnComplete(() =>
                 {
-                    instance.activeCustomSourcesCases[streamID].source.Stop();
-                    instance.activeCustomSourcesCases[streamID].source.clip = null;
-                    instance.activeCustomSourcesCases.RemoveAt(streamID);
+                    instance.activeCustomSourcesCases.Remove(audioCase);
+                    audioCase.source.Stop();
                     instance.customSources.Add(audioCase.source);
-                }
-                else
-                {
-                    instance.activeCustomSourcesCases[streamID].source.DOVolume(0f, fadeTime).OnComplete(() =>
-                    {
-                        instance.activeCustomSourcesCases.Remove(audioCase);
-                        audioCase.source.Stop();
-                        instance.customSources.Add(audioCase.source);
-                    });
-                }
+                });
             }
         }
 
@@ -387,14 +386,11 @@ namespace Watermelon
             for (var i = 0; i < sourcesAmount; i++)
             {
                 if (!audioSources[i].isPlaying)
-                {
                     return audioSources[i];
-                }
             }
 
             var createdSource = CreateAudioSourceObject(false);
             audioSources.Add(createdSource);
-
             return createdSource;
         }
 
@@ -402,7 +398,6 @@ namespace Watermelon
         {
             var audioSource = targetGameObject.AddComponent<AudioSource>();
             SetSourceDefaultSettings(audioSource);
-
             return audioSource;
         }
 
@@ -411,76 +406,60 @@ namespace Watermelon
             SetSoundsVolume(volume);
             SetMusicVolume(volume);
 
-            for (var i = 0; i < activeCustomSourcesCases.Count; i++)
+            foreach (var audi in activeCustomSourcesCases)
             {
-                activeCustomSourcesCases[i].source.volume = volume;
+                audi.source.volume = volume;
             }
         }
 
         public static void SetSoundsVolume(float newVolume)
         {
-            for (var i = 0; i < instance.activeSoundSources.Count; i++)
+            foreach (var src in instance.activeSoundSources)
             {
-                instance.activeSoundSources[i].volume = newVolume;
+                src.volume = newVolume;
             }
         }
 
         public static void SetMusicVolume(float newVolume)
         {
-            for (var i = 0; i < instance.activeMusicSources.Count; i++)
+            foreach (var src in instance.activeMusicSources)
             {
-                instance.activeMusicSources[i].volume = newVolume;
+                src.volume = newVolume;
             }
         }
 
         public static void SetVolume(float volume)
         {
             AudioController.volume = volume;
-
             PrefsSettings.SetFloat(PrefsSettings.Key.Volume, volume);
-
             instance.SetVolumeForAudioSources(volume);
-
             OnVolumeChanged?.Invoke(volume);
         }
 
+        public static float GetVolume() => volume;
 
-
-        public static float GetVolume()
-        {
-            return volume;
-        }
-
-        public static bool IsVibrationEnabled()
-        {
-            return vibrationState;
-        }
+        public static bool IsVibrationEnabled() => vibrationState;
 
         public static void SetVibrationState(bool vibrationState)
         {
             AudioController.vibrationState = vibrationState;
-
             PrefsSettings.SetBool(PrefsSettings.Key.Vibration, vibrationState);
-
             OnVibrationChanged?.Invoke(vibrationState);
         }
 
         public static void SetSourceDefaultSettings(AudioSource source, AudioType type = AudioType.Sound)
         {
-            var volume = PrefsSettings.GetFloat(PrefsSettings.Key.Volume);
+            var vol = PrefsSettings.GetFloat(PrefsSettings.Key.Volume);
 
-            if (type == AudioType.Sound)
+            source.loop = type switch
             {
-                source.loop = false;
-            }
-            else if (type == AudioType.Music)
-            {
-                source.loop = true;
-            }
+                AudioType.Sound => false,
+                AudioType.Music => true,
+                _ => source.loop
+            };
 
             source.clip = null;
-
-            source.volume = volume;
+            source.volume = vol;
             source.pitch = 1.0f;
             source.spatialBlend = 0; // 2D Sound
             source.mute = false;
@@ -495,6 +474,7 @@ namespace Watermelon
         }
 
         public delegate void OnVolumeChangedCallback(float volume);
+
         public delegate void OnVibrationChangedCallback(bool state);
 
 
@@ -507,17 +487,14 @@ namespace Watermelon
                 if (minDelayQueue.Count == 0)
                 {
                     yield return delay;
-
                 }
                 else
                 {
                     for (var i = 0; i < minDelayQueue.Count; i++)
                     {
-                        if (Time.timeSinceLevelLoad >= minDelayQueue[i].enableTime)
-                        {
-                            minDelayQueue.RemoveAt(i);
-                            i--;
-                        }
+                        if (!(Time.timeSinceLevelLoad >= minDelayQueue[i].EnableTime)) continue;
+                        minDelayQueue.RemoveAt(i);
+                        i--;
                     }
 
                     yield return delay;
@@ -528,41 +505,14 @@ namespace Watermelon
 
     public struct AudioMinDelayData
     {
-        public int audioHash;
-        public float enableTime;
+        public readonly int AudioHash;
+        public readonly float EnableTime;
 
         public AudioMinDelayData(int audioHash, float delayDuration)
         {
-            this.audioHash = audioHash;
-            this.enableTime = Time.timeSinceLevelLoad + delayDuration;
+            AudioHash = audioHash;
+            EnableTime = Time.timeSinceLevelLoad + delayDuration;
         }
     }
 }
-
-// -----------------
-// Audio Controller v 0.4
-// -----------------
-
-// Changelog
-// v 0.4
-// • Vibration settings removed
-// v 0.3.3
-// • Method for separate music and sound volume override
-// v 0.3.2
-// • Added audio listener creation method
-// v 0.3.2
-// • Added volume float
-// • AudioSettings variable removed (now sounds, music and vibrations can be reached directly)
-// v 0.3.1
-// • Added OnVolumeChanged callback
-// • Renamed AudioSettings to Settings
-// v 0.3
-// • Added IsAudioModuleEnabled method
-// • Added IsVibrationModuleEnabled method
-// • Removed VibrationToggleButton class
-// v 0.2
-// • Removed MODULE_VIBRATION
-// v 0.1
-// • Added basic version
-// • Added support of new initialization
-// • Music and Sound volume is combined
+ 

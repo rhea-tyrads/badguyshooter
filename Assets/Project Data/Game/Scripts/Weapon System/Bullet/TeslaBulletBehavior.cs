@@ -7,91 +7,91 @@ namespace Watermelon.SquadShooter
 {
     public class TeslaBulletBehavior : PlayerBulletBehavior
     {
-        static readonly int PARTICLE_HIT_HASH = ParticlesController.GetHash("Tesla Hit");
-        static readonly int PARTICLE_WALL_HIT_HASH = ParticlesController.GetHash("Tesla Wall Hit");
+        static readonly int ParticleHitHash = ParticlesController.GetHash("Tesla Hit");
+        static readonly int ParticleWallHitHash = ParticlesController.GetHash("Tesla Wall Hit");
 
         [Space(5f)]
         [SerializeField] TrailRenderer trailRenderer;
 
-        List<BaseEnemyBehavior> targets;
+        List<BaseEnemyBehavior> _targets;
 
-        int targetsHitGoal;
-        int hitsPerformed;
-        float stunDuration;
+        int _targetsHitGoal;
+        int _hitsPerformed;
+        float _stunDuration;
 
         public void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget, float autoDisableTime,
             bool autoDisableOnHit, float stunDuration)
         {
             base.Initialise(damage, speed, currentTarget, autoDisableTime, autoDisableOnHit);
 
-            this.stunDuration = stunDuration;
+            this._stunDuration = stunDuration;
             trailRenderer.Clear();
 
             transform.localScale = Vector3.one * 0.1f;
             transform.DOScale(1.0f, 0.25f).SetEasing(Ease.Type.CubicIn);
 
-            hitsPerformed = 0;
-            targets = ActiveRoom.GetAliveEnemies().OrderBy(e =>
+            _hitsPerformed = 0;
+            _targets = ActiveRoom.GetAliveEnemies().OrderBy(e =>
                 Vector3.SqrMagnitude(e.transform.position - CharacterBehaviour.Transform.position)).ToList();
         }
 
         public void SetTargetsHitGoal(int goal)
         {
-            targetsHitGoal = goal;
+            _targetsHitGoal = goal;
         }
 
         protected override void FixedUpdate()
         {
-            if (targets.Count == 0)
+            if (_targets.Count == 0)
             {
                 DisableBullet();
                 return;
             }
 
-            if (hitsPerformed >= targetsHitGoal)
+            if (_hitsPerformed >= _targetsHitGoal)
             {
                 DisableBullet();
                 return;
             }
 
 
-            var targetDirection = targets[0].transform.position.SetY(1f) - transform.position;
+            var targetDirection = _targets[0].transform.position.SetY(1f) - transform.position;
             var rotationDirection = Vector3.RotateTowards(transform.forward, targetDirection, 360, 0f);
             transform.rotation = Quaternion.LookRotation(rotationDirection);
 
             base.FixedUpdate();
 
-            if (targets[0].IsDead)
+            if (_targets[0].IsDead)
             {
-                targets.RemoveAt(0);
+                _targets.RemoveAt(0);
             }
         }
 
         protected override void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior)
         {
-            baseEnemyBehavior.Stun(stunDuration);
-            ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
+            baseEnemyBehavior.Stun(_stunDuration);
+            ParticlesController.Play(ParticleHitHash).SetPosition(transform.position);
 
             trailRenderer.Clear();
 
-            for (var i = 0; i < targets.Count; i++)
+            for (var i = 0; i < _targets.Count; i++)
             {
-                if (targets[i].IsDead || targets[i].Equals(baseEnemyBehavior))
+                if (_targets[i].IsDead || _targets[i].Equals(baseEnemyBehavior))
                 {
-                    targets.RemoveAt(i);
+                    _targets.RemoveAt(i);
                     i--;
                 }
             }
 
-            hitsPerformed++;
+            _hitsPerformed++;
 
             // all hits after the first one deal 30% of damage
-            if (hitsPerformed == 1)
+            if (_hitsPerformed == 1)
             {
-                damage *= 0.3f;
+                Damage *= 0.3f;
             }
 
-            if (hitsPerformed >= targetsHitGoal || targets.Count == 0)
+            if (_hitsPerformed >= _targetsHitGoal || _targets.Count == 0)
             {
                 DisableBullet();
             }
@@ -101,7 +101,7 @@ namespace Watermelon.SquadShooter
         {
             base.OnObstacleHitted();
 
-            ParticlesController.PlayParticle(PARTICLE_WALL_HIT_HASH).SetPosition(transform.position);
+            ParticlesController.Play(ParticleWallHitHash).SetPosition(transform.position);
             DisableBullet();
         }
 

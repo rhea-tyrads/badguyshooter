@@ -96,7 +96,7 @@ namespace Watermelon
         void OnButtonClicked()
         {
             //Debug.LogError("BUTTON CLICK");
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
 
             if (currencyContentObject.activeSelf)
             {

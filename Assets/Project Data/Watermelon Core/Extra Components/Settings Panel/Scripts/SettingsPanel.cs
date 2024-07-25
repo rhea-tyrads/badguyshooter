@@ -124,7 +124,7 @@ namespace Watermelon
                 isActiveSettingsButton = true;
             }
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
 
         public void Show()

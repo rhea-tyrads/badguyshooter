@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TopDownEngine.Common.Scripts.BoogieScripts
 {
@@ -18,7 +19,7 @@ namespace TopDownEngine.Common.Scripts.BoogieScripts
  
         public void Hide()
         {
-            _isShow = false;
+            isShow = false;
             beamStart.SetActive(false);
             beamEnd.SetActive(false);
             beam.SetActive(false);
@@ -27,14 +28,14 @@ namespace TopDownEngine.Common.Scripts.BoogieScripts
 
  
 
-      public  bool _isShow;
+      [FormerlySerializedAs("_isShow")] public  bool isShow;
         Transform _target;
  
 
         public void Show(Transform target)
         {
             _target = target;
-            _isShow = true;
+            isShow = true;
             beamStart.SetActive(true);
             beamEnd.SetActive(true);
             beam.SetActive(true);
@@ -42,7 +43,7 @@ namespace TopDownEngine.Common.Scripts.BoogieScripts
 
         void Update()
         {
-            if (!_isShow) return;
+            if (!isShow) return;
             var dir = _target.position - transform.position;
             DrawBeam(transform.position, dir);
         }

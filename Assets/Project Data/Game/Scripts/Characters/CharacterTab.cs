@@ -10,51 +10,51 @@ namespace Watermelon.SquadShooter
         [SerializeField] Color notificationColor;
         [SerializeField] Color disabledColor;
         [SerializeField] GameObject notificationObject;
-        UICharactersPanel characterPanel;
-        TweenCase movementTweenCase;
-        Vector2 defaultAnchoredPosition;
-        RectTransform rectTransform;
-        public RectTransform RectTransform => rectTransform;
-        Button button;
-        public Button Button => button;
+        UICharactersPanel _characterPanel;
+        TweenCase _movementTweenCase;
+        Vector2 _defaultAnchoredPosition;
+        RectTransform _rectTransform;
+        public RectTransform RectTransform => _rectTransform;
+        Button _button;
+        public Button Button => _button;
 
-        UIGamepadButton gamepadButton;
-        public UIGamepadButton GamepadButton => gamepadButton;
-        CanvasGroup canvasGroup;
-        bool isActive;
+        UIGamepadButton _gamepadButton;
+        public UIGamepadButton GamepadButton => _gamepadButton;
+        CanvasGroup _canvasGroup;
+        bool _isActive;
 
         public void Initialise()
         {
-            button = GetComponent<Button>();
-            canvasGroup = GetComponent<CanvasGroup>();
-            gamepadButton = GetComponent<UIGamepadButton>();
+            _button = GetComponent<Button>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+            _gamepadButton = GetComponent<UIGamepadButton>();
 
-            rectTransform = (RectTransform)transform;
+            _rectTransform = (RectTransform)transform;
 
-            characterPanel = UIController.GetPage<UICharactersPanel>();
+            _characterPanel = UIController.GetPage<UICharactersPanel>();
 
-            defaultAnchoredPosition = rectTransform.anchoredPosition;
+            _defaultAnchoredPosition = _rectTransform.anchoredPosition;
 
-            isActive = true;
+            _isActive = true;
         }
 
         public void OnWindowOpened()
         {
-            if (!isActive)
+            if (!_isActive)
                 return;
 
-            movementTweenCase.KillActive();
+            _movementTweenCase.KillActive();
 
-            rectTransform.anchoredPosition = defaultAnchoredPosition;
+            _rectTransform.anchoredPosition = _defaultAnchoredPosition;
             tabImage.color = defaultColor;
 
-            if (characterPanel.IsAnyActionAvailable())
+            if (_characterPanel.IsAnyActionAvailable())
             {
                 notificationObject.SetActive(true);
 
-                movementTweenCase = tabImage.DOColor(notificationColor, 0.3f, 0.3f).OnComplete(delegate
+                _movementTweenCase = tabImage.DOColor(notificationColor, 0.3f, 0.3f).OnComplete(delegate
                 {
-                    movementTweenCase = new TabAnimation(rectTransform, new Vector2(defaultAnchoredPosition.x, defaultAnchoredPosition.y + 30)).SetDuration(1.2f).SetUnscaledMode(false).SetUpdateMethod(UpdateMethod.Update).SetEasing(Ease.Type.QuadOutIn).StartTween();
+                    _movementTweenCase = new TabAnimation(_rectTransform, new Vector2(_defaultAnchoredPosition.x, _defaultAnchoredPosition.y + 30)).SetDuration(1.2f).SetUnscaledMode(false).SetUpdateMethod(UpdateMethod.Update).SetEasing(Ease.Type.QuadOutIn).StartTween();
                 });
             }
             else
@@ -65,30 +65,30 @@ namespace Watermelon.SquadShooter
 
         public void OnWindowClosed()
         {
-            movementTweenCase.KillActive();
+            _movementTweenCase.KillActive();
 
-            rectTransform.anchoredPosition = defaultAnchoredPosition;
+            _rectTransform.anchoredPosition = _defaultAnchoredPosition;
         }
 
         public void Disable()
         {
-            isActive = false;
+            _isActive = false;
 
             tabImage.color = disabledColor;
-            rectTransform.anchoredPosition = defaultAnchoredPosition;
+            _rectTransform.anchoredPosition = _defaultAnchoredPosition;
 
             notificationObject.SetActive(false);
 
-            canvasGroup.alpha = 0.5f;
+            _canvasGroup.alpha = 0.5f;
 
-            movementTweenCase.KillActive();
+            _movementTweenCase.KillActive();
         }
 
         public void Activate()
         {
-            isActive = true;
+            _isActive = true;
 
-            canvasGroup.alpha = 1.0f;
+            _canvasGroup.alpha = 1.0f;
 
             OnWindowOpened();
         }
@@ -97,7 +97,7 @@ namespace Watermelon.SquadShooter
         {
             UIController.HidePage<UIMainMenu>(UIController.ShowPage<UICharactersPanel>);
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
     }
 }

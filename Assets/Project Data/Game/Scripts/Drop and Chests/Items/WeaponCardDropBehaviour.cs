@@ -23,14 +23,14 @@ namespace Watermelon.SquadShooter
         public override void Initialise(DropData dropData, float availableToPickDelay = -1, float autoPickDelay = -1, bool ignoreCollector = false)
         {
             this.dropData = dropData;
-            this.availableToPickDelay = availableToPickDelay;
-            this.autoPickDelay = autoPickDelay;
+            this.AvailableToPickDelay = availableToPickDelay;
+            this.AutoPickDelay = autoPickDelay;
 
             isPicked = false;
             particleObject.transform.localScale = Vector3.zero;
 
             LevelController.OnPlayerExitLevelEvent += AutoPick;
-            CharacterBehaviour.OnDied += ItemDisable;
+            CharacterBehaviour.Died += ItemDisable;
         }
 
         public void SetCardData(WeaponType weaponType)
@@ -71,14 +71,14 @@ namespace Watermelon.SquadShooter
             throwTweenCases[0] = transform.DOMoveXZ(position.x, position.z, time).SetCurveEasing(movemenHorizontalCurve);
             throwTweenCases[1] = transform.DOMoveY(position.y, time).SetCurveEasing(movementVerticalCurve).OnComplete(delegate
             {
-                Tween.DelayedCall(availableToPickDelay, () =>
+                Tween.DelayedCall(AvailableToPickDelay, () =>
                 {
                     triggerRef.enabled = true;
                 });
 
-                if (autoPickDelay != -1f)
+                if (AutoPickDelay != -1f)
                 {
-                    Tween.DelayedCall(autoPickDelay, () => Pick());
+                    Tween.DelayedCall(AutoPickDelay, () => Pick());
                 }
 
                 particleObject.transform.DOScale(7f, 0.2f).SetEasing(Ease.Type.SineOut);
@@ -108,7 +108,7 @@ namespace Watermelon.SquadShooter
                 transform.DOMove(CharacterBehaviour.Transform.position.SetY(0.6f), 0.3f).SetEasing(Ease.Type.SineIn).OnComplete(() =>
                 {
                     ItemDisable();
-                    AudioController.PlaySound(AudioController.Sounds.cardPickUp);
+                    AudioController.Play(AudioController.Sounds.cardPickUp);
                 });
             }
             else
@@ -119,7 +119,7 @@ namespace Watermelon.SquadShooter
 
         public void ItemDisable()
         {
-            CharacterBehaviour.OnDied -= ItemDisable;
+            CharacterBehaviour.Died -= ItemDisable;
             gameObject.SetActive(false);
         }
     }

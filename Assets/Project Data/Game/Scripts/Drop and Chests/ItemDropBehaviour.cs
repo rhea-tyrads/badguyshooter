@@ -10,17 +10,17 @@ namespace Watermelon.SquadShooter
         [SerializeField] Collider triggerRef;
         [SerializeField] bool useAutoPickup = true;
 
-        TweenCase[] throwTweenCases;
+        TweenCase[] _throwTweenCases;
 
         public override void Initialise(DropData dropData, float availableToPickDelay = -1, float autoPickDelay = -1,
             bool ignoreCollector = false)
         {
             this.dropData = dropData;
-            this.availableToPickDelay = availableToPickDelay;
-            this.autoPickDelay = autoPickDelay;
+            this.AvailableToPickDelay = availableToPickDelay;
+            this.AutoPickDelay = autoPickDelay;
             isPicked = false;
             animator.enabled = false;
-            CharacterBehaviour.OnDied += ItemDisable;
+            CharacterBehaviour.Died += ItemDisable;
         }
 
         public override void Drop()
@@ -33,20 +33,20 @@ namespace Watermelon.SquadShooter
             AnimationCurve movementVerticalCurve, float time)
         {
             LevelController.OnPlayerExitLevelEvent += AutoPick;
-            throwTweenCases = new TweenCase[2];
+            _throwTweenCases = new TweenCase[2];
             triggerRef.enabled = false;
-            throwTweenCases[0] =
+            _throwTweenCases[0] =
                 transform.DOMoveXZ(position.x, position.z, time).SetCurveEasing(movemenHorizontalCurve);
-            throwTweenCases[1] = transform.DOMoveY(position.y, time).SetCurveEasing(movementVerticalCurve).OnComplete(
+            _throwTweenCases[1] = transform.DOMoveY(position.y, time).SetCurveEasing(movementVerticalCurve).OnComplete(
                 delegate
                 {
                     animator.enabled = true;
 
-                    Tween.DelayedCall(availableToPickDelay, () => { triggerRef.enabled = true; });
+                    Tween.DelayedCall(AvailableToPickDelay, () => { triggerRef.enabled = true; });
 
-                    if (autoPickDelay != -1f)
+                    if (AutoPickDelay != -1f)
                     {
-                        Tween.DelayedCall(autoPickDelay, () =>
+                        Tween.DelayedCall(AutoPickDelay, () =>
                         {
                             Pick();
                             CharacterBehaviour.GetBehaviour().OnItemPicked(this);
@@ -77,9 +77,9 @@ namespace Watermelon.SquadShooter
             if (isPicked) return;
             isPicked = true;
 
-            if (!throwTweenCases.IsNullOrEmpty())
+            if (!_throwTweenCases.IsNullOrEmpty())
             {
-                foreach (var tween in throwTweenCases)
+                foreach (var tween in _throwTweenCases)
                     tween.KillActive();
             }
 
@@ -93,7 +93,7 @@ namespace Watermelon.SquadShooter
                     {
                         ItemDisable();
                         if (dropData.dropType == DropableItemType.Currency)
-                            AudioController.PlaySound(AudioController.Sounds.coinPickUp, 0.4f);
+                            AudioController.Play(AudioController.Sounds.coinPickUp, 0.4f);
                     });
             }
             else
@@ -104,7 +104,7 @@ namespace Watermelon.SquadShooter
 
         public void ItemDisable()
         {
-            CharacterBehaviour.OnDied -= ItemDisable;
+            CharacterBehaviour.Died -= ItemDisable;
             gameObject.SetActive(false);
         }
     }

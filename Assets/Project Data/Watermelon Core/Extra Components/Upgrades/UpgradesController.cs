@@ -7,50 +7,42 @@ namespace Watermelon
 
     public class UpgradesController : MonoBehaviour
     {
-        const string SAVE_IDENTIFIER = "upgrades:{0}";
-
+   
         [SerializeField] UpgradesDatabase upgradesDatabase;
-
-        static BaseUpgrade[] activeUpgrades;
-        public static BaseUpgrade[] ActiveUpgrades => activeUpgrades;
-
-        static Dictionary<UpgradeType, BaseUpgrade> activeUpgradesLink;
-
+        static BaseUpgrade[] _activeUpgrades;
+        public static BaseUpgrade[] ActiveUpgrades => _activeUpgrades;
+        static Dictionary<UpgradeType, BaseUpgrade> _activeUpgradesLink;
+        const string SAVE_IDENTIFIER = "upgrades:{0}";
+        
         public void Initialise()
         {
-            activeUpgrades = upgradesDatabase.Upgrades;
-            activeUpgradesLink = new Dictionary<UpgradeType, BaseUpgrade>();
-            foreach (var upgrade in activeUpgrades)
+            _activeUpgrades = upgradesDatabase.Upgrades;
+            _activeUpgradesLink = new Dictionary<UpgradeType, BaseUpgrade>();
+            foreach (var upgrade in _activeUpgrades)
             {
                 var hash = string.Format(SAVE_IDENTIFIER, upgrade.UpgradeType.ToString()).GetHashCode();
                 var save = SaveController.GetSaveObject<UpgradeSavableObject>(hash); ;
                 upgrade.SetSave(save);
-
-                if (activeUpgradesLink.ContainsKey(upgrade.UpgradeType)) continue;
-                
+                if (_activeUpgradesLink.ContainsKey(upgrade.UpgradeType)) continue;
                 upgrade.Initialise();
-                activeUpgradesLink.Add(upgrade.UpgradeType, upgrade);
+                _activeUpgradesLink.Add(upgrade.UpgradeType, upgrade);
             }
         }
 
         [System.Obsolete]
-        public static BaseUpgrade GetUpgradeByType(UpgradeType perkType)
+        public static BaseUpgrade GetByType(UpgradeType perkType)
         {
-            if (activeUpgradesLink.ContainsKey(perkType))
-                return activeUpgradesLink[perkType];
-
+            if (_activeUpgradesLink.ContainsKey(perkType))
+                return _activeUpgradesLink[perkType];
             Debug.LogError($"[Perks]: Upgrade with type {perkType} isn't registered!");
-
             return null;
         }
 
-        public static T GetUpgrade<T>(UpgradeType type) where T : BaseUpgrade
+        public static T Get<T>(UpgradeType type) where T : BaseUpgrade
         {
-            if (activeUpgradesLink.ContainsKey(type))
-                return activeUpgradesLink[type] as T;
-
+            if (_activeUpgradesLink.ContainsKey(type))
+                return _activeUpgradesLink[type] as T;
             Debug.LogError($"[Perks]: Upgrade with type {type} isn't registered!");
-
             return null;
         }
     }

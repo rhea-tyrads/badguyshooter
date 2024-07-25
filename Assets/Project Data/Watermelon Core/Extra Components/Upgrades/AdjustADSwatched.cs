@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class AdjustADSwatched : MonoBehaviour
 {
-    string AD_WATCH;
+    string _adWatch;
 
     void Start()
     {
        // DontDestroyOnLoad(gameObject);
 
-        AD_WATCH = "d0y1pr";
+        _adWatch = "d0y1pr";
 
         MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
         MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
@@ -21,9 +21,9 @@ public class AdjustADSwatched : MonoBehaviour
 
     void OnAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo impressionData)
     {
-        var send = new AdjustEvent(AD_WATCH);
+        var send = new AdjustEvent(_adWatch);
         Adjust.trackEvent(send);
-        Debug.LogWarning("[Adjust] AD WATCHED, " + "TOKEN: " + AD_WATCH);
+        Debug.LogWarning("[Adjust] AD WATCHED, " + "TOKEN: " + _adWatch);
     }
 }
 

@@ -86,7 +86,7 @@ namespace Watermelon.SquadShooter
         {
             UIController.OnPageClosed(this);
 
-            GameController.OnCharacterSugessionClosed();
+            GameController.OnCharacterSuggestionClosed();
         }
 
         #region Buttons
@@ -94,7 +94,7 @@ namespace Watermelon.SquadShooter
         {
             UIController.HidePage<UICharacterSuggestion>();
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
         #endregion
     }

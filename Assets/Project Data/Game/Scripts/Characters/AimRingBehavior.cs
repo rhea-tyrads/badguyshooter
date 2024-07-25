@@ -14,30 +14,30 @@ namespace Watermelon.SquadShooter
         [Space(5f)]
         [SerializeField] float rotationSpeed;
 
-        MeshFilter meshFilter;
-        MeshRenderer meshRenderer;
-        Mesh mesh;
+        MeshFilter _meshFilter;
+        MeshRenderer _meshRenderer;
+        Mesh _mesh;
 
-        List<Vector3> vertices = new();
-        List<int> triangles = new();
+        List<Vector3> _vertices = new();
+        List<int> _triangles = new();
 
-        Transform followTransform;
+        Transform _followTransform;
 
-        float radius;
+        float _radius;
 
         void Awake()
         {
-            meshFilter = GetComponent<MeshFilter>();
-            meshRenderer = GetComponent<MeshRenderer>();
+            _meshFilter = GetComponent<MeshFilter>();
+            _meshRenderer = GetComponent<MeshRenderer>();
 
-            mesh = new Mesh();
-            meshFilter.mesh = mesh;
+            _mesh = new Mesh();
+            _meshFilter.mesh = _mesh;
         }
 
         public void Init(Transform followTransform)
         {
             transform.SetParent(null);
-            this.followTransform = followTransform;
+            this._followTransform = followTransform;
         }
 
         public void SetRadius(float radius)
@@ -47,43 +47,43 @@ namespace Watermelon.SquadShooter
                 Debug.LogError("Aiming radius can't be 0!");
             }
 
-            this.radius = Mathf.Clamp(radius, 1, float.MaxValue);
+            this._radius = Mathf.Clamp(radius, 1, float.MaxValue);
             GenerateMesh();
         }
 
         public void UpdatePosition()
         {
-            transform.position = followTransform.position;
+            transform.position = _followTransform.position;
             transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
         }
 
         public void Show()
         {
-            meshRenderer.enabled = true;
+            _meshRenderer.enabled = true;
         }
 
         public void Hide()
         {
-            meshRenderer.enabled = false;
+            _meshRenderer.enabled = false;
         }
 
         void GenerateMesh()
         {
-            mesh = new Mesh();
-            mesh.name = "Generated Mesh";
-            meshFilter.mesh = mesh;
+            _mesh = new Mesh();
+            _mesh.name = "Generated Mesh";
+            _meshFilter.mesh = _mesh;
 
             var stepAngle = 360f / detalisation;
 
-            var stripeAngle = 180f * stripeLength / (Mathf.PI * radius);
+            var stripeAngle = 180f * stripeLength / (Mathf.PI * _radius);
             var stripeSectorsAmount = Mathf.FloorToInt(stripeAngle / stepAngle);
 
-            var gapAngle = 180f * gapLength / (Mathf.PI * radius);
+            var gapAngle = 180f * gapLength / (Mathf.PI * _radius);
             var gapSectorsAmount = Mathf.FloorToInt(gapAngle / stepAngle);
 
-            vertices.Clear();
-            triangles.Clear();
-            mesh.Clear();
+            _vertices.Clear();
+            _triangles.Clear();
+            _mesh.Clear();
 
             float currentAngle = 0;
 
@@ -91,23 +91,23 @@ namespace Watermelon.SquadShooter
             {
                 for (var i = 0; i < stripeSectorsAmount && currentAngle < 360f; i++)
                 {
-                    vertices.Add(GetPoint(radius, Mathf.Deg2Rad * currentAngle, Vector3.zero));
-                    vertices.Add(GetPoint(radius + width, Mathf.Deg2Rad * currentAngle, Vector3.zero));
-                    vertices.Add(GetPoint(radius, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
+                    _vertices.Add(GetPoint(_radius, Mathf.Deg2Rad * currentAngle, Vector3.zero));
+                    _vertices.Add(GetPoint(_radius + width, Mathf.Deg2Rad * currentAngle, Vector3.zero));
+                    _vertices.Add(GetPoint(_radius, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
 
-                    vertices.Add(GetPoint(radius + width, Mathf.Deg2Rad * currentAngle, Vector3.zero));
-                    vertices.Add(GetPoint(radius + width, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
-                    vertices.Add(GetPoint(radius, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
+                    _vertices.Add(GetPoint(_radius + width, Mathf.Deg2Rad * currentAngle, Vector3.zero));
+                    _vertices.Add(GetPoint(_radius + width, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
+                    _vertices.Add(GetPoint(_radius, Mathf.Deg2Rad * (currentAngle + stepAngle), Vector3.zero));
 
-                    var trisCount = triangles.Count;
+                    var trisCount = _triangles.Count;
 
-                    triangles.Add(trisCount + 2);
-                    triangles.Add(trisCount + 1);
-                    triangles.Add(trisCount);
+                    _triangles.Add(trisCount + 2);
+                    _triangles.Add(trisCount + 1);
+                    _triangles.Add(trisCount);
 
-                    triangles.Add(trisCount + 5);
-                    triangles.Add(trisCount + 4);
-                    triangles.Add(trisCount + 3);
+                    _triangles.Add(trisCount + 5);
+                    _triangles.Add(trisCount + 4);
+                    _triangles.Add(trisCount + 3);
 
                     currentAngle += stepAngle;
                 }
@@ -118,8 +118,8 @@ namespace Watermelon.SquadShooter
                 }
             }
 
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
+            _mesh.vertices = _vertices.ToArray();
+            _mesh.triangles = _triangles.ToArray();
         }
 
         Vector3 GetPoint(float radius, float angle, Vector3 center)

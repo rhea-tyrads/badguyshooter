@@ -37,7 +37,7 @@ namespace Watermelon
             
             if(initialiseOnStart)
             {
-                CurrenciesController.InvokeOrSubcrtibe(Initialise);
+                CurrenciesController.InvokeOrSubscribe(Initialise);
             }
         }
 

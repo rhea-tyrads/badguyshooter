@@ -18,7 +18,7 @@ namespace Watermelon
             IAPManager.BuyProduct(AdsManager.NO_ADS_PRODUCT_KEY);
 
             // Play button sound
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
 
             settingsPanel.Hide(true);
             settingsPanel.InitPositions();

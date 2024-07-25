@@ -10,27 +10,27 @@ namespace Watermelon.SquadShooter
         [SerializeField] LayerMask targetLayers;
         [SerializeField] float bulletDisableTime;
 
-        float attackDelay;
-        DuoFloat bulletSpeed;
-        float bulletSpreadAngle;
+        float _attackDelay;
+        DuoFloat _bulletSpeed;
+        float _bulletSpreadAngle;
 
-        float nextShootTime;
+        float _nextShootTime;
 
-        Pool bulletPool;
+        Pool _bulletPool;
 
-        TweenCase shootTweenCase;
-        Vector3 shootDirection;
+        TweenCase _shootTweenCase;
+        Vector3 _shootDirection;
 
-        ShotgunUpgrade upgrade;
+        ShotgunUpgrade _upgrade;
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
             base.Initialise(characterBehaviour, data);
 
-            upgrade = UpgradesController.GetUpgrade<ShotgunUpgrade>(data.UpgradeType);
+            _upgrade = UpgradesController.Get<ShotgunUpgrade>(data.UpgradeType);
 
-            var bulletObj = upgrade.BulletPrefab;
-            bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
+            var bulletObj = _upgrade.BulletPrefab;
+            _bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
 
             RecalculateDamage();
         }
@@ -42,82 +42,82 @@ namespace Watermelon.SquadShooter
 
         public override void RecalculateDamage()
         {
-            var stage = upgrade.GetCurrentStage();
+            var stage = _upgrade.GetCurrentStage();
 
             damage = stage.Damage;
-            bulletSpreadAngle = stage.Spread;
-            var atkSpdMult = characterBehaviour.isAtkSpdBooster ? characterBehaviour.atkSpdBoosterMult : 1;
-            attackDelay = 1f / (stage.FireRate * atkSpdMult);
-            bulletSpeed = stage.BulletSpeed;
+            _bulletSpreadAngle = stage.Spread;
+            var atkSpdMult = CharacterBehaviour.isAtkSpdBooster ? CharacterBehaviour.atkSpdBoosterMult : 1;
+            _attackDelay = 1f / (stage.FireRate * atkSpdMult);
+            _bulletSpeed = stage.BulletSpeed;
         }
 
         public override void GunUpdate()
         {
             // Combat
-            if (!characterBehaviour.IsCloseEnemyFound) return;
-            if (nextShootTime >= Time.timeSinceLevelLoad) return;
+            if (!CharacterBehaviour.IsCloseEnemyFound) return;
+            if (_nextShootTime >= Time.timeSinceLevelLoad) return;
 
-            shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
 
-            if (Physics.Raycast(transform.position, shootDirection, out var hitInfo, 300f, targetLayers))
+            if (Physics.Raycast(transform.position, _shootDirection, out var hitInfo, 300f, targetLayers))
             {
                 if (hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
                 {
-                    if (Vector3.Angle(shootDirection, transform.forward) < 40f)
+                    if (Vector3.Angle(_shootDirection, transform.forward) < 40f)
                     {
-                        characterBehaviour.SetTargetActive();
+                        CharacterBehaviour.SetTargetActive();
 
-                        shootTweenCase.KillActive();
+                        _shootTweenCase.KillActive();
 
-                        shootTweenCase = transform.DOLocalMoveZ(-0.15f, 0.1f).OnComplete(delegate
+                        _shootTweenCase = transform.DOLocalMoveZ(-0.15f, 0.1f).OnComplete(delegate
                         {
-                            shootTweenCase = transform.DOLocalMoveZ(0, 0.15f);
+                            _shootTweenCase = transform.DOLocalMoveZ(0, 0.15f);
                         });
 
                         shootParticleSystem.Play();
 
-                        nextShootTime = Time.timeSinceLevelLoad + attackDelay / characterBehaviour.AtkSpdMult;
+                        _nextShootTime = Time.timeSinceLevelLoad + _attackDelay / CharacterBehaviour.AtkSpdMult;
 
-                        var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random();
+                        var bulletsNumber = _upgrade.GetCurrentStage().BulletsPerShot.Random();
 
                         for (var i = 0; i < bulletsNumber; i++)
                         {
-                            var bullet = bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(characterBehaviour.transform.eulerAngles)).GetComponent<PlayerBulletBehavior>();
-                            bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier, bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                            bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(bulletSpreadAngle * -0.5f, bulletSpreadAngle * 0.5f), 0f));
+                            var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetEulerRotation(CharacterBehaviour.transform.eulerAngles)).GetComponent<PlayerBulletBehavior>();
+                            bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier* CharacterBehaviour.critMultiplier, _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
+                            bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(_bulletSpreadAngle * -0.5f, _bulletSpreadAngle * 0.5f), 0f));
                         }
 
-                        characterBehaviour.OnGunShooted();
-                        characterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
+                        CharacterBehaviour.OnGunShooted();
+                        CharacterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
 
-                        AudioController.PlaySound(AudioController.Sounds.shotShotgun);
+                        AudioController.Play(AudioController.Sounds.shotShotgun);
                     }
                 }
                 else
                 {
-                    characterBehaviour.SetTargetUnreachable();
+                    CharacterBehaviour.SetTargetUnreachable();
                 }
             }
             else
             {
-                characterBehaviour.SetTargetUnreachable();
+                CharacterBehaviour.SetTargetUnreachable();
             }
         }
 
         void OnDrawGizmos()
         {
-            if (characterBehaviour == null)
+            if (CharacterBehaviour == null)
                 return;
 
-            if (characterBehaviour.ClosestEnemyBehaviour == null)
+            if (CharacterBehaviour.ClosestEnemyBehaviour == null)
                 return;
 
             var defCol = Gizmos.color;
             Gizmos.color = Color.red;
 
-            var shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            var shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
 
-            Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 10f, characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
+            Gizmos.DrawLine(shootPoint.position - shootDirection.normalized * 10f, CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y));
 
             Gizmos.color = defCol;
         }
@@ -125,10 +125,10 @@ namespace Watermelon.SquadShooter
         public override void OnGunUnloaded()
         {
             // Destroy bullets pool
-            if (bulletPool != null)
+            if (_bulletPool != null)
             {
-                bulletPool.Clear();
-                bulletPool = null;
+                _bulletPool.Clear();
+                _bulletPool = null;
             }
         }
 
@@ -140,7 +140,7 @@ namespace Watermelon.SquadShooter
 
         public override void Reload()
         {
-            bulletPool?.ReturnToPoolEverything();
+            _bulletPool?.ReturnToPoolEverything();
         }
     }
 }

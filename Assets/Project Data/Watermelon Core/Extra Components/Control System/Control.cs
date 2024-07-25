@@ -61,10 +61,10 @@ namespace Watermelon
             }
 #endif
 
-            CurrentControl.EnableMovementControl();
+            CurrentControl.EnableMovement();
         }
 
-        public static void DisableMovementControl()
+        public static void DisableMovement()
         {
 #if UNITY_EDITOR
             if (CurrentControl == null)

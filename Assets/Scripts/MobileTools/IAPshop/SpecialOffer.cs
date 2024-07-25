@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using MobileTools.SDK;
 using MobileTools.Utilities;
 using UnityEngine;
@@ -33,8 +31,8 @@ public class SpecialOffer : MonoBehaviour
 
     void LevelComplete(int arg1, int arg2)
     {
-        var world = ActiveRoom.CurrentWorldIndex;
-        var level = ActiveRoom.CurrentLevelIndex + 1;
+        var world = ActiveRoom.World;
+        var level = ActiveRoom.Level + 1;
 
         if (level % 4 == 0)
             Show();

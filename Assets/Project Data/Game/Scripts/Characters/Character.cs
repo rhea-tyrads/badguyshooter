@@ -24,13 +24,13 @@ namespace Watermelon.SquadShooter
         [SerializeField] CharacterUpgrade[] upgrades;
         public CharacterUpgrade[] Upgrades => upgrades;
 
-        CharacterSave save;
-        public CharacterSave Save => save;
+        CharacterSave _save;
+        public CharacterSave Save => _save;
 
 
         public void Initialise()
         {
-            save = SaveController.GetSaveObject<CharacterSave>("Character" + type);
+            _save = SaveController.GetSaveObject<CharacterSave>("Character" + type);
 
 #if UNITY_EDITOR
             if (stages.IsNullOrEmpty())
@@ -40,7 +40,7 @@ namespace Watermelon.SquadShooter
 
         public CharacterStageData GetCurrentStage()
         {
-            for (var i = save.UpgradeLevel; i >= 0; i--)
+            for (var i = _save.upgradeLevel; i >= 0; i--)
             {
                 if (!upgrades[i].ChangeStage) continue;
                 return stages[upgrades[i].StageIndex];
@@ -51,7 +51,7 @@ namespace Watermelon.SquadShooter
 
         public int GetCurrentStageIndex()
         {
-            for (var i = save.UpgradeLevel; i >= 0; i--)
+            for (var i = _save.upgradeLevel; i >= 0; i--)
             {
                 if (!upgrades[i].ChangeStage) continue;
                 return i;
@@ -61,19 +61,19 @@ namespace Watermelon.SquadShooter
         }
 
         public CharacterUpgrade GetCurrentUpgrade()
-            => upgrades[save.UpgradeLevel];
+            => upgrades[_save.upgradeLevel];
 
         public CharacterUpgrade GetNextUpgrade()
-            => upgrades.IsInRange(save.UpgradeLevel + 1) ? upgrades[save.UpgradeLevel + 1] : null;
+            => upgrades.IsInRange(_save.upgradeLevel + 1) ? upgrades[_save.upgradeLevel + 1] : null;
 
-        public int GetCurrentUpgradeIndex() => save.UpgradeLevel;
+        public int GetCurrentUpgradeIndex() => _save.upgradeLevel;
 
-        public bool IsMaxUpgrade() => !upgrades.IsInRange(save.UpgradeLevel + 1);
+        public bool IsMaxUpgrade() => !upgrades.IsInRange(_save.upgradeLevel + 1);
 
         public void UpgradeCharacter()
         {
-            if (!upgrades.IsInRange(save.UpgradeLevel + 1)) return;
-            save.UpgradeLevel += 1;
+            if (!upgrades.IsInRange(_save.upgradeLevel + 1)) return;
+            _save.upgradeLevel += 1;
             CharactersController.OnCharacterUpgraded(this);
         }
 

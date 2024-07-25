@@ -1,6 +1,5 @@
 //using NaughtyAttributes;
 using UnityEngine;
-using Watermelon;
 
 namespace Watermelon.SquadShooter
 {

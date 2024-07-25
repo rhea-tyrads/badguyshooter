@@ -64,7 +64,7 @@ namespace Watermelon.SquadShooter
             if (isHitting) return;
             isHitting = true;
             ApplySlowDown();
-            AudioController.PlaySound(AudioController.Sounds.enemyMeleeHit, 0.5f);
+            AudioController.Play(AudioController.Sounds.enemyMeleeHit, 0.5f);
             animatorRef.SetTrigger(ANIMATOR_ATTACK_HASH);
         }
 
@@ -165,7 +165,7 @@ namespace Watermelon.SquadShooter
                     if (Vector3.Distance(transform.position, target.position) <= hitRadius)
                     {
                         characterBehaviour.TakeDamage(Damage);
-                        ParticlesController.PlayParticle(HIT_PARTICLE_HASH).SetPosition(hitParticlePosition.position);
+                        ParticlesController.Play(HIT_PARTICLE_HASH).SetPosition(hitParticlePosition.position);
                         OnAttackPlayer();
                         Stun();
                     }

@@ -95,7 +95,7 @@ namespace Watermelon.SquadShooter
                     bullet.InitialiseBullet(Damage, bulletSpeed, 1000, lasetHitPoints);
 
                     gunFireParticle.Play();
-                    AudioController.PlaySound(AudioController.Sounds.enemySniperShoot);
+                    AudioController.Play(AudioController.Sounds.enemySniperShoot);
 
                     break;
 

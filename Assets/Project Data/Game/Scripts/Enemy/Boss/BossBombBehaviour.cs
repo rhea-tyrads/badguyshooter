@@ -42,8 +42,8 @@ namespace Watermelon.SquadShooter
         {
             isPlaced = true;
 
-            ParticlesController.PlayParticle(PARTICLE_HIT_HASH).SetPosition(transform.position);
-            ParticlesController.PlayParticle(PARTICLE_EXPLOSION_RADIUS_HASH).SetPosition(transform.position).SetDuration(duration);
+            ParticlesController.Play(PARTICLE_HIT_HASH).SetPosition(transform.position);
+            ParticlesController.Play(PARTICLE_EXPLOSION_RADIUS_HASH).SetPosition(transform.position).SetDuration(duration);
 
             transform.DOScale(2.0f, duration).SetEasing(Ease.Type.CubicIn).OnComplete(delegate
             {
@@ -67,8 +67,8 @@ namespace Watermelon.SquadShooter
                     }
                 }
 
-                ParticlesController.PlayParticle(PARTICLE_EXPLOSION_HASH).SetPosition(transform.position);
-                AudioController.PlaySound(AudioController.Sounds.explode);
+                ParticlesController.Play(PARTICLE_EXPLOSION_HASH).SetPosition(transform.position);
+                AudioController.Play(AudioController.Sounds.explode);
 
                 if (bossEnemyBehaviour != null)
                     bossEnemyBehaviour.OnBombExploded(this, playerHitted);

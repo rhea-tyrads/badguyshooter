@@ -27,7 +27,7 @@ namespace Watermelon
 
         public bool EnoughMoneyOnBalance()
         {
-            return CurrenciesController.HasAmount(currencyType, price);
+            return CurrenciesController.Has(currencyType, price);
         }
 
         public void SubstractFromBalance()

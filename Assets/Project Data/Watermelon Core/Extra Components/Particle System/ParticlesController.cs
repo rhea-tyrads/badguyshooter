@@ -7,44 +7,36 @@ namespace Watermelon
     public partial class ParticlesController : MonoBehaviour
     {
         [SerializeField] Particle[] particles;
-
-        static Dictionary<int, Particle> registerParticles = new();
-
-        static List<ParticleCase> activeParticles = new();
-        static int activeParticlesCount = 0;
-
-        static List<TweenCase> delayedParticles = new();
+        static readonly Dictionary<int, Particle> Registered = new();
+        static readonly List<ParticleCase> Active = new();
+        static readonly List<TweenCase> Delayed = new();
+        static int _activeParticlesCount;
+      
 
         public void Initialise()
         {
-            // Register particles
-            for (var i = 0; i < particles.Length; i++)
-            {
-                RegisterParticle(particles[i]);
-            }
+            foreach (var particle in particles)
+                Register(particle);
 
-            StartCoroutine(CheckForActiveParticles());
+            StartCoroutine(CheckForActive());
         }
 
         public static void Clear()
         {
-            for(var i = 0; i < delayedParticles.Count; i++)
+            foreach (var tween in Delayed)
+                tween.KillActive();
+
+            Delayed.Clear();
+
+            for (var i = _activeParticlesCount - 1; i >= 0; i--)
             {
-                delayedParticles[i].KillActive();
-            }
-
-            delayedParticles.Clear();
-
-            for (var i = activeParticlesCount - 1; i >= 0; i--)
-            {
-                activeParticles[i].OnDisable();
-
-                activeParticles.RemoveAt(i);
-                activeParticlesCount--;
+                Active[i].OnDisable();
+                Active.RemoveAt(i);
+                _activeParticlesCount--;
             }
         }
 
-        IEnumerator CheckForActiveParticles()
+        IEnumerator CheckForActive()
         {
             while (true)
             {
@@ -54,143 +46,108 @@ namespace Watermelon
                 yield return null;
                 yield return null;
 
-                for (var i = activeParticlesCount - 1; i >= 0; i--)
+                for (var i = _activeParticlesCount - 1; i >= 0; i--)
                 {
-                    if (activeParticles[i] != null)
+                    if (Active[i] != null)
                     {
-                        if (activeParticles[i].IsForceDisabledRequired())
-                            activeParticles[i].ParticleSystem.Stop();
+                        if (Active[i].IsForceDisabledRequired())
+                            Active[i].ParticleSystem.Stop();
 
-                        if (!activeParticles[i].ParticleSystem.IsAlive())
-                        {
-                            activeParticles[i].OnDisable();
-
-                            activeParticles.RemoveAt(i);
-                            activeParticlesCount--;
-                        }
+                        if (Active[i].ParticleSystem.IsAlive()) continue;
+                        
+                        Active[i].OnDisable();
+                        Active.RemoveAt(i);
+                        _activeParticlesCount--;
                     }
                     else
                     {
-                        activeParticles.RemoveAt(i);
-                        activeParticlesCount--;
+                        Active.RemoveAt(i);
+                        _activeParticlesCount--;
                     }
                 }
             }
         }
 
-        public static ParticleCase ActivateParticle(Particle particle, float delay = 0)
+        static ParticleCase ActivateParticle(Particle particle, float delay = 0)
         {
             var isDelayed = delay > 0;
-
             var particleCase = new ParticleCase(particle, isDelayed);
 
             if(isDelayed)
             {
                 TweenCase delayTweenCase = null;
-                
                 delayTweenCase = Tween.DelayedCall(delay, () =>
                 {
                     particleCase.ParticleSystem.Play();
-
-                    activeParticles.Add(particleCase);
-                    activeParticlesCount++;
-
-                    delayedParticles.Remove(delayTweenCase);
+                    Active.Add(particleCase);
+                    _activeParticlesCount++;
+                    Delayed.Remove(delayTweenCase);
                 });
 
-                delayedParticles.Add(delayTweenCase);
-
+                Delayed.Add(delayTweenCase);
                 return particleCase;
             }
 
-            activeParticles.Add(particleCase);
-            activeParticlesCount++;
-
+            Active.Add(particleCase);
+            _activeParticlesCount++;
             return particleCase;
         }
 
         #region Register
-        public static int RegisterParticle(Particle particle)
+
+        static int Register(Particle particle)
         {
             var particleHash = particle.ParticleName.GetHashCode();
-            if (!registerParticles.ContainsKey(particleHash))
+            if (!Registered.ContainsKey(particleHash))
             {
                 particle.Initialise();
-
-                registerParticles.Add(particleHash, particle);
-
+                Registered.Add(particleHash, particle);
                 return particleHash;
             }
-            else
-            {
-                Debug.LogError(string.Format("[Particle Controller]: Particle with name {0} already register!"));
-            }
+
+            Debug.LogError(string.Format("[Particle Controller]: Particle with name {0} already register!"));
 
             return -1;
         }
 
-        public static int RegisterParticle(string particleName, GameObject particlePrefab)
+        public static int Register(string particleName, GameObject particlePrefab)
         {
-            return RegisterParticle(new Particle(particleName, particlePrefab));
+            return Register(new Particle(particleName, particlePrefab));
         }
         #endregion
 
         #region Play
-        public static ParticleCase PlayParticle(string particleName, float delay = 0)
+        public static ParticleCase Play(string particleName, float delay = 0)
         {
             var particleHash = particleName.GetHashCode();
+            if (Registered.ContainsKey(particleHash))
+                return ActivateParticle(Registered[particleHash], delay);
 
-            if (registerParticles.ContainsKey(particleHash))
-            {
-                return ActivateParticle(registerParticles[particleHash], delay);
-            }
-
-            Debug.LogError(string.Format("[Particles System]: Particle with type {0} is missing!", particleName));
-
+            Debug.LogError($"[Particles System]: Particle with type {particleName} is missing!");
             return null;
         }
 
-        public static ParticleCase PlayParticle(int particleHash, float delay = 0)
+        public static ParticleCase Play(int particleHash, float delay = 0)
         {
-            if (registerParticles.ContainsKey(particleHash))
-            {
-                return ActivateParticle(registerParticles[particleHash], delay);
-            }
+            if (Registered.ContainsKey(particleHash))
+                return ActivateParticle(Registered[particleHash], delay);
 
-            Debug.LogError(string.Format("[Particles System]: Particle with hash {0} is missing!", particleHash));
-
+            Debug.LogError($"[Particles System]: Particle with hash {particleHash} is missing!");
             return null;
         }
 
-        public static ParticleCase PlayParticle(Particle particle, float delay = 0)
+        public static ParticleCase Play(Particle particle, float delay = 0)
         {
             var particleHash = particle.ParticleName.GetHashCode();
-            if (registerParticles.ContainsKey(particleHash))
-            {
-                return ActivateParticle(registerParticles[particleHash], delay);
-            }
-
-            Debug.LogError(string.Format("[Particles System]: Particle with hash {0} is missing!", particleHash));
-
+            if (Registered.ContainsKey(particleHash))
+                return ActivateParticle(Registered[particleHash], delay);
+            Debug.LogError($"[Particles System]: Particle with hash {particleHash} is missing!");
             return null;
         }
         #endregion
 
         public static int GetHash(string particleName)
-        {
-            return particleName.GetHashCode();
-        }
+            => particleName.GetHashCode();
     }
 }
-
-// -----------------
-// Particles Controller v1.1
-// -----------------
-
-// Changelog
-// v 1.1
-// • Added custom editor
-// • Ring effect scripts moved to separate files
-// • Added particle spawn delay
-// v 1.0
-// • Basic version
+ 

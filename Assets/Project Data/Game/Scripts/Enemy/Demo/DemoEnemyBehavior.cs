@@ -47,12 +47,12 @@ namespace Watermelon.SquadShooter
         public override void OnAnimatorCallback(EnemyCallbackType enemyCallbackType)
         {
             if (enemyCallbackType != EnemyCallbackType.HitFinish) return;
-            var particleCase = ParticlesController.PlayParticle(explosionParticleHash);
+            var particleCase = ParticlesController.Play(explosionParticleHash);
 
             particleCase.SetPosition(bombBone.position.SetY(0.1f));
             particleCase.SetDuration(1f);
 
-            var decalCase = ParticlesController.PlayParticle(explosionDecalParticleHash).SetRotation(Quaternion.Euler(-90, 0, 0)).SetScale((10.0f).ToVector3());
+            var decalCase = ParticlesController.Play(explosionDecalParticleHash).SetRotation(Quaternion.Euler(-90, 0, 0)).SetScale((10.0f).ToVector3());
 
             decalCase.SetPosition(transform.position);
             decalCase.SetDuration(5f);
@@ -79,7 +79,7 @@ namespace Watermelon.SquadShooter
 
             explosionCircle.gameObject.SetActive(false);
             exploded = true;
-            AudioController.PlaySound(AudioController.Sounds.explode);
+            AudioController.Play(AudioController.Sounds.explode);
             OnDeath();
             gameObject.SetActive(false);
         }

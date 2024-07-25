@@ -37,8 +37,8 @@ namespace Watermelon.SquadShooter
 
         public void LoadPanel()
         {
-            var currentWorldIndex = ActiveRoom.CurrentWorldIndex;
-            var currentLevelIndex = ActiveRoom.CurrentLevelIndex;
+            var currentWorldIndex = ActiveRoom.World;
+            var currentLevelIndex = ActiveRoom.Level;
 
             var currentWorld = levelsDatabase.GetWorld(currentWorldIndex);
             var nextWorld = levelsDatabase.GetWorld(currentWorldIndex + 1);

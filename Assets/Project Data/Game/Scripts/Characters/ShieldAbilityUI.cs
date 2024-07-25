@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ShieldAbilityUI : MonoBehaviour
 {
-    private Transform player1;
+    private Transform _player1;
     public Color activeColor;
     public Color passiveColor;
     public List<Image> shields=new();
@@ -28,7 +28,7 @@ public class ShieldAbilityUI : MonoBehaviour
     
     public void Follow(Transform player)
     {
-        player1 = player;
+        _player1 = player;
     }
     public void Unparent()
     {
@@ -37,9 +37,9 @@ public class ShieldAbilityUI : MonoBehaviour
      
     void Update()
     {
-        if (player1)
+        if (_player1)
         {
-            transform.position = player1.position;
+            transform.position = _player1.position;
         }
     }
 }

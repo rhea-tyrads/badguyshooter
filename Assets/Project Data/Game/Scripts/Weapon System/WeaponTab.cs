@@ -111,7 +111,7 @@ namespace Watermelon.SquadShooter
                 UIController.ShowPage<UIWeaponPage>();
             });
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
     }
 }

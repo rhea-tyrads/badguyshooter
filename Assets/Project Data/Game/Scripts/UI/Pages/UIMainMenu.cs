@@ -216,7 +216,7 @@ namespace Watermelon
         #region Buttons
         public void OnNoAdsButtonClicked()
         {
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
             IAPManager.BuyProduct(ProductKeyType.NoAds);
         }
 
@@ -235,7 +235,7 @@ namespace Watermelon
             Overlay.Show(0.3f, () =>
             {
                 LevelController.OnGameStarted();
-                AudioController.PlaySound(AudioController.Sounds.buttonSound);
+                AudioController.Play(AudioController.Sounds.buttonSound);
 
                 Overlay.Hide(0.3f, null);
             });

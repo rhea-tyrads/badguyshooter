@@ -681,8 +681,8 @@ namespace Watermelon.SquadShooter
             GlobalSave tempSave = SaveController.GetGlobalSave();
 
             LevelSave levelSave = tempSave.GetSaveObject<LevelSave>("level");
-            levelSave.LevelIndex = levelIndex;
-            levelSave.WorldIndex = worldIndex;
+            levelSave.Level = levelIndex;
+            levelSave.World = worldIndex;
             tempSave.Flush();
 
             SaveController.SaveCustom(tempSave);

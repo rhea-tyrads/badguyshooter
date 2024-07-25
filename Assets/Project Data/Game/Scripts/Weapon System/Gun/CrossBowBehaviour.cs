@@ -17,21 +17,21 @@ public class CrossBowBehaviour : BaseGunBehavior
     [Space]
     [SerializeField] List<float> bulletStreamAngles;
 
-    float spread;
-    float attackDelay;
-    DuoFloat bulletSpeed;
-    float nextShootTime;
-    Pool bulletPool;
-    Vector3 shootDirection;
-    CrossbowUpgrade upgrade;
-    TweenCase shootTweenCase;
+    float _spread;
+    float _attackDelay;
+    DuoFloat _bulletSpeed;
+    float _nextShootTime;
+    Pool _bulletPool;
+    Vector3 _shootDirection;
+    CrossbowUpgrade _upgrade;
+    TweenCase _shootTweenCase;
 
     public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
     {
         base.Initialise(characterBehaviour, data);
-        upgrade = UpgradesController.GetUpgrade<CrossbowUpgrade>(data.UpgradeType);
-        var bulletObj = upgrade.BulletPrefab;
-        bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
+        _upgrade = UpgradesController.Get<CrossbowUpgrade>(data.UpgradeType);
+        var bulletObj = _upgrade.BulletPrefab;
+        _bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
         RecalculateDamage();
     }
    
@@ -42,85 +42,85 @@ public class CrossBowBehaviour : BaseGunBehavior
 
     public override void RecalculateDamage()
     {
-        var stage = upgrade.GetCurrentStage();
+        var stage = _upgrade.GetCurrentStage();
 
         damage = stage.Damage;
-        attackDelay = 1f / stage.FireRate;
-        spread = stage.Spread;
-        bulletSpeed = stage.BulletSpeed;
+        _attackDelay = 1f / stage.FireRate;
+        _spread = stage.Spread;
+        _bulletSpeed = stage.BulletSpeed;
     }
 
     public override void GunUpdate()
     {
-        if (!characterBehaviour.IsCloseEnemyFound) return;
+        if (!CharacterBehaviour.IsCloseEnemyFound) return;
         //  barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
-        if (nextShootTime >= Time.timeSinceLevelLoad) return;
+        if (_nextShootTime >= Time.timeSinceLevelLoad) return;
 
-        shootDirection = characterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+        _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
 
-        if (Physics.Raycast(transform.position, shootDirection, out var hitInfo, 300f, targetLayers) &&
+        if (Physics.Raycast(transform.position, _shootDirection, out var hitInfo, 300f, targetLayers) &&
             hitInfo.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY)
         {
-            if (!(Vector3.Angle(shootDirection, transform.forward.SetY(0f)) < 40f)) return;
+            if (!(Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) < 40f)) return;
            
-            shootTweenCase.KillActive();
+            _shootTweenCase.KillActive();
 
-            shootTweenCase = transform.DOLocalMoveZ(-0.0825f, attackDelay * 0.3f / characterBehaviour.AtkSpdMult)
+            _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f / CharacterBehaviour.AtkSpdMult)
                 .OnComplete(delegate
                 {
-                    shootTweenCase =
-                        transform.DOLocalMoveZ(0, attackDelay * 0.6f / characterBehaviour.AtkSpdMult);
+                    _shootTweenCase =
+                        transform.DOLocalMoveZ(0, _attackDelay * 0.6f / CharacterBehaviour.AtkSpdMult);
                 });
 
-            characterBehaviour.SetTargetActive();
+            CharacterBehaviour.SetTargetActive();
 
             shootParticleSystem.Play();
 
-            nextShootTime = Time.timeSinceLevelLoad + attackDelay / characterBehaviour.AtkSpdMult;
+            _nextShootTime = Time.timeSinceLevelLoad + _attackDelay / CharacterBehaviour.AtkSpdMult;
 
             if (bulletStreamAngles.IsNullOrEmpty())
             {
                 bulletStreamAngles = new List<float> {0};
             }
 
-            var bulletsNumber = upgrade.GetCurrentStage().BulletsPerShot.Random() + characterBehaviour.MultishotBoosterAmount;
+            var bulletsNumber = _upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount;
               
 
             for (var k = 0; k < bulletsNumber; k++)
             {
                 foreach (var streamAngle in bulletStreamAngles)
                 {
-                    var bullet = bulletPool.Get(
+                    var bullet = _bulletPool.Get(
                             new PooledObjectSettings()
                                 .SetPosition(shootPoint.position)
-                                .SetEulerRotation(characterBehaviour.transform.eulerAngles + Vector3.up *
-                                    (Random.Range(-spread, spread) +
+                                .SetEulerRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
+                                    (Random.Range(-_spread, _spread) +
                                      streamAngle)))
                         .GetComponent<CrossBowBulletBehaviour>();
-                    bullet.Initialise(damage.Random() * characterBehaviour.Stats.BulletDamageMultiplier* characterBehaviour.critMultiplier,
-                        bulletSpeed.Random(), characterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
+                    bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier* CharacterBehaviour.critMultiplier,
+                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
                     bullet.owner = Owner;
                 }
             }
 
 
-            characterBehaviour.OnGunShooted();
+            CharacterBehaviour.OnGunShooted();
 
-            AudioController.PlaySound(AudioController.Sounds.shotMinigun);
+            AudioController.Play(AudioController.Sounds.shotMinigun);
         }
         else
         {
-            characterBehaviour.SetTargetUnreachable();
+            CharacterBehaviour.SetTargetUnreachable();
         }
     }
 
     public override void OnGunUnloaded()
     {
         // Destroy bullets pool
-        if (bulletPool != null)
+        if (_bulletPool != null)
         {
-            bulletPool.Clear();
-            bulletPool = null;
+            _bulletPool.Clear();
+            _bulletPool = null;
         }
     }
 
@@ -132,6 +132,6 @@ public class CrossBowBehaviour : BaseGunBehavior
 
     public override void Reload()
     {
-        bulletPool.ReturnToPoolEverything();
+        _bulletPool.ReturnToPoolEverything();
     }
 }

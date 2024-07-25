@@ -6,58 +6,58 @@ namespace Watermelon
 {
     public static class DistanceToggle
     {
-        static List<IDistanceToggle> distanceToggles = new();
-        static int distanceTogglesCount;
+        static List<IDistanceToggle> _distanceToggles = new();
+        static int _distanceTogglesCount;
 
-        static bool isActive;
-        public static bool IsActive => isActive;
+        static bool _isActive;
+        public static bool IsActive => _isActive;
 
-        static Vector3 tempDistance;
-        static float tempDistanceMagnitude;
-        static bool tempIsVisible;
+        static Vector3 _tempDistance;
+        static float _tempDistanceMagnitude;
+        static bool _tempIsVisible;
 
-        static Transform playerTransform;
+        static Transform _playerTransform;
 
-        static Coroutine updateCoroutine;
+        static Coroutine _updateCoroutine;
 
         public static void Initialise(Transform transform)
         {
-            playerTransform = transform;
+            _playerTransform = transform;
 
-            distanceToggles = new List<IDistanceToggle>();
-            distanceTogglesCount = 0;
+            _distanceToggles = new List<IDistanceToggle>();
+            _distanceTogglesCount = 0;
 
-            isActive = true;
+            _isActive = true;
 
             // Activate update coroutine
-            updateCoroutine = Tween.InvokeCoroutine(UpdateCoroutine());
+            _updateCoroutine = Tween.InvokeCoroutine(UpdateCoroutine());
         }
 
         static IEnumerator UpdateCoroutine()
         {
             while(true)
             {
-                if (isActive)
+                if (_isActive)
                 {
-                    for (int i = 0; i < distanceTogglesCount; i++)
+                    for (int i = 0; i < _distanceTogglesCount; i++)
                     {
-                        if (!distanceToggles[i].IsShowing)
+                        if (!_distanceToggles[i].IsShowing)
                             continue;
 
-                        tempIsVisible = distanceToggles[i].IsVisible;
+                        _tempIsVisible = _distanceToggles[i].IsVisible;
 
-                        tempDistance = playerTransform.position - distanceToggles[i].DistancePointPosition;
-                        tempDistance.y = 0;
+                        _tempDistance = _playerTransform.position - _distanceToggles[i].DistancePointPosition;
+                        _tempDistance.y = 0;
 
-                        tempDistanceMagnitude = tempDistance.magnitude;
+                        _tempDistanceMagnitude = _tempDistance.magnitude;
 
-                        if (!tempIsVisible && tempDistanceMagnitude <= distanceToggles[i].ShowingDistance)
+                        if (!_tempIsVisible && _tempDistanceMagnitude <= _distanceToggles[i].ShowingDistance)
                         {
-                            distanceToggles[i].PlayerEnteredZone();
+                            _distanceToggles[i].PlayerEnteredZone();
                         }
-                        else if (tempIsVisible && tempDistanceMagnitude > distanceToggles[i].ShowingDistance)
+                        else if (_tempIsVisible && _tempDistanceMagnitude > _distanceToggles[i].ShowingDistance)
                         {
-                            distanceToggles[i].PlayerLeavedZone();
+                            _distanceToggles[i].PlayerLeavedZone();
                         }
                     }
                 }
@@ -72,42 +72,42 @@ namespace Watermelon
 
         public static void AddObject(IDistanceToggle distanceToggle)
         {
-            distanceToggles.Add(distanceToggle);
-            distanceTogglesCount++;
+            _distanceToggles.Add(distanceToggle);
+            _distanceTogglesCount++;
         }
 
         public static void RemoveObject(IDistanceToggle distanceToggle)
         {
-            distanceToggles.Remove(distanceToggle);
-            distanceTogglesCount--;
+            _distanceToggles.Remove(distanceToggle);
+            _distanceTogglesCount--;
         }
 
         public static bool IsInRange(IDistanceToggle distanceToggle)
         {
-            tempDistance = playerTransform.position - distanceToggle.DistancePointPosition;
-            tempDistance.y = 0;
+            _tempDistance = _playerTransform.position - distanceToggle.DistancePointPosition;
+            _tempDistance.y = 0;
 
-            tempDistanceMagnitude = tempDistance.magnitude;
+            _tempDistanceMagnitude = _tempDistance.magnitude;
 
-            return tempDistanceMagnitude <= distanceToggle.ShowingDistance;
+            return _tempDistanceMagnitude <= distanceToggle.ShowingDistance;
         }
 
         public static void Enable()
         {
-            isActive = true;
+            _isActive = true;
         }
 
         public static void Disable()
         {
-            isActive = false;
+            _isActive = false;
         }
 
         public static void Unload()
         {
-            if (updateCoroutine != null)
-                Tween.StopCustomCoroutine(updateCoroutine);
+            if (_updateCoroutine != null)
+                Tween.StopCustomCoroutine(_updateCoroutine);
 
-            isActive = false;
+            _isActive = false;
         }
     }
 }

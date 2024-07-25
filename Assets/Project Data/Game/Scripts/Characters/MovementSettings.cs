@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using Watermelon;
 
 namespace Watermelon.SquadShooter
@@ -6,13 +7,13 @@ namespace Watermelon.SquadShooter
     [System.Serializable]
     public class MovementSettings
     {
-        public float RotationSpeed;
+        [FormerlySerializedAs("RotationSpeed")] public float rotationSpeed;
 
-        [Space]
-        public float MoveSpeed;
-        public float Acceleration;
+        [FormerlySerializedAs("MoveSpeed")] [Space]
+        public float moveSpeed;
+        [FormerlySerializedAs("Acceleration")] public float acceleration;
 
-        [Space]
-        public DuoFloat AnimationMultiplier;
+        [FormerlySerializedAs("AnimationMultiplier")] [Space]
+        public DuoFloat animationMultiplier;
     }
 }

@@ -17,7 +17,7 @@ namespace Watermelon.SquadShooter
         Pool stageStarPool;
 
         protected override int SelectedIndex
-            => Mathf.Clamp(CharactersController.GetCharacterIndex(CharactersController.SelectedCharacter.Type), 0, int.MaxValue);
+            => Mathf.Clamp(CharactersController.GetIndex(CharactersController.SelectedCharacter.Type), 0, int.MaxValue);
 
         public GameObject GetStageStarObject() => stageStarPool.Get();
 
@@ -110,11 +110,11 @@ namespace Watermelon.SquadShooter
             {
                 tempAnimation = characterDynamicAnimations[currentAnimationIndex];
 
-                delayWait = new WaitForSeconds(tempAnimation.Delay);
+                delayWait = new WaitForSeconds(tempAnimation.delay);
 
-                yield return StartCoroutine(ScrollCoroutine(tempAnimation.CharacterPanel));
+                yield return StartCoroutine(ScrollCoroutine(tempAnimation.characterPanel));
 
-                tempAnimation.OnAnimationStarted?.Invoke();
+                tempAnimation.AnimationStarted?.Invoke();
 
                 yield return delayWait;
 

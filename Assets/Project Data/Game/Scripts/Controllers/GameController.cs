@@ -9,12 +9,13 @@ namespace Watermelon
     {
         static GameController instance;
 
-        [Header("Refferences")]
-        [SerializeField] UIController uiController;
+        [Header("Refferences")] [SerializeField]
+        UIController uiController;
+
         public BonusController bonuses;
-        [Space]
-        [DrawReference]
-        [SerializeField] GameSettings settings;
+
+        [Space] [DrawReference] [SerializeField]
+        GameSettings settings;
 
         CurrenciesController currenciesController;
         UpgradesController upgradesController;
@@ -28,9 +29,9 @@ namespace Watermelon
         TutorialController tutorialController;
 
         public static GameSettings Settings => instance.settings;
+        public static bool IsGameActive { get; private set; }
 
-        static bool isGameActive;
-        public static bool IsGameActive => isGameActive;
+        public static bool IsDoubleReward;
 
         void Awake()
         {
@@ -53,6 +54,12 @@ namespace Watermelon
         void Start()
         {
             InitialiseGame();
+            Invoke(nameof(CheckOldUser), 0.2f);
+        }
+
+        void CheckOldUser()
+        {
+            LevelController.CheckOldUser();
         }
 
         public void InitialiseGame()
@@ -65,7 +72,6 @@ namespace Watermelon
             upgradesController.Initialise();
             particlesController.Initialise();
             floatingTextController.Inititalise();
-
             settings.Initialise();
 
             LevelController.Initialise();
@@ -85,35 +91,34 @@ namespace Watermelon
 
         public static void OnGameStarted()
         {
-            isGameActive = true;
+            IsGameActive = true;
         }
 
 
         public static void LevelComplete()
         {
-            if (!isGameActive) return;
+            if (!IsGameActive) return;
 
-            var currentLevel = LevelController.CurrentLevelData;
+            var levelData = LevelController.CurrentLevelData;
             var completePage = UIController.GetPage<UIComplete>();
-            var world = ActiveRoom.CurrentWorldIndex + 1;
-            var level = ActiveRoom.CurrentLevelIndex + 1;
-            var money = currentLevel.GetCoinsReward();
-            var experience = currentLevel.XPAmount;
-            var cards = currentLevel.GetCardsReward();
+            var world = ActiveRoom.World + 1;
+            var level = ActiveRoom.Level + 1;
+            var money = levelData.GetCoinsReward();
+            var experience = levelData.XPAmount;
+            var cards = levelData.GetCardsReward();
             completePage.SetData(world, level, money, experience, cards);
 
             //Debug.LogError("COMPLETE: lvl" + ActiveRoom.CurrentLevelIndex
             //+ ", world: " + ActiveRoom.CurrentWorldIndex + ", " + currentLevel.Rooms
             //+ ", total levels here: " + currentLevel.Rooms.Length);
- 
+
             UIController.OnPageOpenedEvent += OnCompletePageOpened;
             instance.weaponsController.CheckWeaponUpdateState();
             UIController.HidePage<UIGame>();
             UIController.ShowPage<UIComplete>();
-            isGameActive = false;
+            IsGameActive = false;
         }
 
- 
         static void OnCompletePageOpened(UIPage page, System.Type pageType)
         {
             if (pageType != typeof(UIComplete)) return;
@@ -122,7 +127,6 @@ namespace Watermelon
             AdsManager.ShowInterstitial(null);
         }
 
-        public static bool isDoubleReward;
         public static void OnLevelCompleteClosed()
         {
             UIController.HidePage<UIComplete>(() =>
@@ -130,44 +134,42 @@ namespace Watermelon
                 if (LevelController.NeedCharacterSugession)
                     UIController.ShowPage<UICharacterSuggestion>();
                 else
-                    ShowMainMenuAfterLevelComplete();
+                    ShowMainMenu();
             });
         }
 
-        public static void OnCharacterSugessionClosed()
+        public static void OnCharacterSuggestionClosed()
         {
-            ShowMainMenuAfterLevelComplete();
+            ShowMainMenu();
         }
 
-        static void ShowMainMenuAfterLevelComplete()
+        static void ShowMainMenu()
         {
             var xp = LevelController.CurrentLevelData.XPAmount;
-            if (isDoubleReward)
+            if (IsDoubleReward)
             {
-                isDoubleReward = false;
+                IsDoubleReward = false;
                 xp *= 2;
                 WeaponsController.AddCards(LevelController.cardRewards);
             }
-            
-           // AdsManager.ShowInterstitial(null);
+
             CustomMusicController.ToggleMusic(AudioController.Music.menuMusic, 0.3f, 0.3f);
             CameraController.SetCameraShiftState(false);
             CameraController.EnableCamera(CameraType.Menu);
             UIController.ShowPage<UIMainMenu>();
-            
-            ExperienceController.GainXPPoints(xp);
+            ExperienceController.Add(xp);
             SaveController.Save(true);
             LevelController.LoadCurrentLevel();
         }
 
         public static void OnLevelExit()
         {
-            isGameActive = false;
+            IsGameActive = false;
         }
 
         public static void OnLevelFail()
         {
-            if (!isGameActive) return;
+            if (!IsGameActive) return;
 
             if (LevelController.characterBehaviour.respawnCount <= 0)
             {
@@ -179,19 +181,19 @@ namespace Watermelon
             }
 
             LevelController.OnLevelFailed();
-            isGameActive = false;
+            IsGameActive = false;
         }
 
         static void OnFailedPageOpened(UIPage page, System.Type pageType)
         {
             if (pageType != typeof(UIGameOver)) return;
-         //   AdsManager.ShowInterstitial(null);
+            //   AdsManager.ShowInterstitial(null);
             UIController.OnPageOpenedEvent -= OnFailedPageOpened;
         }
 
         public static void OnReplayLevel()
         {
-            isGameActive = true;
+            IsGameActive = true;
             CustomMusicController.ToggleMusic(AudioController.Music.menuMusic, 0.3f, 0.3f);
             CameraController.SetCameraShiftState(false);
             CameraController.EnableCamera(CameraType.Menu);
@@ -205,7 +207,7 @@ namespace Watermelon
 
         public static void OnRevive()
         {
-            isGameActive = true;
+            IsGameActive = true;
             UIController.HidePage<UIGameOver>(() =>
             {
                 LevelController.ReviveCharacter();
@@ -213,16 +215,16 @@ namespace Watermelon
             });
         }
 
-        public bool CacheComponent<T>(out T component) where T : Component
+        bool CacheComponent<T>(out T component) where T : Component
         {
             var unboxedComponent = gameObject.GetComponent(typeof(T));
             if (unboxedComponent != null)
             {
-                component = (T) unboxedComponent;
+                component = (T)unboxedComponent;
                 return true;
             }
 
-            Debug.LogError(string.Format("Scripts Holder doesn't have {0} script added to it", typeof(T)));
+            Debug.LogError($"Scripts Holder doesn't have {typeof(T)} script added to it");
             component = null;
             return false;
         }

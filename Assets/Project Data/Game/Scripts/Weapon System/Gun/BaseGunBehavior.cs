@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Watermelon.SquadShooter
 {
@@ -20,33 +21,28 @@ namespace Watermelon.SquadShooter
         [SerializeField] Vector3 upgradeParticleOffset;
         [SerializeField] float upgradeParticleSize = 1.0f;
 
-        protected CharacterBehaviour characterBehaviour;
-        public CharacterBehaviour Owner => characterBehaviour;
-        protected WeaponData data;
+        protected CharacterBehaviour CharacterBehaviour;
+        public CharacterBehaviour Owner => CharacterBehaviour;
+        protected WeaponData Data;
 
-        protected DuoInt damage;
-        public DuoInt Damage => damage;
-
-        Transform leftHandRigController;
-        Vector3 leftHandExtraRotation;
-
-        Transform rightHandRigController;
-        Vector3 rightHandExtraRotation;
+         public DuoInt damage;
+        Transform _leftHandRigController;
+        Vector3 _leftHandExtraRotation;
+        Transform _rightHandRigController;
+        Vector3 _rightHandExtraRotation;
 
         public virtual void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
-            this.characterBehaviour = characterBehaviour;
-            this.data = data;
+            CharacterBehaviour = characterBehaviour;
+            Data = data;
         }
 
         public void InitialiseCharacter(BaseCharacterGraphics characterGraphics)
         {
-            leftHandRigController = characterGraphics.LeftHandRig.data.target;
-            rightHandRigController = characterGraphics.RightHandRig.data.target;
-
-            leftHandExtraRotation = characterGraphics.LeftHandExtraRotation;
-            rightHandExtraRotation = characterGraphics.RightHandExtraRotation;
-
+            _leftHandRigController = characterGraphics.LeftHandRig.data.target;
+            _rightHandRigController = characterGraphics.RightHandRig.data.target;
+            _leftHandExtraRotation = characterGraphics.LeftHandExtraRotation;
+            _rightHandExtraRotation = characterGraphics.RightHandExtraRotation;
             characterGraphics.SetShootingAnimation(characterShootAnimation);
         }
 
@@ -61,19 +57,19 @@ namespace Watermelon.SquadShooter
 
         public void UpdateHandRig()
         {
-            leftHandRigController.position = leftHandHolder.position;
-            rightHandRigController.position = rightHandHolder.position;
+            _leftHandRigController.position = leftHandHolder.position;
+            _rightHandRigController.position = rightHandHolder.position;
 
 #if UNITY_EDITOR
-            if (characterBehaviour && characterBehaviour.Graphics)
+            if (CharacterBehaviour && CharacterBehaviour.Graphics)
             {
-                leftHandExtraRotation = characterBehaviour.Graphics.LeftHandExtraRotation;
-                rightHandExtraRotation = characterBehaviour.Graphics.RightHandExtraRotation;
+                _leftHandExtraRotation = CharacterBehaviour.Graphics.LeftHandExtraRotation;
+                _rightHandExtraRotation = CharacterBehaviour.Graphics.RightHandExtraRotation;
             }
 #endif
 
-            leftHandRigController.rotation = Quaternion.Euler(leftHandHolder.eulerAngles + leftHandExtraRotation);
-            rightHandRigController.rotation = Quaternion.Euler(rightHandHolder.eulerAngles + rightHandExtraRotation);
+            _leftHandRigController.rotation = Quaternion.Euler(leftHandHolder.eulerAngles + _leftHandExtraRotation);
+            _rightHandRigController.rotation = Quaternion.Euler(rightHandHolder.eulerAngles + _rightHandExtraRotation);
         }
 
         public abstract void Reload();
@@ -102,7 +98,7 @@ namespace Watermelon.SquadShooter
 
         public void PlayUpgradeParticle()
         {
-            var particleCase = ParticlesController.PlayParticle(PARTICLE_UPGRADE)
+            var particleCase = ParticlesController.Play(PARTICLE_UPGRADE)
                 .SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
             particleCase.ParticleSystem.transform.rotation = CameraController.MainCamera.transform.rotation;
             particleCase.ParticleSystem.transform.Rotate(Vector3.up, 180);

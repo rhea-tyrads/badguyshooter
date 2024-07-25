@@ -66,7 +66,7 @@ namespace Watermelon.SquadShooter
                             });
                         }
 
-                        AudioController.PlaySound(AudioController.Sounds.chestOpen, 1f);
+                        AudioController.Play(AudioController.Sounds.chestOpen, 1f);
                     }
                     else if (dropData[i].dropType == DropableItemType.WeaponCard)
                     {

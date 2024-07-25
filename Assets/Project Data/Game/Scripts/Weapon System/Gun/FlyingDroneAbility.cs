@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +10,7 @@ public class FlyingDroneAbility : MonoBehaviour
     [SerializeField] CharacterBehaviour characterBehaviour;
 
     [SerializeField] Pool bulletPool;
-    Vector3 shootDirection;
+    Vector3 _shootDirection;
 
     [SerializeField] LayerMask targetLayers;
     [SerializeField] ParticleSystem shootParticleSystem;
@@ -20,12 +19,12 @@ public class FlyingDroneAbility : MonoBehaviour
     public float damage;
     public float bulletSpeed;
 
-    private bool IsShooting;
+    bool _isShooting;
     public int bulletsNumber;
     public Transform model;
     public GameObject bulletPrefab;
 
-    private void Start()
+    void Start()
     {
         characterBehaviour = CharacterBehaviour.GetBehaviour();
         bulletPool = new Pool(new PoolSettings(bulletPrefab.name, bulletPrefab, 5, true));
@@ -39,33 +38,33 @@ public class FlyingDroneAbility : MonoBehaviour
     }
 
     public float reloadDuration = 5f;
-    float reloadTimer;
-    private float attackTimer;
+    float _reloadTimer;
+    float _attackTimer;
 
     void Update()
     {
         if ( characterBehaviour.IsCloseEnemyFound)
         {
             var enemyPos = characterBehaviour.ClosestEnemyBehaviour.transform.position;
-            shootDirection = enemyPos.SetY(shootPoint.position.y) - shootPoint.position;
-            model.forward = shootDirection;
+            _shootDirection = enemyPos.SetY(shootPoint.position.y) - shootPoint.position;
+            model.forward = _shootDirection;
         
         }
  
 
-        if (IsShooting) return;
+        if (_isShooting) return;
 
-        if (IsReloading)
+        if (_isReloading)
         {
-            reloadTimer -= Time.deltaTime;
-            if (reloadTimer <= 0)
+            _reloadTimer -= Time.deltaTime;
+            if (_reloadTimer <= 0)
                 ReloadFinish();
             return;
         }
 
-        if (attackTimer >= 0)
+        if (_attackTimer >= 0)
         {
-            attackTimer -= Time.deltaTime;
+            _attackTimer -= Time.deltaTime;
             return;
         }
 
@@ -79,7 +78,7 @@ public class FlyingDroneAbility : MonoBehaviour
 
         //  shootParticleSystem.Play();
         if ( !characterBehaviour.IsCloseEnemyFound)return;
-        attackTimer = attackDelay / characterBehaviour.AtkSpdMult;
+        _attackTimer = attackDelay / characterBehaviour.AtkSpdMult;
         StartCoroutine(Shoot());
         return;
         for (var k = 0; k < bulletsNumber; k++)
@@ -96,15 +95,15 @@ public class FlyingDroneAbility : MonoBehaviour
             bullet.owner = characterBehaviour;
         }
 
-        AudioController.PlaySound(AudioController.Sounds.shotMinigun);
+        AudioController.Play(AudioController.Sounds.shotMinigun);
         //  }
     }
 
     IEnumerator Shoot()
     {
-        IsShooting = true;
+        _isShooting = true;
 
-        bullets--;
+        _bullets--;
 
         for (int i = 0; i < bulletsNumber; i++)
         {
@@ -123,29 +122,29 @@ public class FlyingDroneAbility : MonoBehaviour
                 damage * characterBehaviour.Stats.BulletDamageMultiplier * characterBehaviour.critMultiplier,
                 bulletSpeed, characterBehaviour.ClosestEnemyBehaviour, 10f);
             bullet.owner = characterBehaviour;
-            AudioController.PlaySound(AudioController.Sounds.shotTesla);
+            AudioController.Play(AudioController.Sounds.shotTesla);
             
             Debug.LogError("Shoot - " + i);
         }
 
-        if (bullets <= 0) Reload();
-        IsShooting = false;
+        if (_bullets <= 0) Reload();
+        _isShooting = false;
     }
 
     public int magazine = 6;
-    private int bullets;
-    private bool IsReloading;
+    int _bullets;
+    bool _isReloading;
 
     void ReloadFinish()
     {
-        IsReloading = false;
-        bullets = magazine;
+        _isReloading = false;
+        _bullets = magazine;
     }
 
     void Reload()
     {
-        reloadTimer = reloadDuration;
-        IsReloading = true;
+        _reloadTimer = reloadDuration;
+        _isReloading = true;
         //  Invoke(nameof(ReloadFinish),attackTimer);
     }
 

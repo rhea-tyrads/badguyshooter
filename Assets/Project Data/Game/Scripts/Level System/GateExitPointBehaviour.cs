@@ -18,11 +18,11 @@ namespace Watermelon.LevelSystem
         {
             isExitActivated = true;
             gatesAnimator.Play(OPEN_HASH);
-            RingEffectController.SpawnEffect(transform.position.SetY(0.1f), 4.5f, 2, Ease.Type.Linear);
-            AudioController.PlaySound(AudioController.Sounds.complete);
+            RingEffectController.Spawn(transform.position.SetY(0.1f), 4.5f, 2, Ease.Type.Linear);
+            AudioController.Play(AudioController.Sounds.complete);
             Tween.DelayedCall(0.15f, () =>
             {
-                AudioController.PlaySound(AudioController.Sounds.door);
+                AudioController.Play(AudioController.Sounds.door);
             });
         }
 

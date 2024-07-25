@@ -103,7 +103,7 @@ namespace Watermelon
             IsMovementControlActive = false;
         }
 
-        public void EnableMovementControl()
+        public void EnableMovement()
         {
             IsMovementControlActive = true;
         }

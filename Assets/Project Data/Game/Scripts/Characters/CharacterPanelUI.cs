@@ -43,29 +43,29 @@ namespace Watermelon.SquadShooter
 
         public override bool IsUnlocked => Character.IsUnlocked();
 
-        Character character;
-        public Character Character => character;
+        Character _character;
+        public Character Character => _character;
 
-        bool storedIsLocked;
+        bool _storedIsLocked;
 
         public Transform UpgradeButtonTransform => upgradesBuyButton.transform;
 
-        UICharactersPanel charactersPanel;
+        UICharactersPanel _charactersPanel;
 
-        UIGamepadButton gamepadButton;
-        public UIGamepadButton GamepadButton => gamepadButton;
+        UIGamepadButton _gamepadButton;
+        public UIGamepadButton GamepadButton => _gamepadButton;
 
-        static CharacterPanelUI selectedCharacterPanelUI;
+        static CharacterPanelUI _selectedCharacterPanelUI;
 
-        public bool IsSelected() => selectedCharacterPanelUI == this;
+        public bool IsSelected() => _selectedCharacterPanelUI == this;
 
         public void Initialise(Character с, UICharactersPanel panel)
         {
-            character = с;
-            charactersPanel = panel;
+            _character = с;
+            _charactersPanel = panel;
 
             panelRectTransform = (RectTransform) transform;
-            gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
+            _gamepadButton = upgradesBuyButton.GetComponent<UIGamepadButton>();
 
             previewImage.sprite = с.GetCurrentStage().PreviewSprite;
 
@@ -88,7 +88,7 @@ namespace Watermelon.SquadShooter
             if (с.IsUnlocked())
             {
                 titleText.text = с.Name.ToUpper();
-                storedIsLocked = false;
+                _storedIsLocked = false;
 
                 if (CharactersController.SelectedCharacter.Type == с.Type)
                     Select();
@@ -104,13 +104,13 @@ namespace Watermelon.SquadShooter
             else
             {
                 titleText.text = LOCKED_NAME;
-                storedIsLocked = true;
+                _storedIsLocked = true;
                 powerObject.SetActive(false);
                 previewImage.sprite = с.LockedSprite;
                 previewImage.color = lockedPreviewColor;
                 SetRequiredLevel(с.RequiredLevel);
 
-                if (character.onlyShop)
+                if (_character.onlyShop)
                 {
                     shopStateMode.SetActive(true);
                     lockedStateObject.SetActive(false);
@@ -125,8 +125,8 @@ namespace Watermelon.SquadShooter
             lockedStateObject.SetActive(false);
             powerObject.SetActive(true);
             upgradesStateObject.SetActive(true);
-            titleText.text = character.Name.ToUpper();
-            previewImage.sprite = character.Stages[0].PreviewSprite;
+            titleText.text = _character.Name.ToUpper();
+            previewImage.sprite = _character.Stages[0].PreviewSprite;
             previewImage.DOColor(Color.white, 0.6f);
             RedrawUpgradeElements();
             RedrawPower();
@@ -134,7 +134,7 @@ namespace Watermelon.SquadShooter
 
         void PlayUpgradeAnimation(int stage)
         {
-            var tempStage = character.Stages[stage];
+            var tempStage = _character.Stages[stage];
             previewImage.sprite = tempStage.PreviewSprite;
             previewImage.rectTransform.localScale = Vector2.one * 1.3f;
             previewImage.rectTransform.DOScale(1.0f, 0.2f, 0.03f).SetEasing(Ease.Type.SineIn);
@@ -143,15 +143,15 @@ namespace Watermelon.SquadShooter
         public override void OnPanelOpened()
         {
             var dynamicAnimations = new List<CharacterDynamicAnimation>();
-            var isSelected = character.IsSelected();
+            var isSelected = _character.IsSelected();
 
             // Character was locked on start
-            if (storedIsLocked)
+            if (_storedIsLocked)
             {
                 // Now character is unlocked
-                if (character.IsUnlocked())
+                if (_character.IsUnlocked())
                 {
-                    storedIsLocked = false;
+                    _storedIsLocked = false;
                     var unlockAnimation =
                         new CharacterDynamicAnimation(this, 0.5f, onAnimationStarted: PlayOpenAnimation);
                     dynamicAnimations.Add(unlockAnimation);
@@ -160,7 +160,7 @@ namespace Watermelon.SquadShooter
 
             if (!dynamicAnimations.IsNullOrEmpty())
             {
-                charactersPanel.AddAnimations(dynamicAnimations, isSelected);
+                _charactersPanel.AddAnimations(dynamicAnimations, isSelected);
             }
 
             RedrawUpgradeElements();
@@ -175,9 +175,9 @@ namespace Watermelon.SquadShooter
 
         public override void Select()
         {
-            if (selectedCharacterPanelUI) selectedCharacterPanelUI.UnselectCharacter();
+            if (_selectedCharacterPanelUI) _selectedCharacterPanelUI.UnselectCharacter();
             selectionImage.gameObject.SetActive(true);
-            selectedCharacterPanelUI = this;
+            _selectedCharacterPanelUI = this;
             UIGeneralPowerIndicator.UpdateText();
             RedrawUpgradeButton();
         }
@@ -185,13 +185,13 @@ namespace Watermelon.SquadShooter
         public void UnselectCharacter()
         {
             selectionImage.gameObject.SetActive(false);
-            if (gamepadButton)
-                gamepadButton.SetFocus(false);
+            if (_gamepadButton)
+                _gamepadButton.SetFocus(false);
         }
 
         void PlayUpgradeAnimation()
         {
-            var upgradeStateIndex = character.GetCurrentUpgradeIndex() - 1;
+            var upgradeStateIndex = _character.GetCurrentUpgradeIndex() - 1;
             upgradesStatesImages[upgradeStateIndex].DOColor(upgradeStateActiveColor, 0.3f).OnComplete(delegate
             {
                 isUpgradeAnimationPlaying = false;
@@ -199,7 +199,7 @@ namespace Watermelon.SquadShooter
                 RedrawUpgradeButton();
             });
 
-            if (!character.IsMaxUpgrade())
+            if (!_character.IsMaxUpgrade())
             {
                 upgradesMaxObject.SetActive(false);
                 upgradesBuyButton.gameObject.SetActive(true);
@@ -213,30 +213,30 @@ namespace Watermelon.SquadShooter
 
         void RedrawPower()
         {
-            var currentUpgrade = character.GetCurrentUpgrade();
+            var currentUpgrade = _character.GetCurrentUpgrade();
             powerText.text = currentUpgrade.Stats.Power.ToString();
         }
 
         protected override void RedrawUpgradeButton()
         {
-            if (character.IsMaxUpgrade()) return;
-            var upgradeState = character.Upgrades[character.GetCurrentUpgradeIndex() + 1];
+            if (_character.IsMaxUpgrade()) return;
+            var upgradeState = _character.Upgrades[_character.GetCurrentUpgradeIndex() + 1];
             var currency = CurrenciesController.GetCurrency(upgradeState.CurrencyType);
 
             var price = upgradeState.Price;
-            if (CurrenciesController.HasAmount(upgradeState.CurrencyType, price))
+            if (CurrenciesController.Has(upgradeState.CurrencyType, price))
             {
                 upgradesBuyButtonImage.sprite = upgradesBuyButtonActiveSprite;
 
-                if (gamepadButton  )
-                    gamepadButton.SetFocus(selectedCharacterPanelUI == this);
+                if (_gamepadButton  )
+                    _gamepadButton.SetFocus(_selectedCharacterPanelUI == this);
             }
             else
             {
                 upgradesBuyButtonImage.sprite = upgradesBuyButtonDisableSprite;
 
-                if (gamepadButton != null)
-                    gamepadButton.SetFocus(false);
+                if (_gamepadButton != null)
+                    _gamepadButton.SetFocus(false);
             }
 
             upgradesBuyCurrencyImage.sprite = currency.Icon;
@@ -252,21 +252,21 @@ namespace Watermelon.SquadShooter
             }
         }
 
-        public bool IsNewCharacterOpened() => storedIsLocked && character.IsUnlocked();
+        public bool IsNewCharacterOpened() => _storedIsLocked && _character.IsUnlocked();
 
         public bool IsNextUpgradeCanBePurchased()
         {
-            if (!character.IsUnlocked()) return false;
-            if (character.IsMaxUpgrade()) return false;
-            var upgradeState = character.Upgrades[character.GetCurrentUpgradeIndex() + 1];
-            return CurrenciesController.HasAmount(upgradeState.CurrencyType, upgradeState.Price);
+            if (!_character.IsUnlocked()) return false;
+            if (_character.IsMaxUpgrade()) return false;
+            var upgradeState = _character.Upgrades[_character.GetCurrentUpgradeIndex() + 1];
+            return CurrenciesController.Has(upgradeState.CurrencyType, upgradeState.Price);
         }
 
         void RedrawUpgradeElements()
         {
-            if (!character.IsMaxUpgrade())
+            if (!_character.IsMaxUpgrade())
             {
-                var upgradeStateIndex = character.GetCurrentUpgradeIndex();
+                var upgradeStateIndex = _character.GetCurrentUpgradeIndex();
                 for (var i = 0; i < upgradeStateIndex; i++)
                 {
                     upgradesStatesImages[i].color = upgradeStateActiveColor;
@@ -283,33 +283,33 @@ namespace Watermelon.SquadShooter
                     img.color = upgradeStateActiveColor;
                 upgradesMaxObject.SetActive(true);
                 upgradesBuyButton.gameObject.SetActive(false);
-                if (gamepadButton  )
-                    gamepadButton.SetFocus(false);
+                if (_gamepadButton  )
+                    _gamepadButton.SetFocus(false);
             }
         }
 
         public void OnUpgradeButtonClicked()
         {
             if (UICharactersPanel.IsControlBlocked) return;
-            if (character.IsMaxUpgrade()) return;
+            if (_character.IsMaxUpgrade()) return;
 
             OnSelectButtonClicked();
-            var upgradeStateIndex = character.GetCurrentUpgradeIndex() + 1;
-            var price = character.Upgrades[upgradeStateIndex].Price;
-            var currencyType = character.Upgrades[upgradeStateIndex].CurrencyType;
-            if (CurrenciesController.HasAmount(currencyType, price))
+            var upgradeStateIndex = _character.GetCurrentUpgradeIndex() + 1;
+            var price = _character.Upgrades[upgradeStateIndex].Price;
+            var currencyType = _character.Upgrades[upgradeStateIndex].CurrencyType;
+            if (CurrenciesController.Has(currencyType, price))
             {
                 isUpgradeAnimationPlaying = true;
                 CurrenciesController.Substract(currencyType, price);
-                character.UpgradeCharacter();
-                if (CharactersController.SelectedCharacter.Type == character.Type)
+                _character.UpgradeCharacter();
+                if (CharactersController.SelectedCharacter.Type == _character.Type)
                 {
                     var characterBehaviour = CharacterBehaviour.GetBehaviour();
-                    var currentUpgrade = character.GetCurrentUpgrade();
+                    var currentUpgrade = _character.GetCurrentUpgrade();
                     if (currentUpgrade.ChangeStage)
                     {
                         PlayUpgradeAnimation(currentUpgrade.StageIndex);
-                        characterBehaviour.SetGraphics(character.Stages[currentUpgrade.StageIndex].Prefab, true,
+                        characterBehaviour.SetGraphics(_character.Stages[currentUpgrade.StageIndex].Prefab, true,
                             true);
                     }
                     else
@@ -328,18 +328,18 @@ namespace Watermelon.SquadShooter
                 UIGeneralPowerIndicator.UpdateText(true);
             }
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
 
         public void OnSelectButtonClicked()
         {
             if (UICharactersPanel.IsControlBlocked) return;
-            if (character.IsSelected()) return;
+            if (_character.IsSelected()) return;
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
 
-            if (!character.IsUnlocked()) return;
-            CharactersController.SelectCharacter(character.Type);
+            if (!_character.IsUnlocked()) return;
+            CharactersController.Select(_character.Type);
             Select();
         }
     }

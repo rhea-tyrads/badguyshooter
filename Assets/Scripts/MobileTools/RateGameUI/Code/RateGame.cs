@@ -1,4 +1,3 @@
-using System;
 using MobileTools.SDK;
 using MobileTools.Utilities;
 using Watermelon.LevelSystem;
@@ -19,11 +18,11 @@ namespace MobileTools.RateGameUI.Code
         void LevelComplete(int arg1, int arg2)
         {
             if (Keys.IsRated) return;
-            var level = ActiveRoom.CurrentLevelIndex + 1;
+            var level = ActiveRoom.Level + 1;
             if (level % 7 == 0) Show();
         }
 
-        void Show()
+        public void Show()
         {
             ui.Show();
         }

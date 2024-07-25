@@ -1,47 +1,46 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Watermelon;
 
 namespace Watermelon.SquadShooter
 {
     public class BossSniperBulletBehavior : EnemyBulletBehavior
     {
-        static readonly int PARTICLE_WAll_HIT_HASH = ParticlesController.GetHash("Minigun Wall Hit");
+        static readonly int ParticleWAllHitHash = ParticlesController.GetHash("Minigun Wall Hit");
 
         [SerializeField] LayerMask collisionLayer;
 
-        List<Vector3> hitPoints;
+        List<Vector3> _hitPoints;
 
-        int nextHitPointId = 0;
-        Vector3 NextHitPoint => hitPoints[nextHitPointId];
+        int _nextHitPointId = 0;
+        Vector3 NextHitPoint => _hitPoints[_nextHitPointId];
 
         public void InitialiseBullet(float damage, float speed, float selfDestroyDistance, List<Vector3> hitPoints)
         {
             Initialise(damage, speed, selfDestroyDistance);
 
-            this.hitPoints = new List<Vector3>(hitPoints.ToArray());
-            nextHitPointId = 0;
+            this._hitPoints = new List<Vector3>(hitPoints.ToArray());
+            _nextHitPointId = 0;
         }
 
         protected override void FixedUpdate()
         {
-            var distanceTraveledDuringThisFrame = speed * Time.fixedDeltaTime;
+            var distanceTraveledDuringThisFrame = Speed * Time.fixedDeltaTime;
             var distanceToNextHitPoint = (NextHitPoint - transform.position).magnitude;
 
             if (distanceTraveledDuringThisFrame > distanceToNextHitPoint)
             {
                 transform.position = NextHitPoint;
 
-                nextHitPointId++;
+                _nextHitPointId++;
 
-                if (nextHitPointId >= hitPoints.Count)
+                if (_nextHitPointId >= _hitPoints.Count)
                 {
-                    ParticlesController.PlayParticle(PARTICLE_WAll_HIT_HASH).SetPosition(transform.position);
+                    ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
                     SelfDestroy();
                 }
                 else
                 {
-                    ParticlesController.PlayParticle(PARTICLE_WAll_HIT_HASH).SetPosition(transform.position);
+                    ParticlesController.Play(ParticleWAllHitHash).SetPosition(transform.position);
                     transform.forward = (NextHitPoint - transform.position).normalized;
                 }
             }
@@ -60,7 +59,7 @@ namespace Watermelon.SquadShooter
                 var character = other.GetComponent<CharacterBehaviour>();
                 if (character != null)
                 {
-                    character.TakeDamage(damage);
+                    character.TakeDamage(Damage);
 
                     SelfDestroy();
                 }

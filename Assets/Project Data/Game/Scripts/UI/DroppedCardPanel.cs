@@ -39,7 +39,7 @@ namespace Watermelon.SquadShooter
 
             weaponData = WeaponsController.GetWeaponData(weaponType);
             rarityData = WeaponsController.GetRarityData(weaponData.Rarity);
-            weaponUpgrade = UpgradesController.GetUpgrade<BaseWeaponUpgrade>(weaponData.UpgradeType);
+            weaponUpgrade = UpgradesController.Get<BaseWeaponUpgrade>(weaponData.UpgradeType);
 
             currentCardsAmount = weaponData.CardsAmount;
 
@@ -89,12 +89,12 @@ namespace Watermelon.SquadShooter
 
         public void OnEquipButtonClicked()
         {
-            WeaponsController.SelectWeapon(weaponData.Type);
+            WeaponsController.Select(weaponData.Type);
 
             progressEquipButtonObject.SetActive(false);
             progressEquipedObject.SetActive(true);
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
     }
 }

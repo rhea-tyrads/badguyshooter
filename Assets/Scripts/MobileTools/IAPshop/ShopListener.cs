@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using com.adjust.sdk;
 using MobileTools.SDK;
 using MobileTools.Utilities;
 using UnityEngine;
@@ -46,7 +45,7 @@ namespace MobileTools.IAPshop
             SDKEvents.Instance.OnProductPurchase -= Purchase;
         }
 
-        public void RemoveAds()
+          void RemoveAds()
             => Keys.PurchaseNoAds();
 
         void Purchase(string id)
@@ -70,8 +69,8 @@ namespace MobileTools.IAPshop
             BonusController.Instance.AddHp(item.respawnBoostAmount);
             CurrenciesController.Add(CurrencyType.Coins, item.goldAmount);
 
-            weapons.UnlockWeapon(item.weapon);
-            weapons.UnlockWeapon(item.weapon_2);
+            weapons.Unlock(item.weapon);
+            weapons.Unlock(item.weapon_2);
 
             var character = characters.Characters.Find(c => c.Type == item.skin);
             if (character.onlyShop) character.Purchase();

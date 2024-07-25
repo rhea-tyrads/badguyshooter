@@ -8,8 +8,8 @@ namespace Watermelon
 
     public class ExperienceStarsManager : MonoBehaviour
     {
-        readonly string TRAIL_POOL_NAME = "Custom UI Trail";
-        readonly string PARTICLE_POOL_NAME = "Custom UI Particle";
+        readonly string _trailPoolName = "Custom UI Trail";
+        readonly string _particlePoolName = "Custom UI Particle";
 
         [Header("Data")]
         [SerializeField] ExperienceStarsFlightData starsData;
@@ -32,16 +32,16 @@ namespace Watermelon
         [SerializeField] GameObject particlePrefab;
 
 
-        PoolGeneric<UIParticleTrail> trailPool;
-        PoolGeneric<UIParticle> particlePool;
+        PoolGeneric<UIParticleTrail> _trailPool;
+        PoolGeneric<UIParticle> _particlePool;
 
-        Pool starsPool;
+        Pool _starsPool;
 
 
-        List<ExpStarData> starsInfo = new();
-        System.Action OnComplete;
+        List<ExpStarData> _starsInfo = new();
+        System.Action _complete;
 
-        ExperienceUIController experienceUIController;
+        ExperienceUIController _experienceUIController;
 
         public void Awake()
         {
@@ -50,19 +50,19 @@ namespace Watermelon
 
         public void Initialise(ExperienceUIController experienceUIController)
         {
-            this.experienceUIController = experienceUIController;
+            this._experienceUIController = experienceUIController;
 
             starIconBounce.Initialise(starIconTransform);
         }
 
         void AssignPools()
         {
-            if (PoolManager.PoolExists(TRAIL_POOL_NAME))
-                trailPool = PoolManager.GetPoolByName<UIParticleTrail>(TRAIL_POOL_NAME);
+            if (PoolManager.PoolExists(_trailPoolName))
+                _trailPool = PoolManager.GetPoolByName<UIParticleTrail>(_trailPoolName);
             else
-                trailPool = new PoolGeneric<UIParticleTrail>(new PoolSettings
+                _trailPool = new PoolGeneric<UIParticleTrail>(new PoolSettings
                 {
-                    name = TRAIL_POOL_NAME,
+                    name = _trailPoolName,
                     singlePoolPrefab = trailPrefab,
                     size = 5,
                     objectsContainer = particlesParent,
@@ -70,12 +70,12 @@ namespace Watermelon
                     type = Pool.PoolType.Single
                 });
 
-            if (PoolManager.PoolExists(TRAIL_POOL_NAME))
-                particlePool = PoolManager.GetPoolByName<UIParticle>(PARTICLE_POOL_NAME);
+            if (PoolManager.PoolExists(_trailPoolName))
+                _particlePool = PoolManager.GetPoolByName<UIParticle>(_particlePoolName);
             else
-                particlePool = new PoolGeneric<UIParticle>(new PoolSettings
+                _particlePool = new PoolGeneric<UIParticle>(new PoolSettings
                 {
-                    name = PARTICLE_POOL_NAME,
+                    name = _particlePoolName,
                     singlePoolPrefab = particlePrefab,
                     size = 100,
                     objectsContainer = particlesParent,
@@ -84,20 +84,20 @@ namespace Watermelon
                 });
 
             if (PoolManager.PoolExists(starUIPrefab.name))
-                starsPool = PoolManager.GetPoolByName(starUIPrefab.name);
+                _starsPool = PoolManager.GetPoolByName(starUIPrefab.name);
             else
-                starsPool = PoolManager.AddPool(new PoolSettings(starUIPrefab.name, starUIPrefab, 3, true, transform));
+                _starsPool = PoolManager.AddPool(new PoolSettings(starUIPrefab.name, starUIPrefab, 3, true, transform));
         }
 
-        public void PlayXpGainedAnimation(int starsAmount, Vector3 worldPos, System.Action OnComplete = null)
+        public void PlayXpGainedAnimation(int starsAmount, Vector3 worldPos, System.Action complete = null)
         {
-            this.OnComplete = OnComplete;
+            this._complete = complete;
 
             starsAmount = Mathf.Clamp(starsAmount, 1, 10);
 
             for (int i = 0; i < starsAmount; i++)
             {
-                RectTransform starRect = starsPool.Get().GetComponent<RectTransform>();
+                RectTransform starRect = _starsPool.Get().GetComponent<RectTransform>();
 
                 starRect.SetParent(transform.parent);
                 starRect.anchoredPosition = Camera.main.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-25f, 25f), Random.Range(-25f, 25f), 0f);
@@ -108,104 +108,104 @@ namespace Watermelon
 
                 var data = new ExpStarData()
                 {
-                    star = starRect,
+                    Star = starRect,
 
-                    startPoint = starRect.anchoredPosition,
-                    middlePoint = starRect.anchoredPosition + startDirection * starsData.FirstStageDistance,
+                    StartPoint = starRect.anchoredPosition,
+                    MiddlePoint = starRect.anchoredPosition + startDirection * starsData.FirstStageDistance,
 
-                    key1 = starRect.anchoredPosition + startDirection * starsData.Key1,
-                    key2 = endPoint + starsData.Key2,
+                    Key1 = starRect.anchoredPosition + startDirection * starsData.Key1,
+                    Key2 = endPoint + starsData.Key2,
 
-                    endPoint = endPoint,
+                    EndPoint = endPoint,
 
-                    startTime = Time.time,
-                    duration1 = starsData.FirstStageDuration,
-                    duration2 = starsData.SecondStageDuration
+                    StartTime = Time.time,
+                    Duration1 = starsData.FirstStageDuration,
+                    Duration2 = starsData.SecondStageDuration
                 };
 
                 data.SetCurves(starsData);
 
-                var trail = trailPool.GetPooledComponent();
+                var trail = _trailPool.GetPooledComponent();
 
-                trail.SetPool(particlePool);
+                trail.SetPool(_particlePool);
 
                 trail.AnchoredPos = starRect.anchoredPosition;
                 trail.transform.localScale = Vector3.one;
 
                 data.SetTrail(trail);
 
-                starsInfo.Add(data);
+                _starsInfo.Add(data);
             }
         }
 
         void Update()
         {
-            if (starsInfo.IsNullOrEmpty())
+            if (_starsInfo.IsNullOrEmpty())
                 return;
 
-            for (int i = 0; i < starsInfo.Count; i++)
+            for (int i = 0; i < _starsInfo.Count; i++)
             {
-                var data = starsInfo[i];
+                var data = _starsInfo[i];
 
                 if (data.Update())
                 {
-                    starsInfo.RemoveAt(i);
+                    _starsInfo.RemoveAt(i);
                     i--;
 
                     starIconBounce.Bounce();
 
-                    experienceUIController.OnStarHitted();
+                    _experienceUIController.OnStarHitted();
                 }
             }
 
-            if (starsInfo.IsNullOrEmpty())
-                OnComplete?.Invoke();
+            if (_starsInfo.IsNullOrEmpty())
+                _complete?.Invoke();
         }
 
         [Button]
         public void Spawn2Stars()
         {
-            ExperienceController.GainXPPoints(2);
+            ExperienceController.Add(2);
         }
         [Button]
         public void Spawn5Stars()
         {
-            ExperienceController.GainXPPoints(5);
+            ExperienceController.Add(5);
         }
         [Button]
         public void Spawn10Stars()
         {
-            ExperienceController.GainXPPoints(10);
+            ExperienceController.Add(10);
         }
 
         class ExpStarData
         {
-            public RectTransform star;
+            public RectTransform Star;
 
-            public Vector2 startPoint;
-            public Vector2 middlePoint;
+            public Vector2 StartPoint;
+            public Vector2 MiddlePoint;
 
-            public Vector2 key1;
-            public Vector2 key2;
+            public Vector2 Key1;
+            public Vector2 Key2;
 
-            public Vector2 endPoint;
+            public Vector2 EndPoint;
 
-            public float startTime;
-            public float duration1;
-            public float duration2;
+            public float StartTime;
+            public float Duration1;
+            public float Duration2;
 
-            ExperienceStarsFlightData data;
+            ExperienceStarsFlightData _data;
 
-            UIParticleTrail trail;
+            UIParticleTrail _trail;
 
             public void SetCurves(ExperienceStarsFlightData data)
             {
-                this.data = data;
+                this._data = data;
             }
 
             public void SetTrail(UIParticleTrail trail)
             {
-                this.trail = trail;
+                this._trail = trail;
 
                 trail.Init();
                 trail.IsPlaying = true;
@@ -213,18 +213,18 @@ namespace Watermelon
 
             public bool Update()
             {
-                var time = Time.time - startTime;
+                var time = Time.time - StartTime;
 
-                if (time > duration1)
+                if (time > Duration1)
                 {
-                    var t = (time - duration1) / duration2;
+                    var t = (time - Duration1) / Duration2;
 
                     if (t >= 1)
                     {
-                        star.gameObject.SetActive(false);
+                        Star.gameObject.SetActive(false);
 
-                        trail.DisableWhenReady = true;
-                        trail.IsPlaying = false;
+                        _trail.DisableWhenReady = true;
+                        _trail.IsPlaying = false;
 
                         return true;
                     }
@@ -233,7 +233,7 @@ namespace Watermelon
                 }
                 else
                 {
-                    var t = time / duration1;
+                    var t = time / Duration1;
 
                     FirstStageUpdate(t);
                 }
@@ -243,26 +243,26 @@ namespace Watermelon
 
             public void FirstStageUpdate(float t)
             {
-                var prevPos = star.anchoredPosition;
+                var prevPos = Star.anchoredPosition;
 
-                star.anchoredPosition = Vector2.Lerp(startPoint, middlePoint, data.PathCurve1.Evaluate(t));
-                star.localScale = Vector3.one * data.StarsScale1.Evaluate(t);
+                Star.anchoredPosition = Vector2.Lerp(StartPoint, MiddlePoint, _data.PathCurve1.Evaluate(t));
+                Star.localScale = Vector3.one * _data.StarsScale1.Evaluate(t);
 
-                trail.NormalizedVelocity = (star.anchoredPosition - prevPos).normalized;
+                _trail.NormalizedVelocity = (Star.anchoredPosition - prevPos).normalized;
 
-                trail.AnchoredPos = star.anchoredPosition;
+                _trail.AnchoredPos = Star.anchoredPosition;
             }
 
             public void SecondStageUpdate(float t)
             {
-                var prevPos = star.anchoredPosition;
+                var prevPos = Star.anchoredPosition;
 
-                star.anchoredPosition = Bezier.EvaluateCubic(middlePoint, key1, key2, endPoint, data.PathCurve2.Evaluate(t));
-                star.localScale = Vector3.one * data.StarsScale2.Evaluate(t);
+                Star.anchoredPosition = Bezier.EvaluateCubic(MiddlePoint, Key1, Key2, EndPoint, _data.PathCurve2.Evaluate(t));
+                Star.localScale = Vector3.one * _data.StarsScale2.Evaluate(t);
 
-                trail.NormalizedVelocity = (star.anchoredPosition - prevPos).normalized;
+                _trail.NormalizedVelocity = (Star.anchoredPosition - prevPos).normalized;
 
-                trail.AnchoredPos = star.anchoredPosition;
+                _trail.AnchoredPos = Star.anchoredPosition;
             }
         }
     }

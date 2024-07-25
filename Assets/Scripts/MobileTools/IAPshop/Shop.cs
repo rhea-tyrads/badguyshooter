@@ -5,7 +5,6 @@ using System.Linq;
 using com.adjust.sdk;
 using Firebase.Analytics;
 using MobileTools.SDK;
-using MobileTools.SDK.Firebase;
 using MobileTools.Utilities;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -188,8 +187,8 @@ namespace MobileTools.IAPshop
                 var item = listener.Find(id);
                 if (item == null) continue;
 
-                listener.weapons.UnlockWeapon(item.weapon);
-                listener.weapons.UnlockWeapon(item.weapon_2);
+                listener.weapons.Unlock(item.weapon);
+                listener.weapons.Unlock(item.weapon_2);
                 var character = listener.FindCharacter(item.skin);
                 if (character.onlyShop) character.Purchase();
                 var character2 = listener.FindCharacter(item.skin_2);

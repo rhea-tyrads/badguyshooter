@@ -39,7 +39,7 @@ namespace Watermelon
 
         public ParticleCase Play(float delay = 0)
         {
-            return ParticlesController.PlayParticle(this, delay);
+            return ParticlesController.Play(this, delay);
         }
     }
 }

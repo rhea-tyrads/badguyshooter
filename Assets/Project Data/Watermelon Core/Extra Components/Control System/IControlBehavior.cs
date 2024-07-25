@@ -7,7 +7,7 @@ namespace Watermelon
         public Vector3 MovementInput { get; }
         public bool IsMovementInputNonZero { get; }
 
-        public void EnableMovementControl();
+        public void EnableMovement();
         public void DisableMovementControl();
         public void ResetControl();
 

@@ -7,27 +7,27 @@ namespace Watermelon.SquadShooter
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public abstract class PlayerBulletBehavior : MonoBehaviour
     {
-        protected float damage;
-        protected float speed;
-        bool autoDisableOnHit;
+        protected float Damage;
+        protected float Speed;
+        bool _autoDisableOnHit;
 
-        TweenCase disableTweenCase;
+        TweenCase _disableTweenCase;
 
-        protected BaseEnemyBehavior currentTarget;
+        protected BaseEnemyBehavior CurrentTarget;
 
         public virtual void Initialise(float damage, float speed, BaseEnemyBehavior currentTarget,
             float autoDisableTime, bool autoDisableOnHit = true)
         {
             hitted.Clear();
-            this.damage = damage;
-            this.speed = speed;
-            this.autoDisableOnHit = autoDisableOnHit;
+            this.Damage = damage;
+            this.Speed = speed;
+            this._autoDisableOnHit = autoDisableOnHit;
 
-            this.currentTarget = currentTarget;
+            this.CurrentTarget = currentTarget;
 
             if (autoDisableTime > 0)
             {
-                disableTweenCase = Tween.DelayedCall(autoDisableTime, delegate
+                _disableTweenCase = Tween.DelayedCall(autoDisableTime, delegate
                 {
                     // Disable bullet
                     gameObject.SetActive(false);
@@ -37,8 +37,8 @@ namespace Watermelon.SquadShooter
 
         protected virtual void FixedUpdate()
         {
-            if (speed != 0)
-                transform.position += transform.forward * (speed * Time.fixedDeltaTime);
+            if (Speed != 0)
+                transform.position += transform.forward * (Speed * Time.fixedDeltaTime);
         }
 
         public List<Transform> hitted = new();
@@ -53,14 +53,14 @@ namespace Watermelon.SquadShooter
                 var baseEnemyBehavior = other.GetComponent<BaseEnemyBehavior>();
                 if (baseEnemyBehavior == null) return;
                 if (baseEnemyBehavior.IsDead) return;
-                disableTweenCase.KillActive();
+                _disableTweenCase.KillActive();
 
                 // Disable bullet
-                if (autoDisableOnHit)
+                if (_autoDisableOnHit)
                     gameObject.SetActive(false);
 
                 // Deal damage to enemy
-                baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : damage, transform.position,
+                baseEnemyBehavior.TakeDamage(CharacterBehaviour.NoDamage ? 0 : Damage, transform.position,
                     transform.forward);
 
                 // Call hit callback
@@ -74,19 +74,19 @@ namespace Watermelon.SquadShooter
 
         void OnDisable()
         {
-            disableTweenCase.KillActive();
+            _disableTweenCase.KillActive();
         }
 
         void OnDestroy()
         {
-            disableTweenCase.KillActive();
+            _disableTweenCase.KillActive();
         }
 
         protected abstract void OnEnemyHitted(BaseEnemyBehavior baseEnemyBehavior);
 
         protected virtual void OnObstacleHitted()
         {
-            disableTweenCase.KillActive();
+            _disableTweenCase.KillActive();
 
             gameObject.SetActive(false);
         }

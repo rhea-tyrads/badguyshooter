@@ -169,7 +169,7 @@ namespace Watermelon
         {
             HidePage(UIController.ShowPage<UIMainMenu>);
 
-            AudioController.PlaySound(AudioController.Sounds.buttonSound);
+            AudioController.Play(AudioController.Sounds.buttonSound);
         }
 
         #endregion

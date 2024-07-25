@@ -54,7 +54,7 @@ public class UIPowerupPanel : MonoBehaviour
         moveSpd.SetActive(player.isMoveSpeedBooster);
         multishotSpd.SetActive(player.isMultishotBooster);
         hp.SetActive(player.isHpBonus);
-        crit.SetActive(player.IsCritical);
+        crit.SetActive(player.isCritical);
         respawn.SetActive(player.respawnCount > 0);
     }
 

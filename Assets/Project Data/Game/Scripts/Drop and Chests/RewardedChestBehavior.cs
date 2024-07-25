@@ -7,7 +7,7 @@ namespace Watermelon.SquadShooter
 {
     public class RewardedChestBehavior : AbstractChestBehavior
     {
-        protected static readonly int IS_OPEN_HASH = Animator.StringToHash("IsOpen");
+        static readonly int IS_OPEN_HASH = Animator.StringToHash("IsOpen");
 
         [SerializeField] Animator rvAnimator;
         [SerializeField] Button rvButton;

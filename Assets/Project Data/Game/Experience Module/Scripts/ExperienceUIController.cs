@@ -16,13 +16,13 @@ namespace Watermelon
 
         [SerializeField] ExperienceStarsManager starsManager;
 
-        ExperienceController expController;
-        int displayedExpPoints;
+        ExperienceController _expController;
+        int _displayedExpPoints;
 
 
         public void Init(ExperienceController expController)
         {
-            this.expController = expController;
+            this._expController = expController;
 
             starsManager.Initialise(this);
 
@@ -32,44 +32,44 @@ namespace Watermelon
 
         #region In Game UI
 
-        int hittedStarsAmount = 0;
-        int fixedStarsAmount;
-        float currentFillAmount;
-        float targetFillAmount;
+        int _hittedStarsAmount = 0;
+        int _fixedStarsAmount;
+        float _currentFillAmount;
+        float _targetFillAmount;
 
-        TweenCase whiteFillbarCase;
+        TweenCase _whiteFillbarCase;
 
-        public void PlayXpGainedAnimation(int starsAmount, Vector3 worldPos, System.Action OnComplete = null)
+        public void PlayXpGainedAnimation(int starsAmount, Vector3 worldPos, System.Action complete = null)
         {
-            hittedStarsAmount = 0;
-            fixedStarsAmount = starsAmount;
+            _hittedStarsAmount = 0;
+            _fixedStarsAmount = starsAmount;
 
-            int currentLevelExp = expController.CurrentLevelData.ExperienceRequired;
-            int requiredExp = expController.NextLevelData.ExperienceRequired;
+            int currentLevelExp = _expController.CurrentLevelData.ExperienceRequired;
+            int requiredExp = _expController.NextLevelData.ExperienceRequired;
 
-            targetFillAmount = Mathf.InverseLerp(currentLevelExp, requiredExp, ExperienceController.ExperiencePoints);
-            currentFillAmount = expProgressFillImage.fillAmount;
+            _targetFillAmount = Mathf.InverseLerp(currentLevelExp, requiredExp, ExperienceController.ExperiencePoints);
+            _currentFillAmount = expProgressFillImage.fillAmount;
 
-            starsManager.PlayXpGainedAnimation(starsAmount, worldPos, () => UpdateUI(false, OnComplete));
+            starsManager.PlayXpGainedAnimation(starsAmount, worldPos, () => UpdateUI(false, complete));
         }
 
         public void OnStarHitted()
         {
-            hittedStarsAmount++;
+            _hittedStarsAmount++;
 
-            if (whiteFillbarCase != null)
-                whiteFillbarCase.Kill();
+            if (_whiteFillbarCase != null)
+                _whiteFillbarCase.Kill();
 
             expProgressBackFillImage.gameObject.SetActive(true);
-            whiteFillbarCase = expProgressBackFillImage.DOFillAmount(Mathf.Lerp(currentFillAmount, targetFillAmount, Mathf.InverseLerp(0, fixedStarsAmount, hittedStarsAmount)), 0.1f).SetEasing(Ease.Type.SineIn);
+            _whiteFillbarCase = expProgressBackFillImage.DOFillAmount(Mathf.Lerp(_currentFillAmount, _targetFillAmount, Mathf.InverseLerp(0, _fixedStarsAmount, _hittedStarsAmount)), 0.1f).SetEasing(Ease.Type.SineIn);
         }
 
-        public void UpdateUI(bool instantly, System.Action OnComplete = null)
+        public void UpdateUI(bool instantly, System.Action complete = null)
         {
             //if (!ExperienceController.IsMax)
             //{
-            int currentLevelExp = expController.CurrentLevelData.ExperienceRequired;
-            int requiredExp = expController.NextLevelData.ExperienceRequired;
+            int currentLevelExp = _expController.CurrentLevelData.ExperienceRequired;
+            int requiredExp = _expController.NextLevelData.ExperienceRequired;
 
             int firstValue = ExperienceController.ExperiencePoints - currentLevelExp;
             int secondValue = requiredExp - currentLevelExp;
@@ -85,14 +85,14 @@ namespace Watermelon
                 expLevelText.text = ExperienceController.CurrentLevel.ToString();
                 expProgressText.text = firstValue + "/" + secondValue;
 
-                OnComplete?.Invoke();
+                complete?.Invoke();
             }
             else
             {
-                RunFillAnimation(fillAmount, secondValue, displayedExpPoints, firstValue, OnComplete);
+                RunFillAnimation(fillAmount, secondValue, _displayedExpPoints, firstValue, complete);
             }
 
-            displayedExpPoints = firstValue;
+            _displayedExpPoints = firstValue;
             //}
             //else
             //{
@@ -105,7 +105,7 @@ namespace Watermelon
             //}
         }
 
-        void RunFillAnimation(float newFillAmount, float requiredExp, int displayedExpPoints, int currentExpPoints, System.Action OnComplete = null)
+        void RunFillAnimation(float newFillAmount, float requiredExp, int displayedExpPoints, int currentExpPoints, System.Action complete = null)
         {
             Tween.DelayedCall(0.5f, () =>
             {
@@ -113,7 +113,7 @@ namespace Watermelon
                 {
                     expLevelText.text = ExperienceController.CurrentLevel.ToString();
 
-                    OnComplete?.Invoke();
+                    complete?.Invoke();
 
                     expProgressBackFillImage.fillAmount = expProgressFillImage.fillAmount;
                     expProgressBackFillImage.gameObject.SetActive(false);

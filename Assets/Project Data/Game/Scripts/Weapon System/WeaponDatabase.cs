@@ -28,7 +28,7 @@ namespace Watermelon.SquadShooter
             return weapons[index % weapons.Length];
         }
 
-        public RarityData GetRarityData(Rarity rarity)
+        public RarityData GetRarity(Rarity rarity)
         {
             for (var i = 0; i < raritySettings.Length; i++)
             {

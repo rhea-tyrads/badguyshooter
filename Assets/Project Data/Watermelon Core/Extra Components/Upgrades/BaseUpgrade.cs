@@ -13,10 +13,10 @@ namespace Watermelon.Upgrades
         protected string title;
         public string Title => title;
 
-        public int UpgradeLevel { get => save?.UpgradeLevel ?? 1; set => save.UpgradeLevel = value; }
+        public int UpgradeLevel { get => Save?.UpgradeLevel ?? 1; set => Save.UpgradeLevel = value; }
 
         [NonSerialized]
-        protected UpgradeSavableObject save;
+        protected UpgradeSavableObject Save;
 
         public abstract BaseUpgradeStage[] Upgrades { get; }
         public int UpgradesCount => Upgrades.Length;
@@ -47,7 +47,7 @@ namespace Watermelon.Upgrades
 
         public virtual void SetSave(UpgradeSavableObject save)
         {
-            this.save = save;
+            this.Save = save;
         }
 
         public Sprite GetPreviewImage(int level)
