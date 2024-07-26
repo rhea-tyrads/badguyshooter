@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Watermelon.SquadShooter
 {
@@ -11,7 +13,6 @@ namespace Watermelon.SquadShooter
         float _spread;
         MinigunUpgrade _upgrade;
         TweenCase _shootAnim;
-
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
@@ -39,59 +40,43 @@ namespace Watermelon.SquadShooter
 
         void RotateBarrelAnimation()
         {
-            barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
+            barrelTransform.Rotate(Vector3.forward * (fireRotationSpeed * Time.deltaTime));
         }
 
         int BulletsNumber => RandomBulletsAmount(_upgrade);
-        public override void GunUpdate()
+
+        void Update()
         {
             if (NoTarget) return;
             RotateBarrelAnimation();
-            if (NotReady) return;
+        }
 
-            _shootDirection = AimAtTarget();
-            if (OutOfAngle) return;
+        public override void Shoot()
+        {
+            PlayShootAnimation();
 
-            if (TargetInSight)
+            for (var k = 0; k < BulletsNumber; k++)
             {
-                PlayShootAnimation();
-                _nextShootTime = FireRate();
-
-                for (var k = 0; k < BulletsNumber; k++)
+                foreach (var streamAngle in bulletStreamAngles)
                 {
-                    foreach (var streamAngle in bulletStreamAngles)
-                    {
-                        var angle = Vector3.up * (Random.Range(-_spread, _spread) + streamAngle);
-                        var settings = new PooledObjectSettings()
-                            .SetPosition(shootPoint.position)
-                            .SetRotation(CharacterBehaviour.transform.eulerAngles + angle);
-                        
-                        var bullet = _bulletPool.GetPlayerBullet(settings);
-                        bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
-                    }
+                    var angle = Vector3.up * (Random.Range(-_spread, _spread) + streamAngle);
+                    var settings = PoolSettings(angle);
+                    var bullet = _bulletPool.GetPlayerBullet(settings);
+                    bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
                 }
-            }
-            else
-            {
-                TargetUnreachable();
             }
         }
 
         void PlayShootAnimation()
         {
             _shootAnim.KillActive();
-            _shootAnim = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f)
-                .OnComplete(delegate { _shootAnim = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
-            if (shootParticleSystem)  shootParticleSystem.Play();
+            _shootAnim = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootAnim = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
+            if (shootParticleSystem) shootParticleSystem.Play();
             CharacterBehaviour.FocusOnTarget();
             CharacterBehaviour.OnGunShooted();
             AudioController.Play(AudioController.Sounds.shotMinigun);
         }
 
-        public override void OnGunUnloaded()
-        {
- 
-        }
 
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)
         {
@@ -99,9 +84,5 @@ namespace Watermelon.SquadShooter
             transform.ResetLocal();
         }
 
-        public override void Reload()
-        {
-            _bulletPool.ReturnToPoolEverything();
-        }
     }
 }

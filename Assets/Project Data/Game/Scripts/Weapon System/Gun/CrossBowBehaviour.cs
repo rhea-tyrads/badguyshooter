@@ -44,48 +44,31 @@ public class CrossBowBehaviour : BaseGunBehavior
     
     int BulletsNumber => RandomBulletsAmount(_upgrade);
     
-    public override void GunUpdate()
+    public override void Shoot()
     {
-        if (NoTarget) return;
-        if (NotReady) return;
-
-        _shootDirection = AimAtTarget();
-        if (OutOfAngle) return;
-
-        if (TargetInSight)
-        {
-            PlayShootAnimation();
-            _nextShootTime = FireRate();
+        PlayShootAnimation();
  
-            for (var k = 0; k < BulletsNumber; k++)
+        for (var k = 0; k < BulletsNumber; k++)
+        {
+            foreach (var streamAngle in bulletStreamAngles)
             {
-                foreach (var streamAngle in bulletStreamAngles)
-                {
-                    var bullet = _bulletPool.Get(
-                            new PooledObjectSettings()
-                                .SetPosition(shootPoint.position)
-                                .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                                    (Random.Range(-_spread, _spread) +
-                                     streamAngle)))
-                        .GetComponent<CrossBowBulletBehaviour>();
-                    bullet.Initialise(
-                        damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                        CharacterBehaviour.critMultiplier,
-                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                    bullet.owner = Owner;
-                }
+                var bullet = _bulletPool.Get(
+                        new PooledObjectSettings()
+                            .SetPosition(shootPoint.position)
+                            .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
+                                (Random.Range(-_spread, _spread) +
+                                 streamAngle)))
+                    .GetComponent<CrossBowBulletBehaviour>();
+                bullet.Initialise(
+                    damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
+                    CharacterBehaviour.critMultiplier,
+                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
+                bullet.owner = Owner;
             }
         }
-        else
-        {
-            TargetUnreachable();
-        }
+
     }
 
-    public override void OnGunUnloaded()
-    {
- 
-    }
 
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
@@ -93,8 +76,4 @@ public class CrossBowBehaviour : BaseGunBehavior
         transform.ResetLocal();
     }
 
-    public override void Reload()
-    {
-        _bulletPool.ReturnToPoolEverything();
-    }
 }

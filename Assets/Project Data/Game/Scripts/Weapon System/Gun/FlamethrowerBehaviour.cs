@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Watermelon;
 using Watermelon.SquadShooter;
+using Random = UnityEngine.Random;
 
 public class FlamethrowerBehaviour : BaseGunBehavior
 {
@@ -12,7 +14,6 @@ public class FlamethrowerBehaviour : BaseGunBehavior
     [SerializeField] GameObject flameParticle;
     [SerializeField] GameObject flameParticleMultishot3;
     [SerializeField] GameObject flameParticleMultishot5;
-    
     float _spread;
     FlameThrowerUpgrade _upgrade;
     TweenCase _shootTweenCase;
@@ -40,16 +41,18 @@ public class FlamethrowerBehaviour : BaseGunBehavior
         _spread = stage.Spread;
         _bulletSpeed = stage.BulletSpeed;
     }
+
     void PlayShootAnimation()
     {
         _shootTweenCase.KillActive();
         _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
-        if (shootParticleSystem)  shootParticleSystem.Play();
+        if (shootParticleSystem) shootParticleSystem.Play();
         CharacterBehaviour.FocusOnTarget();
         CharacterBehaviour.OnGunShooted();
         AudioController.Play(AudioController.Sounds.shotMinigun);
     }
-    public override void GunUpdate()
+
+    void Update()
     {
         if (NoTarget)
         {
@@ -58,68 +61,46 @@ public class FlamethrowerBehaviour : BaseGunBehavior
             flameParticleMultishot5.SetActive(false);
             return;
         }
-        //  barrelTransform.Rotate(Vector3.forward * fireRotationSpeed);
 
         flameParticle.SetActive(true);
-        if (NotReady) return;
-        
-        _shootDirection = AimAtTarget();
-        if (OutOfAngle) return;
-
-        if (TargetInSight)
-        {
-            PlayShootAnimation();
-            _nextShootTime = FireRate();
-            
-    
-            if (bulletStreamAngles.IsNullOrEmpty())
-            {
-                bulletStreamAngles = new List<float> { 0 };
-            }
-
-            var bulletsNumber = BulletsNumber;
-
-            if (bulletsNumber == 1)
-            {
-                flameParticleMultishot3.SetActive(false);
-                flameParticleMultishot5.SetActive(false);
-            }
-
-            if (bulletsNumber > 1)
-                flameParticleMultishot3.SetActive(true);
-
-            if (bulletsNumber > 3)
-                flameParticleMultishot5.SetActive(true);
-
-            var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
-
-            for (var k = 0; k < bulletsNumber; k++)
-            {
-                foreach (var streamAngle in bulletStreamAngles)
-                {
-                    var bullet = _bulletPool.Get(
-                        new PooledObjectSettings()
-                            .SetPosition(shootPoint.position)
-                            .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                                (Random.Range(-finalSpread, finalSpread) +
-                                 streamAngle))).GetComponent<FlamethrowerBulletBehaviour>();
-
-                    bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier * CharacterBehaviour.critMultiplier,
-                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
-                }
-            }
- 
-        }
-        else
-        {
-           TargetUnreachable();
-        }
     }
-    int BulletsNumber => RandomBulletsAmount(_upgrade);
-    public override void OnGunUnloaded()
+
+    public override void Shoot()
     {
- 
+        PlayShootAnimation();
+
+        var bulletsNumber = BulletsNumber;
+
+        if (bulletsNumber == 1)
+        {
+            flameParticleMultishot3.SetActive(false);
+            flameParticleMultishot5.SetActive(false);
+        }
+
+        if (bulletsNumber > 1)
+            flameParticleMultishot3.SetActive(true);
+
+        if (bulletsNumber > 3)
+            flameParticleMultishot5.SetActive(true);
+
+        var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
+
+        for (var k = 0; k < bulletsNumber; k++)
+        {
+            foreach (var streamAngle in bulletStreamAngles)
+            {
+                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
+                    (Random.Range(-finalSpread, finalSpread) +
+                     streamAngle))).GetComponent<FlamethrowerBulletBehaviour>();
+
+                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier * CharacterBehaviour.critMultiplier,
+                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
+            }
+        }
     }
+
+    int BulletsNumber => RandomBulletsAmount(_upgrade);
+
 
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
@@ -127,8 +108,4 @@ public class FlamethrowerBehaviour : BaseGunBehavior
         transform.ResetLocal();
     }
 
-    public override void Reload()
-    {
-        _bulletPool.ReturnToPoolEverything();
-    }
 }

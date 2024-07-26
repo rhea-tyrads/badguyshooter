@@ -13,7 +13,9 @@ namespace Watermelon
 {
     public static class CoreExtensions
     {
+
         #region Int
+
         /// <summary>
         /// Set random sign
         /// </summary>
@@ -21,9 +23,11 @@ namespace Watermelon
         {
             return value * Random.value < 0.5f ? 1 : -1;
         }
+
         #endregion
 
         #region Float
+
         /// <summary>
         /// Set random sign
         /// </summary>
@@ -31,9 +35,11 @@ namespace Watermelon
         {
             return value * Random.value < 0.5f ? 1 : -1;
         }
+
         #endregion
 
         #region Double
+
         /// <summary>
         /// Set random sign
         /// </summary>
@@ -41,9 +47,11 @@ namespace Watermelon
         {
             return value * Random.value < 0.5f ? 1 : -1;
         }
+
         #endregion
 
         #region String
+
         /// <summary>
         /// Add space before capital letters
         /// </summary>
@@ -88,9 +96,11 @@ namespace Watermelon
 
             return result;
         }
+
         #endregion
 
         #region Array & List
+
         /// <summary>
         /// Get array with unique ids of another array
         /// </summary>
@@ -115,8 +125,7 @@ namespace Watermelon
                 do
                 {
                     randomValue = Random.Range(0, array.Length);
-                }
-                while (objectIDs.FindIndex(x => x == randomValue) != -1);
+                } while (objectIDs.FindIndex(x => x == randomValue) != -1);
 
                 objectIDs.Add(randomValue);
             }
@@ -149,8 +158,7 @@ namespace Watermelon
                 do
                 {
                     randomValue = Random.Range(0, array.Length);
-                }
-                while (objectIDs.FindIndex(x => x == randomValue) != -1);
+                } while (objectIDs.FindIndex(x => x == randomValue) != -1);
 
                 objectIDs.Add(randomValue);
 
@@ -184,8 +192,7 @@ namespace Watermelon
                 do
                 {
                     randomValue = Random.Range(0, array.Count);
-                }
-                while (objectIDs.FindIndex(x => x == randomValue) != -1);
+                } while (objectIDs.FindIndex(x => x == randomValue) != -1);
 
                 objectIDs.Add(randomValue);
             }
@@ -218,8 +225,7 @@ namespace Watermelon
                 do
                 {
                     randomValue = Random.Range(0, array.Count);
-                }
-                while (objectIDs.FindIndex(x => x == randomValue) != -1);
+                } while (objectIDs.FindIndex(x => x == randomValue) != -1);
 
                 objectIDs.Add(randomValue);
 
@@ -257,7 +263,7 @@ namespace Watermelon
         {
             var sum = 0;
 
-            for(var i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 sum += sumFun(array[i]);
             }
@@ -324,10 +330,11 @@ namespace Watermelon
         public static List<T> MakeCopy<T>(this List<T> list)
         {
             var copy = new List<T>();
-            for(var i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 copy.Add(list[i]);
             }
+
             return copy;
         }
 
@@ -337,14 +344,15 @@ namespace Watermelon
 
             var result = new T[array.Length - count];
 
-            for (var i = 0; i < result.Length; i++) {
+            for (var i = 0; i < result.Length; i++)
+            {
                 result[i] = array[i];
             }
 
             return result;
         }
 
-        public static T[] Sort<T, K>(this T[] array, Func<T, K> sortFun) where K: IComparable
+        public static T[] Sort<T, K>(this T[] array, Func<T, K> sortFun) where K : IComparable
         {
             var result = new T[array.Length];
 
@@ -370,9 +378,9 @@ namespace Watermelon
         {
             var result = new List<T>();
 
-            for(var i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
-                if(!array[i].Equals(itemToRemove))
+                if (!array[i].Equals(itemToRemove))
                 {
                     result.Add(array[i]);
                 }
@@ -383,7 +391,7 @@ namespace Watermelon
 
         public static void ForEach<T>(this T[] array, Action<T> action)
         {
-            for(var i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 action(array[i]);
             }
@@ -393,7 +401,7 @@ namespace Watermelon
         {
             for (var i = 0; i < array.Length; i++)
             {
-                if(action(array[i])) return array[i];
+                if (action(array[i])) return array[i];
             }
 
             return default(T);
@@ -517,7 +525,7 @@ namespace Watermelon
             }
         }
 
-        public static T FindRandomOrder<T>(this List<T> list, Func<T, bool> action) 
+        public static T FindRandomOrder<T>(this List<T> list, Func<T, bool> action)
         {
             var tabsIndices = new List<int>(list.Count);
             for (var i = 0; i < list.Count; i++) tabsIndices.Add(i);
@@ -603,6 +611,7 @@ namespace Watermelon
                 if (!comparer.Equals(a1[i], a2[i]))
                     return false;
             }
+
             return true;
         }
 
@@ -636,7 +645,7 @@ namespace Watermelon
         {
             var resultList = new List<T>();
 
-            for(var i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 if (func(array[i])) resultList.Add(array[i]);
             }
@@ -653,9 +662,11 @@ namespace Watermelon
         {
             return array[^1];
         }
+
         #endregion
 
         #region GameObject
+
         /// <summary>
         /// Get component if it exists or add new one
         /// </summary>
@@ -668,9 +679,11 @@ namespace Watermelon
 
             return (T)gameObject.AddComponent(typeof(T));
         }
+
         #endregion
 
         #region Transform
+
         /// <summary>
         /// Flip object x scale
         /// </summary>
@@ -753,14 +766,15 @@ namespace Watermelon
         #endregion
 
         #region RectTransform
+
         #endregion
 
         #region Quaternion
 
-
         #endregion
 
         #region Vector3
+
         /// <summary>
         ///  Adds to each component specified value
         /// </summary>
@@ -968,8 +982,7 @@ namespace Watermelon
             var halfHeight = bounds.size.y / 2f;
             var halfDepth = bounds.size.z / 2f;
 
-            var result = bounds.center + new Vector3(
-                Random.Range(-halfWidth, halfWidth),
+            var result = bounds.center + new Vector3(Random.Range(-halfWidth, halfWidth),
                 Random.Range(-halfHeight, halfHeight),
                 Random.Range(-halfDepth, halfDepth));
 
@@ -982,8 +995,7 @@ namespace Watermelon
             var halfHeight = bounds.size.y / 2f + offset;
             var halfDepth = bounds.size.z / 2f + offset;
 
-            var result = bounds.center + rotation * new Vector3(
-                Random.Range(-halfWidth, halfWidth),
+            var result = bounds.center + rotation * new Vector3(Random.Range(-halfWidth, halfWidth),
                 Random.Range(-halfHeight, halfHeight),
                 Random.Range(-halfDepth, halfDepth));
 
@@ -1007,12 +1019,13 @@ namespace Watermelon
 
         public static Vector2 xz(this Vector3 value) => new(value.x, value.z);
         public static Vector2 xy(this Vector3 value) => new(value.x, value.y);
-
         public static Vector3 xyz(this Vector4 value) => new(value.x, value.y, value.z);
         public static Vector2 xy(this Vector4 value) => new(value.x, value.y);
+
         #endregion
 
         #region Vector2
+
         /// <summary>
         ///  Adds to each component specified value
         /// </summary>
@@ -1132,9 +1145,11 @@ namespace Watermelon
         {
             return new Vector3(vector.x, vector.y, z);
         }
+
         #endregion
 
         #region Color
+
         /// <summary>
         /// Set color alpha
         /// </summary>
@@ -1182,9 +1197,11 @@ namespace Watermelon
 
             return graphic;
         }
+
         #endregion
 
         #region Dictionary
+
         /// <summary>
         /// Add element to dictionary or add some new values if it exists
         /// </summary>
@@ -1211,9 +1228,9 @@ namespace Watermelon
             return dictionary[key];
         }
 
-        public static void ForEachKey<T,K>(this Dictionary<T, K> dictionary, Action<T> action)
+        public static void ForEachKey<T, K>(this Dictionary<T, K> dictionary, Action<T> action)
         {
-            foreach(var key in dictionary.Keys)
+            foreach (var key in dictionary.Keys)
             {
                 action(key);
             }
@@ -1230,6 +1247,7 @@ namespace Watermelon
         #endregion
 
         #region Object
+
         public static string ObjectToString(this object parentObject, int maxDepth = 3)
         {
             if (parentObject == null)
@@ -1242,7 +1260,7 @@ namespace Watermelon
             stringBuilder.AppendLine("");
 
             var fieldsString = GetFields(0, maxDepth, "  ", parentObject);
-            if(!string.IsNullOrEmpty(fieldsString))
+            if (!string.IsNullOrEmpty(fieldsString))
             {
                 stringBuilder.AppendLine("Variables:");
                 stringBuilder.Append(fieldsString);
@@ -1254,7 +1272,7 @@ namespace Watermelon
         static string GetFields(int depth, int maxDepth, string space, object parentObject)
         {
             depth += 1;
-               
+
             var stringBuilder = new StringBuilder();
             var parentObjectType = parentObject.GetType();
 
@@ -1280,7 +1298,7 @@ namespace Watermelon
                             var arrayFieldInfos = elementType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
                             var list = (IList)value;
-                            if(list != null)
+                            if (list != null)
                             {
                                 stringBuilder.AppendLine(space + fieldName + " - " + fieldType.ToString());
 
@@ -1332,9 +1350,10 @@ namespace Watermelon
 
             return stringBuilder.ToString();
         }
-#endregion
 
-#region Random
+        #endregion
+
+        #region Random
 
         public static class ExtendedRandom
         {
@@ -1354,6 +1373,7 @@ namespace Watermelon
             }
         }
 
-#endregion
+        #endregion
+
     }
 }

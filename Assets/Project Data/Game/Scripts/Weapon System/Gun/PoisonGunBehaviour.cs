@@ -34,68 +34,39 @@ public class PoisonGunBehaviour : BaseGunBehavior
         _spread = stage.Spread;
         _bulletSpeed = stage.BulletSpeed;
     }
+
     void PlayShootAnimation()
     {
         _shootTweenCase.KillActive();
         _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
-        if (shootParticleSystem)  shootParticleSystem.Play();
+        if (shootParticleSystem) shootParticleSystem.Play();
         CharacterBehaviour.FocusOnTarget();
         CharacterBehaviour.OnGunShooted();
         AudioController.Play(AudioController.Sounds.shotMinigun);
     }
-    
+
     int BulletsNumber => RandomBulletsAmount(_upgrade);
-    public override void GunUpdate()
-    {
-        if (NoTarget) return;
-        if (NotReady) return;
 
-        _shootDirection = AimAtTarget();
-        if (OutOfAngle) return;
-        
-        if (TargetInSight)
+    public override void Shoot()
+    {
+        PlayShootAnimation();
+
+        for (var k = 0; k < BulletsNumber; k++)
         {
-            PlayShootAnimation();
-            _nextShootTime = FireRate();
- 
-            for (var k = 0; k < BulletsNumber; k++)
+            foreach (var streamAngle in bulletStreamAngles)
             {
-                foreach (var streamAngle in bulletStreamAngles)
-                {
-                    var bullet = _bulletPool.Get(
-                            new PooledObjectSettings()
-                                .SetPosition(shootPoint.position)
-                                .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                                    (Random.Range(-_spread, _spread) +
-                                     streamAngle)))
-                        .GetComponent<PoisonBulletBehaviour>();
-                    bullet.Initialise(
-                        damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                        CharacterBehaviour.critMultiplier,
-                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                }
+                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
+                    (Random.Range(-_spread, _spread) + streamAngle))).GetComponent<PoisonBulletBehaviour>();
+                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
+                                  CharacterBehaviour.critMultiplier,
+                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
             }
- 
         }
-        else
-        {
-            TargetUnreachable();
-        }
-    }
-
-    public override void OnGunUnloaded()
-    {
- 
     }
 
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
         transform.SetParent(characterGraphics.MinigunHolderTransform);
         transform.ResetLocal();
-    }
-
-    public override void Reload()
-    {
-        _bulletPool.ReturnToPoolEverything();
     }
 }

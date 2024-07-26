@@ -48,28 +48,16 @@ namespace Watermelon.SquadShooter
             CharacterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
         }
 
-        public override void GunUpdate()
+        public override void Shoot()
         {
-            if (NoTarget) return;
-            if (NotReady) return;
-            _shootDirection = AimAtTarget();
-            if (OutOfAngle) return;
+            PlayShootAnimation();
 
-            if (TargetInSight)
+            for (var i = 0; i < BulletsNumber; i++)
             {
-                PlayShootAnimation();
-                _nextShootTime = FireRate();
-
-                for (var i = 0; i < BulletsNumber; i++)
-                {
-                    var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles)).GetComponent<PlayerBulletBehavior>();
-                    bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier * CharacterBehaviour.critMultiplier, _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                    bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(_bulletSpreadAngle * -0.5f, _bulletSpreadAngle * 0.5f), 0f));
-                }
-            }
-            else
-            {
-                TargetUnreachable();
+                var settings = PoolSettings();
+                var bullet = _bulletPool.GetPlayerBullet(settings);
+                bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
+                bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(_bulletSpreadAngle * -0.5f, _bulletSpreadAngle * 0.5f), 0f));
             }
         }
 
@@ -91,20 +79,10 @@ namespace Watermelon.SquadShooter
             Gizmos.color = defCol;
         }
 
-        public override void OnGunUnloaded()
-        {
- 
-        }
-
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)
         {
             transform.SetParent(characterGraphics.ShootGunHolderTransform);
             transform.ResetLocal();
-        }
-
-        public override void Reload()
-        {
-            _bulletPool?.ReturnToPoolEverything();
         }
     }
 }

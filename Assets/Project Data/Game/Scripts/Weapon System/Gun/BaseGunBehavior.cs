@@ -19,6 +19,7 @@ namespace Watermelon.SquadShooter
         [Header("Upgrade")]
         [SerializeField] Vector3 upgradeParticleOffset;
         [SerializeField] float upgradeParticleSize = 1.0f;
+        [SerializeField] protected LayerMask targetLayers;
         protected CharacterBehaviour CharacterBehaviour;
         [SerializeField] protected List<float> bulletStreamAngles = new() { 0 };
         protected CharacterBehaviour Owner => CharacterBehaviour;
@@ -32,28 +33,30 @@ namespace Watermelon.SquadShooter
         Transform _rightHandRigController;
         Vector3 _rightHandExtraRotation;
         protected DuoFloat _bulletSpeed;
+        protected Vector3 FaceDirection => CharacterBehaviour.transform.eulerAngles;
         protected void TargetUnreachable() => CharacterBehaviour.TargetUnreachable();
         protected float BulletSpeed => _bulletSpeed.Random();
         protected BaseEnemyBehavior Target => CharacterBehaviour.ClosestEnemyBehaviour;
         protected float _nextShootTime;
         protected float _attackDelay;
         protected Vector3 _shootDirection;
-        [SerializeField] protected LayerMask targetLayers;
-        protected bool OutOfAngle => !(Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) < 40f);
+        protected bool NotLookAtTarget
+            => Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) > 40f;
 
         protected float FireRate()
         {
-            return Time.timeSinceLevelLoad + _attackDelay / CharacterBehaviour.AtkSpdMult;
+            return Time.timeSinceLevelLoad + _attackDelay / AtkSpdMult;
         }
 
-        protected bool TargetInSight =>
-           // Physics.Raycast(transform.position, _shootDirection, out var hit, 300f, targetLayers)
+        protected float AtkSpdMult => CharacterBehaviour.AtkSpdMult;
+        protected bool VisionIsClear =>
+            // Physics.Raycast(transform.position, _shootDirection, out var hit, 300f, targetLayers)
             Physics.Raycast(transform.position - _shootDirection.normalized, _shootDirection, out var hit, 300f, targetLayers)
             && hit.collider.gameObject.layer == PhysicsHelper.LAYER_ENEMY;
 
-        protected Vector3 AimAtTarget()
+        protected void AimAtTarget()
         {
-            return CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
+            _shootDirection = CharacterBehaviour.ClosestEnemyBehaviour.transform.position.SetY(shootPoint.position.y) - shootPoint.position;
         }
 
         protected bool NotReady => _nextShootTime >= Time.timeSinceLevelLoad;
@@ -73,11 +76,9 @@ namespace Watermelon.SquadShooter
             characterGraphics.SetShootingAnimation(characterShootAnimation);
         }
 
-        protected int RandomBulletsAmount(BaseWeaponUpgrade upgrade)
-        {
-            return upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount;
-        }
-
+        protected int RandomBulletsAmount(BaseWeaponUpgrade upgrade) 
+            => upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount;
+        
         protected bool NoTarget
         {
             get
@@ -93,7 +94,28 @@ namespace Watermelon.SquadShooter
             RecalculateDamage();
         }
 
-        public virtual void GunUpdate()
+        public void OnFixedUpdate()
+        {
+            if (NotReady) return;
+            if (NoTarget) return;
+            AimAtTarget();
+            if (NotLookAtTarget) return;
+
+            if (VisionIsClear)
+            {
+                _nextShootTime = FireRate();
+                Shoot();
+            }
+            else
+            {
+                TargetUnreachable();
+            }
+        }
+
+        protected PooledObjectSettings PoolSettings() => new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(FaceDirection);
+        protected PooledObjectSettings PoolSettings(Vector3 angle) => new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(FaceDirection + angle);
+
+        public virtual void Shoot()
         {
         }
 
@@ -114,8 +136,11 @@ namespace Watermelon.SquadShooter
             _rightHandRigController.rotation = Quaternion.Euler(rightHandHolder.eulerAngles + _rightHandExtraRotation);
         }
 
-        public abstract void Reload();
-        public abstract void OnGunUnloaded();
+        public void Reload()
+        {
+            _bulletPool?.ReturnToPoolEverything();
+        }
+
         protected Pool _bulletPool;
 
         public void Unload()
@@ -123,7 +148,6 @@ namespace Watermelon.SquadShooter
             if (_bulletPool == null) return;
             _bulletPool.Clear();
             _bulletPool = null;
-            OnGunUnloaded();
         }
 
         public abstract void PlaceGun(BaseCharacterGraphics characterGraphics);
@@ -148,8 +172,7 @@ namespace Watermelon.SquadShooter
 
         public void PlayUpgradeParticle()
         {
-            var particleCase = ParticlesController.Play(_particleUpgrade)
-                .SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
+            var particleCase = ParticlesController.Play(_particleUpgrade).SetPosition(transform.position + upgradeParticleOffset).SetScale(upgradeParticleSize.ToVector3());
             particleCase.ParticleSystem.transform.rotation = CameraController.MainCamera.transform.rotation;
             particleCase.ParticleSystem.transform.Rotate(Vector3.up, 180);
         }

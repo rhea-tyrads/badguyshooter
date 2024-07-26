@@ -52,37 +52,18 @@ namespace Watermelon.SquadShooter
 
         int BulletsNumber => RandomBulletsAmount(_upgrade);
 
-        public override void GunUpdate()
+        public override void Shoot()
         {
-            if (NoTarget) return;
-            if (NotReady) return;
+            PlayShootAnimation();
 
-
-            _shootDirection = AimAtTarget();
-            if (OutOfAngle) return;
-
-            var origin = shootPoint.position - _shootDirection.normalized * 1.5f;
-
-            if (TargetInSight)
+            for (var i = 0; i < BulletsNumber; i++)
             {
-                PlayShootAnimation();
-                _nextShootTime = FireRate();
+                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(shootPoint.eulerAngles)).GetComponent<LavaBulletBehavior>();
+                bullet.Initialise(damage, _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, -1f, false, _shootingRadius, CharacterBehaviour, bulletHeight, explosionRadius);
+            }
 
-                for (var i = 0; i < BulletsNumber; i++)
-                {
-                    var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(shootPoint.eulerAngles)).GetComponent<LavaBulletBehavior>();
-                    bullet.Initialise(damage, _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, -1f, false, _shootingRadius, CharacterBehaviour, bulletHeight, explosionRadius);
-                }
-            }
-            else
-            {
-                CharacterBehaviour.TargetUnreachable();
-            }
         }
 
-        public override void OnGunUnloaded()
-        {
-        }
 
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)
         {
@@ -90,9 +71,5 @@ namespace Watermelon.SquadShooter
             transform.ResetLocal();
         }
 
-        public override void Reload()
-        {
-            _bulletPool.ReturnToPoolEverything();
-        }
     }
 }

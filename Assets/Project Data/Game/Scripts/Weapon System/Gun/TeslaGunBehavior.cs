@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Watermelon.SquadShooter
@@ -15,17 +16,13 @@ namespace Watermelon.SquadShooter
         bool _isChargeParticleActivated;
         float _fullChargeTime;
         TeslaGunUpgrade _upgrade;
- 
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
             base.Initialise(characterBehaviour, data);
-
             _upgrade = UpgradesController.Get<TeslaGunUpgrade>(data.UpgradeType);
             var bulletObj = _upgrade.BulletPrefab;
-
             _bulletPool = new Pool(new PoolSettings(bulletObj.name, bulletObj, 5, true));
-
             RecalculateDamage();
         }
 
@@ -41,7 +38,10 @@ namespace Watermelon.SquadShooter
             _bulletSpeed = stage.BulletSpeed;
         }
 
-        public override void GunUpdate()
+        bool NotCharged => !_isCharging && !_isCharged;
+        bool Charged => _fullChargeTime >= Time.timeSinceLevelLoad;
+
+        void Update()
         {
             if (NoTarget)
             {
@@ -49,20 +49,14 @@ namespace Watermelon.SquadShooter
                 return;
             }
 
-            var atkSpdMult = CharacterBehaviour.isAtkSpdBooster ? CharacterBehaviour.atkSpdBoosterMult : 1;
-
-            // if not charging - start
-            if (!_isCharging && !_isCharged)
+            if (NotCharged)
             {
                 _isCharging = true;
                 _isChargeParticleActivated = false;
-                _fullChargeTime = Time.timeSinceLevelLoad + (chargeDuration / atkSpdMult);
+                _fullChargeTime = Time.timeSinceLevelLoad + (chargeDuration / AtkSpdMult);
             }
 
-            _shootDirection = AimAtTarget();
-
-            // wait for full charge
-            if (_fullChargeTime >= Time.timeSinceLevelLoad)
+            if (Charged)
             {
                 //start charge particle 0.5 sec before charge complete
                 if (!_isChargeParticleActivated && _fullChargeTime - Time.timeSinceLevelLoad <= 0.5f)
@@ -71,9 +65,8 @@ namespace Watermelon.SquadShooter
                     shootParticleSystem.Play();
                 }
 
-                if (TargetInSight && !OutOfAngle) CharacterBehaviour.FocusOnTarget();
+                if (VisionIsClear && !NotLookAtTarget) CharacterBehaviour.FocusOnTarget();
                 else CharacterBehaviour.TargetUnreachable();
-
                 return;
             }
 
@@ -83,37 +76,27 @@ namespace Watermelon.SquadShooter
                 _isCharged = true;
                 lightningLoopParticle.SetActive(true);
             }
-
-
-            if (OutOfAngle) return;
-
-            if (TargetInSight)
-            {
-                PlayShootAnimation();
-                _nextShootTime = FireRate();
-
-                for (var k = 0; k < BulletsNumber; k++)
-                {
-                    var bullet = _bulletPool
-                        .Get(new PooledObjectSettings().SetPosition(shootPoint.position)
-                            .SetRotation(CharacterBehaviour.transform.eulerAngles))
-                        .GetComponent<TeslaBulletBehavior>();
-                    bullet.Initialise(
-                        damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                        CharacterBehaviour.critMultiplier,
-                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, 5f, false, stunDuration);
-                    bullet.SetTargetsHitGoal(targetsHitGoal.Random());
-                }
-
-
-                CancelCharge();
-            }
-            else
-            {
-                TargetUnreachable();
-            }
         }
 
+        public override void Shoot()
+        {
+            PlayShootAnimation();
+
+            for (var k = 0; k < BulletsNumber; k++)
+            {
+                var settings = PoolSettings();
+                var bullet = _bulletPool.GetPlayerBullet(settings);
+                if (bullet is TeslaBulletBehavior tesla)
+                {
+                    tesla.Initialise(Damage, BulletSpeed, Target, bulletLifeTime, false, stunDuration);
+                    tesla.SetHitsAmount(HitsAmount);
+                }
+            }
+
+            CancelCharge();
+        }
+
+        int HitsAmount => targetsHitGoal.Random();
         int BulletsNumber => RandomBulletsAmount(_upgrade);
 
         void PlayShootAnimation()
@@ -124,7 +107,6 @@ namespace Watermelon.SquadShooter
             CharacterBehaviour.FocusOnTarget();
             CharacterBehaviour.OnGunShooted();
             AudioController.Play(AudioController.Sounds.shotTesla, volumePercentage: 0.8f);
-
             CharacterBehaviour.MainCameraCase.Shake(0.04f, 0.04f, 0.3f, 0.8f);
         }
 
@@ -141,10 +123,8 @@ namespace Watermelon.SquadShooter
         {
             if (CharacterBehaviour == null)
                 return;
-
             if (CharacterBehaviour.ClosestEnemyBehaviour == null)
                 return;
-
             var defCol = Gizmos.color;
             Gizmos.color = Color.red;
             var shootDirection =
@@ -155,20 +135,10 @@ namespace Watermelon.SquadShooter
             Gizmos.color = defCol;
         }
 
-        public override void OnGunUnloaded()
-        {
-
-        }
-
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)
         {
             transform.SetParent(characterGraphics.TeslaHolderTransform);
             transform.ResetLocal();
-        }
-
-        public override void Reload()
-        {
-            _bulletPool.ReturnToPoolEverything();
         }
     }
 }

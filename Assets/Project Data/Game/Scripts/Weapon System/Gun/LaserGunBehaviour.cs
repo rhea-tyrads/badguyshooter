@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using TopDownEngine.Common.Scripts.BoogieScripts;
 using UnityEngine;
 using Watermelon;
 using Watermelon.SquadShooter;
+using Random = UnityEngine.Random;
 
 public class LaserGunBehaviour : BaseGunBehavior
 {
@@ -42,9 +44,7 @@ public class LaserGunBehaviour : BaseGunBehavior
     void PlayShootAnimation()
     {
         _shootTweenCase.KillActive();
-
         _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
-
         if (shootParticleSystem) shootParticleSystem.Play();
         CharacterBehaviour.FocusOnTarget();
         CharacterBehaviour.OnGunShooted();
@@ -53,55 +53,38 @@ public class LaserGunBehaviour : BaseGunBehavior
 
     int BulletsNumber => RandomBulletsAmount(_upgrade);
 
-    public override void GunUpdate()
+    void Update()
     {
         if (NoTarget)
         {
             laser.Hide();
             return;
         }
+    }
 
-        if (NotReady) return;
-        _shootDirection = AimAtTarget();
-        if (OutOfAngle) return;
+    public override void Shoot()
+    {
+        PlayShootAnimation();
+        laser.Show(CharacterBehaviour.ClosestEnemyBehaviour.transform);
 
+        var dmgBonus = (_upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount) > 1
+            ? 3
+            : 1f;
 
-        if (TargetInSight)
+        for (var k = 0; k < BulletsNumber; k++)
         {
-            PlayShootAnimation();
-            _nextShootTime = FireRate();
-            laser.Show(CharacterBehaviour.ClosestEnemyBehaviour.transform);
-
-            var dmgBonus = (_upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount) > 1
-                ? 3
-                : 1f;
-
-            for (var k = 0; k < BulletsNumber; k++)
+            foreach (var streamAngle in bulletStreamAngles)
             {
-                foreach (var streamAngle in bulletStreamAngles)
-                {
-                    var bullet = _bulletPool.Get(new PooledObjectSettings()
-                            .SetPosition(shootPoint.position)
-                            .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                                (Random.Range(-_spread, _spread) + streamAngle)))
-                        .GetComponent<LaserBulletBehaviour>();
+                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
+                    (Random.Range(-_spread, _spread) + streamAngle))).GetComponent<LaserBulletBehaviour>();
 
-                    bullet.Initialise(
-                        damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                        CharacterBehaviour.critMultiplier * dmgBonus,
-                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                }
+                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
+                                  CharacterBehaviour.critMultiplier * dmgBonus,
+                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
             }
         }
-        else
-        {
-            TargetUnreachable();
-        }
     }
 
-    public override void OnGunUnloaded()
-    {
-    }
 
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
@@ -109,8 +92,4 @@ public class LaserGunBehaviour : BaseGunBehavior
         transform.ResetLocal();
     }
 
-    public override void Reload()
-    {
-        _bulletPool.ReturnToPoolEverything();
-    }
 }

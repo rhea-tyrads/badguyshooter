@@ -32,7 +32,7 @@ namespace Watermelon.SquadShooter
                 Vector3.SqrMagnitude(e.transform.position - CharacterBehaviour.Transform.position)).ToList();
         }
 
-        public void SetTargetsHitGoal(int goal)
+        public void SetHitsAmount(int goal)
         {
             _targetsHitGoal = goal;
         }

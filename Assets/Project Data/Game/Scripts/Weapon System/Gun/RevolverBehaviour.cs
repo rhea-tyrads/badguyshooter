@@ -49,11 +49,9 @@ public class RevolverBehaviour : BaseGunBehavior
 
     int BulletsNumber => RandomBulletsAmount(_upgrade);
 
-    public override void GunUpdate()
+    public override void Shoot()
     {
         var shootPos = _isLeft ? shootPoint : shootPoint2;
-        if (NoTarget) return;
-        if (NotReady) return;
 
         if (_bullets <= 0)
         {
@@ -68,44 +66,27 @@ public class RevolverBehaviour : BaseGunBehavior
 
         // offsetDir *= -1;
         // shootPoint.localPosition += offsetDir * shootPointOffset;
-        _shootDirection = AimAtTarget();
-        if (OutOfAngle) return;
+        //   if (isLeft) shootParticleSystem.Play();
+        // else shootParticleSystem_2.Play();
 
-        if (TargetInSight)
+        PlayShootAnimation();
+
+        var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
+
+        for (var k = 0; k < BulletsNumber; k++)
         {
-            //   if (isLeft) shootParticleSystem.Play();
-            // else shootParticleSystem_2.Play();
-
-            PlayShootAnimation();
-            _nextShootTime = FireRate();
-
-            var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
-
-            for (var k = 0; k < BulletsNumber; k++)
+            foreach (var streamAngle in bulletStreamAngles)
             {
-                foreach (var streamAngle in bulletStreamAngles)
-                {
-                    var bullet = _bulletPool.Get(
-                            new PooledObjectSettings()
-                                .SetPosition(shootPos.position)
-                                .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                                    (Random.Range(-finalSpread, finalSpread) +
-                                     streamAngle)))
-                        .GetComponent<RevolverBulletBehaviour>();
-                    bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier,
-                        _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                    bullet.owner = Owner;
-                }
+                var angle = Vector3.up * (Random.Range(-finalSpread, finalSpread) + streamAngle);
+                var settings = PoolSettings(angle);
+                var bullet = _bulletPool.GetPlayerBullet(settings);
+                bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
             }
+        }
 
-            _bullets--;
-            if (_bullets <= 0) _reloadTimer = reloadTime;
-            // isLeft = !isLeft;
-        }
-        else
-        {
-            TargetUnreachable();
-        }
+        _bullets--;
+        if (_bullets <= 0) _reloadTimer = reloadTime;
+        // isLeft = !isLeft;
     }
 
     void PlayShootAnimation()
@@ -118,18 +99,9 @@ public class RevolverBehaviour : BaseGunBehavior
         AudioController.Play(AudioController.Sounds.shotMinigun);
     }
 
-    public override void OnGunUnloaded()
-    {
-    }
-
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
         transform.SetParent(characterGraphics.MinigunHolderTransform);
         transform.ResetLocal();
-    }
-
-    public override void Reload()
-    {
-        _bulletPool.ReturnToPoolEverything();
     }
 }
