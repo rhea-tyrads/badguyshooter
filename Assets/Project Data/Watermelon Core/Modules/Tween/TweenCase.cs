@@ -7,38 +7,26 @@ namespace Watermelon
         // System variables
         public int ActiveID;
         public bool IsActive;
-
         protected float currentDelay;
         public float CurrentDelay => currentDelay;
-
         protected float delay;
         public float Delay => delay;
-
         protected float state;
         public float State => state;
-
         protected UpdateMethod updateMethod;
         public UpdateMethod UpdateMethod => updateMethod;
-
         protected float duration;
         public float Duration => duration;
-
         protected bool isPaused;
         public bool IsPaused => isPaused;
-
         protected bool isUnscaled;
         public bool IsUnscaled => isUnscaled;
-
         protected bool isCompleted;
         public bool IsCompleted => isCompleted;
-
         protected bool isKilling;
         public bool IsKilling => isKilling;
-
         protected Ease.IEasingFunction easeFunction;
-
         protected event SimpleCallback tweenCompleted;
-
         protected GameObject parentObject;
         public GameObject ParentObject => parentObject;
 
@@ -108,7 +96,6 @@ namespace Watermelon
             return this;
         }
 
-
         /// <summary>
         /// Reset tween state
         /// </summary>
@@ -146,6 +133,7 @@ namespace Watermelon
         }
 
         #region Set
+
         public TweenCase SetDelay(float delay)
         {
             this.delay = delay;
@@ -191,6 +179,7 @@ namespace Watermelon
 
             return this;
         }
+
         #endregion
 
         /// <summary>

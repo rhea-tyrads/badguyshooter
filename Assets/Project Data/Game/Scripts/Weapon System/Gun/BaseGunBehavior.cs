@@ -23,6 +23,7 @@ namespace Watermelon.SquadShooter
         protected CharacterBehaviour CharacterBehaviour;
         [SerializeField] protected List<float> bulletStreamAngles = new() { 0 };
         protected CharacterBehaviour Owner => CharacterBehaviour;
+        protected TweenCase _shootTweenCase;
         protected WeaponData Data;
         public DuoInt damage;
         [FormerlySerializedAs("bulletDisableTime")] [SerializeField]
@@ -40,6 +41,7 @@ namespace Watermelon.SquadShooter
         protected float _nextShootTime;
         protected float _attackDelay;
         protected Vector3 _shootDirection;
+        float defaultSpread = 30;
         protected bool NotLookAtTarget
             => Vector3.Angle(_shootDirection, transform.forward.SetY(0f)) > 40f;
 
@@ -76,9 +78,43 @@ namespace Watermelon.SquadShooter
             characterGraphics.SetShootingAnimation(characterShootAnimation);
         }
 
-        protected int RandomBulletsAmount(BaseWeaponUpgrade upgrade) 
-            => upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount;
-        
+        int bulletsAmount;
+
+        protected int RandomBulletsAmount(BaseWeaponUpgrade upgrade)
+        {
+            var amount = upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount;
+            RefreshAngles(amount);
+            return amount;
+        }
+
+        void RefreshAngles(int amount)
+        {
+            if (bulletsAmount == amount) return;
+            bulletsAmount = amount;
+
+            bulletStreamAngles.Clear();
+            if (amount == 1)
+            {
+                bulletStreamAngles.Add(0);
+                return;
+            }
+
+            var step = defaultSpread / (amount - 1);
+            var angle = -defaultSpread / 2;
+            for (int i = 0; i < amount; i++)
+            {
+                angle += i * step;
+                bulletStreamAngles.Add(angle);
+            }
+        }
+
+        Vector3 GetAngle(int id)
+        {
+            var b = id < bulletStreamAngles.Count ? bulletStreamAngles[id] : 0;
+            var a = Vector3.up * (Random.Range(-_spread, _spread) + b);
+            return a;
+        }
+
         protected bool NoTarget
         {
             get
@@ -142,6 +178,17 @@ namespace Watermelon.SquadShooter
         }
 
         protected Pool _bulletPool;
+        protected float _spread;
+
+        protected PlayerBulletBehavior SpawnBullet(int id, bool init = true)
+        {
+            var angle = GetAngle(id);
+            var settings = PoolSettings(angle);
+            var bullet = _bulletPool.GetPlayerBullet(settings);
+            bullet.owner = Owner;
+            if (init) bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
+            return bullet;
+        }
 
         public void Unload()
         {

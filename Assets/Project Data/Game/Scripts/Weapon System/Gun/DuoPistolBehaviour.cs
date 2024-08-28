@@ -11,14 +11,12 @@ public class DuoPistolBehaviour : BaseGunBehavior
     [LineSpacer]
     [SerializeField] ParticleSystem shootParticleSystem2;
     [SerializeField] Transform shootPoint2;
-    [SerializeField] float bulletDisableTime;
     [SerializeField] float reloadTime = 0.1f;
     float _offsetDir = 1;
     bool _isLeft;
     float _reloadTimer;
     const int BULLETS_TOTAL = 6;
     int _bullets;
-    float _spread;
     DuoPistolUpgrade _upgrade;
     TweenCase _shootTweenCase;
 
@@ -76,26 +74,17 @@ public class DuoPistolBehaviour : BaseGunBehavior
 
     public override void Shoot()
     {
-        var shootPos = _isLeft ? shootPoint : shootPoint2;
+        //  var shootPos = _isLeft ? shootPoint : shootPoint2;
 
         PlayShootAnimation();
 
         // if (isLeft) shootParticleSystem.Play();
         // else shootParticleSystem_2.Play();
-
-        var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
-
-        for (var k = 0; k < BulletsNumber; k++)
+        for (var i = 0; i < BulletsNumber; i++)
         {
-            foreach (var streamAngle in bulletStreamAngles)
-            {
-                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPos.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                    (Random.Range(-finalSpread, finalSpread) +
-                     streamAngle))).GetComponent<DuoPistolsBulletBehaviour>();
-                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier,
-                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
-                bullet.owner = Owner;
-            }
+            var bullet = SpawnBullet(i );
+            bullet.SetPiercing(true);
+ 
         }
 
         _bullets--;
@@ -103,11 +92,9 @@ public class DuoPistolBehaviour : BaseGunBehavior
         //isLeft = !isLeft;
     }
 
-
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
         transform.SetParent(characterGraphics.MinigunHolderTransform);
         transform.ResetLocal();
     }
-
 }

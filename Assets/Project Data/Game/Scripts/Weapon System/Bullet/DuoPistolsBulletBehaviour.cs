@@ -6,7 +6,7 @@ public class DuoPistolsBulletBehaviour : PlayerBulletBehavior
 {
    public float knockBackForce = 1.5f;
     [SerializeField] TrailRenderer trailRenderer;
-    public CharacterBehaviour owner;
+  
 
     public override void Initialise(float dmg, float speed, BaseEnemyBehavior currentTarget, float lifeTime,
         bool disableOnHit = true)

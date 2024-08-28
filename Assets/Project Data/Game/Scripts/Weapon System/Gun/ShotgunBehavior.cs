@@ -7,7 +7,7 @@ namespace Watermelon.SquadShooter
         [LineSpacer]
         [SerializeField] float bulletDisableTime;
         float _bulletSpreadAngle;
-        TweenCase _shootTweenCase;
+
         ShotgunUpgrade _upgrade;
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
@@ -51,12 +51,9 @@ namespace Watermelon.SquadShooter
         public override void Shoot()
         {
             PlayShootAnimation();
-
             for (var i = 0; i < BulletsNumber; i++)
             {
-                var settings = PoolSettings();
-                var bullet = _bulletPool.GetPlayerBullet(settings);
-                bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
+                var bullet = SpawnBullet(i);
                 bullet.transform.Rotate(new Vector3(0f, i == 0 ? 0f : Random.Range(_bulletSpreadAngle * -0.5f, _bulletSpreadAngle * 0.5f), 0f));
             }
         }

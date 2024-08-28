@@ -10,7 +10,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] float chargeDuration;
         [SerializeField] DuoInt targetsHitGoal;
         [SerializeField] float stunDuration = 0.2f;
-        TweenCase _shootTweenCase;
+ 
         bool _isCharging;
         bool _isCharged;
         bool _isChargeParticleActivated;
@@ -84,8 +84,7 @@ namespace Watermelon.SquadShooter
 
             for (var k = 0; k < BulletsNumber; k++)
             {
-                var settings = PoolSettings();
-                var bullet = _bulletPool.GetPlayerBullet(settings);
+                var bullet = SpawnBullet(k, false);
                 if (bullet is TeslaBulletBehavior tesla)
                 {
                     tesla.Initialise(Damage, BulletSpeed, Target, bulletLifeTime, false, stunDuration);

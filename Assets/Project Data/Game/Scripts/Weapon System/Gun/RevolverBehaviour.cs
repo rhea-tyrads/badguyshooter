@@ -18,9 +18,9 @@ public class RevolverBehaviour : BaseGunBehavior
     bool _isLeft;
     float _reloadTimer;
     int _bullets;
-    float _spread;
+ 
     RevolverUpgrade _upgrade;
-    TweenCase _shootTweenCase;
+ 
 
     public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
     {
@@ -51,7 +51,7 @@ public class RevolverBehaviour : BaseGunBehavior
 
     public override void Shoot()
     {
-        var shootPos = _isLeft ? shootPoint : shootPoint2;
+        //  var shootPos = _isLeft ? shootPoint : shootPoint2;
 
         if (_bullets <= 0)
         {
@@ -71,17 +71,9 @@ public class RevolverBehaviour : BaseGunBehavior
 
         PlayShootAnimation();
 
-        var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
-
-        for (var k = 0; k < BulletsNumber; k++)
+        for (var i = 0; i < BulletsNumber; i++)
         {
-            foreach (var streamAngle in bulletStreamAngles)
-            {
-                var angle = Vector3.up * (Random.Range(-finalSpread, finalSpread) + streamAngle);
-                var settings = PoolSettings(angle);
-                var bullet = _bulletPool.GetPlayerBullet(settings);
-                bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
-            }
+            SpawnBullet(i);
         }
 
         _bullets--;

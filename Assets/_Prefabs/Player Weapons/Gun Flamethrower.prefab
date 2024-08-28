@@ -187,17 +187,22 @@ MonoBehaviour:
     type: 2}
   leftHandHolder: {fileID: 9133348590722764629}
   rightHandHolder: {fileID: 3277364149726533961}
+  shootParticleSystem: {fileID: 0}
   shootPoint: {fileID: 3329955506062770556}
   upgradeParticleOffset: {x: 0, y: 0, z: 0}
   upgradeParticleSize: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 512
-  bulletDisableTime: 0
   bulletStreamAngles: []
+  damage:
+    firstValue: 0
+    secondValue: 0
+  bulletLifeTime: 0
+  bulletDisableTime: 0
   flameParticle: {fileID: 4340359018043607071}
-  flameParticleMultishot_3: {fileID: 3471949446903636743}
-  flameParticleMultishot_5: {fileID: 4443056686832927792}
+  flameParticleMultishot3: {fileID: 3471949446903636743}
+  flameParticleMultishot5: {fileID: 4443056686832927792}
 --- !u!1 &7944366739245315619
 GameObject:
   m_ObjectHideFlags: 0

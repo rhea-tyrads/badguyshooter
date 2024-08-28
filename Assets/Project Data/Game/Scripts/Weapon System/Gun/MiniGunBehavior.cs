@@ -10,9 +10,8 @@ namespace Watermelon.SquadShooter
         [LineSpacer]
         [SerializeField] Transform barrelTransform;
         [SerializeField] float fireRotationSpeed;
-        float _spread;
         MinigunUpgrade _upgrade;
-        TweenCase _shootAnim;
+     
 
         public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
         {
@@ -54,35 +53,26 @@ namespace Watermelon.SquadShooter
         public override void Shoot()
         {
             PlayShootAnimation();
-
             for (var k = 0; k < BulletsNumber; k++)
             {
-                foreach (var streamAngle in bulletStreamAngles)
-                {
-                    var angle = Vector3.up * (Random.Range(-_spread, _spread) + streamAngle);
-                    var settings = PoolSettings(angle);
-                    var bullet = _bulletPool.GetPlayerBullet(settings);
-                    bullet.Initialise(Damage, BulletSpeed, Target, bulletLifeTime);
-                }
+                SpawnBullet(k);
             }
         }
 
         void PlayShootAnimation()
         {
-            _shootAnim.KillActive();
-            _shootAnim = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootAnim = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
+            _shootTweenCase.KillActive();
+            _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f); });
             if (shootParticleSystem) shootParticleSystem.Play();
             CharacterBehaviour.FocusOnTarget();
             CharacterBehaviour.OnGunShooted();
             AudioController.Play(AudioController.Sounds.shotMinigun);
         }
 
-
         public override void PlaceGun(BaseCharacterGraphics characterGraphics)
         {
             transform.SetParent(characterGraphics.MinigunHolderTransform);
             transform.ResetLocal();
         }
-
     }
 }

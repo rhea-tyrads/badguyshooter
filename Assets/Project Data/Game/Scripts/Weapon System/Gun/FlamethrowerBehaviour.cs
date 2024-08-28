@@ -14,9 +14,9 @@ public class FlamethrowerBehaviour : BaseGunBehavior
     [SerializeField] GameObject flameParticle;
     [SerializeField] GameObject flameParticleMultishot3;
     [SerializeField] GameObject flameParticleMultishot5;
-    float _spread;
+ 
     FlameThrowerUpgrade _upgrade;
-    TweenCase _shootTweenCase;
+ 
 
     public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
     {
@@ -82,20 +82,10 @@ public class FlamethrowerBehaviour : BaseGunBehavior
 
         if (bulletsNumber > 3)
             flameParticleMultishot5.SetActive(true);
-
-        var finalSpread = CharacterBehaviour.isMultishotBooster && _spread == 0 ? 30 : _spread;
-
-        for (var k = 0; k < bulletsNumber; k++)
+        
+        for (var i = 0; i < BulletsNumber; i++)
         {
-            foreach (var streamAngle in bulletStreamAngles)
-            {
-                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                    (Random.Range(-finalSpread, finalSpread) +
-                     streamAngle))).GetComponent<FlamethrowerBulletBehaviour>();
-
-                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier * CharacterBehaviour.critMultiplier,
-                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime, false);
-            }
+            SpawnBullet(i);
         }
     }
 

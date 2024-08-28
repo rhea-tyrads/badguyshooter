@@ -13,9 +13,9 @@ public class LaserGunBehaviour : BaseGunBehavior
     [SerializeField] float bulletDisableTime;
     [SerializeField] MagicBeam laser;
     [Space]
-    float _spread;
+ 
     LaserUpgrade _upgrade;
-    TweenCase _shootTweenCase;
+ 
 
     public override void Initialise(CharacterBehaviour characterBehaviour, WeaponData data)
     {
@@ -66,23 +66,14 @@ public class LaserGunBehaviour : BaseGunBehavior
     {
         PlayShootAnimation();
         laser.Show(CharacterBehaviour.ClosestEnemyBehaviour.transform);
-
-        var dmgBonus = (_upgrade.GetCurrentStage().BulletsPerShot.Random() + CharacterBehaviour.MultishotBoosterAmount) > 1
-            ? 3
-            : 1f;
-
-        for (var k = 0; k < BulletsNumber; k++)
+ 
+        
+        for (var i = 0; i < BulletsNumber; i++)
         {
-            foreach (var streamAngle in bulletStreamAngles)
-            {
-                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                    (Random.Range(-_spread, _spread) + streamAngle))).GetComponent<LaserBulletBehaviour>();
-
-                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                                  CharacterBehaviour.critMultiplier * dmgBonus,
-                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-            }
+            SpawnBullet(i);
         }
+        
+ 
     }
 
 

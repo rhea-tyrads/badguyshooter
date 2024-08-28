@@ -7,7 +7,7 @@ public class PoisonGunBehaviour : BaseGunBehavior
 {
     [LineSpacer]
     [SerializeField] float bulletDisableTime;
-    float _spread;
+ 
     PoisonGunUpgrade _upgrade;
     TweenCase _shootTweenCase;
 
@@ -53,14 +53,7 @@ public class PoisonGunBehaviour : BaseGunBehavior
 
         for (var k = 0; k < BulletsNumber; k++)
         {
-            foreach (var streamAngle in bulletStreamAngles)
-            {
-                var bullet = _bulletPool.Get(new PooledObjectSettings().SetPosition(shootPoint.position).SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                    (Random.Range(-_spread, _spread) + streamAngle))).GetComponent<PoisonBulletBehaviour>();
-                bullet.Initialise(damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                                  CharacterBehaviour.critMultiplier,
-                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-            }
+            SpawnBullet(k);
         }
     }
 

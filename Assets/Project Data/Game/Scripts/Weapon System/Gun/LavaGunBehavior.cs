@@ -8,7 +8,7 @@ namespace Watermelon.SquadShooter
         [SerializeField] Transform graphicsTransform;
         [SerializeField] float explosionRadius;
         [SerializeField] DuoFloat bulletHeight;
-        TweenCase _shootTweenCase;
+ 
         float _shootingRadius;
         LavaLauncherUpgrade _upgrade;
 

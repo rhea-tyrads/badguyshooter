@@ -6,7 +6,6 @@ using Watermelon.SquadShooter;
 public class CrossBowBehaviour : BaseGunBehavior
 {
     [SerializeField] float bulletDisableTime;
-    float _spread;
     CrossbowUpgrade _upgrade;
     TweenCase _shootTweenCase;
 
@@ -32,48 +31,31 @@ public class CrossBowBehaviour : BaseGunBehavior
         _spread = stage.Spread;
         _bulletSpeed = stage.BulletSpeed;
     }
+
     void PlayShootAnimation()
     {
         _shootTweenCase.KillActive();
         _shootTweenCase = transform.DOLocalMoveZ(-0.0825f, _attackDelay * 0.3f / CharacterBehaviour.AtkSpdMult).OnComplete(delegate { _shootTweenCase = transform.DOLocalMoveZ(0, _attackDelay * 0.6f / CharacterBehaviour.AtkSpdMult); });
-        if (shootParticleSystem)  shootParticleSystem.Play();
+        if (shootParticleSystem) shootParticleSystem.Play();
         CharacterBehaviour.FocusOnTarget();
         CharacterBehaviour.OnGunShooted();
         AudioController.Play(AudioController.Sounds.shotMinigun);
     }
-    
+
     int BulletsNumber => RandomBulletsAmount(_upgrade);
-    
+
     public override void Shoot()
     {
         PlayShootAnimation();
- 
-        for (var k = 0; k < BulletsNumber; k++)
+        for (var i = 0; i < BulletsNumber; i++)
         {
-            foreach (var streamAngle in bulletStreamAngles)
-            {
-                var bullet = _bulletPool.Get(
-                        new PooledObjectSettings()
-                            .SetPosition(shootPoint.position)
-                            .SetRotation(CharacterBehaviour.transform.eulerAngles + Vector3.up *
-                                (Random.Range(-_spread, _spread) +
-                                 streamAngle)))
-                    .GetComponent<CrossBowBulletBehaviour>();
-                bullet.Initialise(
-                    damage.Random() * CharacterBehaviour.Stats.BulletDamageMultiplier *
-                    CharacterBehaviour.critMultiplier,
-                    _bulletSpeed.Random(), CharacterBehaviour.ClosestEnemyBehaviour, bulletDisableTime);
-                bullet.owner = Owner;
-            }
+            SpawnBullet(i);
         }
-
     }
-
 
     public override void PlaceGun(BaseCharacterGraphics characterGraphics)
     {
         transform.SetParent(characterGraphics.MinigunHolderTransform);
         transform.ResetLocal();
     }
-
 }

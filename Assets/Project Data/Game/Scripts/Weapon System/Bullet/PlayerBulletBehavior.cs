@@ -9,7 +9,7 @@ namespace Watermelon.SquadShooter
     {
         [SerializeField] string hitVfx;
         [SerializeField] string wallHitVfx;
-
+        public CharacterBehaviour owner;
         int _hitVfx  ;
         int _hitWallVfx  ;
         protected float Damage;
@@ -19,7 +19,7 @@ namespace Watermelon.SquadShooter
         TweenCase _disableTweenCase;
 
         protected BaseEnemyBehavior CurrentTarget;
-
+        public void SetPiercing(bool isPirce) => _autoDisableOnHit = !isPirce;
         public virtual void Initialise(float dmg, float speed, BaseEnemyBehavior currentTarget,
             float lifeTime, bool disableOnHit = true)
         {
