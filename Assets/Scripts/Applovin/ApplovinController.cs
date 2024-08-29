@@ -21,7 +21,6 @@ namespace Applovin
         public Rewarded rewarded;
         public Interstitial interstitial;
 
-
         public event Action OnRewardReceived = delegate { };
         public event Action OnRewardDisplayFail = delegate { };
         public event Action OnInterstitialHidden = delegate { };
@@ -54,7 +53,6 @@ namespace Applovin
             }
         }
 
-
         void Start()
         {
             InitSdk();
@@ -69,7 +67,6 @@ namespace Applovin
             ResetInterstitialTimer();
         }
 
-
         //  [NaughtyAttributes.Button]
         public void ShowRewarded(string msg)
         {
@@ -82,7 +79,6 @@ namespace Applovin
         //  [NaughtyAttributes.Button()]
         public void ShowInterstitial(string msg)
         {
- 
             if (IsInterstitialReady)
             {
                 var amount = InterstitialWatchedAmount;
@@ -92,8 +88,8 @@ namespace Applovin
                     PlayerPrefs.SetInt(InterstitialAmountKey, amount);
                     ResetInterstitialTimer();
                     interstitial.Show(msg);
-                   // var startEvent = new AdjustEvent("d0y1pr");
-                   // Adjust.trackEvent(startEvent);
+                    // var startEvent = new AdjustEvent("d0y1pr");
+                    // Adjust.trackEvent(startEvent);
                 }
                 else
                 {
@@ -160,7 +156,7 @@ namespace Applovin
 
         void RewardReceived()
         {
-          var startEvent = new AdjustEvent("d0y1pr");
+            var startEvent = new AdjustEvent("d0y1pr");
             Adjust.trackEvent(startEvent);
             ResetInterstitialTimer();
             OnRewardReceived();
@@ -168,7 +164,7 @@ namespace Applovin
             var amount = PlayerPrefs.GetInt("REWARD_ADS_WATCHED", 0);
             amount++;
             PlayerPrefs.SetInt("REWARD_ADS_WATCHED", amount);
-            
+
             if (amount % 10 == 0)
             {
                 var e = new AdjustEvent("mk7pqt");

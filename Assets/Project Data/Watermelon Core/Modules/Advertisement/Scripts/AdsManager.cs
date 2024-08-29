@@ -84,29 +84,24 @@ namespace Watermelon
             if (isModuleInitialised)
             {
                 Debug.LogWarning("[AdsManager]: Module already exists!");
-
                 return;
             }
 
             isModuleInitialised = true;
             isFirstAdLoaded = false;
-
             initModule = adsManagerInitModule;
             settings = adsManagerInitModule.Settings;
-
             isForcedAdEnabled = IsForcedAdEnabled(false);
 
             if (settings == null)
             {
                 Debug.LogError("[AdsManager]: Settings don't exist!");
-
                 return;
             }
 
             if (!PlayerPrefs.HasKey(FIRST_LAUNCH_PREFS))
             {
                 lastInterstitialTime = Time.time + settings.InterstitialFirstStartDelay;
-
                 PlayerPrefs.SetInt(FIRST_LAUNCH_PREFS, 1);
             }
             else
@@ -148,9 +143,7 @@ namespace Watermelon
             {
                 var gdprLoadingTask = new GDPRLoadingTask();
                 gdprLoadingTask.OnTaskCompleted += () => { InitialiseModules(loadOnStart); };
-
                 GameLoading.AddTask(gdprLoadingTask);
-
                 return;
             }
 
@@ -408,7 +401,7 @@ namespace Watermelon
             if (InterstitialConditions == null) return true;
 
             var listDelegates = InterstitialConditions.GetInvocationList();
-            var state = listDelegates.All(d => (bool) d.DynamicInvoke());
+            var state = listDelegates.All(d => (bool)d.DynamicInvoke());
             if (settings.SystemLogs)
                 Debug.Log("[AdsManager]: Extra condition interstitial state: " + state);
 
@@ -658,7 +651,7 @@ namespace Watermelon
         {
             void Update()
             {
-              //  AdsManager.Update();
+                //  AdsManager.Update();
             }
         }
     }
